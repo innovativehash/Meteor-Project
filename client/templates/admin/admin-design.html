@@ -1,0 +1,93 @@
+<template name="adminDesign">
+<style>
+  #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
+</style>
+<div id="cover"></div>
+
+  <div class="dashboard-body-area">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="customize-page">
+            <div class="customize-title">
+              <h2>Design Settings</h2>
+            </div>
+            <div class="customize-page-body">
+              <form action="">
+                <div class="single-customize">
+                  <div class="row">
+                    <div class="col-sm-5">
+                      <div class="single-customize-title logo-c">
+                        <label>Change Logo :</label>
+                        <label for="logo-upload" class="image-upload">
+                          upload file
+                          <i class="fa fa-arrow-up"></i>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-sm-7">
+                      <div class="logo-upload">
+                        <input id="logo-upload"
+                               class="hidden"
+                               type="file"
+                               accept="image/png, image/jpeg, image/gif"
+                               name="input-file-preview"/>
+                        <div class="image-preview">
+                          <!-- <img id="logo-preview" src="/img/demo-logo.png" alt=""> -->
+                          <!-- <span id="reset-image">x</span> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="single-customize">
+                  <div class="row">
+                    <div class="col-sm-5">
+                      <div class="single-customize-title color-c">
+                        <label for="">Change Background Color :</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-7">
+                      <div class="color-picker input-group colorpicker-component">
+                        <input type="text" value="#00AABB" class="form-control" />
+                        <span class="input-group-addon"><i></i></span>
+                      </div>
+
+                      <!--
+<div class="color-picker">
+<input type="text" value="#ab1313">
+<button type="button" class="input-group-addon">Pick A Color</button>
+</div>
+-->
+                    </div>
+                  </div>
+                </div>
+                <div class="single-customize">
+                  <div class="row">
+                    <div class="col-sm-5">
+                      <div class="single-customize-title code-c">
+                        <label for="">Insert Code :</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-7">
+                      <div class="insert-code">
+                        <textarea name="" id="" cols="30" rows="10"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="single-customize">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <input type="submit" value="Save">
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

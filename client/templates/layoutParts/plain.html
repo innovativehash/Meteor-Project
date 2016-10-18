@@ -1,0 +1,35 @@
+
+<template name="plain">
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Login</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="/img/favicon/apple-touch-icon.png">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="/fonts/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,600italic,700,700italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/fonts/fonts.css">
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+		<script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+    
+    <!--[if lt IE 9]>
+      <script src="/bower_components/html5shiv/dist/html5shiv.min.js"></script>
+      <script src="/js/respond.min.js">
+    <![endif]-->
+
+  </head>
+ 
+    <body class="login">
+      {{> Template.dynamic template=main  }}
+    </body>
+			<!-- Scripts -->
+      <script>window.jQuery || document.write('<script src="/js/vendor/jquery-1.11.3.min.js"><\/script>')</script>
+			<script src="/js/bootstrap-select.min.js"></script>
+</template>

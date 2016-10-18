@@ -1,0 +1,62 @@
+<template name="studentCourseListing">
+<style>
+  #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
+</style>
+<div id="cover"></div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="search-list">
+        <h3 style="text-align:center;">Available Courses</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th># Of course</th>
+              <th>Credits</th>
+              <th>Completed</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#with courses}}
+            {{#each this}}
+            <tr>
+              <th class="name"><img src="/img/icon-4.png" alt="">
+                {{#if completed}}
+                  <span style="text-decoration: line-through;">{{name}}</span>
+                {{else}}
+                  {{name}}
+                {{/if}}
+              </th>
+              <td>1 course<input type="hidden" name="id" value="{{id}}"/></td>
+              <td>{{credits}}</td>
+              {{#if completed }}
+              <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+              {{else}}
+              <td></td>
+              {{/if}}
+              <td>
+                <a href="#">{{buttonText}}</a>
+                <!--
+                <button id="" type="button" class="btn btn-info">{{buttonText}}</button>
+                <button id="edit">
+                  <img src="/student/img/edit.png" alt="">
+                </button>
+                <button id="delete">
+                  <img src="/student/img/delete.png" alt="">
+                </button>
+                -->
+              </td>
+            </tr>
+            {{/each}}
+            {{/with}}
+          </tbody>
+        </table>
+        <div class="more">
+          <button><img src="/img/more.png" alt=""></button>
+        </div>
+      </div>
+    </div>
+  </div> 
+</template>

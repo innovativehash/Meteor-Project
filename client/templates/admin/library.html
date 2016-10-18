@@ -1,0 +1,122 @@
+
+
+<template name="library">
+<style>
+  #library-cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
+</style>
+<div id="library-cover"></div>
+
+<div class="dashboard-body-area admin">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+
+
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="import-navigation">
+                  <ul>
+                      <li><a href="#" id="dashboard-page"><i class="fa fa-home"></i>Dashboard</a></li>
+                      <li><a href="#" id="courses-page">Courses</a></li>
+                      <li style="color:blue;text-decoration:undeline;">Add From Library</li>
+                  </ul>
+              </div>
+              <br />
+              
+              <div class="filter-buttons">
+
+                <button class="js-course-builder">Build Course</button>
+
+                <!-- <button class="js-add-course-from-lib">Add From Library</button> -->
+
+                <button class="js-load-scorm"
+                        type="button" 
+                        id="import-button" 
+                        data-toggle="modal" 
+                        data-target="#myModal">
+                        Import Course
+                </button>
+
+                <div class="col-sm-4 col-sm-offset-8">
+                  <select id="search-courses" style="width:auto;">
+                    <option>Search Courses...</option>
+                    {{#with courses}}
+                    {{#each this}}
+                    <option value="{{_id}}">{{name}}</option>
+                    {{/each}}
+                    {{/with}}
+                  </select>
+                  <!--
+                  <button id="search" type="search"><img src="/img/search-1.png" alt=""></button>
+                  <input id="search-courses" style="color:blue;" type="text" placeholder="Search Material">
+                  <button id="close-search">X</button>
+                  -->
+                </div>
+                <div class="modal fade left" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog">
+                    <div class="pop-up-area">
+                      <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button>
+                      <div class="popup-body">
+                        <form action="">
+                          <div class="row">
+                            <div class="col-sm-4">
+                              <label for="fileup">Import Scorm Course</label>
+                            </div>
+                            <div class="col-sm-7">
+                              <input class="hidden" id="fileup" type="file">
+                              <span id="filename">No File Chosen</span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-12 text-right">
+                              <input type="submit" value="SUBMIT">
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>                                         
+                  </div>
+                </div><!-- modal --> 
+                
+              </div><!-- filter buttons -->
+
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="search-list libary">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th># Of course</th>
+                      <th>Credits</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#with courses}}
+                    {{#each this}}
+                    <tr id="{{_id}}">
+                      <th class="name"><img src="{{icon}}" alt="">{{name}}</th>
+                      <td>1</td>
+                      <td>{{credits}}</td>
+                      <td><button id="add" data-id="{{_id}}" data-name="{{name}}"><img src="/img/add.png" alt=""></button></td>
+                    </tr>
+                    {{/each}}
+                    {{/with}}
+                  </tbody>
+                </table>
+                <div class="more">
+                  <button><img src="/img/more.png" alt=""></button>
+                </div>
+              </div>
+            </div>
+          </div>                        
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

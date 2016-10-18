@@ -1,0 +1,193 @@
+
+<template name="adminDashboardLayout">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Dashboard</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+		<link rel="shortcut icon" href="/img/favicon/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="img/favicon/apple-touch-icon.png">
+
+		<!-- Fonts -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,600italic,700,700italic'
+          rel='stylesheet'
+          type='text/css'>
+
+		<link rel="stylesheet" href="/fonts/fonts.css">
+
+		<script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+
+		<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+  </head>
+
+  <body>
+
+   {{#if currentUser}}
+
+      {{#if showNewsfeed }}
+      <div class="feedback-form">
+          <button onclick="location.href='http://cu.collectiveinnovation.com/';">
+            Share Your Feedback
+          </button>
+
+          <form action="">
+              <h2>Share Your Feedback</h2>
+              <textarea name=""
+                        id="adminFeedback"
+                        cols="30"
+                        rows="10"
+                        placeholder="Write feedback here..."></textarea>
+
+              <input type="submit" value="Submit Feedback">
+          </form>
+      </div>
+      {{/if}}
+{{#with company}}
+      <div class="sidebar-menu-area" style="background:{{backgroundColor}} !important;">
+        <div class="buttons">
+            <button id="open">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <button id="close">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div class="logo">
+            <a href="#" id="logo-click"><img  src="{{logo}}" alt=""></a> <!-- src="/img/logo_d.png" -->
+            <button type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target=".sidebar-menu"
+                    aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="profile hidden-xs">
+            <div class="profile-image">
+                <div class="diamond">
+                    <img src="{{avatar}}" alt="">
+                </div>
+            </div>
+            <div class="profile-text">
+                <h2>Hello, {{fname}}<span>Welcome Back</span></h2>
+            </div>
+        </div>
+
+        <div class="sidebar-menu collapse navbar-collapse" style="background:{{backgroundColor}} !important;">
+          <ul>
+            <li class="menu-icon-1">
+              <a id="admin-courses" href="#">
+                Courses
+              </a>
+            </li>
+            <li class="menu-icon-2">
+              <a id="admin-students" href="#">
+                Students
+              </a>
+            </li>
+            <li class="menu-icon-3">
+              <a id="admin-degrees" href="#">
+                Degrees & Certifications
+              </a>
+            </li>
+            <li class="menu-icon-4">
+              <a id="admin-assignCourses" href="#">
+                Assign Courses <!-- assign-courses.html -->
+              </a>
+            </li>
+            <li class="menu-icon-5">
+              <a id="admin-analytics" href="#">
+                Analytics
+              </a>
+            </li>
+            <li class="menu-icon-6">
+              <a id="admin-design" href="#">
+                Design <!-- design.html -->
+              </a>
+            </li>
+            <li class="menu-icon-7">
+              <a id="admin-advanced" href="#">
+                Advanced
+              </a>
+            </li>
+          </ul>
+        </div>
+    </div>
+
+    <div class="dashboard-header-area" style="background:{{backgroundColor}} !important;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="search-bar">
+                        <form>
+                            <h2>
+                              <span style ="color:red;
+                                            fond-size:24px;
+                                            border: 1px dashed yellow">
+                                BETA v0.9.3
+                              </span>
+                            </h2>
+                            <!--
+                            <input style="color:blue;" type="text" placeholder="Search Students"/>
+
+                            <select class="chosen-select" style="width: 200px;" id="search-std">
+                              <option>Search Students...</option>
+                              {{#with students}}
+                              {{#each this}}
+                                <option value="{{_id}}">{{fullName}}</option>
+                              {{/each}}
+                              {{/with}}
+                            </select>
+                            -->
+                        </form>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="profile-bar">
+                        <ul>
+                            <li><button><img src="/img/message.png" alt=""></button></li>
+                            <li><button><img src="/img/notification.png" alt=""></button></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="profile-link">
+                    <a class="dropdown-toggle"
+                        data-toggle="dropdown"
+                        href="#"
+                        role="button"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                        <span class="diamonds">
+                        <img src="{{avatar}}" alt="">
+                        </span>
+                        {{fname}}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a id="account-settings" href="#">Account Settings</a></li>
+                        <li><a id="account-upload-photo" href="#">Upload Photo</a></li>
+                        <li><a id="logout" href="#">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/with}}
+    {{> Template.dynamic template=main  }}
+
+    {{/if}}
+  </body>
+</template>

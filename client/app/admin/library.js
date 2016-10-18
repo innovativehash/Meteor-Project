@@ -1,0 +1,150 @@
+
+
+import { Courses }    from '../../../both/collections/api/courses.js';
+
+import '../../templates/admin/library.html';
+import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
+
+
+
+/**
+ * CREATED
+ */
+Template.library.onCreated(function() {
+  $("#library-cover").show();
+  
+  $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
+      //console.log('Library:: bootstrap-dialog loaded...');
+  }).fail( function( jqxhr, settings, exception ) {
+    console.log( 'Library:: load bootstrap-dialog.min.js fail' );
+    //console.log( 'jqxhr ' + jqxhr );
+    //console.log( 'settings ' + settings );
+    //console.log( 'exception: ' + exception );
+  }); 
+  
+/**
+ * MULTI-SELECT AUTOCOMPLETE COMBOBOX
+ */
+  $.getScript('/js/select2.min.js', function() {
+    $(document).ready(function(){
+      $('#search-courses').select2({
+        allowClear: true
+      });
+    });
+    //console.log('library:: chosen,jquery.min.js loaded...');
+  }).fail( function(jqxhr, settings, exception ) {
+    console.log( 'library:: load select2.js fail' );
+    //console.log( 'jqxhr ' + jqxhr );
+    //console.log( 'settings ' + settings );
+    //console.log( 'exception: ' + exception );
+  });
+
+});
+
+
+
+/**
+ * RENDERED
+ */
+Template.library.onRendered(function(){
+
+  $( '#library-cover' ).delay( 100 ).fadeOut( 'slow', function() {
+    $("#library-cover").hide();
+    $( ".filter-buttons" ).fadeIn( 'slow' );
+  });  
+});
+
+
+
+/**
+ * DESTROYED
+ */
+Template.library.onDestroyed(function(){
+  Session.set( 'searchTerm', null );    
+});
+
+
+
+/**
+ * HELPERS
+ */
+Template.library.helpers({
+   courses: () =>
+      Courses.find({ company_id: 0 }, { _id:1, name:1, credits:1, icon:1 }).fetch()
+});
+
+
+
+/**
+ * EVENTS
+ */
+Template.library.events({
+  
+  'click #courses-page'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    
+    FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+  },
+  
+  'click #dashboard-page'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    
+    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+  },
+  
+  'change #search-courses'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    
+    let idx = $( e.currentTarget ).val();
+    $('tr').css('border', '');
+    $('tr#' + idx ).css('border', '1px solid');
+    $('html, body').animate({
+      scrollTop: $('tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
+      }, 'fast');
+  },
+  
+   'click #add'( e, t ) {
+     e.preventDefault();
+     e.stopImmediatePropagation();
+     
+     let idx = $(e.currentTarget).data('id');
+     let nm  = $(e.currentTarget).data('name');
+     
+     idx = String(idx);
+     let c = Courses.findOne({ _id: idx });
+
+      BootstrapDialog.show({
+        title: "Add Course",
+        message:  '<div class="pop-up-area students">' +
+                    '<div class="popup-body">' + 
+                      '<div class="row">' +
+                        '<div class="col-sm-6">' +
+                            '<p>Add the following course?<br /><span style="color:white;">"' + nm + '"</span></p>' +
+                        '</div>' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>',
+        buttons: [
+          {
+            label: 'Commit Edit',
+            cssClass: 'btn-success',
+            action: function( dialog ) {
+              /* ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY */
+              Courses.update({ _id: idx }, {$set:{ company_id:1} });
+              dialog.close();
+            }
+          },
+          {
+            label: 'Cancel Edit',
+            cssClass: 'btn-danger',
+            action: function( dialog ) {
+              dialog.close();
+            }        
+          }]
+        });
+  },
+
+});

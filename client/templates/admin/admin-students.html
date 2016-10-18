@@ -1,0 +1,102 @@
+
+
+<template name="adminStudents">
+<style>
+  #students-cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
+</style>
+<div id="students-cover"></div>
+
+<div class="dashboard-body-area admin">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+
+
+  <div class="row">
+    <div class="col-sm-12"><!-- 8 -->
+      <div class="import-navigation">
+          <ul>
+              <li><a href="#" id="dashboard-page"><i class="fa fa-home"></i>Dashboard</a></li>
+              <li style="color:blue;text-decoration:undeline;">Students</li>
+          </ul>
+      </div>
+      <br />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="filter-buttons studentpage">
+        <button type="button" id="add_students" class="js-add-student"><span>+</span>Add Student</button>
+        <button id="import_student" class="js-import-students-csv">Import Students CSV</button>    
+      </div><!-- filter buttons -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+          <div class="col-sm-6 col-sm-offset-6">
+            <!-- <div class="search-box"> -->
+              <form action="">
+                <select id="search-students" style="width:auto;">
+                  <option>Search Students...</option>
+                  {{#with students}}
+                  {{#each this}}
+                  <option value="{{_id}}">{{fullName}}</option>
+                  {{/each}}
+                  {{/with}}
+                </select>
+                  <!--
+                  <button id="search" type="search"><img src="/img/search-1.png" alt=""></button>
+                  <input id="search-students" type="text" style="color:blue;" placeholder="Search Students">
+                  <button id="close-search">X</button>
+                  -->
+              </form>
+            </div>
+         </div><!-- col-sm-12 -->
+      </div><!-- row -->
+      
+      <div class="row">
+          <div class="col-sm-12">
+              <div class="search-list students">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th># Of courses</th>
+                      <th>Credits</th>
+                      <th>Dated Added</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each students }}
+                    <tr id="{{_id}}">
+                      <th class="name"><span><img src="{{avatar}}" alt=""></span><a class="js-student" data-id="{{_id}}" href="#">{{fname}} {{lname}}</a></th>
+                      {{#if compl_courses_cnt }}
+                        <td>{{ compl_courses_cnt }}</td>
+                      {{else}}
+                        <td></td>
+                      {{/if}}
+                      {{#if current_credits}}
+                        <td>{{ current_credits }}</td>
+                      {{else}}
+                        <td></td>
+                      {{/if}}
+                      <td>{{created_at}}</td>
+                      <td><button class="js-edit-student" data-id="{{_id}}" id="edit"><img src="/img/edit.png" alt=""></button><button class="js-delete-student" data-id="{{_id}}" id="delete"><img src="/img/delete.png" alt=""></button></td>
+                    </tr>
+                   
+                    {{/each}}
+                  </tbody>
+                </table>
+                <div class="more">
+                  <button><img src="/img/more.png" alt=""></button>
+                </div>
+              </div>
+            </div>
+          </div>                        
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <script src='/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js'></script> -->
+</template>

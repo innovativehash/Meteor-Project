@@ -1,0 +1,32 @@
+<template name="courseBuilderLayout">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Course Builder</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+		<link rel="shortcut icon" href="/img/favicon/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="img/favicon/apple-touch-icon.png">
+		
+		<!-- Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,600italic,700,700italic' 
+          rel='stylesheet' 
+          type='text/css'>
+          
+		<link rel="stylesheet" href="/fonts/fonts.css">
+		
+		<link rel="stylesheet" type="text/css" media="screen" href="https://formbuilder.online/assets/css/form-builder.min.css">
+		
+		<script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+
+		<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+  </head>
+    
+  <body>
+      
+      {{> Template.dynamic template=main  }}
+      
+  </body>
+</template>

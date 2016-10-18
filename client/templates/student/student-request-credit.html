@@ -1,0 +1,45 @@
+
+<template name="studentRequestCredit">
+<style>
+  #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
+</style>
+<div id="cover"></div>
+
+  <div class="credit-request">
+    <div class="credit-request-header">
+      <h2>Credit Request</h2>
+      <button id="cancel">x</button>
+    </div>
+    <div class="credit-request-body">
+      <p style="font-size: 18px;"><span>The following tool is for claiming credit for conferences, classes, certifications, vocational or other educational training you received outside of the system</span></p>
+
+      <p><span><center>
+        <select class="selectpicker js-credit-select">
+          <option value="conference">Conference</option>
+          <option value="internal">Certification Internal Training</option>
+          <option value="vocational">Vocational/Educational Class</option>
+          <option value="other">Other</option>
+        </select>
+      </center></span></p>
+
+      <p><span>Please describe the training you received:</span><br />
+        <textarea style="color: blue; width: 95%" id="details" rows="5"></textarea>
+      </p>
+    </div>
+    <div class="credit-request-footer">
+       <span>
+         <h2 style="color: #6495ED; font-size: 18px; display: inline-block;">
+          If you have any proof of your receiving this training, please upload it here : &nbsp; &nbsp;
+         </h2>
+        <h4 style="display: inline-block;">
+          <input class="js-credit-attachment" style="color: blue;" id="file" type="file" />
+        </h4>
+      </span> 
+      <br />
+      <div class="credit-request-footer-link">
+        <button id="cancel" class="disapprove">Cancel</button>
+        <button id="send"   class="approve">Send</button>
+      </div>
+    </div>
+  </div>
+</template>

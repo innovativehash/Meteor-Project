@@ -1,0 +1,179 @@
+
+
+<template name="assignCourses">
+<style>
+  #assign-courses-cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
+</style>
+<div id="assign-courses-cover"></div>
+
+<div class="dashboard-body-area admin">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-12"><!-- 8 -->
+            <div class="import-navigation">
+              <ul>
+                <li>
+                  <a href="#" id="dashboard-page">
+                    <i class="fa fa-home"></i>
+                    Dashboard
+                  </a>
+                </li>
+                <li style="color:blue;text-decoration:undeline;">
+                  Assign Courses
+                </li>
+              </ul>
+            </div>
+            <br />
+            <div class="list-title">
+              <h2>Assign Courses:</h2>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="col-sm-4 col-sm-offset-8">
+              <form action="">
+                <select id="search-courses">
+                  <option>Search Courses...</option>
+                  {{#with courses}}
+                  {{#each courses}}
+                  <option value="{{_id}}">{{name}}</option>
+                  {{/each}}
+                  {{/with}}
+                </select>
+                <!--
+                  <button id="search" type="search"><img src="/img/search-1.png" alt=""></button>
+                  <input id="search-courses" type="text" placeholder="Search Material" style="color:blue;">
+                  <button id="close-search">X</button>
+                -->
+              </form>
+            </div>
+            <div class="search-list assign">
+              <table class="table">
+                <tbody>
+                  {{#with courses}}
+                    {{#each this}}
+                      <tr id="{{_id}}">
+                        <th class="name"><img src="{{icon}}" alt="">{{name}}</th>
+                        <td>
+                          <button id="assign" 
+                                  data-credits="{{credits}}" 
+                                  data-name="{{name}}" 
+                                  data-id="{{_id}}">Click To Assign</button>
+                                  <!-- 
+                                  data-toggle="modal" 
+                                  data-target="#assignCourse"
+                                  -->
+                        </td>
+                      </tr>
+                    {{/each}}
+                  {{/with}}
+                </tbody>
+              </table>
+              <div class="more">
+                  <button><img src="/img/more.png" alt=""></button>
+              </div>
+            </div>
+          </div>
+        </div>   
+                                                           
+        <div  id="assign-modal" 
+              class="modal fade left" 
+              tabindex="-1" 
+              role="dialog" 
+              aria-labelledby="myModalLabel">
+          <div class="modal-dialog">
+            <div class="pop-up-area">
+              <div class="modal-header">
+                <h3 class="modal-title">
+                  Assign Course: 
+                  <span id="course-name" style="color:white;"></span>
+                </h3>
+              </div>
+              <button type="button" 
+                      id="popup-close" 
+                      data-dismiss="modal" 
+                      aria-label="Close">
+                <strong>x</strong>
+              </button>
+              <div class="popup-body">
+                <div id="notify"></div>
+                <form id="assignCourses" class="form-horizontal">
+                  <div class="row">
+                    <div class="form-group">
+                      <div class="col-xs-5">
+                        <label class="checkbox-inline">
+                          <input  id="all-students" 
+                                  type="checkbox" 
+                                  data-toggle="toggle" 
+                                  data-offstyle="danger"
+                                  data-onstyle="success">
+                          <span style="color:white;">&nbsp;&nbsp;<strong>All students</strong></span>
+                        </label>
+                      </div>
+                      <div class="col-xs-5 inputGroupContainer">
+                        <span style="color:white;"><strong>Completion Date?</strong></span>
+                        <div class="input-group">
+                          <input id="assign-due-date" type="date" class="form-control" />
+                        </div>
+                      </div>
+                  </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group">
+                    <div class="col-xs-5 selectContainer">
+                      <label class="checkbox-inline">
+                        <input  id="abn" 
+                                style="margin-bottom:5px;" 
+                                type="checkbox" 
+                                data-toggle="toggle" 
+                                data-offstyle="danger" 
+                                data-onstyle="success">
+                        <span style="color:white;">&nbsp;&nbsp;<strong>Names:</strong></span>
+                      </label>
+                      <select data-placeholder="Select/type Name(s)..." id="by-name" multiple>
+                        {{#with names}}
+                          {{#each this}}
+                        <option>{{fullName}}</option>
+                          {{/each}}
+                        {{/with}}
+                      </select>
+                    </div>
+                    <div class="col-xs-5 selectContainer">
+                      <label class="checkbox-inline">
+                        <input  id="abd" 
+                                style="margin-bottom:5px;" 
+                                type="checkbox" 
+                                data-offstyle="danger" 
+                                data-onstyle="success" 
+                                data-toggle="toggle">
+                        <span style="color:white;">&nbsp;&nbsp;<strong>Departments:</strong></span>
+                      </label>
+                      <select id="by-dept" data-placeholder="Select/type Dept(s)..." multiple>
+                        {{#with dept}}
+                          {{#each this}}
+                        <option>{{name}}</option>
+                          {{/each}}
+                        {{/with}}
+                      </select>
+                    </div></div>
+                  </div>
+                  <div class="row">
+                      <div class="col-sm-12 text-right">
+                        <input type="submit" class="add-course" value="SAVE">
+                        <!-- <input type="submit" class="dismiss-modal" value="CANCEL"> -->
+                      </div>
+                  </div>
+                </form>
+              </div>
+            </div>                                         
+          </div>
+        </div>   
+        
+      </div>
+    </div>
+  </div>
+</div>
+</template>

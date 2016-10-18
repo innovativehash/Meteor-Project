@@ -1,0 +1,204 @@
+<template name="adminTestCreator">
+
+<style>
+  #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
+</style>
+<div id="cover"></div>
+
+<!--
+  <div class="dashboard-header-area">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-7">
+                   
+        </div>
+        <div class="col-sm-5">
+          <div class="profile-bar">
+            <ul>
+              <li><button><img src="/img/message.png" alt=""></button></li>
+              <li><button><img src="/img/notification.png" alt=""></button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="profile-link">
+          <a  class="dropdown-toggle" 
+              data-toggle="dropdown" 
+              href="#" 
+              role="button" 
+              aria-haspopup="true" 
+              aria-expanded="false">
+                <span class="diamonds">
+                  <img src="/img/profile-1.jpg" alt="">
+                </span>
+              
+                  {{fname}}
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Account Settings</a></li>
+            <li><a href="#">Upload Photo</a></li>
+            <li><a href="#">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="dashboard-body-area">
+    
+        <div class="sidebar-menu-area course-builder-sidebar">
+          <div class="buttons">
+            <button id="open">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <button id="close">
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+          <div class="page-back-home js-back-to-home">
+            <a href="#">
+              <i class="fa fa-long-arrow-left"></i>
+                Back To Home
+            </a>
+          </div>
+        </div>
+
+    <div class="container">
+      <div class="row">
+-->    
+        <div class="col-xs-12 col-md-offset-2 col-lg-8 col-lg-offset-2">
+
+            <header>
+                <h4 style=""><a id="test-go-home" href="#">Go Home</a></h4>
+                <br />
+                <h1 style="">
+                  Test Creator
+                  <input type="hidden" name="qnum" value="1">
+                </h1>
+              
+            </header>
+
+            <section>
+
+              <!-- TEST NAME -->
+              <div class="input-group">
+                <span class="input-group-addon">Test Name</span>
+                <input  type="text"
+                        id="test-name"
+                        class="form-control input-lg" 
+                        placeholder="enter test name..." 
+                        style="width:50%;"/>
+              </div>
+
+              <br />
+
+              <!-- QUESTION TEXT -->
+              <div class="input-group">
+                <span class="input-group-addon">Question&nbsp;</span>
+                <input  type="text"
+                        id="question"
+                        class="form-control input-lg" 
+                        placeholder="enter question... " 
+                        style="width:50%;"/>
+              </div>
+              <br /><br />
+
+              <!-- SELECT ANSWER TYPE -->
+              <h3 style="text-decoration: underline;">Answer Type</h3>
+              <div class="btn-group" role="group" aria-label="...">
+                <button id="tf" 
+                        type="button" 
+                        class="btn btn-info">True/False</button>
+
+                <button id="mc" 
+                        type="button" 
+                        class="btn btn-warning">Multiple Choice</button>
+              </div>
+
+              <br /><br /><br />
+
+              <!-- TRUE/FALSE ANSWERS -->
+              <div id="ans-tf" class="hide">
+                <p>Answer:</p>
+                <div class="form-group">
+                  <label class="radio-inline">
+                    <input class="js-tf" type="radio" name="optradio" value="true">
+                    True
+                  </label>
+
+                  <label class="radio-inline">
+                    <input class="js-tf" type="radio" name="optradio" value="false">
+                    False
+                  </label>
+
+                  <br /><br />
+
+                  <button class="btn btn-primary" id="tf-submit">Add Question/Answer</button>
+                  <button class="btn btn-success js-test-complete">Test Complete</button>
+                </div>
+              </div>
+
+              <!-- MULTIPLE CHOICE ANSWERS -->
+              <div id="ans-mc" class="hide form-group">
+                <p>Answer:</p>
+                <div>
+                  <label class="">A
+                    <input  id="A" 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="enter answer...">
+                  </label>
+
+                  <label class="">B
+                    <input  id="B" 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="enter answer...">
+                  </label>
+
+                  <label class="">C
+                    <input  id="C" 
+                            type="text" 
+                            class="form-control" 
+                            placeholder="enter answer...">
+                  </label>
+
+                  <button id="plus">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+
+                  <br /><br /><br />
+                  <div class="form-group">
+                    <select class="form-control" id="correct_ans" style="width:20%;">
+                      <option>Correct Answer</option>
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                    </select>
+                  </div>
+                  <br />
+                  <button id="mc-submit" class="btn btn-primary">Add Question/Answer</button>
+                  <button class="btn btn-success js-test-complete">Test Complete</button>
+                </div>
+              </div>
+
+            </section>
+
+            <br /><br />
+
+            <footer>
+              <p>
+                &copy; 2016 Collective Innovation
+              </p>
+            </footer>
+        </div>              
+<!--
+     </div>
+    </div>
+  </div>
+-->
+</template>

@@ -1,0 +1,148 @@
+<template name="studentDashboardLayout">
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Dashboard</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+		<link rel="shortcut icon" href="/img/favicon/favicon.ico">
+		<link rel="apple-touch-icon-precomposed" href="img/favicon/apple-touch-icon.png">
+
+		<!-- Fonts -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,600italic,700,700italic' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="/fonts/fonts.css">
+
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+		<script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+
+
+		<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    </head>
+
+    <body>
+    {{#if currentUser}}
+      {{#if showStudentNewsfeed }}
+      <div class="feedback-form">
+          <button onclick="location.href='http://cu.collectiveinnovation.com/';">Share Your Feedback</button>
+          <form action="">
+              <h2>Share Your Feedback</h2>
+              <textarea name="" id="" cols="30" rows="10" placeholder="Write feedback here..."></textarea>
+              <input type="submit" value="Submit Feedback">
+          </form>
+      </div>
+      {{/if}}
+
+    <div class="sidebar-menu-area">
+        <div class="buttons">
+            <button id="open">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <button id="close">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div class="logo">
+            <a href="#" id="logo-click"><img  src="{{logoImage}}" alt=""></a> <!-- src="/img/logo_d.png" -->
+            <button type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target=".sidebar-menu"
+                    aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="profile hidden-xs">
+            <div class="profile-image">
+                <div class="diamond">
+                    <img src="{{avatar}}" alt="">
+                </div>
+            </div>
+            <div class="profile-text">
+                <h2>Hello, {{fname}}<span>Welcome Back</span></h2>
+            </div>
+        </div>
+
+        <div class="sidebar-menu collapse navbar-collapse">
+          <ul>
+            <li class="menu-icon-1"><a id = "st-courses" href="#">Courses</a></li>
+            <li class="menu-icon-2"><a id = "st-request-credit" href="#">Request Credit</a></li>
+            <li class="menu-icon-3"><a id = "st-records" href="#">Records</a></li>
+            <li class="menu-icon-4"><a id = "st-training-calendar" href="#">Training Calendar</a></li>
+          </ul>
+        </div>
+    </div>
+
+    <div class="dashboard-header-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="search-bar">
+                      <form>
+                        <h2>
+                          <span style=" color:red;
+                                        font-size:24px;
+                                        border: 1px solid yellow">
+                            BETA v0.9.3
+                          </span>
+                        </h2>
+                      </form>
+                        <!--
+                        <form action="">
+                            <input type="text" placeholder="Search Students">
+                            <input type="submit" value="Search">
+                        </form>
+                        -->
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="profile-bar">
+                        <ul>
+                            <li><button><img src="/img/message.png" alt=""></button></li>
+                            <li><button><img src="/img/notification.png" alt=""></button></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="profile-link">
+                    <a class="dropdown-toggle"
+                        data-toggle="dropdown"
+                        href="#"
+                        role="button"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                        <span class="diamonds">
+                        <img src="{{avatar}}" alt="">
+                        </span>
+                        {{fname}}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a id="account-settings" href="#">Account Settings</a></li>
+                        <li><a id="account-upload-photo" href="#">Upload Photo</a></li>
+                        <li><a id="logout" href="#">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-body-area admin">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            {{> Template.dynamic template=main  }}
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+  </body>
+</template>
