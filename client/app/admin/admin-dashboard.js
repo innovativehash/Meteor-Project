@@ -14,32 +14,54 @@ Template.registerHelper('not', function(obj){
 });
 
 
+/*
+ * CREATED
+ */
 Template.adminDashboard.onCreated( function() {
+  
   $('#cover').show();
+  
 });
 
 
+/*
+ * RENDERED
+ */
 Template.adminDashboard.onRendered( function() {
+  
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
+  
 });
 
 
+/*
+ * HELPERS
+ */
 Template.adminDashboard.helpers({
+  
  showAdminCreditRequests() {
    if ( Newsfeeds.find({ type: "CR" }).count() > 0 ) {
     return true;
    } else {
      return false;
    }
+//-------------------------------------------------------------------
   },
+  
 });
 
 
+/*
+ * EVENTS
+ */
 Template.adminDashboard.events({
-
+  
+  /*
+   * CLICK #VIEW-REQUEST-DOC
+   */
   'click #view-request-doc'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -53,20 +75,9 @@ Template.adminDashboard.events({
     largeImage.src = imgsrc;
     //let url= imgsrc;
     window.open(imgsrc,'Image','width=500,height=500,resizable=0, location=0');
-  }
-/*
-    'keypress #js-student-search': function(event){
-
-    if ( event.which == 13){
-
-      event.preventDefault();
-
-      let idx = $("#js-student-search").val(),
-          item = Students.find({ _id: idx  }, { limit:1 }).fetch()[0];
-      return item;
-    }
+//-------------------------------------------------------------------
   },
-*/
+
 });
 
 

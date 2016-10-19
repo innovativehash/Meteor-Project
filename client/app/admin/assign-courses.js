@@ -8,13 +8,14 @@ import { Departments }  from '../../../both/collections/api/departments';
 import '../../templates/admin/assign-courses.html';
 
 
-/**
+/*
  * ON CREATED
  */
 Template.assignCourses.onCreated(function() {
-  $("#assign-courses-cover").show();          //set-up fade-in screen
   
-  /**
+  $("#assign-courses-cover").show();  //set-up fade-in screen
+  
+  /*
    * MULTI-SELECT AUTOCOMPLETE COMBOBOX
    */
   $.getScript( '/js/select2.min.js', function() {
@@ -32,11 +33,12 @@ Template.assignCourses.onCreated(function() {
     //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'Assign Courses:: load select2.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
   });
   
+  
+  /*
+   * BOOTSTRAP TOGGLE
+   */
   $.getScript( '/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js', function() {
     $('#abd').bootstrapToggle();
     $('#abn').bootstrapToggle();
@@ -46,35 +48,10 @@ Template.assignCourses.onCreated(function() {
     console.log( 'Assign Courses:: bootstrap-toggle.min.js fail' );
   });
   
-  /**
-   * NOTIFICATIONS
-   */
-  $.getScript( '/js/notify.min.js', function() {
-    $.notify.addStyle('happyblack', {
-      html: '<div style="width:200px;height:100px;">'                   +
-              '<span class="glyphicon glyphicon-warning-sign"></span>'  +
-                '&nbsp;&nbsp;<span data-notify-text/>!'                 +
-            '</div>',
-      classes: {
-        base: {
-          "white-space": "nowrap",
-          "background-color": "DarkGrey",
-          "padding": "5px"
-        },
-        superblack: {
-          "color": "LightGrey",
-          "background-color": "black"
-        }
-      }
-    });
-    //console.log('CourseBuilder:: notify.js loaded...');
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'Assign-Courses:: load notify.min.js fail' );
-  });
 });
   
 
-/**
+/*
  * ON RENDERED
  */
 Template.assignCourses.onRendered(function(){
@@ -86,15 +63,7 @@ Template.assignCourses.onRendered(function(){
 });
 
 
-/**
- * ON DESTROYED
- */
-Template.assignCourses.onDestroyed(function(){
-    
-});
-
-
-/**
+/*
  * HELPERS
  */
 Template.assignCourses.helpers({
@@ -107,12 +76,13 @@ Template.assignCourses.helpers({
 });
 
 
-/**
+/*
  * EVENTS
  */
 Template.assignCourses.events({
   
-  /**
+  /*
+   * CHANGE #SEARCH-COURSES
    * scroll to selected search result
    */
   'change #search-courses'( e, t ) {
@@ -129,8 +99,8 @@ Template.assignCourses.events({
   },
  
   
-    /**
-     * TEMPLATE ASSIGN BUTTON
+    /*
+     * CLICK #ASSIGN
      */
    'click #assign'( e, t ) {
      e.preventDefault();
@@ -150,8 +120,8 @@ Template.assignCourses.events({
   },
 
   
-  /**
-   * MODAL ADD BUTTON
+  /*
+   * CLICK .ADD-COURSE
    */
   'click .add-course'( e, t ) {
     e.preventDefault();
@@ -239,12 +209,7 @@ Template.assignCourses.events({
       position:"top center" 
       }
     );
-/*
-    $.notify(
-      "I'm over here !", "warn",
-      { position:"top center" }
-    );
-*/
+
       return;
     }
 
@@ -260,11 +225,13 @@ Template.assignCourses.events({
   },
 
 
-  /**
-   * DIALOG RADIO BUTTON ROUTINES
-   */
+//-------------------------------------------------------------------
+// DIALOG RADIO BUTTON ROUTINES
+//-------------------------------------------------------------------
  
-  // ALL STUDENTS RADIO
+  /*
+   * CHANGE #ALL-STUDENTS
+   */
   'change #all-students'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -279,12 +246,13 @@ Template.assignCourses.events({
       $('#abn').bootstrapToggle('off');
       $('#abd').bootstrapToggle('off');
     }
-    //$('#assign-due-date').prop('readonly', true);
 //-----------------------------------------------------------------
   },
   
   
-  // ASSIGN BY NAME RADIO
+  /*
+   * CHANGE #ABN
+   */
   'change #abn'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -306,7 +274,9 @@ Template.assignCourses.events({
   
 
   
-  // ASSIGN BY DEPARTMENT RADIO
+  /*
+   * CHANGE #ABD
+   */
   'change #abd'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -327,8 +297,8 @@ Template.assignCourses.events({
   },
  
  
-/**
- * SEARCH BOX [ENTER]
+/*
+ * KEYPRESS #SEARCH-COURSES
  */
   'keypress #search-courses': function(event){
     e.preventDefault();
@@ -345,12 +315,15 @@ Template.assignCourses.events({
   },
   
 
-  // DASHBOARD LINK CLICK
+  /*
+   * CLICK #DASHBOARD-PAGE
+   */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 //-----------------------------------------------------------------
-  }
+  },
+  
 });

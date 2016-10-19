@@ -9,47 +9,53 @@ import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.theme.min.css';
 
 
 
-/**
+/*
  * CREATED
  */
-Template.importCV.onCreated( function() {  
+Template.importCV.onCreated( function() { 
+  
   this.res = new ReactiveVar();
   
   $("#csv-cover").show();
   
+  
+  /*
+   * BOOTSTRAP-SELECT
+   */
   $.getScript('/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js', function() {
     $('.selectpicker').selectpicker({ style: "btn-new", title:"Choose One" });
     //console.log('importCSV:: bootstrap.min.js loaded...');
   }).fail( function(jqxhr, settings, exception ) {
     console.log( 'importCSV:: load bootstrap-select.min.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
+//-------------------------------------------------------------------
   }); 
   
+  
+  /*
+   * PAPA PARSE
+   */
   $.getScript( '/js/papaparse.min.js', function() {
       //console.log('insertCSV:: papaparse.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'importCSV:: load papaparse.min.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
+//-------------------------------------------------------------------
   }); 
   
+  
+  /*
+   * JQUERY-UI
+   */
   $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function() {
       //console.log('insertCSV:: jquery-ui.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'importCSV:: load jquery-ui.min.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
+//-------------------------------------------------------------------
   }); 
 
 });
 
 
-
-/**
+/*
  * RENDERED
  */
 Template.importCV.onRendered(function(){
@@ -60,8 +66,7 @@ Template.importCV.onRendered(function(){
 });
 
 
-
-/**
+/*
  * DESTROYED
  */
 Template.importCV.onDestroyed(function(){
@@ -71,8 +76,7 @@ Template.importCV.onDestroyed(function(){
 });
 
 
-
-/**
+/*
  * HELPERS
  */
 Template.importCV.helpers({
@@ -113,33 +117,44 @@ Template.importCV.helpers({
     
     } catch (e) {
       return;
-      //console.log( e )
     }
   },
 
 });
 
 
-
-/**
+/*
  * EVENTS
  */
 Template.importCV.events({
   
+  /*
+   * CLICK #DASHBOARD-PAGE
+   */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #STUDENTS-PAGE
+   */
   'click #students-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-students', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CHANGE #CSV
+   */
   'change #csv'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -164,8 +179,13 @@ Template.importCV.events({
     }, 200);
     $('#csv').attr('disabled','disabled');
     return;
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK .JS-IMPORT-STUDENTS-FROM-CSV
+   */
   'click .js-import-students-from-csv'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -240,8 +260,7 @@ Template.importCV.events({
         }
       });
     }, 100);
-        
+//-------------------------------------------------------------------        
   },
       
 });
-//PUT A TIME DELAY AND ANIMATION HERE FOLLOWED BY NOTIFICATION, THEN CLEAR FIELDS, RETURN TO MAIN

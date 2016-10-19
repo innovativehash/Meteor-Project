@@ -11,7 +11,7 @@ import { Students }    from '../../../both/collections/api/students.js';
 import '../../templates/admin/student-record.html';
 
 
-/**
+/*
  * CREATED
  */
 Template.studentRecord.onCreated( function() {
@@ -22,8 +22,7 @@ Template.studentRecord.onCreated( function() {
 });
 
 
-
-/**
+/*
  * RENDERED
  */
 Template.studentRecord.onRendered( function() {
@@ -40,8 +39,7 @@ Template.studentRecord.onRendered( function() {
 });
 
 
-
-/**
+/*
  * HELPERS
  */
 Template.studentRecord.helpers({
@@ -123,23 +121,31 @@ Template.studentRecord.helpers({
 });
 
 
-
-/**
+/*
  * EVENTS
  */
 Template.studentRecord.events({
   
+  /*
+   * CLICK #DASHBOARD-PAGE
+   */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #STUDENTS-PAGE
+   */
   'click #students-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-students', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
 });

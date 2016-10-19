@@ -11,9 +11,10 @@ import '../../templates/admin/admin-credit-requests.html';;
 
 
 /**
- * ON CREATED
+ * CREATED
  */
 Template.adminCreditRequests.onCreated( function() {
+  
   $('#cover').show();
   
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
@@ -25,33 +26,36 @@ Template.adminCreditRequests.onCreated( function() {
 
 
 /**
- * ON RENDERED
+ * RENDERED
  */
 Template.adminCreditRequests.onRendered(function(){
+  
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });  
+  
 });
 
 
-/**
+/*
  * HELPERS
  */
 Template.adminCreditRequests.helpers({
+  
   requests: () =>
     Newsfeeds.find({ type: "CR" }).fetch()
+    
 });
 
 
-/**
+/*
  * EVENTS
  */
 Template.adminCreditRequests.events({
   
-  /**
-   * @method disapprove click
-   * @event click
+  /*
+   * CLICK .DISAPPROVE
    */
   'click .disapprove'( e, t ) {
     e.preventDefault();
@@ -59,12 +63,12 @@ Template.adminCreditRequests.events({
     
     let record = $('.disapprove').data("id");
     Newsfeeds.remove({ _id: record });
+//-------------------------------------------------------------------
   },
 
 
-  /**
-   * @method approve click
-   * @event click
+  /*
+   * CLICK .APPROVE
    */
   'click .approve'( e, t ) {
     e.preventDefault();
@@ -103,6 +107,7 @@ Template.adminCreditRequests.events({
               }
       }]
     });
-  }
+//-------------------------------------------------------------------
+  },
 
 });

@@ -10,10 +10,16 @@ import '../../templates/admin/certs.html';
 let certificate     = {};
 certificate.courses = [];
 
+/*
+ * CREATED
+ */
 Template.certs.onCreated(function(){
   
   $("#certificate-cover").show();
   
+  /*
+   * JQUERY-UI
+   */
   $.getScript('/jquery-ui-1.12.0.custom/jquery-ui.min.js', function() {
     //console.log('certificate:: jquery-ui.min.js loaded...');
     $( ".draggable" ).draggable({
@@ -82,40 +88,52 @@ Template.certs.onCreated(function(){
   //console.log('certificate:: jquery-ui.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'degree:: load jquery-ui.min.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
   });
+//-------------------------------------------------------------------
 });
 
+
+/*
+ * RENDERED
+ */
 Template.certs.onRendered(function(){
 
   $( '#certificate-cover' ).delay( 100 ).fadeOut( 'slow', function() {
     $("#certificate-cover").hide();
     $( ".certificate-area" ).fadeIn( 'slow' );
   }); 
+  
 });
 
 
+/*
+ * DESTROYED
+ */
 Template.certs.onDestroyed(function(){
   certificate = null;  
 });
 
 
-Template.certs.helpers({
-    
-});
-
-
+/*
+ * EVENTS
+ */
 Template.certs.events({
   
+  /*
+   * BLUR #ENTER-CERTIFICATE-NAME
+   */
   'blur #enter-certificate-name'( e, t ) {
     e.preventDefault()
     e.stopImmediatePropagation();
     
     $('#cName').text( $('#enter-certificate-name').val() );
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK .JS-CERTIFICATE-SAVE
+   */
   'click .js-certificate-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -155,8 +173,13 @@ Template.certs.events({
     //console.log( Blaze.currentView );
     //console.log( Template.degreesAndCerts.__helpers );//&& Template.degreesAndCerts.__helpers.HelperMap.setCS );
     FlowRouter.go( 'admin-degrees-and-certifications', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * KEYPRESS #FIND-COURSE
+   */
   'keypress #find-course': function(event){
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -167,9 +190,6 @@ Template.certs.events({
       
       let idx = $("#find-course").val(), 
           item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
-
-      //console.log( $('#firDrag').contents().eq(0).text().indexOf('Sample'));
-      //console.log( $('#firDrag').text().indexOf('Sample'));
       
       if ( $('#firDrag').text().indexOf('Sample') == 0 ) {
         certificate.courses[0] = item;
@@ -220,32 +240,50 @@ Template.certs.events({
         $('#sevDrag').css('color', 'green');
         $('#sevDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
       }
-      
-      //return item;
     }
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #FC
+   */
   'click #fc'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #DEGREE-CERTIFICATE-PAGE
+   */
   'click #degree-certificate-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-degrees-and-certifications', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #DASHBOARD-PAGE
+   */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
 
 });
 
+
+/*
+ * REPLACE TEXT NODE()
+ */
 function replaceTextNode( t, item ) {
   
   let textNode = t.contents().first(); //$("#firDrag").contents().first();

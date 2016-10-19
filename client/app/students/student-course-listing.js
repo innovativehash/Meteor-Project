@@ -12,7 +12,7 @@ import { Students }    from '../../../both/collections/api/students.js';
 import '../../templates/student/student-course-listing.html';
 
 
-/**
+/*
  * CREATED
  */
 Template.studentCourseListing.onCreated(function() {
@@ -23,7 +23,7 @@ Template.studentCourseListing.onCreated(function() {
 });
 
 
-/**
+/*
  * RENDERED
  */
 Template.studentCourseListing.onRendered(function(){
@@ -34,7 +34,7 @@ Template.studentCourseListing.onRendered(function(){
 });
 
 
-/**
+/*
  * HELPERs
  */
 Template.studentCourseListing.helpers({
@@ -63,7 +63,7 @@ Template.studentCourseListing.helpers({
  
   
 
-// moment(c[i].due_date).format('MM/DD/YYYY');
+    // moment(c[i].due_date).format('MM/DD/YYYY');
 
       let o = Courses.find({ company_id:1 }).fetch();
       let ocl = o.length;
@@ -91,16 +91,20 @@ Template.studentCourseListing.helpers({
 });
 
 
-/**
+/*
  * EVENTS
  */
 Template.studentCourseListing.events = {
   
+  /*
+   * CLICK #BTN
+   */
   'click #btn': function ( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     //text value of button: begin, continue, completed
     console.log( e.currentTarget.firstChild.nodeValue );
-  }
+//-------------------------------------------------------------------
+  },
 }

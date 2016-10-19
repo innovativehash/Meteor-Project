@@ -145,7 +145,7 @@
                     {{#with courses}}
                     {{#each this}}
                     <tr id="{{_id}}">
-                      <th class="name"><img src="{{icon}}" alt="">{{name}}</th>
+                      <th class="name"><img src="{{icon}}" alt=""><a id="{{course_id}}" href="/admin/dashboard/course-viewer/{{course_id}}">{{name}}</a></th>
                       <td>1 course</td>
                       <td>{{credits}}</td>
                       <td>{{times_completed}}</td>

@@ -154,6 +154,15 @@ adminRoutes.route('/dashboard/course-builder/:_id', {
     BlazeLayout.render( 'courseBuilderLayout', {main:"courseBuilderPage"})
 });
 
+/*
+ * COURSE-VIEWER
+ */
+adminRoutes.route('/dashboard/course-viewer/:id', {
+  name: 'admin-course-viewer',
+  action: () =>
+    BlazeLayout.render( 'courseViewerLayout', {main:"courseViewer"})
+});
+
 /* TEST-CREATOR */
 adminRoutes.route('/dashboard/test-maker/:_id', {
   name: 'admin-test-creator',
@@ -253,3 +262,17 @@ adminRoutes.route('/dashboard/assign-courses/:_id', {
    action: () =>
     BlazeLayout.render( 'adminDashboardLayout', {main: 'adminAdvanced'})
  });
+ 
+  FlowRouter.route( '/verify-email/:token', {
+    name: 'verify-email',
+    action( params ) {
+      Accounts.verifyEmail( params.token, ( error ) =>{
+        if ( error ) {
+          Bert.alert( error.reason, 'danger' );
+        } else {
+          FlowRouter.go( '/' );
+          Bert.alert( 'Email verified! Thanks!', 'success' );
+        }
+      });
+    }
+  });

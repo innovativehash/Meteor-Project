@@ -6,24 +6,37 @@ import '../../templates/admin/admin-test-creator.html';
 
 let testidnum;
 
-
+/*
+ * CREATED
+ */
 Template.adminTestCreator.onCreated(function(){
+  
   $('#cover').show();
+  
 });
 
 
+/*
+ * RENDERED
+ */
 Template.adminTestCreator.onRendered(function(){
+  
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
+  
 });
 
 
-
+/*
+ * EVENTS
+ */
 Template.adminTestCreator.events({
 
-  /* CLICK GO HOME */
+  /*
+   * CLICK #TEST-GO-HOME
+   */
   'click #test-go-home'( e, t ){
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -31,10 +44,13 @@ Template.adminTestCreator.events({
     //todo: if a test hasn't been saved, remove() the _id
 
     FlowRouter.go('admin-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
 
 
-  /* TEST COMPLETE BUTTON CLICK */
+  /*
+   * CLICK .JS-TEST-COMPLETE
+   */
   'click .js-test-complete'( e, t ){
     let lastId      = t.$('div#ans-mc input:last').attr('id');
     //clear out added dom elements
@@ -55,10 +71,13 @@ Template.adminTestCreator.events({
 
     if ( ! t.$('#ans-mc').hasClass('hide') )
       t.$('#ans-mc').addClass('hide');
+//-------------------------------------------------------------------
   },
 
 
-  /* TEST NAME ENTERED */
+  /*
+   * BLUR #TEST-NAME
+   */
   'blur #test-name'( e, t ){
       Tests.insert({
         test_name: t.$('#test-name').val()
@@ -70,26 +89,35 @@ Template.adminTestCreator.events({
       }, 200);
 
       $('#test-name').attr('readonly', true);
+//-------------------------------------------------------------------
   },
 
 
-  /* USER SELECTS A TRUE/FALSE ANSWER TYPE */
+  /*
+   * CLICK #TF
+   */
   'click #tf'( e, t ) {
     
     t.$('#ans-tf').removeClass('hide');
     t.$('#ans-mc').addClass('hide');
+//-------------------------------------------------------------------
   },
 
 
-  /* user selects a MULTIPLE CHOICE answer type */
+  /*
+   * CLICK #MC
+   */
   'click #mc'( e, t ){
 
     t.$('#ans-mc').removeClass('hide');
     t.$('#ans-tf').addClass('hide');
+//-------------------------------------------------------------------
   },
 
 
-  /* MULTIPLE CHOICE SUBMISSION */
+  /*
+   * CLICK #MC-SUBMIT
+   */
   'click #mc-submit'( e, t ){
     
     let answers   = [];
@@ -131,10 +159,13 @@ Template.adminTestCreator.events({
     );
     
     t.$('#ans-mc').addClass('hide');
+//-------------------------------------------------------------------
   },
 
 
-  /* TRUE/FALSE SUBMIT */
+  /*
+   * CLICK #TF-SUBMIT
+   */
   'click #tf-submit'( e, t ){
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -158,11 +189,14 @@ Template.adminTestCreator.events({
     t.$('.js-tf').prop('checked', false);
     t.$('#question').val('');
     t.$('#ans-tf').addClass('hide');  
+//-------------------------------------------------------------------
   },
 
 
 
-  /* USER WISHES TO ADD ANOTHER MULTIPLE CHOICE ANSWER */
+  /*
+   * CLICK #PLUS
+   */
   'click #plus'( e, t ){
 
     //what is the last questions letter?
@@ -184,5 +218,7 @@ Template.adminTestCreator.events({
     opt.setAttribute('id', 'opt' + nextChar );
     opt.innerHTML = nextChar;
     document.getElementById('correct_ans').appendChild(opt);
+//-------------------------------------------------------------------
   },
+  
 });

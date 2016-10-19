@@ -10,10 +10,8 @@ import { Newsfeeds }     from '../../../both/collections/api/newsfeeds.js';
 import '../../templates/shared/postbox.html';
 
 
-
-
-/**
- * ON CREATED
+/*
+ * CREATED
  */
 Template.postbox.onCreated(function() {
 
@@ -23,31 +21,29 @@ Template.postbox.onCreated(function() {
 
 
 
-/**
- * HELPERS
- */
-Template.postbox.helpers({
-
-});
-
-
-
 let ig = ''
   , ext;
 
-/**
+/*
  * EVENTS
  */
 Template.postbox.events({
 
+  /*
+   * CLICK #CANCEL
+   */
   'click #cancel':  _.throttle( function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     $('').hide();
   }, 1000),
+//-------------------------------------------------------------------
 
 
+  /*
+   * CHANGE #UL
+   */
   'change #ul'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -83,17 +79,13 @@ Template.postbox.events({
     }, 200);
 
     return;
+//-------------------------------------------------------------------
   },
 
-/*
-  'keypress':  _.debounce( function( e ) {
-    e.preventDefault();
-    if ( e.keyCode === 13 ) {
-      $('#postSubmit').click();
-    }
-  }, 1000),
-*/
 
+  /*
+   * CLICK #POST  CLICK #POST SUBMIT
+   */
   'click #post, click #postSubmit':  function( e, t ) {
      e.preventDefault();
      e.stopImmediatePropagation();
@@ -158,7 +150,7 @@ Template.postbox.events({
         autoHideDelay: 3000
       }
     );
-
+//-------------------------------------------------------------------
   },
 
 });

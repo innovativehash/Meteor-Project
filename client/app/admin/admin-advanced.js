@@ -20,48 +20,60 @@ Template.adminAdvanced.onRendered(function(){
 });
 
 
-Template.adminAdvanced.onDestroyed(function(){
-  
-});
-
-
-Template.adminAdvanced.helpers({
-  
-});
-
-
-
+/*
+ * EVENTS
+ */
 Template.adminAdvanced.events({
+  
+  /*
+   * CLICK #CREDIT-OFF
+   */
   'click #credit-off'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
 		$("#credit-on").removeClass('active');
 		$(e.currentTarget).addClass('active');
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #CREDIT-ON
+   */
   'click #credit-on'( e, t ){
     e.preventDefault();
     e.stopImmediatePropagation();
     
 		$("#credit-off").removeClass('active');
-		$(e.currentTarget).addClass('active');    
+		$(e.currentTarget).addClass('active');  
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK .ADVANCE-TIME-BUTTON BUTTON
+   */
   'click .advance-time-button button'( e, t ){
     e.preventDefault();
     e.stopImmediatePropagation();
     
 		$(".advance-time-button button:first-child").removeClass('active');
 		$(".advance-time-button button:last-child").removeClass('active');
-		$(e.currentTarget).toggleClass('active');    
+		$(e.currentTarget).toggleClass('active');  
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #RESET-IMAGE
+   */
   'click #reset-image'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
-	   $('#logo-preview').attr('src', '/img/demo-logo.png');    
-  }
+	   $('#logo-preview').attr('src', '/img/demo-logo.png');  
+//-------------------------------------------------------------------
+  },
   
 });

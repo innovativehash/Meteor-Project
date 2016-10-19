@@ -6,20 +6,17 @@ import { Students }     from '../../../both/collections/api/students.js';
 
 import '../../templates/home/home.html';
 
-
+/*
+ * CREATED
+ */
 Template.home.onCreated(function homeOnCreated() {
   
   $("#cover").show();
-/*
-    $.getScript('/js/vendor/jq/jquery-1.11.3.min.js', function(){
-      //console.log('home:: jQuery-1.11.3 loaded...');
-    }).fail( function(jqxhr, settings, exception ) {
-    console.log( 'home:: load jquery-1.11.13 failed' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
-  });
-*/
+
+  
+  /*
+   * JQUERY.PRETTYPHOTO
+   */
     $.getScript('/js/jquery.prettyPhoto.js', function() {
       //console.log( 'home:: jquery.prettyPhoto.js loaded...' );
       //Video
@@ -37,8 +34,12 @@ Template.home.onCreated(function homeOnCreated() {
       //console.log( 'settings ' + settings );
       //console.log( 'exception: ' + exception );
   });
+//-------------------------------------------------------------------
 
-
+    
+    /*
+     * OWL.CAROUSEL
+     */
     $.getScript('/js/owl.carousel.min.js', function(){
       //console.log( 'home:: owl.carousel.min.js loaded' );
       // Slider
@@ -78,22 +79,13 @@ Template.home.onCreated(function homeOnCreated() {
       });
     }).fail( function(jqxhr, settings, exception ) {
     console.log( 'home:: owl.carousel.min.js failed' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
   });
+//-------------------------------------------------------------------
 
-/*
-  $.getScript('/js/vendor/bootstrap-select.min.js', function(){
-      console.log( 'home:: bootstrap-select.min.js loaded...' );
-  }).fail( function(jqxhr, settings, exception ) {
-    console.log( 'home:: bootstrap-select.min.js failed' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
-  });
-*/
 
+    /*
+     * SELECT2
+     */
     $.getScript('/js/select2.min.js', function(){
       //console.log( 'home:: select2.min.js loaded' );
     }).fail( function(jqxhr, settings, exception ) {
@@ -102,7 +94,12 @@ Template.home.onCreated(function homeOnCreated() {
     //console.log( 'settings ' + settings );
     //console.log( 'exception: ' + exception );
   });
+//-------------------------------------------------------------------
 
+  
+    /*
+     * SCRIPTS
+     */
     $.getScript('/js/scripts.js', function() {
       //Session.set('connectReady', true);
       //console.log('home:: scripts.js loaded');
@@ -112,12 +109,12 @@ Template.home.onCreated(function homeOnCreated() {
     //console.log( 'settings ' + settings );
     //console.log( 'exception: ' + exception );
   }); 
-
+//-------------------------------------------------------------------
 
 });
 
 
-/**
+/*
  * RENDERED
  */
 Template.home.onRendered(function() {
@@ -125,15 +122,4 @@ Template.home.onRendered(function() {
         $("#cover").hide();
         $( ".slider-area" ).fadeIn( 'slow' );
       });
-   //$("#cover").hide();
 });
-
-
-/**
- * HELPERS
- */
-Template.home.helpers({
-  ready() {
-  },
-});
-

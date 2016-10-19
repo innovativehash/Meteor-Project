@@ -8,16 +8,19 @@ import { Diplomas }      from '../../../both/collections/api/diplomas.js';
 import '../../templates/admin/degrees.html';
 
 
-let degree = {};
-degree.courses = [];
+let degree      = {};
+degree.courses  = [];
 
-/**
+/*
  * CREATED
  */
 Template.degrees.onCreated(function() {
   
   $("#degree-cover").show();
   
+  /*
+   * JQUERY-UI
+   */
   $.getScript('/jquery-ui-1.12.0.custom/jquery-ui.min.js', function() {
     
     $( ".draggable" ).draggable({
@@ -80,24 +83,18 @@ Template.degrees.onCreated(function() {
       for ( var i = 0; i < arr.length; i++ ) { 
         result.push({ name: arr[i].name, id: arr[i]._id });
       }
-      //console.log('searchTerms result ' + result );
       return result; 
     }
-
   //console.log('degree:: jquery-ui.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'degree:: load jquery-ui.min.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
   });
-  
+//-------------------------------------------------------------------  
 
 });
 
 
-
-/**
+/*
  * RENDERED
  */
 Template.degrees.onRendered(function(){
@@ -110,8 +107,7 @@ Template.degrees.onRendered(function(){
 });
 
 
-
-/**
+/*
  * DESTROYED
  */
 Template.degrees.onDestroyed(function(){
@@ -119,20 +115,26 @@ Template.degrees.onDestroyed(function(){
 });
 
 
-
-/**
+/*
  * EVENTS
  */
 Template.degrees.events({
 
+  /*
+   * BLUR #ENTER-DEGREE-NAME
+   */
   'blur #enter-degree-name'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     $('#dName').text( $('#enter-degree-name').val() );
+//-------------------------------------------------------------------
   },
 
   
+  /*
+   * CLICK .JS-DEGREE-SAVE
+   */
   'click .js-degree-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -167,9 +169,13 @@ Template.degrees.events({
     });
     
     Session.set("doc", "degreeCertificate");
+//-------------------------------------------------------------------
   },
   
 
+  /*
+   * KEYPRESS #FIND-COURSE
+   */
   'keypress #find-course': function(event){
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -237,31 +243,47 @@ Template.degrees.events({
       idx  = null;
       item = null;
     }
+//-------------------------------------------------------------------
   },
   
 
+  /*
+   * CLICK #FC
+   */
   'click #fc'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
+//-------------------------------------------------------------------
   },
   
 
+  /*
+   * CLICK #DEGREE-CERTIFICATE-PAGE
+   */
   'click #degree-certificate-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-degrees-and-certifications', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
   
+  /*
+   * CLICK #DASHBOARD-PAGE
+   */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
 });
 
+/*
+ * REPLACE TEXT NODE()
+ */
 function replaceTextNode( t, item ) {
   
   let textNode    = t.contents().first();

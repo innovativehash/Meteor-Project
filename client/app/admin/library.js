@@ -6,24 +6,27 @@ import '../../templates/admin/library.html';
 import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
 
 
-
-/**
+/*
  * CREATED
  */
 Template.library.onCreated(function() {
+  
   $("#library-cover").show();
   
+  /*
+   * BOOTSTRAP3-DIALOG
+   */
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
       //console.log('Library:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'Library:: load bootstrap-dialog.min.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
+//-------------------------------------------------------------------
   }); 
   
-/**
- * MULTI-SELECT AUTOCOMPLETE COMBOBOX
+  
+/*
+ * SELECT2
+ * multi-select combo box
  */
   $.getScript('/js/select2.min.js', function() {
     $(document).ready(function(){
@@ -34,16 +37,13 @@ Template.library.onCreated(function() {
     //console.log('library:: chosen,jquery.min.js loaded...');
   }).fail( function(jqxhr, settings, exception ) {
     console.log( 'library:: load select2.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
+//-------------------------------------------------------------------
   });
 
 });
 
 
-
-/**
+/*
  * RENDERED
  */
 Template.library.onRendered(function(){
@@ -55,8 +55,7 @@ Template.library.onRendered(function(){
 });
 
 
-
-/**
+/*
  * DESTROYED
  */
 Template.library.onDestroyed(function(){
@@ -64,8 +63,7 @@ Template.library.onDestroyed(function(){
 });
 
 
-
-/**
+/*
  * HELPERS
  */
 Template.library.helpers({
@@ -74,26 +72,38 @@ Template.library.helpers({
 });
 
 
-
-/**
+/*
  * EVENTS
  */
 Template.library.events({
   
+  /*
+   * CLICK #COURSES-PAGE
+   */
   'click #courses-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #DASHBOARD-PAGE
+   */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CHANGE #SEARCH-COURSES
+   */
   'change #search-courses'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -104,8 +114,13 @@ Template.library.events({
     $('html, body').animate({
       scrollTop: $('tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
+//-------------------------------------------------------------------
   },
   
+  
+   /*
+    * CLICK #ADD
+    */
    'click #add'( e, t ) {
      e.preventDefault();
      e.stopImmediatePropagation();
@@ -145,6 +160,7 @@ Template.library.events({
             }        
           }]
         });
+//-------------------------------------------------------------------
   },
 
 });

@@ -2,7 +2,7 @@
 <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Dashboard</title>
+        <title>Student Dashboard</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -34,8 +34,9 @@
           </form>
       </div>
       {{/if}}
-
-    <div class="sidebar-menu-area">
+    
+    <div class="sidebar-menu-area" style="background:{{backgroundColor}} !important;">
+    
         <div class="buttons">
             <button id="open">
                 <span></span>
@@ -48,7 +49,9 @@
             </button>
         </div>
         <div class="logo">
-            <a href="#" id="logo-click"><img  src="{{logoImage}}" alt=""></a> <!-- src="/img/logo_d.png" -->
+            
+            <a href="#" id="logo-click"><img src="{{logo}}" alt=""></a> <!-- src="/img/logo_d.png" -->
+            
             <button type="button"
                     class="navbar-toggle collapsed"
                     data-toggle="collapse"
@@ -70,8 +73,9 @@
                 <h2>Hello, {{fname}}<span>Welcome Back</span></h2>
             </div>
         </div>
-
-        <div class="sidebar-menu collapse navbar-collapse">
+        
+        <div class="sidebar-menu collapse navbar-collapse" style="background:{{backgroundColor}} !important;">
+        
           <ul>
             <li class="menu-icon-1"><a id = "st-courses" href="#">Courses</a></li>
             <li class="menu-icon-2"><a id = "st-request-credit" href="#">Request Credit</a></li>
@@ -80,8 +84,9 @@
           </ul>
         </div>
     </div>
-
-    <div class="dashboard-header-area">
+    
+    <div class="dashboard-header-area" style="background:{{backgroundColor}} !important;">
+    
         <div class="container">
             <div class="row">
                 <div class="col-sm-7">

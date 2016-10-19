@@ -18,8 +18,7 @@ import { Companies }    from '../../../both/collections/api/companies.js';
 import '../../templates/shared/student-dashboard-layout.html';
 
 
-
-/**
+/*
  * CREATED
  */
 Template.studentDashboardLayout.onCreated(function(){
@@ -29,7 +28,7 @@ Template.studentDashboardLayout.onCreated(function(){
 });
 
 
-/**
+/*
  * RENDERED
  */
 Template.studentDashboardLayout.onRendered(function(){
@@ -42,15 +41,24 @@ Template.studentDashboardLayout.onRendered(function(){
 });
 
 
-
-/**
+/*
  * HELPERS
  */
 Template.studentDashboardLayout.helpers({
-  logoImage() {
+  
+  backgroundColor() {
     try {
-      let id = Students.findOne({ _id: Meteor.userId() }).company_id;
-      return Companies.findOne({ _id: id }).logo;
+      let id = Students.findOne({_id: Meteor.userId() }).company_id;
+      return Companies.find({ _id: id }).fetch()[0].backgroundColor;
+    } catch(e) {
+      return;
+    }
+  },
+  
+  logo() {
+    try {
+      let id = Students.findOne({_id: Meteor.userId() }).company_id;
+      return Companies.find({ _id: id }).fetch()[0].logo;
     } catch(e) {
       return;
     }
@@ -87,62 +95,97 @@ Template.studentDashboardLayout.helpers({
 });
 
 
-/**
+/*
  * EVENTS
  */
 Template.studentDashboardLayout.events({
 
   'click #account-settings'( e, t ) {
-    
+    console.log( 'account-settings student' );
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #ACCOUNT-UPLOAD-PHOTO
+   */
   'click #account-upload-photo'( e, t ){
-    console.log('admin prof ul');
+    console.log('account-upload-photo student');
     $('#profile-modal').modal('show');
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #LOGOUT
+   */
   'click #logout': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     Meteor.logout();
     FlowRouter.go( '/login' );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #LOGO-CLICK
+   */
   'click #logo-click': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
 
 
+  /*
+   * CLICK #ST-COURSES
+   */
   'click #st-courses': function ( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
   
     FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   }, 
   
+  
+  /*
+   * CLICK #ST-REQUEST-CREDIT
+   */
   'click #st-request-credit': function ( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'student-request-credit', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #ST-RECORDS
+   */
   'click #st-records': function ( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
   
     FlowRouter.go( 'student-records', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #ST-TRAINING-CALENDAR
+   */
   'click #st-training-calendar': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'student-training-calendar', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   }
   
 });

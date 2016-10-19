@@ -9,13 +9,17 @@ import { Newsfeeds }     from '../../../both/collections/api/newsfeeds.js';
 import '../../templates/student/student-request-credit.html';
 
 
-/**
+/*
  * ON CREATED
  */
 Template.studentRequestCredit.onCreated(function() {
   
   $("#cover").show();
   
+  
+  /*
+   * BOOTSTRAP-SELECT
+   */
   $.getScript('/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js', function() {
     
     $('.selectpicker').selectpicker({ 
@@ -25,16 +29,16 @@ Template.studentRequestCredit.onCreated(function() {
       width:  'auto', 
       showTick: true
     });
-    
     //console.log('studentRequestCredit:: bootstrap.min.js loaded...');
   }).fail( function(jqxhr, settings, exception ) {
     console.log( 'studentRequestCredit:: load bootstrap-select.min.js fail' );
   });
+//-------------------------------------------------------------------
 });
 
 
 
-/**
+/*
  * ON RENDERED
  */
 Template.studentRequestCredit.onRendered(function(){
@@ -54,13 +58,16 @@ var ig = ''
   , content
   , fname;
   
-/**
+/*
  * EVENTS
  */
 Template.studentRequestCredit.events({
   
-  //1 get file from element
+  /*
+   * CHANGE .JS-CREDIT-ATTACHMENT
+   */
   'change .js-credit-attachment'( e, t ) {
+    //1 get file from element
     //mime type application/pdf
     e.preventDefault();
     e.stopPropagation();
@@ -96,34 +103,22 @@ Template.studentRequestCredit.events({
     };
     
     fr.readAsDataURL( fil );
-
     return;
-  },
-
-
-  /**
-   * @event CANCEL
-   */
-  'click #cancel'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    
-    FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
   
-  /**
-   * @method cancel click
-   * @event click
+  /*
+   * CLICK #CANCEL
    */
   'click #cancel'( e, t ) {
     FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });  
+//-------------------------------------------------------------------
   },
   
   
-  /**
-   * @method send click
-   * @event click
+  /*
+   * CLICK #SEND 
    */
   'click #send'( e, t ) {
     e.preventDefault();
@@ -158,7 +153,7 @@ Template.studentRequestCredit.events({
       t.$('.js-credit-select').prop('selectedIndex', 0);
       FlowRouter.go( 'student-dashboard', {_id: Meteor.userId() });
     }, 200);
-    
-  }
+//-------------------------------------------------------------------    
+  },
 });
 

@@ -10,12 +10,21 @@ import '../../templates/admin/admin-design.html';
 
 let co_id = '';
 
+/*
+ * CREATED
+ */
 Template.adminDesign.onCreated(function(){
+  
   $("#cover").show();
 
-//   this.autorun(() => {
-//     this.subscribe("company_id", Meteor.userId());
-//   });
+  //this.autorun(() => {
+  //this.subscribe("company_id", Meteor.userId());
+  //});
+  
+  
+  /*
+   * BOOTSTRAP-COLORPICKER
+   */
   $.getScript( '/js/bootstrap-colorpicker.min.js', function() {
     let tmp = Students.findOne({_id: Meteor.userId() });
     co_id = tmp && tmp.company_id;
@@ -29,33 +38,36 @@ Template.adminDesign.onCreated(function(){
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'DESIGN:: load bootstrap-colorpicker.min.js fail' );
   });
-
+//-------------------------------------------------------------------
 });
 
 
+/*
+ * RENDERED
+ */
 Template.adminDesign.onRendered(function(){
 
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
+  
 });
 
 
-Template.adminDesign.onDestroyed(function(){
-
-});
-
-
-Template.adminDesign.helpers({
-
-});
 
 let ig  = ''
   , ext = ''
   , foo = '';
-
+  
+/*
+ * EVENTS
+ */
 Template.adminDesign.events({
+  
+  /*
+   * CHANGE #LOGO-UPLOAD
+   */
   'change #logo-upload'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -105,23 +117,14 @@ Template.adminDesign.events({
           img = null;
       }
     }, 200);
-
-    if ( foo ) {
-
-    }
-/*
-    Meteor.setTimeout(function() {
-      $('.postText').val('');
-      $('#thumbnail img:last-child').remove();
-      ig  = '';
-      ext = '';
-      }, 100);
-    $('#profile-modal').modal('hide');
-  }
- */
     return;
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * HIDEPICKER .COLOR-PICKER
+   */
   'hidePicker .color-picker'( e, t ){
     let colorValue = t.$('.color-picker > input').val();
 
@@ -130,11 +133,15 @@ Template.adminDesign.events({
         Meteor.call( 'saveCompanyColor', co_id, colorValue );
       }
     }, 200);
+//-------------------------------------------------------------------
   },
 
 });
 
-// Takes a data URI and returns the Data URI corresponding to the resized image at the wanted size.
+
+/* Takes a data URI and returns the Data URI corresponding to 
+ * the resized image at the wanted size.
+ */
 function resizedataURL(img, ext, wantedWidth, wantedHeight) {
 
     let iw=img.width;

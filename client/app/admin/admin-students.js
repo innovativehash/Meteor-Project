@@ -4,17 +4,22 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 import { Students }     from '../../../both/collections/api/students.js';
 import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Comments }     from '../../../both/collections/api/comments.js';
+import { Departments }  from '../../../both/collections/api/departments.js';
 
 import '../../templates/admin/admin-students.html';
 
 
-/**
- * ON CREATED
+/*
+ * CREATED
  */
 Template.adminStudents.onCreated( function() {
 
   $("#students-cover").show();
 
+
+  /*
+   * BOOTSTRAP3-DIALOG
+   */
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
       //console.log('student:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {
@@ -23,9 +28,11 @@ Template.adminStudents.onCreated( function() {
     //console.log( 'settings ' + settings );
     //console.log( 'exception: ' + exception );
   });
+//-------------------------------------------------------------------
 
-  /**
-   * MULTI-SELECT AUTOCOMPLETE COMBOBOX
+
+  /*
+   * SELECT2
   */
   $.getScript('/js/select2.min.js', function() {
     $(document).ready(function(){
@@ -44,21 +51,24 @@ Template.adminStudents.onCreated( function() {
 
 
 
-/**
- * ON RENDERED
+/*
+ * RENDERED
  */
 Template.adminStudents.onRendered( function() {
+  
   $( '#students-cover' ).delay( 100 ).fadeOut( 'slow', function() {
     $("#students-cover").hide();
     $( ".filter-buttons" ).fadeIn( 'slow' );
   });
+  
 });
 
 
-/**
+/*
  * HELPERS
  */
 Template.adminStudents.helpers({
+  
   students() {
     let s = Students.find().fetch();
     let len = s.length;
@@ -66,15 +76,20 @@ Template.adminStudents.helpers({
       s[i].created_at = moment(s[i].created_at).format('M-D-Y') //modify array in place
     }
     return s;
-  }
+  },
+  
 });
 
-
-/**
+    
+    
+/*
  * EVENTS
  */
 Template.adminStudents.events({
-
+  
+  /*
+   * CHANGE #SEARCH-STUDENTS
+   */
   'change #search-students'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -85,40 +100,68 @@ Template.adminStudents.events({
     $('html, body').animate({
       scrollTop: $('tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #CLOSE-SEARCH
+   */
   'click #close-search'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     $('#search-students').val('');
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK .JS-STUDENT
+   */
   'click .js-student'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    
     if ( Meteor.userId() == $(e.currentTarget).data('id') ) return;
 
     FlowRouter.go( 'student-record', { _id: $(e.currentTarget).data('id') });
 
-    //Session.set('id', $(e.currentTarget).data('id'));
-    //Session.set('doc', 'studentRecord');
+    //$(e.currentTarget).data('id'));
     //console.log( Template.instance().view.parentView );
     //console.log( Template.adminStudentsBase );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK .JS-IMPORT-STUDENTS-CSV
+   */
   'click .js-import-students-csv'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-import-csv', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK .JS-ADD-STUDENT
+   */
   'click .js-add-student'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    
+    let dpt = Departments.find({}).fetch();
+    
+    Meteor.setTimeout(function(){
+      for( let i = 0, l = dpt.length; i < l; i++){
+        $('.js-dept').append('<option value="' + dpt[i]._id + '">' +
+                                  dpt[i].name + '</option>');
+      }
+    }, 500);
+    
     BootstrapDialog.show({
       title: "Add Student",
       message:  $('<div class="pop-up-area students">'                                  +
@@ -136,7 +179,7 @@ Template.adminStudents.events({
                           '<input class="js-email" type="text" placeholder="Email"/>'   +
                         '</div>'                                                        +
                         '<div class="col-sm-6">'                                        +
-                          '<input class="js-dept" type="text" placeholder="Department"/>' +
+                          '<select class="js-dept form-control"/></select>' +
                         '</div>'                                                        +
                       '</div>'                                                          +
                       '<div class="row">'                                               +
@@ -161,15 +204,14 @@ Template.adminStudents.events({
                   let fname = $('.js-fn').val().trim();
                   let lname = $('.js-ln').val().trim();
                   let email = $('.js-email').val().trim();
-                  let dept  = $('.js-dept').val().trim();
+                  let dept  = $('.js-dept :selected').text();
                   let opt   = $('#sel1').val();
                   let password = $('.js-password').val().trim();
                   let text = "You have a new account with password: " + password;
 
-
                   Meteor.call('addUser', email, password, fname, lname, opt, dept);
 
-                  Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
+                  //Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
                   /*
                   Students.update({ _id: student},
                                   {
@@ -207,96 +249,113 @@ Template.adminStudents.events({
           }
       }]
     });
+//-------------------------------------------------------------------
   },
 
-  /**
-   * EDIT STUDENT
+
+  /*
+   * CLICK .JS-EDIT-STUDENT
    */
   'click .js-edit-student'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+      e.preventDefault();
+      e.stopImmediatePropagation();
+  
+      let id = $( e.currentTarget ).data('id');
+      let s  = Students.findOne({_id: id});
+      
+      let dpt = Departments.find({}).fetch();
+      
+      Meteor.setTimeout(function(){
+        for( let i = 0, l = dpt.length; i < l; i++){
+          $('.js-dept').append('<option value="' + dpt[i]._id + '">' +
+                                    dpt[i].name + '</option>');
+        }
 
-    let id = $( e.currentTarget ).data('id');
-    let s  = Students.findOne({_id: id});
-    BootstrapDialog.show({
-      title: "Edit Student",
-      message:  '<div class="pop-up-area students">'  +
-                  '<div class="popup-body">'          +
-                    '<div class="row">'               +
-                      '<div class="col-sm-6">'        +
-                        '<input class="js-fn" type="text" placeholder="' + s.fname + '"' + '/>' +
-                      '</div>'                  +
-                      '<div class="col-sm-6">'  +
-                        '<input class="js-ln" type="text" placeholder="' + s.lname + '"' + '/>' +
-                      '</div>'  +
-                    '</div>'    +
-                    '<div class="row">'         +
-                      '<div class="col-sm-6">'  +
-                        '<input class="js-email" type="text" placeholder="' + s.email + '"' + '/>' +
-                      '</div>'  +
-                    '<div class="col-sm-6">' +
-                      '<input class="js-dept" type="text" placeholder="' + s.department + '"' + '/>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="row">'         +
-                      '<div class="col-sm-6">'  +
-                        '<select class="form-control" name="sel1" id="sel1">' +
-                          '<option ' + eval(s.role == "student" ? 'selected="selected"' : "" ) + ' value="student">Student</option>'  +
-                          '<option ' + eval(s.role == "teacher" ? 'selected="selected"' : "" ) + ' value="teacher">Teacher</option>'  +
-                          '<option ' + eval(s.role == "admin"   ? 'selected="selected"' : "" ) + ' value="admin">Admin</option>'      +
-                        '</select>' +
-                      '</div>'  +
-                    '</div>'    +
-                  '</div></div>',
-      buttons: [
-        {
-          label: 'Commit Edit',
-          cssClass: 'btn-success',
-          action: function( dialog ) {
-            let r   = $('#sel1').val()      || s.role,
-                fn  = $('.js-fn').val()     || s.fname,
-                ln  = $('.js-ln').val()     || s.lname,
-                e   = $('.js-email').val()  || s.email,
-                d   = $('.js-dept').val()   || s.department,
-                f   = fn + ' ' + ln,
-                n   = Newsfeeds.find({ owner_id: id}).fetch(),
-                c   = Comments.find({ poster_id: id}).fetch();
-
-            Students.update({ _id: id },
-                            {$set:{ role:r,
-                                    fname:fn,
-                                    lname:ln,
-                                    email:e,
-                                    department:d,
-                                    fullName:f,
-                                    updated_at: new Date() } });
-
-            Meteor.users.update({ _id: id }, {$set:{ username: f } });
-
-            let nlim = n.length;
-            for ( let i = 0; i < nlim; i++ ) {
-              console.log( 'newsfeeds ' + n[i]._id );
-              Meteor.call('changeNewsfeedAuthorName', n[i]._id, f );
+        $('select[name="add-dept-select"]').find('option:contains("' + s.department + '")').attr("selected",true);
+      }, 500);
+      
+      BootstrapDialog.show({
+        title: "Edit Student",
+        message:  '<div class="pop-up-area students">'  +
+                    '<div class="popup-body">'          +
+                      '<div class="row">'               +
+                        '<div class="col-sm-6">'        +
+                          '<input class="js-fn" type="text" placeholder="' + s.fname + '"' + '/>' +
+                        '</div>'                  +
+                        '<div class="col-sm-6">'  +
+                          '<input class="js-ln" type="text" placeholder="' + s.lname + '"' + '/>' +
+                        '</div>'  +
+                      '</div>'    +
+                      '<div class="row">'         +
+                        '<div class="col-sm-6">'  +
+                          '<input class="js-email" type="text" placeholder="' + s.email + '"' + '/>' +
+                        '</div>'  +
+                      '<div class="col-sm-6">' +
+                        '<select name="add-dept-select" class="js-dept form-control"></select>' +
+                      '</div>' +
+                      '</div>' +
+                      '<div class="row">'         +
+                        '<div class="col-sm-6">'  +
+                          '<select class="form-control" name="sel1" id="sel1">' +
+                            '<option ' + eval(s.role == "student" ? 'selected="selected"' : "" ) + ' value="student">Student</option>'  +
+                            '<option ' + eval(s.role == "teacher" ? 'selected="selected"' : "" ) + ' value="teacher">Teacher</option>'  +
+                            '<option ' + eval(s.role == "admin"   ? 'selected="selected"' : "" ) + ' value="admin">Admin</option>'      +
+                          '</select>' +
+                        '</div>'  +
+                      '</div>'    +
+                    '</div></div>',
+        buttons: [
+          {
+            label: 'Commit Edit',
+            cssClass: 'btn-success',
+            action: function( dialog ) {
+              let r   = $('#sel1').val()                || s.role,
+                  fn  = $('.js-fn').val()               || s.fname,
+                  ln  = $('.js-ln').val()               || s.lname,
+                  e   = $('.js-email').val()            || s.email,
+                  d   = $('.js-dept :selected').text()  || s.department,
+                  f   = fn + ' ' + ln,
+                  n   = Newsfeeds.find({ owner_id: id}).fetch(),
+                  c   = Comments.find({ poster_id: id}).fetch();
+  
+              Students.update({ _id: id },
+                              {$set:{ role:r,
+                                      fname:fn,
+                                      lname:ln,
+                                      email:e,
+                                      department:d,
+                                      fullName:f,
+                                      updated_at: new Date() } });
+  
+              Meteor.users.update({ _id: id }, {$set:{ roles: r } });
+  
+              let nlim = n.length;
+              for ( let i = 0; i < nlim; i++ ) {
+                Meteor.call('changeNewsfeedAuthorName', n[i]._id, f );
+              }
+              let clim = c.length;
+              for ( let i = 0; i < clim; i++ ) {
+                Meteor.call('changeCommentsAuthorName', c[i]._id, f );
+              }
+              dialog.close();
             }
-            let clim = c.length;
-            for ( let i = 0; i < clim; i++ ) {
-              console.log( 'comments ' + c[i]._id)
-              Meteor.call('changeCommentsAuthorName', c[i]._id, f );
+          },
+          {
+            label: 'Cancel Edit',
+            cssClass: 'btn-danger',
+            action: function( dialog ) {
+            dialog.close();
+              dialog.close();
             }
-            dialog.close();
-          }
-        },
-        {
-          label: 'Cancel Edit',
-          cssClass: 'btn-danger',
-          action: function( dialog ) {
-          dialog.close();
-            dialog.close();
-          }
-        }]
-    });
+          }]
+      });
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK .JS-DELETE-STUDENT
+   */
   'click .js-delete-student'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -335,12 +394,40 @@ Template.adminStudents.events({
             }
         }]
     });
+//-------------------------------------------------------------------
   },
 
+  
+  /*
+   * CLICK #DASHBOARD-PAGE
+   */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-  }
+//-------------------------------------------------------------------
+  },
+  
 });
+
+
+/**
+ * Get the parent template instance
+ * @param {Number} [levels] How many levels to go up. Default is 1
+ * @returns {Blaze.TemplateInstance}
+ * 
+ * Example usage: someTemplate.parentTemplate() to get the immediate parent
+ */
+Blaze.TemplateInstance.prototype.parentTemplate = function (levels) {
+    var view = this.view;
+    if (typeof levels === "undefined") {
+        levels = 1;
+    }
+    while (view) {
+        if (view.name.substring(0, 9) === "Template." && !(levels--)) {
+            return view.templateInstance();
+        }
+        view = view.parentView;
+    }
+};

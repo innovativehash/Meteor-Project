@@ -13,39 +13,18 @@ import { Students  }    from '../../../both/collections/api/students.js';
 import '../../templates/shared/newsfeed.html';
 
 
-/**
+/*
  * ON CREATED
  */
 Template.newsfeed.onCreated(function(){
   
   Session.setDefault('active_click_id', '');
   
-  $.getScript( '/js/notify.min.js', function() {
-    $.notify.addStyle('happyblack', {
-      html: '<div style="width:275px;height:100px;border-radius: 15px 50px;padding: 10px;opacity:0.75;border: 0.5px dashed LightGrey">' +
-              '&nbsp;&nbsp;<span class="glyphicon glyphicon-ok"></span>' +
-              '&nbsp;&nbsp;<span data-notify-text/>!</div>',
-      classes: {
-        base: {
-          "white-space": "nowrap",
-          "background-color": "DarkGrey",
-          "padding": "5px"
-        },
-        superblack: {
-          "color": "LightGrey",
-          "background-color": "black"
-        }
-      }
-    });
-    //console.log('CourseBuilder:: notify.js loaded...');
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'Assign-Courses:: load notify.min.js fail' );
-  });
 });
 
 
 
-/**
+/*
  * ON DESTROYED
  */
 Template.newsfeed.onDestroyed( function() {
@@ -58,7 +37,7 @@ Template.newsfeed.onDestroyed( function() {
 
 
 
-/**
+/*
  * HELPERS
  */
 Template.newsfeed.helpers({
@@ -99,23 +78,18 @@ Template.newsfeed.helpers({
     } catch(e) {
       return;
     }
-  }
-  /*
-  name() {
-    return Meteor.user() && Meteor.user().username;
   },
-  */
+
 });
 
 
-
-/**
+/*
  * EVENTS
  */
 Template.newsfeed.events({
   
-  /**
-   * LIKE BUTTON
+  /*
+   * CLICK .JS-LIKE-BUTTON
    */
   'click .js-like-button': _.debounce( function( e, t ) {
     e.preventDefault();
@@ -136,10 +110,11 @@ Template.newsfeed.events({
     Newsfeeds.update( { _id: id },  { $inc: { likes: 1 } ,  $push: { likers:  Meteor.userId() }  });
     
   }, 1000 ),
+//-------------------------------------------------------------------
   
   
-  /**
-   * MORE BUTTON
+  /*
+   * CLICK .JS-MORE
    */
   'click .js-more':  _.debounce( function( e, t ) {
     e.preventDefault();
@@ -162,10 +137,11 @@ Template.newsfeed.events({
     $(window).scrollTop(tempScrollTop);                                   // reposition scroll top
 
   }, 1000),
+//-------------------------------------------------------------------
 
 
-  /**
-   * NEWS ITEM DELETE
+  /*
+   * CLICK #NEWS-ITEM-DELETE
    */
   'click #news-item-delete':  _.debounce( function( e, t ) {
     e.preventDefault();
@@ -195,20 +171,14 @@ Template.newsfeed.events({
     }, 250);
     
     // NOTIFICATION
-    $.notify(
-      "\n\n\t\t\tThe post was deleted from your feed",
-      {
-      style: "happyblack",
-      className: "superblack",
-      globalPosition:"top center",
-      autoHideDelay: 3000
-      }
-    );
-
 
   }, 1000),
+//-------------------------------------------------------------------
 
 
+  /*
+   * KEYPRESS
+   */
   'keypress':  _.throttle( function( e, t ) {
     if ( e.keyCode === 13 ) {
       e.preventDefault();
@@ -242,8 +212,12 @@ Template.newsfeed.events({
     }
       //t.$('.js-comment-button').click();
   }, 1000),
- 
+//-------------------------------------------------------------------
 
+
+  /*
+   * CLICK .JS-COMMENT-BUTTON
+   */
   'click .js-comment-button':  _.debounce( function ( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -266,6 +240,7 @@ Template.newsfeed.events({
                         date: new Date() });
       $(`#ta-${id}`).val('');
     }, 250);
-  }, 1000)
+  }, 1000),
+//-------------------------------------------------------------------
 
 });

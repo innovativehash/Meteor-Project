@@ -10,7 +10,14 @@ let ig  = ''
   , ext = ''
   , foo = '';
 
+/*
+ * EVENTS
+ */
 Template.userProfile.events({
+  
+  /*
+   * CHANGE #USER-AVATAR-UPLOAD
+   */
   'change #user-avatar-upload'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -60,10 +67,14 @@ Template.userProfile.events({
         img = null;
       }
     }, 200);
-
     return;
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK .SAVE-PROFILE-PIC
+   */
   'click .save-profile-pic'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -81,10 +92,13 @@ Template.userProfile.events({
       ext = '';
       }, 100);
     t.$('#profile-modal').modal('hide');
-  }
+//-------------------------------------------------------------------
+  },
 });
 
-// Takes a data URI and returns the Data URI corresponding to the resized image at the wanted size.
+/* Takes a data URI and returns the Data URI corresponding
+ * to the resized image at the wanted size.
+ */
 function resizedataURL(img, ext, wantedWidth, wantedHeight) {
 
     let iw=img.width;

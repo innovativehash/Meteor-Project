@@ -6,23 +6,28 @@ import '../../../public/bower_components/fullcalendar/dist/fullcalendar.min.css'
 import '../../templates/student/student-training-calendar.html';
 
 
-
-/**
+/*
  * CREATED
  */
 Template.studentTrainingCalendar.onCreated( function() {  
+  
   $('#cover').show();
   
+  
+  /*
+   * BOOTSTRAP3-DIALOG
+   */
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
       //console.log('studentDashboard:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'load bootstrap-dialog.min.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
+//-------------------------------------------------------------------
   }); 
 
 
+  /*
+   * FULLCALENDAR
+   */
    $.getScript( '/bower_components/fullcalendar/dist/fullcalendar.min.js', function() {
     //console.log('studentDashboard:: fullcalendar.js loaded...' );
     $('#calendar').fullCalendar({
@@ -74,20 +79,14 @@ Template.studentTrainingCalendar.onCreated( function() {
                         $(this).css('border-color', 'red');
       }
     })
-    //Session.set('calendarConnectReady', true);
-      //console.log( 'calendarConnectReady: ' + Session.get('calendarConnectReady'));
+      //console.log( 'calendarConnectReady);
   }).fail( function( jqxhr, settings, exception ) {
-    //console.log( 'load calendar failed' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
+//-------------------------------------------------------------------
   }); 
-
 });
 
 
-
-/**
+/*
  * RENDERED
  */
 Template.studentTrainingCalendar.onRendered(function(){

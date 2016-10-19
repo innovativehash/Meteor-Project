@@ -5,24 +5,27 @@ import '../../templates/admin/courses.html';
 import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
 
 
-
-/**
+/*
  * CREATED
  */
 Template.courses.onCreated(function(){
+  
   $("#courses-cover").show();
     
+  /*
+   * BOOTSTRAP3-DIALOG
+   */
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
       //console.log('Course:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'Course:: load bootstrap-dialog.min.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
   });
+//-------------------------------------------------------------------
 
-/**
- * MULTI-SELECT AUTOCOMPLETE COMBOBOX
+
+/*
+ * SELECT2
+ * multi-select combo box
  */
   $.getScript('/js/select2.min.js', function() {
     $(document).ready(function(){
@@ -33,67 +36,77 @@ Template.courses.onCreated(function(){
     //console.log('Courses:: chosen,jquery.min.js loaded...');
   }).fail( function(jqxhr, settings, exception ) {
     console.log( 'Courses:: load select2.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
   });
-
+//-------------------------------------------------------------------
 });
 
 
-
-/**
+/*
  * RENDERED
  */
 Template.courses.onRendered(function(){
+  
   $( '#courses-cover' ).delay( 100 ).fadeOut( 'slow', function() {
     $("#courses-cover").hide();
     $( ".filter-buttons" ).fadeIn( 'slow' );
   });  
+  
 });
 
 
-
-/**
+/*
  * DESTROYED
  */
 Template.courses.onDestroyed(function(){
+  
   Session.set( 'searchTerm', null );
+  
 });
 
 
-
-/**
+/*
  * HELPERS
  */
 Template.courses.helpers({
+  
    courses: () =>
       Courses.find({ company_id:1 }).fetch()
+      
 });
 
 
-
-/**
+/*
  * EVENTS
  */
 Template.courses.events({
   
+  /*
+   * CLICK .JS-ADD-COURSE-FROM-LIBRARY
+   */
   'click .js-add-course-from-library'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK .JS-CREATE-TEST
+   */
   'click .js-create-test'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-test-creator', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
-  /**
-   * SCROLL TO SELECTED SEARCH RESULT
+  
+  /*
+   * CHANGE #SEARCH-COURSES
+   * scroll to selected course
    */
   'change #search-courses'( e, t ) {
     e.preventDefault();
@@ -105,8 +118,13 @@ Template.courses.events({
     $('html, body').animate({
       scrollTop: $('tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK .JS-EDIT-COURSE
+   */
   'click .js-edit-course'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -155,8 +173,13 @@ Template.courses.events({
             }        
           }]
         });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK .JS-DELETE-COURSE
+   */
   'click .js-delete-course'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -191,8 +214,13 @@ Template.courses.events({
             }
         }]
     });
+//-------------------------------------------------------------------
   }, 
   
+  
+  /*
+   * KEYPRESS #SEARCH-COURSES
+   */
   'keypress #search-courses': function(event){
     if ( event.which == 13){
       event.preventDefault();
@@ -203,15 +231,25 @@ Template.courses.events({
       console.log( 'item = ' + item );
       return item;
     }
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #DASHBOARD-PAGE
+   */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK .JS-COURSE-BUILDER
+   */
   'click .js-course-builder'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -219,4 +257,5 @@ Template.courses.events({
     //t.currentScreen.set('courseBuilder');
     FlowRouter.go( 'admin-course-builder', { _id: Meteor.userId() });
   }
+//-------------------------------------------------------------------
 });

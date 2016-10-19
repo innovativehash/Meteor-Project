@@ -10,8 +10,7 @@ import { Students }    from '../../../both/collections/api/students.js';
 import '../../templates/student/student-records.html';
 
 
-
-/**
+/*
  * CREATED
  */
 Template.studentRecords.onCreated( function() {
@@ -21,8 +20,7 @@ Template.studentRecords.onCreated( function() {
 });
 
 
-
-/**
+/*
  * RENDERED
  */
 Template.studentRecords.onRendered(function(){
@@ -33,8 +31,7 @@ Template.studentRecords.onRendered(function(){
 });
 
 
-
-/**
+/*
  * HELPERS
  */
 Template.studentRecords.helpers({

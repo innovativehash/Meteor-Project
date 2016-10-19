@@ -8,26 +8,28 @@ import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-di
 import '../../templates/admin/degree-certificate.html';
 
 
-
-/**
+/*
  * CREATED
  */
 Template.degreeCertificate.onCreated( function() {
+  
   $("#degree-cert-cover").show();
     
   Session.setDefault('doc', 'degreeCertificate');
 
+  /*
+   * BOOTSTRAP3-DIALOG
+   */
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
       //console.log('degreeCertificate:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'degreeCertificate:: load bootstrap-dialog.min.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
   });
+ //------------------------------------------------------------------- 
   
-/**
- * MULTI-SELECT AUTOCOMPLETE COMBOBOX
+/*
+ * SELECT2
+ * multi-select auto-complete box
  */
   $.getScript('/js/select2.min.js', function() {
     $(document).ready(function(){
@@ -38,15 +40,12 @@ Template.degreeCertificate.onCreated( function() {
     //console.log('degreeCertificate:: chosen,jquery.min.js loaded...');
   }).fail( function(jqxhr, settings, exception ) {
     console.log( 'degreeCertificate:: load select2.js fail' );
-    //console.log( 'jqxhr ' + jqxhr );
-    //console.log( 'settings ' + settings );
-    //console.log( 'exception: ' + exception );
   });
+//-------------------------------------------------------------------
 });
 
 
-
-/**
+/*
  * RENDERED
  */
 Template.degreeCertificate.onRendered( function() {
@@ -55,11 +54,11 @@ Template.degreeCertificate.onRendered( function() {
     $("#degree-cert-cover").hide();
     $( ".dashboard-body-area" ).fadeIn( 'slow' );
   }); 
+  
 });
 
 
-
-/**
+/*
  * HELPERS
  */
 Template.degreeCertificate.helpers({
@@ -70,15 +69,18 @@ Template.degreeCertificate.helpers({
     c.push.apply(c, d);
     return c;
   }
+//-------------------------------------------------------------------
 });
 
 
-
-/**
+/*
  * EVENTS
  */
 Template.degreeCertificate.events({
 
+  /*
+   * CLICK .JS-DEGREE
+   */
   'click .js-degree'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -86,15 +88,25 @@ Template.degreeCertificate.events({
     //console.log( UI._parentData() );
     //t.currentScreen.set("degree");
     FlowRouter.go('admin-degrees', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK .JS-CERTIFICATE
+   */
   'click .js-certificate'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
     FlowRouter.go('admin-certifications', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CHANGE #SEARCH-CERT-DEG
+   */
   'change #search-cert-deg'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -105,8 +117,13 @@ Template.degreeCertificate.events({
     $('html, body').animate({
       scrollTop: $('tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK .JS-EDIT
+   */
   'click .js-edit'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -173,8 +190,13 @@ Template.degreeCertificate.events({
             }        
           }]
         });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK .JS-DELETE
+   */
   'click .js-delete'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -222,12 +244,18 @@ Template.degreeCertificate.events({
             }
         }]
     });
+//-------------------------------------------------------------------
   },
   
+  
+  /*
+   * CLICK #DASHBOARD-PAGE
+   */
   'click #dashboard-page'( e, t ) {
     e.preventDefault()
     e.stopImmediatePropagation();
     
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
   },
 });

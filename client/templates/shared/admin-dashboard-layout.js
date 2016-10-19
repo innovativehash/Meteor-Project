@@ -4,7 +4,7 @@ import '../../../public/css/normalize.css';
 import '../../../public/css/common.css';
 import '../../../public/css/style.css';
 import '../../../public/css/responsive.css';
-//import '../../../public/css/select2.min.css';
+
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.min.css';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.structure.min.css';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.theme.min.css';
@@ -19,20 +19,17 @@ import { Companies }    from '../../../both/collections/api/companies.js';
 import '../../templates/shared/admin-dashboard-layout.html';
 
 
-/**
+/*
  * CREATED
  */
 Template.adminDashboardLayout.onCreated(function(){
 
   $("#cover").show();
 
-  //   Tracker.autorun( function(){
-//     this.subscribe("company_id", Meteor.userId());
-//   });
 });
 
 
-/**
+/*
  * RENDERED
  */
 Template.adminDashboardLayout.onRendered(function(){
@@ -46,7 +43,7 @@ Template.adminDashboardLayout.onRendered(function(){
 
 
 
-/**
+/*
  * HELPERS
  */
 Template.adminDashboardLayout.helpers({
@@ -91,82 +88,140 @@ Template.adminDashboardLayout.helpers({
 });
 
 
-/**
+/*
  * EVENTS
  */
 Template.adminDashboardLayout.events({
 
+  /*
+   * CLICK #ACCOUNT-SETTINGS
+   */
   'click #account-settings'( e, t ){
-
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #ACCOUNT-UPLOAD-PHOTO
+   */
   'click #account-upload-photo'( e, t ){
+    
+    console.log('account-layout account-upload-photo');
+    
     $('#profile-modal').modal('show');
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #LOGOUT
+   */
   'click #logout': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     Meteor.logout();
     FlowRouter.go( '/login' );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #LOGO-CLICK
+   */
   'click #logo-click': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    
+    console.log('account-layout logo-click');
+    
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() } );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #ADMIN-COURSES
+   */
   'click #admin-courses': function ( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-courses', { _id: Meteor.userId() } );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #ADMIN-STUDENTS
+   */
   'click #admin-students': function ( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-students', { _id: Meteor.userId() } );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #ADMIN-DEGREES
+   */
   'click #admin-degrees': function ( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-degrees-and-certifications', { _id: Meteor.userId() } );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #ADMIN-ASSIGN COURSES
+   */
   'click #admin-assignCourses': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-assign-courses', { _id: Meteor.userId() } );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #ADMIN-ANALYTICS
+   */
   'click #admin-analytics': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-analytics', { _id: Meteor.userId() } );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #ADMIN-DESIGN
+   */
   'click #admin-design': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-design', { _id: Meteor.userId() } );
+//-------------------------------------------------------------------
   },
 
+
+  /*
+   * CLICK #ADMIN-ADVANCED
+   */
   'click #admin-advanced': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-advanced', { _id: Meteor.userId() } );
-  }
+//-------------------------------------------------------------------
+  },
 });
 
 
