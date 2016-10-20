@@ -14,24 +14,30 @@ Template.login.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-
-    var email     = $('#email').val(); //e.target.email.value (name)
+    //e.target.email.value
+    var email     = $('#email').val();
+    //e.target.password.value
     var password  = $('#password').val();
-
+    
+    
     Meteor.loginWithPassword( email, password, (error) => {
 
       //console.log( 'login with pw uid & roles ' + Meteor.userId() + ' ' + Meteor.user().roles[0]) /* DEBUG */
       if ( error ) {
-        console.log( 'log in error ' + error.reason );
-        console.log( error );
+        console.log( 'log in error ' + error );
       } else {
+
+        
         if ( Meteor.user().roles.admin ) {
           FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-        } else if ( Meteor.user().roles.student ) {
-          FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
+          
+        } else if ( Meteor.user().roles === 'student' || 
+                    Meteor.user().roles === 'teacher' ) {
+            FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
         }
       }
-    } );
-  }
+    });
+  },
+  
 });
 

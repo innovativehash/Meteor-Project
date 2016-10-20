@@ -9,7 +9,7 @@
       //hack to avoid necessity of user needing to verify their email
       //user.emails[0].verified = true;
   
-      //console.log( 'onCreateUser user._id ' + user._id );
+
       Meteor.setTimeout(function(){
         Accounts.sendVerificationEmail(user._id);
       }, 2000);
@@ -17,18 +17,12 @@
       return user;
     });
 
-/*
-    Accounts.validateNewUser(function(user){
-      //do something with user._id
-      return true;
-    });
-*/
-
 
 if ( Meteor.isServer ) {
 
     Accounts.validateLoginAttempt(function( attemptInfo ) {
-
+      console.log('in account validation');
+      console.log(attemptInfo);
         if ( attemptInfo.type == 'resume' ) return true;
 
         if ( attemptInfo.methodName == 'createUser' ) return false;

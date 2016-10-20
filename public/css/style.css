@@ -3968,5 +3968,21 @@ html .ui-button.ui-state-disabled:active {
   padding-bottom: 20px;
   margin-bottom: 20px;
   margin-top: 20px;
-
 }
+
+.footer-page {
+  background: #37ACE9;
+  border-top: 1px solid #181818;
+  padding: 20px 0;
+  position: relative;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+}
+
+#cb-pdf-disp {
+  height: auto !important;
+}
+
+
+
