@@ -22,7 +22,7 @@
             <div class="search-list">
               <div style="margin-left:40%;">
                 <p>
-                  <em>Student:&nbsp;&nbsp;</em><span style="text-align:left;"><strong>{{name}}</strong></span>
+                  <em>Student:&nbsp;&nbsp;</em><span style="text-align:left;"><strong>{{uname}}</strong></span>
                 </p>
                 <span style="text-align:left;">
                   <em>Credits Remaining To Meet Goal: &nbsp;&nbsp;</em>
@@ -44,7 +44,7 @@
                   {{#with certificates}}
                   {{#each this}}
                   <tr>
-                    <th class="name"><img src="/img/icon-6.png" alt="">&nbsp;{{name}}</th>
+                    <th style="width:30%;"><img src="/img/icon-6.png" alt="">&nbsp;{{name}}</th>
                     <td>Completed On {{date_completed}}</td>
                     <td>Expires {{expiry}}</td>
                     <!-- <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td> -->
@@ -68,7 +68,7 @@
                   {{#with degrees}}
                   {{#each this}}
                     <tr>
-                      <th class="name"><img src="/img/icon-5.png" alt="">&nbsp;{{name}}</th>
+                      <th style="width:30%;"><img src="/img/icon-5.png" alt="">&nbsp;{{name}}</th>
                       <td><input type="hidden" name="id" value="{{id}}"/></td>
                     </tr>
                   {{/each}}
@@ -91,22 +91,49 @@
                     <th># of course</th>
                     <th>credits</th>
                     <th>completed on</th>
+                    <th></th>
                   </thead>
                   <tbody>
-                    {{#with completed_courses}}
-                    {{#each this}}
+                    
+                    {{#each completed_courses}}
                     <tr>
-                      <th class="name"><img src="/img/icon-4.png" alt="">{{name}}</th>
+                      <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{name}}</th>
                       <td>{{num}}</td>
                       <td>{{credits}}</td>
                       <td>{{date_completed}}</td>
-                      <!-- <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td> -->
+                      <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
                     </tr>
                     {{/each}}
-                    {{/with}}
+                    
                   </tbody>
                 </table>
             {{/if}}
+            
+            {{#if approved_courses}}
+                <center><h3>Approved Courses</h3></center>
+                <table class="table">
+                  <thead>
+                    <th></th>
+                    <th># of course</th>
+                    <th>credits</th>
+                    <th>completed on</th>
+                    <th></th>
+                  </thead>
+                  <tbody>
+                    
+                    {{#each approved_courses}}
+                    <tr>
+                      <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{course}}</th>
+                      <td>- n/a -</td>
+                      <td>{{credits}}</td>
+                      <td>{{date}}</td>
+                      <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
+                    </tr>
+                    {{/each}}
+                    
+                  </tbody>
+                </table>
+            {{/if}}            
             
             {{#if current_courses}}
                 <center><h3>Current Courses</h3></center>
@@ -118,17 +145,17 @@
                     <th>Started On</th>
                   </thead>
                   <tbody>
-                    {{#with current_courses}}
-                    {{#each this}}
+                    
+                    {{#each current_courses}}
                     <tr>
-                      <th class="name"><img src="/img/icon-4.png" alt="">{{name}}</th>
+                      <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{name}}</th>
                       <td>{{num}}</td>
                       <td>{{credits}}</td>
                       <td>{{date_started}}</td>
                       <!-- <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td> -->
                     </tr>
                     {{/each}}
-                    {{/with}}
+                   
                   </tbody>
                 </table>
                 {{#if more}}

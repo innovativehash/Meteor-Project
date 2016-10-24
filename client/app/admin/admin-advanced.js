@@ -1,5 +1,6 @@
 import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
 
+import { Students }    from '../../../both/collections/api/students.js';
 import { Template }     from 'meteor/templating';
 
 
@@ -13,9 +14,8 @@ Template.adminAdvanced.onCreated(function(){
    * BOOTSTRAP TOGGLE
    */
   $.getScript( '/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js', function() {
-    $('#abd').bootstrapToggle();
-    $('#abn').bootstrapToggle();
-    $('#all-students').bootstrapToggle();
+
+    $('#cr-on').bootstrapToggle();
     //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'Assign Courses:: bootstrap-toggle.min.js fail' );
@@ -39,27 +39,19 @@ Template.adminAdvanced.onRendered(function(){
 Template.adminAdvanced.events({
   
   /*
-   * CLICK #CREDIT-OFF
+   * CLICK #CREDIT-ON/OFF
    */
-  'click #credit-off'( e, t ) {
+  'change #cr-on'( e, t ){
     e.preventDefault();
     e.stopImmediatePropagation();
     
-		t.$("#credit-on").removeClass('active');
-		t.$(e.currentTarget).addClass('active');
-//-------------------------------------------------------------------
-  },
-  
-  
-  /*
-   * CLICK #CREDIT-ON
-   */
-  'click #credit-on'( e, t ){
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    
-		t.$("#credit-off").removeClass('active');
-		t.$(e.currentTarget).addClass('active');  
+    //let tog = $(e.currentTarget).prop('checked');
+		//if ( tog ) {
+		  // switched on
+		  //let req_creds = t.$('.js-credits-required').val();
+		  //Students.upsert({ company_id: Meteor.user().profile.company_id},{$set:{required_credits: req_creds}});
+		  //Meteor.call('upsertCredits', Meteor.user().profile.company_id, req_creds);
+		//}
 //-------------------------------------------------------------------
   },
   
@@ -71,6 +63,7 @@ Template.adminAdvanced.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
+    console.log( t.$(e.currentTarget).data('value'))
 		t.$(".advance-time-button button:first-child").removeClass('active');
 		t.$(".advance-time-button button:last-child").removeClass('active');
 		t.$(e.currentTarget).toggleClass('active');  
@@ -81,12 +74,42 @@ Template.adminAdvanced.events({
   /*
    * CLICK #RESET-IMAGE
    */
-  'click #reset-image'( e, t ) {
+  'click .js-priv-url'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
     
-	   t.$('#logo-preview').attr('src', '/img/demo-logo.png');  
+    let purl = t.$('.js-priv-url').val();
 //-------------------------------------------------------------------
   },
+  
+  
+  /*
+   * CLICK SAVE
+   */
+  'click .js-advanced-save'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    
+    let tog = $('#cr-on').prop('checked');
+    console.log( 'tog = ' + tog );
+		if ( tog ) {
+		  // switched on
+		  let req_creds = t.$('.js-credits-required').val()
+		    , freq;
+		    
+		  if ( t.$(".advance-time-button button:first-child").hasClass('active') ) {
+		    freq = t.$(".advance-time-button button:first-child").data('value');
+		  } else if ( t.$(".advance-time-button button:last-child").hasClass('active') ) {
+		    freq = t.$(".advance-time-button button:last-child").data('value');
+		  } else {
+		    Bert.alert('Please select frequency:  Quarterly or Yearly.', 'danger');
+		    return;
+		  }
+		
+		  Meteor.call('upsertCompany', Meteor.user().profile.company_id, freq, req_creds )
+		  Meteor.call('upsertCredits', Meteor.user().profile.company_id, req_creds);
+		}
+    Bert.alert('Your information has been saved', 'success');
+  }
   
 });

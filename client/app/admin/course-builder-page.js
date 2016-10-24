@@ -432,10 +432,11 @@ Template.courseBuilderPage.events({
                       num: 1, 
                       name: name, 
                       passing_percent: percent,
-                      company_id: 1,
+                      company_id: Meteor.user().profile.company_id,
                       times_completed: 0,
                       icon: "/img/icon-4.png",
-                      public: true
+                      public: false,
+                      created_at: new Date()
     });
     
     t.$('#intro-modal').modal('hide');

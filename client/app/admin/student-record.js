@@ -44,7 +44,7 @@ Template.studentRecord.onRendered( function() {
  */
 Template.studentRecord.helpers({
   
-  name: () =>
+  uname: () =>
     Meteor.users.findOne({ _id: FlowRouter.getParam("_id") }, { username:1 }).username,
   
   email() {
@@ -96,6 +96,20 @@ Template.studentRecord.helpers({
       return;
     }
   },
+
+  approved_courses() {
+    try {
+      let c   = ( Students.find( {_id: FlowRouter.getParam("_id")}, {}).fetch()[0].approved_courses );
+      var lim = c.length;
+      for( let i=0; i<lim; i++ ) {
+        c[i].date = moment(c[i].date_completed).format('M-D-Y');
+      }
+      return c;
+    } catch (e) {
+      return;
+    }
+  },
+
 
   certificates() {
     try {

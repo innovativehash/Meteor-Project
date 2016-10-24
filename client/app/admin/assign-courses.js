@@ -70,7 +70,7 @@ Template.assignCourses.onRendered(function(){
  */
 Template.assignCourses.helpers({
   courses: () =>
-    Courses.find({ company_id:1 }).fetch(),
+    Courses.find({ company_id: Meteor.user().profile.company_id}).fetch(),
   dept: () =>
     Departments.find({}).fetch(),
   names: () =>

@@ -6,6 +6,17 @@ import { BuiltCourses } from '../both/collections/api/built-courses.js';
 
 
 Meteor.methods({
+  
+  'upsertCompany': function( company_id, freq, req_cred ) {
+    console.log( company_id );
+    console.log( freq );
+    console.log( req_cred );
+    return Companies.update({ _id: company_id }, {$set:{ required_credits: req_cred, frequency: freq} });    
+  },
+  
+  'upsertCredits': function( company_id, cr ) {
+    return Students.upsert({ company_id: company_id }, {$set:{required_credits: cr}}, {multi: true});
+  },
 
   'insertCompanyReturnId': function( name, backgroundColor, logo ) {
     return Companies.insert({ name: name, backgroundColor: backgroundColor, logo: logo});

@@ -80,7 +80,8 @@ Template.adminTestCreator.events({
    */
   'blur #test-name'( e, t ){
       Tests.insert({
-        test_name: t.$('#test-name').val()
+        test_name: t.$('#test-name').val(),
+        company_id: Meteor.user().profile.company_id
       });
 
       Meteor.setTimeout(function(){

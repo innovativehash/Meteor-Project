@@ -69,7 +69,7 @@ Template.library.onDestroyed(function(){
  */
 Template.library.helpers({
    courses: () =>
-      Courses.find({ company_id: 0 }, { _id:1, name:1, credits:1, icon:1 }).fetch()
+      Courses.find( {public:true}, { _id:1, name:1, credits:1, icon:1 }).fetch()
 });
 
 
@@ -149,7 +149,9 @@ Template.library.events({
             cssClass: 'btn-success',
             action: function( dialog ) {
               /* ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY */
-              Courses.update({ _id: idx }, {$set:{ company_id:1} });
+                            Courses.insert({company_id:Meteor.user().profile.company_id, 
+                              name: c.name, "icon": "/img/icon-4.png",
+                              credits: c.credits, public: false, times_completed:0});
               dialog.close();
             }
           },

@@ -133,12 +133,13 @@ Template.adminDesign.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
+    Bert.alert('Your information has been saved.', 'success');
   },
   
 
   /*
    * HIDEPICKER .COLOR-PICKER
-   */
+   
   'hidePicker .color-picker'( e, t ){
     let colorValue = t.$('.color-picker > input').val();
 
@@ -150,6 +151,7 @@ Template.adminDesign.events({
     }, 200);
 //-------------------------------------------------------------------
   },
+  */
 
 });
 

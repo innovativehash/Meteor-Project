@@ -312,9 +312,16 @@
     </div>
   </div>
   <script>
-    $('#overview').addClass("active").siblings().removeClass('active');
+    
     $(document).ready(function(){
+      $('#overview').addClass("active").siblings().removeClass('active');
       $(this).scrollTop(0);
+      
+      $('.logo').click(function(){
+        var loc = location.protocol + "//" + location.hostname;
+        window.location.href = loc;
+      });
     });
+    
   </script>
 </template>

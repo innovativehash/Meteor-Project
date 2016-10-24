@@ -63,14 +63,14 @@ Template.courses.onDestroyed(function(){
   
 });
 
-
+//Courses.find({ $or: [ {company_id:Meteor.user().profile.company_id}, {public:true}] }).fetch()
 /*
  * HELPERS
  */
 Template.courses.helpers({
   
-   courses: () =>
-      Courses.find({ company_id:1 }).fetch()
+   courses: () => 
+    Courses.find({ company_id: Meteor.user().profile.company_id}).fetch()
       
 });
 
