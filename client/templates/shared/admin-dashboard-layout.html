@@ -48,8 +48,8 @@
           </form>
       </div>
       {{/if}}
-{{#with company}}
-      <div class="sidebar-menu-area" style="background:{{backgroundColor}} !important;">
+
+      <div class="sidebar-menu-area" style="background:{{company.backgroundColor}} !important;">
         <div class="buttons">
             <button id="open">
                 <span></span>
@@ -62,7 +62,7 @@
             </button>
         </div>
         <div class="logo">
-            <a href="#" id="logo-click"><img  src="{{logo}}" alt=""></a> <!-- src="/img/logo_d.png" -->
+            <a href="#" id="logo-click"><img  src="{{company.logo}}" alt=""></a> <!-- src="/img/logo_d.png" -->
             <button type="button"
                     class="navbar-toggle collapsed"
                     data-toggle="collapse"
@@ -85,40 +85,68 @@
             </div>
         </div>
 
-        <div class="sidebar-menu collapse navbar-collapse" style="background:{{backgroundColor}} !important;">
-          <ul>
+        <div class="sidebar-menu collapse navbar-collapse" >
+          <ul >
+            {{#if company.menu}}
+            <li class="menu-icon-1" style="background:{{company.backgroundColor}} !important;">
+              <a id="admin-courses" href="#">
+                Courses
+              </a>
+            </li>
+            {{else}}
             <li class="menu-icon-1">
               <a id="admin-courses" href="#">
                 Courses
               </a>
             </li>
+            {{/if}}
+            
+            {{#if company.menu}}
+            <li class="menu-icon-2" style="background:{{company.backgroundColor}} !important;">
+              <a id="admin-students" href="#">
+                Students
+              </a>
+            </li>
+            {{else}}
             <li class="menu-icon-2">
               <a id="admin-students" href="#">
                 Students
               </a>
             </li>
+            {{/if}}
+            
+            {{#if company.menu}}
+            <li class="menu-icon-3" style="background:{{company.backgroundColor}} !important;">
+              <a id="admin-degrees" href="#">
+                Degrees & Certifications
+              </a>
+            </li>
+            {{else}}
             <li class="menu-icon-3">
               <a id="admin-degrees" href="#">
                 Degrees & Certifications
               </a>
             </li>
-            <li class="menu-icon-4">
+            {{/if}}
+            
+            
+            <li class="menu-icon-4" style="background:{{company.backgroundColor}} !important;">
               <a id="admin-assignCourses" href="#">
                 Assign Courses <!-- assign-courses.html -->
               </a>
             </li>
-            <li class="menu-icon-5">
+            <li class="menu-icon-5" style="background:{{company.backgroundColor}} !important;">
               <a id="admin-analytics" href="#">
                 Analytics
               </a>
             </li>
-            <li class="menu-icon-6">
-              <a id="admin-design" href="#">
+            <li class="menu-icon-6" style="background:{{company.backgroundColor}} !important;">
+              <a id="admin-design" href="#" >
                 Design <!-- design.html -->
               </a>
             </li>
-            <li class="menu-icon-7">
-              <a id="admin-advanced" href="#">
+            <li class="menu-icon-7" style="background:{{company.backgroundColor}} !important;">
+              <a id="admin-advanced">
                 Advanced
               </a>
             </li>
@@ -126,7 +154,7 @@
         </div>
     </div>
 
-    <div class="dashboard-header-area" style="background:{{backgroundColor}} !important;">
+    <div class="dashboard-header-area" style="background:{{company.backgroundColor}} !important;">
         <div class="container">
             <div class="row">
                 <div class="col-sm-7">
@@ -185,7 +213,7 @@
             </div>
         </div>
     </div>
-{{/with}}
+
     {{> Template.dynamic template=main  }}
 
     {{/if}}

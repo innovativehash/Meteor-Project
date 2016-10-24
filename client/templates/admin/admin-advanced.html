@@ -1,9 +1,10 @@
 <template name="adminAdvanced">
+<!--
 <style>
   #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
 </style>
 <div id="cover"></div>
-
+-->
   <div class="dashboard-body-area">
             <div class="container">
                 <div class="row">
@@ -19,14 +20,26 @@
                                     </div>
                                     <div class="col-sm-5">
                                         <div class="credit-required">
-                                            <div class="single-credit-required">
+                                            <!-- <div class="single-credit-required"> -->
+                                                <!--
                                                 <input name="credit-required" id="yes_credit" type="radio" class="hidden">
                                                 <label id="credit-on" for="yes_credit"><img src="/img/on.png" alt=""></label>
+                                                -->
+                                              <label class="checkbox-inline">
+                                                <input  id="all-students" 
+                                                        type="checkbox" 
+                                                        data-toggle="toggle" 
+                                                        data-offstyle="danger"
+                                                        data-onstyle="success">
+                                                <span style="color:white;">&nbsp;&nbsp;<strong>On</strong></span>
+                                              </label>
+                                            <!--
                                             </div>
                                             <div class="single-credit-required">
                                                 <input name="credit-required" id="no_credit" type="radio" class="hidden">
                                                 <label id="credit-off" for="no_credit"><img src="/img/off.png" alt=""></label>
-                                            </div>                                            
+                                            </div>  
+                                            -->
                                         </div>
                                     </div>
                                 </div>

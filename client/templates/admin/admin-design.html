@@ -1,9 +1,10 @@
 <template name="adminDesign">
+<!--
 <style>
   #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
 </style>
 <div id="cover"></div>
-
+-->
   <div class="dashboard-body-area">
     <div class="container">
       <div class="row">
@@ -33,6 +34,7 @@
                                accept="image/png, image/jpeg, image/gif"
                                name="input-file-preview"/>
                         <div class="image-preview">
+                          <img id="logo-preview" src="{{companies.logo}}" width="150" height="136">
                           <!-- <img id="logo-preview" src="/img/demo-logo.png" alt=""> -->
                           <!-- <span id="reset-image">x</span> -->
                         </div>
@@ -49,8 +51,8 @@
                     </div>
                     <div class="col-sm-7">
                       <div class="color-picker input-group colorpicker-component">
-                        <input type="text" value="#00AABB" class="form-control" />
-                        <span class="input-group-addon"><i></i></span>
+                        <input type="text" value="{{companies.backgroundColor}}" class="form-control" />
+                        <span class="input-group-addon"><i style="background-color: {{companies.backgroundColor}}"></i></span>
                       </div>
 
                       <!--
@@ -62,6 +64,7 @@
                     </div>
                   </div>
                 </div>
+                <hr /><hr />
                 <div class="single-customize">
                   <div class="row">
                     <div class="col-sm-5">
@@ -79,7 +82,7 @@
                 <div class="single-customize">
                   <div class="row">
                     <div class="col-sm-12">
-                      <input type="submit" value="Save">
+                      <input id = "design-submit" type="submit" value="Save">
                     </div>
                   </div>
                 </div>

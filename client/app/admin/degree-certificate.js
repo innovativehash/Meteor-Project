@@ -4,7 +4,7 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 import { Certifications } from '../../../both/collections/api/certifications.js';
 import { Diplomas }       from '../../../both/collections/api/diplomas.js';
 
-import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
+//import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
 import '../../templates/admin/degree-certificate.html';
 
 
@@ -13,7 +13,7 @@ import '../../templates/admin/degree-certificate.html';
  */
 Template.degreeCertificate.onCreated( function() {
   
-  $("#degree-cert-cover").show();
+  //$("#degree-cert-cover").show();
     
   Session.setDefault('doc', 'degreeCertificate');
 
@@ -49,12 +49,12 @@ Template.degreeCertificate.onCreated( function() {
  * RENDERED
  */
 Template.degreeCertificate.onRendered( function() {
-
+/*
   $( '#degree-cert-cover' ).delay( 100 ).fadeOut( 'slow', function() {
     $("#degree-cert-cover").hide();
     $( ".dashboard-body-area" ).fadeIn( 'slow' );
   }); 
-  
+*/  
 });
 
 

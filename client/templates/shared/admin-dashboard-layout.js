@@ -1,4 +1,4 @@
-
+/*
 import '../../../public/css/bootstrap-select.min.css';
 import '../../../public/css/normalize.css';
 import '../../../public/css/common.css';
@@ -8,7 +8,7 @@ import '../../../public/css/responsive.css';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.min.css';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.structure.min.css';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.theme.min.css';
-
+*/
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 
@@ -51,7 +51,7 @@ Template.adminDashboardLayout.helpers({
   company() {
     try {
       let id = Students.findOne({_id: Meteor.userId() }).company_id;
-      return Companies.find({ _id: id }).fetch()[0];
+      return Companies.findOne({ _id: id });
     } catch(e) {
       return;
     }

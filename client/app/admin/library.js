@@ -3,7 +3,8 @@
 import { Courses }    from '../../../both/collections/api/courses.js';
 
 import '../../templates/admin/library.html';
-import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
+
+//import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
 
 
 /*

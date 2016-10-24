@@ -5,7 +5,7 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Students }     from '../../../both/collections/api/students.js';
 
-import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
+//import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
 
 import '../../templates/admin/admin-credit-requests.html';;
 
@@ -15,7 +15,7 @@ import '../../templates/admin/admin-credit-requests.html';;
  */
 Template.adminCreditRequests.onCreated( function() {
   
-  $('#cover').show();
+  //$('#cover').show();
   
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
       //console.log('AdminCreditRequest:: bootstrap-dialog loaded...');
@@ -29,12 +29,12 @@ Template.adminCreditRequests.onCreated( function() {
  * RENDERED
  */
 Template.adminCreditRequests.onRendered(function(){
-  
+/*  
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });  
-  
+*/  
 });
 
 
@@ -61,7 +61,7 @@ Template.adminCreditRequests.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
-    let record = $('.disapprove').data("id");
+    let record = t.$('.disapprove').data("id");
     Newsfeeds.remove({ _id: record });
 //-------------------------------------------------------------------
   },
@@ -74,9 +74,9 @@ Template.adminCreditRequests.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
-    let student   = $(".approve").data("student");
-    let recordId  = $(".approve").data("id");
-    let option    = $('.approve').data("option");
+    let student   = t.$(".approve").data("student");
+    let recordId  = t.$(".approve").data("id");
+    let option    = t.$('.approve').data("option");
 
     let cur_cred  = Students.findOne({ _id: student }).current_credits;
 

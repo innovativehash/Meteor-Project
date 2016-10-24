@@ -2,15 +2,15 @@
 import { Courses }    from '../../../both/collections/api/courses.js';
 
 import '../../templates/admin/courses.html';
-import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
+//import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
 
 
 /*
  * CREATED
  */
 Template.courses.onCreated(function(){
-  
-  $("#courses-cover").show();
+ 
+  //$("#courses-cover").show();
     
   /*
    * BOOTSTRAP3-DIALOG
@@ -45,12 +45,12 @@ Template.courses.onCreated(function(){
  * RENDERED
  */
 Template.courses.onRendered(function(){
-  
+/* 
   $( '#courses-cover' ).delay( 100 ).fadeOut( 'slow', function() {
     $("#courses-cover").hide();
     $( ".filter-buttons" ).fadeIn( 'slow' );
   });  
-  
+*/  
 });
 
 

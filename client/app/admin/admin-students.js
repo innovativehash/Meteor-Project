@@ -14,7 +14,7 @@ import '../../templates/admin/admin-students.html';
  */
 Template.adminStudents.onCreated( function() {
 
-  $("#students-cover").show();
+  //$("#students-cover").show();
 
 
   /*
@@ -55,12 +55,12 @@ Template.adminStudents.onCreated( function() {
  * RENDERED
  */
 Template.adminStudents.onRendered( function() {
-  
+/* 
   $( '#students-cover' ).delay( 100 ).fadeOut( 'slow', function() {
     $("#students-cover").hide();
     $( ".filter-buttons" ).fadeIn( 'slow' );
   });
-  
+*/
 });
 
 
@@ -154,7 +154,7 @@ Template.adminStudents.events({
     e.stopImmediatePropagation();
     
     let dpt = Departments.find({}).fetch();
-    
+  
     Meteor.setTimeout(function(){
       for( let i = 0, l = dpt.length; i < l; i++){
         $('.js-dept').append('<option value="' + dpt[i]._id + '">' +
@@ -201,15 +201,17 @@ Template.adminStudents.events({
               cssClass: 'btn-success',
               action: function( dialog ) {
 
-                  let fname = $('.js-fn').val().trim();
-                  let lname = $('.js-ln').val().trim();
-                  let email = $('.js-email').val().trim();
-                  let dept  = $('.js-dept :selected').text();
-                  let opt   = $('#sel1').val();
-                  let password = $('.js-password').val().trim();
-                  let text = "You have a new account with password: " + password;
+                  let co = Students.findOne({_id: Meteor.userId()});
 
-                  Meteor.call('addUser', email, password, fname, lname, opt, dept);
+                  let fname     = $('.js-fn').val().trim();
+                  let lname     = $('.js-ln').val().trim();
+                  let email     = $('.js-email').val().trim();
+                  let dept      = $('.js-dept :selected').text();
+                  let opt       = $('#sel1').val();
+                  let password  = $('.js-password').val().trim();
+                  let text      = "You have a new account with password: " + password;
+
+                  Meteor.call('addUser', email, password, fname, lname, opt, dept, co.company, co.company_id);
 
                   //Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
                   /*
@@ -260,7 +262,7 @@ Template.adminStudents.events({
       e.preventDefault();
       e.stopImmediatePropagation();
   
-      let id = $( e.currentTarget ).data('id');
+      let id = t.$( e.currentTarget ).data('id');
       let s  = Students.findOne({_id: id});
       
       let dpt = Departments.find({}).fetch();
@@ -280,10 +282,10 @@ Template.adminStudents.events({
                     '<div class="popup-body">'          +
                       '<div class="row">'               +
                         '<div class="col-sm-6">'        +
-                          '<input class="js-fn" type="text" placeholder="' + s.fname + '"' + '/>' +
+                          '<input class="js-fn" type="text" placeholder="' + s.fname + '"' + 'readonly/>' +
                         '</div>'                  +
                         '<div class="col-sm-6">'  +
-                          '<input class="js-ln" type="text" placeholder="' + s.lname + '"' + '/>' +
+                          '<input class="js-ln" type="text" placeholder="' + s.lname + '"' + 'readonly/>' +
                         '</div>'  +
                       '</div>'    +
                       '<div class="row">'         +
@@ -310,25 +312,25 @@ Template.adminStudents.events({
             cssClass: 'btn-success',
             action: function( dialog ) {
               let r   = $('#sel1').val()                || s.role,
-                  fn  = $('.js-fn').val()               || s.fname,
-                  ln  = $('.js-ln').val()               || s.lname,
+                  //fn  = $('.js-fn').val()               || s.fname,
+                  //ln  = $('.js-ln').val()               || s.lname,
                   e   = $('.js-email').val()            || s.email,
-                  d   = $('.js-dept :selected').text()  || s.department,
-                  f   = fn + ' ' + ln,
-                  n   = Newsfeeds.find({ owner_id: id}).fetch(),
-                  c   = Comments.find({ poster_id: id}).fetch();
+                  d   = $('.js-dept :selected').text()  || s.department;
+                  //f   = fn + ' ' + ln;
+                  //n   = Newsfeeds.find({ owner_id: id}).fetch(),
+                  //c   = Comments.find({ poster_id: id}).fetch();
   
               Students.update({ _id: id },
                               {$set:{ role:r,
-                                      fname:fn,
-                                      lname:ln,
+                                      //fname:fn,
+                                      //lname:ln,
                                       email:e,
                                       department:d,
-                                      fullName:f,
+                                      //fullName:f,
                                       updated_at: new Date() } });
   
               Meteor.users.update({ _id: id }, {$set:{ roles: r } });
-  
+/*  
               let nlim = n.length;
               for ( let i = 0; i < nlim; i++ ) {
                 Meteor.call('changeNewsfeedAuthorName', n[i]._id, f );
@@ -337,6 +339,7 @@ Template.adminStudents.events({
               for ( let i = 0; i < clim; i++ ) {
                 Meteor.call('changeCommentsAuthorName', c[i]._id, f );
               }
+*/
               dialog.close();
             }
           },

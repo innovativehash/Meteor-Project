@@ -15,7 +15,7 @@ let co_id = '';
  */
 Template.adminDesign.onCreated(function(){
   
-  $("#cover").show();
+  //$("#cover").show();
 
   //this.autorun(() => {
   //this.subscribe("company_id", Meteor.userId());
@@ -46,14 +46,21 @@ Template.adminDesign.onCreated(function(){
  * RENDERED
  */
 Template.adminDesign.onRendered(function(){
-
+/*
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
-  
+*/  
 });
 
+
+Template.adminDesign.helpers({
+  companies: () => {
+    let id = Students.findOne({_id: Meteor.userId()}).company_id;
+    return Companies.findOne({_id: id});
+  }
+});
 
 
 let ig  = ''
@@ -82,7 +89,7 @@ Template.adminDesign.events({
     ext  = (e.currentTarget.files[0].name).slice( mark );
     ext = (ext == ('jpg' || 'jpeg') ) ? 'image/jpeg' : 'image/png';
 
-    let fil = $('#logo-upload').get(0).files[0];
+    let fil = t.$('#logo-upload').get(0).files[0];
     let fr = new FileReader();
 
     let myimage = new Image();
@@ -109,9 +116,9 @@ Template.adminDesign.events({
     fr.readAsDataURL(fil);
     Meteor.setTimeout( function() {
       if ( foo ) {
-        let img = $('<img id="logo-preview" />');
-            img.attr("src", foo ); // ig
-            img.appendTo('.image-preview');
+        let co_id = Students.findOne({_id: Meteor.userId()}).company_id;
+        t.$('#logo-preview').attr("src", foo ); // ig
+
         Meteor.call('saveCompanyLogo', co_id, foo);
       } else {
           img = null;
@@ -122,6 +129,13 @@ Template.adminDesign.events({
   },
 
 
+  'click #design-submit'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    
+  },
+  
+
   /*
    * HIDEPICKER .COLOR-PICKER
    */
@@ -130,6 +144,7 @@ Template.adminDesign.events({
 
     Meteor.setTimeout(function(){
       if ( colorValue ) {
+        let co_id = Students.findOne({_id: Meteor.userId()}).company_id;
         Meteor.call( 'saveCompanyColor', co_id, colorValue );
       }
     }, 200);

@@ -6,6 +6,7 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 //import { Blaze } from 'meteor/blaze'
 
 import { Newsfeeds }     from '../../../both/collections/api/newsfeeds.js';
+import { Students }     from '../../../both/collections/api/students.js';
 
 import '../../templates/shared/postbox.html';
 
@@ -102,6 +103,9 @@ Template.postbox.events({
       }
 
       let name = Meteor.user() && Meteor.user().username;
+      let co_id = Meteor.user() && Meteor.user().profile.company_id;
+      //let co_id = Students.findOne({_id: Meteor.userId()}).company_id;
+      
       if ( ig ) {
         Newsfeeds.insert({  owner_id: Meteor.userId(),
                             poster: name,
@@ -113,6 +117,7 @@ Template.postbox.events({
                             news: content,
                             comment_limit: 3,
                             likes: 0,
+                            company_id: co_id,
                             date: new Date() });
       } else {
         Newsfeeds.insert({  owner_id: Meteor.userId(),
@@ -122,6 +127,7 @@ Template.postbox.events({
                             private: false,
                             news: content,
                             comment_limit: 3,
+                            company_id: co_id,
                             likes: 0,
                             date: new Date() });
       }
@@ -141,15 +147,7 @@ Template.postbox.events({
       }).fadeIn('slow');
 
 		// NOTIFICATION
-    $.notify(
-      "\n\n\t\tYour Post has been Submitted!",
-      {
-        globalPosition: "top center",
-        style: "happyblack",
-        className: "superblack",
-        autoHideDelay: 3000
-      }
-    );
+    Bert.alert("Your post has been submitted!", 'success', 'growl-top-right');
 //-------------------------------------------------------------------
   },
 

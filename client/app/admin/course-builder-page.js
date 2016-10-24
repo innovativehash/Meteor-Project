@@ -7,10 +7,11 @@ import { Courses }        from '../../../both/collections/api/courses.js';
 
 import '../../templates/admin/course-builder-page.html';
 
+/*
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.min.css';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.structure.min.css';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.theme.min.css';
-
+*/
 
 
 let course_id = '';
@@ -326,17 +327,19 @@ Template.courseBuilderPage.events({
     Template.instance().total.set( Template.instance().total.get() + 1 );
 
     t.$('#fb-template').hide();
+    /*
     let obj =
-    '<object data="' + ig + '" type="application/pdf" width="100%" height="100%">' +
+    '<object data="' + ig + '" type="application/pdf" width="10%" height="100%">' +
     '<iframe src="' + ig + '" width="100%" height="100%" style="border: none;">' +
     'This browser does not support PDFs. Please download the PDF to view it: <a href="' + ig + '">Download PDF</a>' +
     '</iframe>' + 
     '</object>';
-    
+   */ 
     t.$('#fb-template').hide();
-    t.$('#cb-pdf-disp').html(obj);
+    //t.$('#cb-pdf-disp').html(obj);
     t.$('#cb-pdf-disp').show();
-    //t.$('#cb-pdf-disp').html('<embed src="' + ig + '"' + ' width="492px" height="285px" style="margin:auto;padding:0;" />');
+    //492px x 285px
+    t.$('#cb-pdf-disp').html('<embed src="' + ig + '"' + ' width="100%" height="100%" style="margin:auto;padding:0;" />');
     ig = null;
     
     t.$('#add-pdf').modal('hide');

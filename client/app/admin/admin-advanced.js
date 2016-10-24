@@ -1,3 +1,4 @@
+import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
 
 import { Template }     from 'meteor/templating';
 
@@ -6,17 +7,29 @@ import '../../templates/admin/admin-advanced.html';
 
 
 Template.adminAdvanced.onCreated(function(){
-  $("#cover").show();
+  //$("#cover").show();
+  
+  /*
+   * BOOTSTRAP TOGGLE
+   */
+  $.getScript( '/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js', function() {
+    $('#abd').bootstrapToggle();
+    $('#abn').bootstrapToggle();
+    $('#all-students').bootstrapToggle();
+    //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
+  }).fail( function( jqxhr, settings, exception ) {
+    console.log( 'Assign Courses:: bootstrap-toggle.min.js fail' );
+  });
 });
 
 
 Template.adminAdvanced.onRendered(function(){
-
+/*
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   }); 
-  
+*/  
 });
 
 
@@ -32,8 +45,8 @@ Template.adminAdvanced.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
-		$("#credit-on").removeClass('active');
-		$(e.currentTarget).addClass('active');
+		t.$("#credit-on").removeClass('active');
+		t.$(e.currentTarget).addClass('active');
 //-------------------------------------------------------------------
   },
   
@@ -45,8 +58,8 @@ Template.adminAdvanced.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
-		$("#credit-off").removeClass('active');
-		$(e.currentTarget).addClass('active');  
+		t.$("#credit-off").removeClass('active');
+		t.$(e.currentTarget).addClass('active');  
 //-------------------------------------------------------------------
   },
   
@@ -58,9 +71,9 @@ Template.adminAdvanced.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
-		$(".advance-time-button button:first-child").removeClass('active');
-		$(".advance-time-button button:last-child").removeClass('active');
-		$(e.currentTarget).toggleClass('active');  
+		t.$(".advance-time-button button:first-child").removeClass('active');
+		t.$(".advance-time-button button:last-child").removeClass('active');
+		t.$(e.currentTarget).toggleClass('active');  
 //-------------------------------------------------------------------
   },
   
@@ -72,7 +85,7 @@ Template.adminAdvanced.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
-	   $('#logo-preview').attr('src', '/img/demo-logo.png');  
+	   t.$('#logo-preview').attr('src', '/img/demo-logo.png');  
 //-------------------------------------------------------------------
   },
   

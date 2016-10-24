@@ -10,9 +10,9 @@ let testidnum;
  * CREATED
  */
 Template.adminTestCreator.onCreated(function(){
-  
+/* 
   $('#cover').show();
-  
+*/  
 });
 
 
@@ -20,12 +20,12 @@ Template.adminTestCreator.onCreated(function(){
  * RENDERED
  */
 Template.adminTestCreator.onRendered(function(){
-  
+/* 
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
-  
+*/
 });
 
 
@@ -84,11 +84,11 @@ Template.adminTestCreator.events({
       });
 
       Meteor.setTimeout(function(){
-        let testName  = $('#test-name').val();
+        let testName  = t.$('#test-name').val();
         testidnum     = Tests.findOne({ test_name: testName })._id;
       }, 200);
 
-      $('#test-name').attr('readonly', true);
+      t.$('#test-name').attr('readonly', true);
 //-------------------------------------------------------------------
   },
 

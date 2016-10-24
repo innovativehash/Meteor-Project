@@ -42,10 +42,11 @@ Template.newsfeed.onDestroyed( function() {
  */
 Template.newsfeed.helpers({
   newsfeeds() {
-    var owner = Meteor.userId(); //reactivevariable
-    
+    let owner = Meteor.userId(); //reactivevariable
+
+    console.log( Meteor.user().profile.company_id );
     //var feed  = Newsfeeds.find({ owner_id: owner}, { sort: { date: -1 } }).fetch();
-    let feed = Newsfeeds.find({ private: false }, { sort: { date: -1 } }).fetch(); //most recent at top
+    let feed = Newsfeeds.find({ private: false, company_id: Meteor.user().profile.company_id }, { sort: { date: -1 } }).fetch(); //most recent at top
 
     for( let i = 0; i < feed.length; i++ ) {  
       var com = Comments.find({ owner_id: feed[i]._id }, { sort: { date: -1 } }).fetch(); //most recent at top   
@@ -74,7 +75,8 @@ Template.newsfeed.helpers({
   
   cur_user_avatar() {
     try {
-      return Students.findOne({_id: Meteor.userId()}).avatar;
+      //return Students.findOne({_id: Meteor.userId()}).avatar;
+      return Meteor.user().profile.avatar;
     } catch(e) {
       return;
     }
@@ -109,6 +111,7 @@ Template.newsfeed.events({
     //otherwise, allow like and save it
     Newsfeeds.update( { _id: id },  { $inc: { likes: 1 } ,  $push: { likers:  Meteor.userId() }  });
     
+    Bert.alert('Your "Like" has been posted!', 'success', 'growl-top-right');
   }, 1000 ),
 //-------------------------------------------------------------------
   
@@ -146,7 +149,8 @@ Template.newsfeed.events({
   'click #news-item-delete':  _.debounce( function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+        // NOTIFICATION
+    Bert.alert('Your post has been deleted', 'danger');
     var i_d = $(e.currentTarget).data( 'id' );
 
     $( '#news-item-' + i_d ).hide();
@@ -169,10 +173,7 @@ Template.newsfeed.events({
     Meteor.setTimeout(function() {
       Newsfeeds.remove({ _id: i_d  });
     }, 250);
-    
-    // NOTIFICATION
-
-  }, 1000),
+  }, 500),
 //-------------------------------------------------------------------
 
 
@@ -194,7 +195,7 @@ Template.newsfeed.events({
       }
 
       //var rec = Newsfeeds.findOne({ _id: id }); //.fetch()[0];
-
+      //console.log( Meteor.user().profile.avatar );
       Meteor.setTimeout(function() {
         Comments.insert({ owner_id: id, 
                           poster_id: Meteor.userId(), 
@@ -209,6 +210,7 @@ Template.newsfeed.events({
         // Animation complete.
         $(e.target).css("outline", "");
       }).fadeIn('slow');
+      Bert.alert('Your comment has been posted', 'success', 'growl-top-right');
     }
       //t.$('.js-comment-button').click();
   }, 1000),
@@ -240,6 +242,7 @@ Template.newsfeed.events({
                         date: new Date() });
       $(`#ta-${id}`).val('');
     }, 250);
+    Bert.alert('Your Comment has been submitted', 'success', 'gowl-top-right');
   }, 1000),
 //-------------------------------------------------------------------
 

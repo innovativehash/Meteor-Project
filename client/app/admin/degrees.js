@@ -35,7 +35,7 @@ Template.degrees.onCreated(function() {
       }
     });
   
-    $( "#find-course" ).autocomplete({
+    $( "#deg-find-course" ).autocomplete({
     minLength:3,
     delay:100,
   
@@ -54,12 +54,12 @@ Template.degrees.onCreated(function() {
       }));
     },
     focus:      function( event, ui ) {
-                    $( '#find-course' ).val( ui.item.id );
+                    $( '#deg-find-course' ).val( ui.item.id );
                     return false;
                   },
                   
       select:     function( event, ui ){
-                    $( '#find-course' ).val( ui.item.id );
+                    $( '#deg-find-course' ).val( ui.item.id );
                     return false;
                   }
     })
@@ -176,68 +176,67 @@ Template.degrees.events({
   /*
    * KEYPRESS #FIND-COURSE
    */
-  'keypress #find-course': function(event){
-    event.preventDefault();
-    event.stopImmediatePropagation();
+  'keypress #deg-find-course': function(event){
     
     if ( event.which == 13 ) {
       event.preventDefault();
       
-      let idx = $("#find-course").val(), 
+      let idx = $("#deg-find-course").val(), 
           item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
-
+          
+      t.$('#deg-find-course').val('');
       //console.log( $('#firDrag').contents().eq(0).text().indexOf('Sample'));
       //console.log( $('#firDrag').text().indexOf('Sample'));
     
       
-      if ( $('#firDrag').text().indexOf('Sample') == 0 ) {
+      if ( t.$('#firDrag').text().indexOf(' ') == 0 ) {
         degree.courses[0] = item;
-        $('#firDrag span img').data('dt', item.name);
-        replaceTextNode( $('#firDrag'), item );
-        $('#firDrag').css('color', 'green');
-        $('#firDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
+        t.$('#firDrag span img').data('dt', item.name);
+        replaceTextNode( t.$('#firDrag'), item );
+        t.$('#firDrag').css('color', 'green');
+        t.$('#firDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
       } 
-      else if ( $('#secDrag').text().indexOf('Sample') == 0 ) {
+      else if ( t.$('#secDrag').text().indexOf(' ') == 0 ) {
         degree.courses[1] = item;
-        $('#secDrag span img').data('dt', item.name);
-        replaceTextNode( $('#secDrag'), item );
-        $('#secDrag').css('color', 'green');
-        $('#secDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
+        t.$('#secDrag span img').data('dt', item.name);
+        replaceTextNode( t.$('#secDrag'), item );
+        t.$('#secDrag').css('color', 'green');
+        t.$('#secDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
       }
-      else if ( $('#thrDrag').text().indexOf('Sample') == 0 ) {
+      else if ( t.$('#thrDrag').text().indexOf(' ') == 0 ) {
         degree.courses[2] = item;
-        $('#thrDrag span img').data('dt', item.name);
-        replaceTextNode( $('#thrDrag'), item );
-        $('#thrDrag').css('color', 'green');
-        $('#thrDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
+        t.$('#thrDrag span img').data('dt', item.name);
+        replaceTextNode( t.$('#thrDrag'), item );
+        t.$('#thrDrag').css('color', 'green');
+        t.$('#thrDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
       }
-      else if ( $('#fouDrag').text().indexOf('Sample') == 0 ) {
+      else if ( t.$('#fouDrag').text().indexOf(' ') == 0 ) {
         degree.courses[3] = item;
-        $('#fouDrag span img').data('dt', item.name);
-        replaceTextNode( $('#fouDrag'), item );
-        $('#fouDrag').css('color', 'green');
-        $('#fouDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
+        t.$('#fouDrag span img').data('dt', item.name);
+        replaceTextNode( t.$('#fouDrag'), item );
+        t.$('#fouDrag').css('color', 'green');
+        t.$('#fouDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
       }
-      else if ( $('#fivDrag').text().indexOf('Sample') == 0 ) {
+      else if ( t.$('#fivDrag').text().indexOf(' ') == 0 ) {
         degree.courses[4] = item;
-        $('#fivDrag span img').data('dt', item.name);
-        replaceTextNode( $('#fivDrag'), item );
-        $('#fivDrag').css('color', 'green');
-        $('#fivDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
+        t.$('#fivDrag span img').data('dt', item.name);
+        replaceTextNode( t.$('#fivDrag'), item );
+        t.$('#fivDrag').css('color', 'green');
+        t.$('#fivDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
       }
-      else if ( $('#sixDrag').text().indexOf('Sample') == 0 ) {
+      else if ( t.$('#sixDrag').text().indexOf(' ') == 0 ) {
         degree.courses[5] = item;
-        $('#sixDrag span img').data('dt', item.name);
-        replaceTextNode( $('#sixDrag'), item );
-        $('#sixDrag').css('color', 'green');
-        $('#sixDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
+        t.$('#sixDrag span img').data('dt', item.name);
+        replaceTextNode( t.$('#sixDrag'), item );
+        t.$('#sixDrag').css('color', 'green');
+        t.$('#sixDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
       }
-      else if ( $('#sevDrag').text().indexOf('Sample') == 0 ) {
+      else if ( t.$('#sevDrag').text().indexOf(' ') == 0 ) {
         degree.courses[6] = item;
-        $('#sevDrag span img').data('dt', item.name);
-        replaceTextNode( $('#sevDrag'), item );
-        $('#sevDrag').css('color', 'green');
-        $('#sevDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
+        t.$('#sevDrag span img').data('dt', item.name);
+        replaceTextNode( t.$('#sevDrag'), item );
+        t.$('#sevDrag').css('color', 'green');
+        t.$('#sevDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
       }
       //unnecessary, but just because
       idx  = null;
