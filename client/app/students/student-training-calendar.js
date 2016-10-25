@@ -11,7 +11,7 @@ import '../../templates/student/student-training-calendar.html';
  */
 Template.studentTrainingCalendar.onCreated( function() {  
   
-  $('#cover').show();
+  //$('#cover').show();
   
   
   /*
@@ -90,8 +90,10 @@ Template.studentTrainingCalendar.onCreated( function() {
  * RENDERED
  */
 Template.studentTrainingCalendar.onRendered(function(){
+  /*
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });  
+  */
 });

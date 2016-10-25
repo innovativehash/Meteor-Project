@@ -178,6 +178,7 @@ Template.library.events({
                             Courses.insert({company_id:Meteor.user().profile.company_id, 
                               cid: c.cid, name: c.name, "icon": "/img/icon-4.png",
                               credits: c.credits, public: false, times_completed:0});
+              Bert.alert('Class added to your courses', 'success', 'growl-top-right');
               dialog.close();
             }
           },

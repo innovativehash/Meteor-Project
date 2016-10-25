@@ -16,7 +16,7 @@ import '../../templates/student/student-course-listing.html';
  * CREATED
  */
 Template.studentCourseListing.onCreated(function() {
-  $('#cover').show();
+  //$('#cover').show();
   
   this.cur_cor = new ReactiveArray([]);
   this.cor_com = new ReactiveArray([]);
@@ -27,10 +27,12 @@ Template.studentCourseListing.onCreated(function() {
  * RENDERED
  */
 Template.studentCourseListing.onRendered(function(){
+  /*
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   }); 
+  */
 });
 
 
@@ -65,7 +67,7 @@ Template.studentCourseListing.helpers({
 
     // moment(c[i].due_date).format('MM/DD/YYYY');
 
-      let o = Courses.find({ company_id:1 }).fetch();
+      let o = Courses.find({ company_id:Meteor.user().profile.company_id }).fetch();
       let ocl = o.length;
       for ( let i = 0; i < ocl; i++ ) {
         var found = _.filter( Template.instance().cor_com.list(), ( m ) => { return m == o[i]._id })

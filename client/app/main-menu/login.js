@@ -31,8 +31,8 @@ Template.login.events({
         if ( Meteor.user().roles.admin ) {
           FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
           
-        } else if ( Meteor.user().roles === 'student' || 
-                    Meteor.user().roles === 'teacher' ) {
+        } else if ( Meteor.user().roles.student || 
+                    Meteor.user().roles.teacher ) {
             FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
         }
       }

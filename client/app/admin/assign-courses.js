@@ -74,7 +74,8 @@ Template.assignCourses.helpers({
   dept: () =>
     Departments.find({}).fetch(),
   names: () =>
-    Students.find({}).fetch()
+    Students.find({ company_id: Meteor.user().profile.company_id }).fetch()
+
 });
 
 
@@ -154,19 +155,28 @@ Template.assignCourses.events({
     let abn = $('#abn').is(':checked');               // by name radio
     let abd = $('#abd').is(':checked');               // by department radio
     
+    
     /*
      * ALL STUDENTS
      */
     if ( as ) {                                       
 
+      //let url = 'https://collective-university-nsardo.c9users.io/login';
+      //let text_wo_due_date  = `Hello ${s[i].fname},\n\nYou've been enrolled in ${nm}.\n\nYou can log in here: ${url}\nUser: s[i].email\nYour password remains the same.`;
+      //let text_w_due_date   = `Hello ${s[i].fname},\n\nYou've been enrolled in ${nm}.  Please complete this by:  ${assignDueDate}.\n\nYou can log in here: ${url}\nUser: s[i].email\nYour password remains the same.`;
+      
       let s     = Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
       let slen  = s.length;
+      
       let o     = { id: idx, name: nm, credits: cr, num: 1 };
+      
       if ( assignDueDate ) o.assignByDate = assignDueDate;
       
       for ( let i = 0; i < slen; i++ ) {
         if ( s[i].role == 'admin') continue;
         Students.update({ _id: s[i]._id },{ $push:{ current_courses: o } });
+        
+        //Meteor.call('sendEmail', s[i].email, 'admin@collectiveuniversity.com', 'Assigned Course', text_wo_due_date);
       }
       Bert.alert('Course Assigned', 'success', 'growl-top-right');
       

@@ -24,10 +24,12 @@ Template.studentRecords.onCreated( function() {
  * RENDERED
  */
 Template.studentRecords.onRendered(function(){
+  /*
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });  
+  */
 });
 
 

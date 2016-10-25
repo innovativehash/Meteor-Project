@@ -5,6 +5,7 @@ import { Students }     from '../../../both/collections/api/students.js';
 import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Comments }     from '../../../both/collections/api/comments.js';
 import { Departments }  from '../../../both/collections/api/departments.js';
+import { Companies }    from '../../../both/collections/api/companies.js';
 
 import '../../templates/admin/admin-students.html';
 
@@ -201,7 +202,7 @@ Template.adminStudents.events({
               cssClass: 'btn-success',
               action: function( dialog ) {
 
-                  let co = Students.findOne({_id: Meteor.userId()});
+                  let co = Companies.findOne({ _id: Meteor.user().profile.company_id });
 
                   let fname     = $('.js-fn').val().trim();
                   let lname     = $('.js-ln').val().trim();
@@ -209,12 +210,12 @@ Template.adminStudents.events({
                   let dept      = $('.js-dept :selected').text();
                   let opt       = $('#sel1').val();
                   let password  = $('.js-password').val().trim();
-                  let url       = 'https://collective-university-nsardo.c9users.io';
-                  //let text      = `Hello ${fname},\n\nThis organization has set up its own corporate university to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video:\n\nIf you have any questions, please contact: `;
+                  let url       = 'https://collective-university-nsardo.c9users.io/login';
+                  let text      = `Hello ${fname},\n\nThis organization has set up its own corporate university to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video:\n\nIf you have any questions, please contact: `;
 
-                  Meteor.call('addUser', email, password, fname, lname, opt, dept, co.company, co.company_id);
+                  Meteor.call('addUser', email, password, fname, lname, opt, dept, co.name, co._id);
 
-                  //Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
+                  Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
                   
                   /*
                   Meteor.call('sendEmail',
@@ -224,7 +225,7 @@ Template.adminStudents.events({
                               'This is a test of Email.send.');
                   */
                   
-                  //Bert.alert('Account Created', 'success', 'growl-top-right');
+                  Bert.alert('Account Created', 'success', 'growl-top-right');
                   dialog.close();
 
               } //action
@@ -301,7 +302,8 @@ Template.adminStudents.events({
                   fn  = $('.js-fn').val()               || s.fname,
                   //ln  = $('.js-ln').val()               || s.lname,
                   e   = $('.js-email').val()            || s.email,
-                  d   = $('.js-dept :selected').text()  || s.department;
+                  d   = $('.js-dept :selected').text()  || s.department,
+                  url = 'https://collective-university-nsardo.c9users.io/login';
                   //f   = fn + ' ' + ln;
                   //n   = Newsfeeds.find({ owner_id: id}).fetch(),
                   //c   = Comments.find({ poster_id: id}).fetch();
@@ -316,12 +318,12 @@ Template.adminStudents.events({
                                       updated_at: new Date() } });
   
               Meteor.users.update({ _id: id }, {$set:{ roles: r } });
-              /*
+              
               if ( r == 'teacher' ) {
-                let text = `Hello ${fn},\n\nThe administrator of Corporate University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here:\nUser: ${e}\nYour password remains the same.`;
+                let text = `Hello ${fn},\n\nThe administrator of Corporate University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${e}\nYour password remains the same.`;
                 Meteor.call('sendEmail', e, 'admin@collectiveuniversity.com', 'Upgraded Account', text);
               }
-              */
+              
 /*  
               let nlim = n.length;
               for ( let i = 0; i < nlim; i++ ) {
@@ -332,7 +334,7 @@ Template.adminStudents.events({
                 Meteor.call('changeCommentsAuthorName', c[i]._id, f );
               }
 */
-              //Bert.alert('Edits to student record recorded', 'success', 'growl-top-right');
+              Bert.alert('Edits to student record recorded', 'success', 'growl-top-right');
               dialog.close();
             }
           },
@@ -379,7 +381,7 @@ Template.adminStudents.events({
               action: function( dialog ) {
                 Students.remove(id);
                 Meteor.users.remove(id);
-               // Bert.alert('Student record deleted','danger');
+                Bert.alert('Student record deleted','danger');
                 dialog.close();
               }
         },

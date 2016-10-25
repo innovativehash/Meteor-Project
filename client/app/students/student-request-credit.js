@@ -14,7 +14,7 @@ import '../../templates/student/student-request-credit.html';
  */
 Template.studentRequestCredit.onCreated(function() {
   
-  $("#cover").show();
+  //$("#cover").show();
   
   
   /*
@@ -42,12 +42,12 @@ Template.studentRequestCredit.onCreated(function() {
  * ON RENDERED
  */
 Template.studentRequestCredit.onRendered(function(){
-  
+  /*
   $('#cover').delay( 500 ).fadeOut( 'slow', function() {
     $('#cover').hide();
     $('.dashboard-header-area').fadeIn( 'slow' );
   });  
-  
+  */
 });
 
 
@@ -72,8 +72,8 @@ Template.studentRequestCredit.events({
     e.preventDefault();
     e.stopPropagation();
    
-   option   = t.$('.js-credit-select').val().trim();
-   content  = t.$('#details').val().trim();
+   option   = $('.js-credit-select').val().trim();
+   content  = $('#details').val().trim();
    fname    = e.currentTarget.files[0].name;
 
     if ( e.currentTarget.files === undefined ) {
@@ -94,7 +94,7 @@ Template.studentRequestCredit.events({
       return;
     }
    
-    let fil = t.$('.js-credit-attachment').get(0).files[0];
+    let fil = $('.js-credit-attachment').get(0).files[0];
      //2 read file using file reader
     let fr  = new FileReader();
 
@@ -124,11 +124,11 @@ Template.studentRequestCredit.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
-    details = t.$('#details').val().trim();
-    option  = t.$('.js-credit-select option:selected').text();
+    details = $('#details').val().trim();
+    option  = $('.js-credit-select option:selected').text();
 
     //t.view.parentView.parentView.parentView._templateInstance.
-    t.$('.credit-request').hide();
+    $('.credit-request').hide();
 
     //todo:
     // NOTICE
@@ -149,8 +149,8 @@ Template.studentRequestCredit.events({
 
     Meteor.setTimeout(function() {
       //Template.instance().parentview.message = "sent";
-      t.$('#details').val('');
-      t.$('.js-credit-select').prop('selectedIndex', 0);
+      $('#details').val('');
+      $('.js-credit-select').prop('selectedIndex', 0);
       FlowRouter.go( 'student-dashboard', {_id: Meteor.userId() });
     }, 200);
 //-------------------------------------------------------------------    

@@ -77,6 +77,7 @@ Template.studentRecord.helpers({
       let lim = c.length;
       for ( let i=0; i<lim; i++ ) {
         c[i].date_started = moment(c[i].started_date).format('M-D-Y');
+        c[i].date_due     = moment(c[i].assignByDate).format('M-D-Y');
       }
       return c;
     } catch (e) {

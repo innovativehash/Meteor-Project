@@ -1,18 +1,17 @@
 
 
     Accounts.onCreateUser( ( options, user ) => {
-      user.roles = options.roles;
-      user.profile = options.profile;
-      console.log( user.roles );
-      return;
+      user.roles    = options.roles;
+      user.profile  = options.profile;
+      console.log( 'user.roles.student is ' + user.roles.student );
+    
       //user.roles = options.roles;
       //user.profile= {
         //"avatar": ""
       //}
       
       //hack to avoid necessity of user needing to verify their email
-      if ( user.profile.roles == "student" ) {
-        console.log('in student');
+      if ( user.roles.student || user.roles.teacher ) {
         user.emails[0].verified = true;
       } else {
 
