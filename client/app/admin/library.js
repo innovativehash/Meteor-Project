@@ -68,8 +68,34 @@ Template.library.onDestroyed(function(){
  * HELPERS
  */
 Template.library.helpers({
-   courses: () =>
-      Courses.find( {public:true}, { _id:1, name:1, credits:1, icon:1 }).fetch()
+   courses: () => {
+      let discard = []
+        , c = []
+        , cids = [];
+        
+      let own = Courses.find({ company_id: Meteor.user().profile.company_id }).fetch();
+      own.forEach(function(el){
+        cids.push( el.cid );
+      });
+
+      let pub = Courses.find( {$and: [ {public:true},{company_id:{$ne: Meteor.user().profile.company_id}}]}, { _id:1, name:1, credits:1, icon:1, cid:1 }).fetch();
+
+      /* Cycle through pub, and cherry pick out where pub[i].cid == own.cid */
+      for( let ii = 0, ilen = pub.length; ii < ilen; ii++ ) {
+        for( let i = 0, len = cids.length; i < len; i++ ) {
+          if( pub[ii].cid == cids[i] ) discard.push( ii ); //place matches in discard pile
+        }
+      }    
+
+    let ought = 0; // need ought to keep delivery array 0 indexed
+    for( let i = 0, len = pub.length; i < len; i++ ) {
+      if ( discard.includes(i)) continue; //if in discard pile, move on to next
+      c[ought++] = pub[i];  //not in discard pile, add it to delivery array
+    }
+
+    //c = pub.slice(2);
+    return c;
+   }
 });
 
 
@@ -150,7 +176,7 @@ Template.library.events({
             action: function( dialog ) {
               /* ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY */
                             Courses.insert({company_id:Meteor.user().profile.company_id, 
-                              name: c.name, "icon": "/img/icon-4.png",
+                              cid: c.cid, name: c.name, "icon": "/img/icon-4.png",
                               credits: c.credits, public: false, times_completed:0});
               dialog.close();
             }

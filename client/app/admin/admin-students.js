@@ -209,21 +209,14 @@ Template.adminStudents.events({
                   let dept      = $('.js-dept :selected').text();
                   let opt       = $('#sel1').val();
                   let password  = $('.js-password').val().trim();
-                  let text      = "You have a new account with password: " + password;
+                  let url       = 'https://collective-university-nsardo.c9users.io';
+                  //let text      = `Hello ${fname},\n\nThis organization has set up its own corporate university to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video:\n\nIf you have any questions, please contact: `;
 
                   Meteor.call('addUser', email, password, fname, lname, opt, dept, co.company, co.company_id);
 
                   //Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
-                  /*
-                  Students.update({ _id: student},
-                                  {
-                                    $set: {current_credits: tot_credits},
-                                    $inc: {compl_courses_cnt: 1},
-                                    $push:{approved_courses: {course:option, credits:credits, date: new Date()}}
-                                  });
-                  Newsfeeds.remove({_id: recordId});
                   
-                
+                  /*
                   Meteor.call('sendEmail',
                               'nsardo@msn.com',
                               'bob@example.com',
@@ -231,16 +224,9 @@ Template.adminStudents.events({
                               'This is a test of Email.send.');
                   */
                   
+                  //Bert.alert('Account Created', 'success', 'growl-top-right');
                   dialog.close();
-                  /*
-                  Session.set( 'message', 'Request Approval Recorded...' );
-                  Meteor.setTimeout(function() {
-                    console.log('in timer');
-                    Session.set('message', '');
-                    Session.set('showPostBox', true );
-                    Session.set('showNewsfeed', true );
-                }, 1500);
-                */
+
               } //action
           },
           {
@@ -312,7 +298,7 @@ Template.adminStudents.events({
             cssClass: 'btn-success',
             action: function( dialog ) {
               let r   = $('#sel1').val()                || s.role,
-                  //fn  = $('.js-fn').val()               || s.fname,
+                  fn  = $('.js-fn').val()               || s.fname,
                   //ln  = $('.js-ln').val()               || s.lname,
                   e   = $('.js-email').val()            || s.email,
                   d   = $('.js-dept :selected').text()  || s.department;
@@ -330,6 +316,12 @@ Template.adminStudents.events({
                                       updated_at: new Date() } });
   
               Meteor.users.update({ _id: id }, {$set:{ roles: r } });
+              /*
+              if ( r == 'teacher' ) {
+                let text = `Hello ${fn},\n\nThe administrator of Corporate University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here:\nUser: ${e}\nYour password remains the same.`;
+                Meteor.call('sendEmail', e, 'admin@collectiveuniversity.com', 'Upgraded Account', text);
+              }
+              */
 /*  
               let nlim = n.length;
               for ( let i = 0; i < nlim; i++ ) {
@@ -340,6 +332,7 @@ Template.adminStudents.events({
                 Meteor.call('changeCommentsAuthorName', c[i]._id, f );
               }
 */
+              //Bert.alert('Edits to student record recorded', 'success', 'growl-top-right');
               dialog.close();
             }
           },
@@ -386,6 +379,7 @@ Template.adminStudents.events({
               action: function( dialog ) {
                 Students.remove(id);
                 Meteor.users.remove(id);
+               // Bert.alert('Student record deleted','danger');
                 dialog.close();
               }
         },

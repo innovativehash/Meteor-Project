@@ -108,16 +108,25 @@ Template.assignCourses.events({
      e.preventDefault();
      e.stopImmediatePropagation();
      
-    t.$('#course-name').html( $(e.currentTarget).data('name') );
-    t.$('.add-course').attr('data-id', $(e.currentTarget).data('id'));
-    t.$('.add-course').attr('data-credits', $(e.currentTarget).data('credits'));
-    t.$('.add-course').attr('data-name', $(e.currentTarget).data('name'));
+    $('#course-name').html( $(e.currentTarget).data('name') );
+    $('.add-course').attr('data-id', $(e.currentTarget).data('id'));
+    $('.add-course').attr('data-credits', $(e.currentTarget).data('credits'));
+    $('.add-course').attr('data-name', $(e.currentTarget).data('name'));
     
-    t.$('#by-name').val(null).trigger('change');
-    t.$('#by-name').attr('disabled', true);  
-    t.$('#by-dept').val(null).trigger('change');
-    t.$('#by-dept').attr('disabled', true);
-    t.$('#assign-modal').modal('show'); 
+    $('#by-name').val(null).trigger('change');
+    $('#by-name').attr('disabled', true);  
+    $('#by-dept').val(null).trigger('change');
+    $('#by-dept').attr('disabled', true);
+    $('#assign-due-date').val('');
+   
+    
+    $('#abd').prop('checked', false);
+    $('#abd').bootstrapToggle('off');
+    $('#abn').prop('checked', false);
+    $('#abn').bootstrapToggle('off');
+    $('#all-students').prop('checked', false);
+    //$('#all-students').bootstrapToggle('off');
+    $('#assign-modal').modal('show'); 
 //-------------------------------------------------------------------
   },
 
@@ -132,21 +141,25 @@ Template.assignCourses.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
-    let idx   = t.$('.add-course').data('id');          // course id
-    let nm    = t.$('.add-course').data('name');        // course name
-    let cr    = t.$('.add-course').data('credits');     // course credits
+    let idx   = $('.add-course').data('id');          // course id
+    let nm    = $('.add-course').data('name');        // course name
+    let cr    = $('.add-course').data('credits');     // course credits
     
 
-    let assignByDept  = t.$('#by-dept').val();           // department name(s)
-    let assignByName  = t.$('#by-name').val();           // student name(s)
-    let assignDueDate = t.$('#assign-due-date').val();  // due date
+    let assignByDept  = $('#by-dept').val();           // department name(s)
+    let assignByName  = $('#by-name').val();           // student name(s)
+    let assignDueDate = $('#assign-due-date').val();  // due date
     
-    let as  = t.$('#all-students').is(':checked');      // all-students radio
-    let abn = t.$('#abn').is(':checked');               // by name radio
-    let abd = t.$('#abd').is(':checked');               // by department radio
+    let as  = $('#all-students').is(':checked');      // all-students radio
+    let abn = $('#abn').is(':checked');               // by name radio
+    let abd = $('#abd').is(':checked');               // by department radio
     
-    if ( as ) {                                       // all students?
-      let s     = Students.find().fetch();
+    /*
+     * ALL STUDENTS
+     */
+    if ( as ) {                                       
+
+      let s     = Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
       let slen  = s.length;
       let o     = { id: idx, name: nm, credits: cr, num: 1 };
       if ( assignDueDate ) o.assignByDate = assignDueDate;
@@ -156,7 +169,12 @@ Template.assignCourses.events({
         Students.update({ _id: s[i]._id },{ $push:{ current_courses: o } });
       }
       Bert.alert('Course Assigned', 'success', 'growl-top-right');
-    } else if ( abn ) {                               // assign by name?
+      
+    /*
+     * ASSIGN BY NAME
+     */
+    } else if ( abn ) {                           
+    
 
       if ( ! Array.isArray( assignByName ) ) {
         console.log( 'names empty' );
@@ -165,7 +183,7 @@ Template.assignCourses.events({
       }                                               // least one name!
     
       //assign this/these student(s) to course
-      let s     = Students.find().fetch(),
+      let s     = Students.find({ company_id: Meteor.user().profile.company_id }).fetch(),
           slen  = s.length,
           alen;
           
@@ -174,24 +192,31 @@ Template.assignCourses.events({
       
       // DOUBLE CHECK ASYNC TIMING, BEST PRACTICE FOR THIS
       alen = assignByName.length;
-      for ( let i = 0; i < slen; i++ ) {
-        for ( let j = 0; j < alen; j++ ) {
-          if ( s[i].role == 'admin') continue;
+      if ( assignByName[alen-1] == '' ) alen = alen - 1; //artifact in input
+      
+      for ( let i = 0; i < slen; i++ ) { //number of students
+        for ( let j = 0; j < alen; j++ ) { //number of names assigned
+          if ( s[i].role == 'admin') continue; //don't assign to admin
           if ( (s[i].fullName).indexOf( assignByName[j] ) != -1 ) {
             Students.update({ _id: s[i]._id },{ $push:{ current_courses: o } });
           }
         }
       }
       Bert.alert('Course assigned', 'success', 'growl-top-right');
-    } else if ( abd ) {                               // assign by dept?
-  
+      
+      
+    /*
+     * ASSIGN BY DEPARTMENT
+     */
+    } else if ( abd ) {
+    console.log('assign by dept');
       if ( ! Array.isArray( assignByDept ) ) {
         console.log( 'dept empty' );
         Bert.alert('You must enter a department!', 'danger');
         return;                                       // toast: must enter a dept!
       }
       
-      let s     = Students.find().fetch(),
+      let s     = Students.find({ company_id: Meteor.user().profile.company_id }).fetch(),
           slen  = s.length,
           dlen;
           
@@ -208,7 +233,9 @@ Template.assignCourses.events({
           }
         }
       }
-      Bert.alert('Course assigned', 'success', 'growl-top-left');
+      Bert.alert('Course assigned', 'success', 'growl-top-right');
+      
+      
     } else {
       Bert.alert( "You MUST select one of:\n 'all students', \n'names', or \n'departments'",
                   'danger');
@@ -216,13 +243,16 @@ Template.assignCourses.events({
     }
 
     /* EXIT, CLEAR */
-    t.$("#by-dept").val(null).trigger("change");
-    t.$("#by-name").val(null).trigger("change");
-    t.$('#assign-due-date').val('');
-    t.$('#abn').prop('checked', false);
-    t.$('#all-students').prop('checked', false);
-    t.$('#abd').prop('checked', false);
-    t.$('#assign-modal').modal('hide');
+    $("#by-dept").val(null).trigger("change");
+    $("#by-dept").attr('disabled', true);
+    $("#by-name").val(null).trigger("change");
+    $('#by-name').attr('disabled', true);
+    
+    $('#assign-due-date').val('');
+    $('#abn').prop('checked', false);
+    $('#all-students').prop('checked', false);
+    $('#abd').prop('checked', false);
+    $('#assign-modal').modal('hide');
 //-------------------------------------------------------------------
   },
 
@@ -241,12 +271,12 @@ Template.assignCourses.events({
     let tog = $(e.currentTarget).prop('checked');
     
     if (tog){
-      t.$("#by-dept").val(null).trigger("change");
-      t.$("#by-name").val(null).trigger("change");
-      t.$('#by-name').attr('disabled', true); 
-      t.$('#by-dept').attr('disabled', true);
-      t.$('#abn').bootstrapToggle('off');
-      t.$('#abd').bootstrapToggle('off');
+      $("#by-dept").val(null).trigger("change");
+      $("#by-name").val(null).trigger("change");
+      $('#by-name').attr('disabled', true); 
+      $('#by-dept').attr('disabled', true);
+      $('#abn').bootstrapToggle('off');
+      $('#abd').bootstrapToggle('off');
     }
 //-----------------------------------------------------------------
   },
@@ -262,14 +292,14 @@ Template.assignCourses.events({
     let tog = $(e.currentTarget).prop('checked');
     
     if (tog){
-      t.$('#by-name').attr('disabled', false );
-      t.$('#by-dept').val(null).trigger('change');
-      t.$('#by-dept').attr('disabled', true);
-      t.$('#abd').bootstrapToggle('off');
-      t.$('#all-students').bootstrapToggle('off');
+      $('#by-name').attr('disabled', false );
+      $('#by-dept').val(null).trigger('change');
+      $('#by-dept').attr('disabled', true);
+      $('#abd').bootstrapToggle('off');
+      $('#all-students').bootstrapToggle('off');
     } else {
-      t.$('#by-name').val(null).trigger('change');
-      t.$('#by-name').attr('disabled', true);
+      $('#by-name').val(null).trigger('change');
+      $('#by-name').attr('disabled', true);
     }
 //-----------------------------------------------------------------
   },
@@ -286,14 +316,14 @@ Template.assignCourses.events({
     let tog = $(e.currentTarget).prop('checked');
     
     if (tog){
-      t.$('#by-dept').attr('disabled', false);
-      t.$('#by-name').val(null).trigger('change');
-      t.$('#by-name').attr('disabled', true );
-      t.$('#abn').bootstrapToggle('off');
-      t.$('#all-students').bootstrapToggle('off');
+      $('#by-dept').attr('disabled', false);
+      $('#by-name').val(null).trigger('change');
+      $('#by-name').attr('disabled', true );
+      $('#abn').bootstrapToggle('off');
+      $('#all-students').bootstrapToggle('off');
     } else {
-      t.$('#by-dept').val(null).trigger('change');
-      t.$('#by-dept').attr('disabled', true);
+      $('#by-dept').val(null).trigger('change');
+      $('#by-dept').attr('disabled', true);
     }
 //-----------------------------------------------------------------
   },
@@ -327,5 +357,6 @@ Template.assignCourses.events({
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 //-----------------------------------------------------------------
   },
+  
   
 });

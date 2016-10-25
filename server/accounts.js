@@ -3,18 +3,24 @@
     Accounts.onCreateUser( ( options, user ) => {
       user.roles = options.roles;
       user.profile = options.profile;
+      console.log( user.roles );
+      return;
       //user.roles = options.roles;
       //user.profile= {
         //"avatar": ""
       //}
+      
       //hack to avoid necessity of user needing to verify their email
-      //user.emails[0].verified = true;
-  
+      if ( user.profile.roles == "student" ) {
+        console.log('in student');
+        user.emails[0].verified = true;
+      } else {
 
-      Meteor.setTimeout(function(){
-        Accounts.sendVerificationEmail(user._id);
-      }, 2000);
-
+        Meteor.setTimeout(function(){
+          Accounts.sendVerificationEmail(user._id);
+        }, 2000);
+      }
+      
       return user;
     });
 
@@ -61,9 +67,10 @@ Accounts.emailTemplates.verifyEmail = {
   },
   text( user, url ) {
     let emailAddress   = user.emails[0].address,
+        name           = user.username.split(' ')[0],
         urlWithoutHash = url.replace( '#/', '' ),
         supportEmail   = "support@collectiveUniversity.com",
-        emailBody      = `To verify your email address (${emailAddress}) visit the following link:\n\n${urlWithoutHash}\n\n If you did not request this verification, please ignore this email. If you feel something is wrong, please contact our support team: ${supportEmail}.`;
+        emailBody      = `Hello ${name},\n\nThanks for signing up for Corporate University, to begin setting up your platform please click here and sign-on: ${urlWithoutHash}\n\n If you should have any questions, please feel free to contact our support team: ${supportEmail}.\n\nSincerely,\n\nThe Corporate U Team`;
 
     return emailBody;
   }
