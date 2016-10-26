@@ -1,6 +1,8 @@
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 
+import '../../../public/css/select2.min.css';
+
 import { Students }     from '../../../both/collections/api/students.js';
 import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Comments }     from '../../../both/collections/api/comments.js';
@@ -40,6 +42,7 @@ Template.adminStudents.onCreated( function() {
       $('#search-students').select2({
         allowClear: true
       });
+
     });
     //console.log('students:: chosen,jquery.min.js loaded...');
   }).fail( function(jqxhr, settings, exception ) {
@@ -62,6 +65,7 @@ Template.adminStudents.onRendered( function() {
     $( ".filter-buttons" ).fadeIn( 'slow' );
   });
 */
+
 });
 
 
@@ -71,7 +75,7 @@ Template.adminStudents.onRendered( function() {
 Template.adminStudents.helpers({
   
   students() {
-    let s = Students.find().fetch();
+    let s = Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
     let len = s.length;
     for( let i=0; i<len; i++) {
       s[i].created_at = moment(s[i].created_at).format('M-D-Y') //modify array in place
@@ -156,7 +160,17 @@ Template.adminStudents.events({
     
     let dpt = Departments.find({}).fetch();
   
+
+    
     Meteor.setTimeout(function(){
+                        $('.js-dept').select2({
+                    placeholder: "Select a Dept...",
+                    //allowClear: true,
+                    //multiple: false,
+                    tags:true
+                  });
+      
+      $('.js-dept').append('<option></option>');
       for( let i = 0, l = dpt.length; i < l; i++){
         $('.js-dept').append('<option value="' + dpt[i]._id + '">' +
                                   dpt[i].name + '</option>');
@@ -179,14 +193,12 @@ Template.adminStudents.events({
                         '<div class="col-sm-6">'                                        +
                           '<input class="js-email" type="text" placeholder="Email"/>'   +
                         '</div>'                                                        +
-                        '<div class="col-sm-6">'                                        +
-                          '<select class="js-dept form-control"/></select>' +
+                        '<div class="col-sm-6">'  +
+                        '<div id="dptdiv" class="inline">Select a Dept, or <button id="add-department" type="button" class="btn btn-success btn-xs">Add a Dept</button></div>' +
+                          '<select class="js-dept form-control" style="width:auto;"></select>' +
                         '</div>'                                                        +
                       '</div>'                                                          +
                       '<div class="row">'                                               +
-                        '<div class="col-sm-6">'                                        +
-                          '<input class="js-password" type="text" placeholder="initial password...">' +
-                        '</div>'                                                        +
                         '<div class="col-sm-6">'                                        +
                           '<select class="form-control" id="sel1">'                     +
                             '<option value="student">Student</option>'                  +
@@ -194,9 +206,27 @@ Template.adminStudents.events({
                             '<option value="admin" >Admin</option>'                     +
                           '</select>'                                                   +
                         '</div>'                                                        +
+                        '<div class="col-sm-6"></div>'                                  +
                       '</div>'                                                          +
                     '</div>'                                                            +
                   '</div>'),
+      onshown: function() {
+                  $('.js-dept').select2({
+                    placeholder: "Select a Dept...",
+                    //allowClear: true,
+                    //multiple: false,
+                    tags:true
+                  });
+                  
+                  $('#add-department').click(function(){
+                    //hide select
+                    $('.js-dept').remove();
+                    $('.js-dept').select2('destroy');
+                    
+                    $('#dptdiv').append('<input type="text" id="ndept" />');
+                    //add input
+                  });
+      },
       buttons: [{
               label: 'Add Student',
               cssClass: 'btn-success',
@@ -211,9 +241,9 @@ Template.adminStudents.events({
                   let opt       = $('#sel1').val();
                   let password  = $('.js-password').val().trim();
                   let url       = 'https://collective-university-nsardo.c9users.io/login';
-                  let text      = `Hello ${fname},\n\nThis organization has set up its own corporate university to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video:\n\nIf you have any questions, please contact: `;
+                  let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video:\n\nIf you have any questions, please contact: `;
 
-                  Meteor.call('addUser', email, password, fname, lname, opt, dept, co.name, co._id);
+                  Meteor.call('addUser', email, password, fname, lname, opt, dept, co.name, co._id, password);
 
                   Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
                   
@@ -238,10 +268,14 @@ Template.adminStudents.events({
           }
       }]
     });
+
 //-------------------------------------------------------------------
   },
 
 
+
+  
+  
   /*
    * CLICK .JS-EDIT-STUDENT
    */
@@ -320,7 +354,7 @@ Template.adminStudents.events({
               Meteor.users.update({ _id: id }, {$set:{ roles: r } });
               
               if ( r == 'teacher' ) {
-                let text = `Hello ${fn},\n\nThe administrator of Corporate University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${e}\nYour password remains the same.`;
+                let text = `Hello ${fn},\n\nThe administrator of Collective University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${e}\nPass: ${s.password}`;
                 Meteor.call('sendEmail', e, 'admin@collectiveuniversity.com', 'Upgraded Account', text);
               }
               

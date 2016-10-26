@@ -69,7 +69,7 @@ Accounts.emailTemplates.verifyEmail = {
         name           = user.username.split(' ')[0],
         urlWithoutHash = url.replace( '#/', '' ),
         supportEmail   = "support@collectiveUniversity.com",
-        emailBody      = `Hello ${name},\n\nThanks for signing up for Corporate University, to begin setting up your platform please click here and sign-on: ${urlWithoutHash}\n\n If you should have any questions, please feel free to contact our support team: ${supportEmail}.\n\nSincerely,\n\nThe Corporate U Team`;
+        emailBody      = `Hello ${name},\n\nThanks for signing up for Collective University, to begin setting up your platform please click here and sign-on: ${urlWithoutHash}\n\n If you should have any questions, please feel free to contact our support team: ${supportEmail}.\n\nSincerely,\n\nThe Collective U Team`;
 
     return emailBody;
   }

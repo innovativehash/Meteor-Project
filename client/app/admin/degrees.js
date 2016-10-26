@@ -10,7 +10,6 @@ import '../../templates/admin/degrees.html';
 
 let degree      = {};
 degree.courses  = [];
-
 /*
  * CREATED
  */
@@ -54,12 +53,12 @@ Template.degrees.onCreated(function() {
       }));
     },
     focus:      function( event, ui ) {
-                    $( '#deg-find-course' ).val( ui.item.id );
+                    $( '#deg-find-course' ).val( ui.item.name ); //id
                     return false;
                   },
                   
       select:     function( event, ui ){
-                    $( '#deg-find-course' ).val( ui.item.id );
+                    $( '#deg-find-course' ).val( ui.item.name ); //id
                     return false;
                   }
     })
@@ -67,10 +66,12 @@ Template.degrees.onCreated(function() {
           function( ul, item ) {
             return $( "<li>" )
               .append(  "<a><strong id = 'name'>"       +
-                        item.name                       +
-                        "</strong><br /><em id = 'id'>" +
-                        item.id                         +
-                        "</em></a>" )
+                        item.name +
+                        
+                        "</strong><br />"               +
+                        //"<em id = 'id'>" +
+                        //item.id </em>                   +
+                        "</a>" )
               .appendTo( ul );
       };
     
@@ -81,7 +82,7 @@ Template.degrees.onCreated(function() {
           str = eval(Session.get('searchTerm' )); //harden this!!!
       arr = Courses.find( { name: {$regex: str  }}, { limit:50 } ).fetch();
       for ( var i = 0; i < arr.length; i++ ) { 
-        result.push({ name: arr[i].name, id: arr[i]._id });
+        result.push({ name: arr[i].name }); //, id: arr[i]._id });
       }
       return result; 
     }
@@ -176,14 +177,16 @@ Template.degrees.events({
   /*
    * KEYPRESS #FIND-COURSE
    */
-  'keypress #deg-find-course': function(event){
+  'keypress #deg-find-course': function( event, t ){
     
-    if ( event.which == 13 ) {
+    if ( event.which === 13 ) {
       event.preventDefault();
       
-      let idx = $("#deg-find-course").val(), 
-          item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
-          
+      let idx = $("#deg-find-course").val();
+      //let item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
+      let item = Courses.find({ name: {$regex: idx  }}).fetch()[0];
+      //need idx returned from search!!!
+
       t.$('#deg-find-course').val('');
       //console.log( $('#firDrag').contents().eq(0).text().indexOf('Sample'));
       //console.log( $('#firDrag').text().indexOf('Sample'));

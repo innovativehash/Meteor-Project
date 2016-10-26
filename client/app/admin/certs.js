@@ -53,23 +53,29 @@ Template.certs.onCreated(function(){
       }));
     },
     focus:      function( event, ui ) {
-                    $( '#cert-find-course' ).val( ui.item.id );
+                    $( '#cert-find-course' ).val( ui.item.name ); //id
                     return false;
                   },
                   
       select:     function( event, ui ){
-                    $( '#cert-find-course' ).val( ui.item.id );
+                    $( '#cert-find-course' ).val( ui.item.name ); //id
                     return false;
                   }
     })
     .autocomplete( "instance" )._renderItem =
           function( ul, item ) {
             return $( "<li>" )
+            /*
               .append(  "<a><strong id = 'name'>"       +
                         item.name                       +
                         "</strong><br /><em id = 'id'>" +
                         item.id                         +
                         "</em></a>" )
+            */
+              .append(  "<a><strong id = 'name'>"       +
+                        item.name                       +
+                        "</strong><br />"               +
+                        "</a>" )
               .appendTo( ul );
       };
     
@@ -80,7 +86,7 @@ Template.certs.onCreated(function(){
           str = eval(Session.get('searchTerm' )); //harden this!!!
       arr = Courses.find( { name: {$regex: str  }}, { limit:50 } ).fetch();
       for ( var i = 0; i < arr.length; i++ ) { 
-        result.push({ name: arr[i].name, id: arr[i]._id });
+        result.push({ name: arr[i].name }); //, id: arr[i]._id });
       }
       //console.log('searchTerms result ' + result );
       return result; 
@@ -186,8 +192,11 @@ Template.certs.events({
       event.preventDefault();
       //event.stopImmediatePropagation();
       
-      let idx = t.$("#cert-find-course").val(), 
-          item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
+      let idx = t.$("#cert-find-course").val();
+      
+      //let item = Courses.find({ _id: currIdx  }, { limit:1 }).fetch()[0];
+      let item = Courses.find({ name: {$regex: idx  }}).fetch()[0];
+      
       t.$('#cert-find-course').val('');
       
       if ( t.$('#firDrag').text().indexOf(' ') == 0 ) {
