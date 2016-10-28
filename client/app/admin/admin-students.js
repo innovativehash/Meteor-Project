@@ -40,9 +40,23 @@ Template.adminStudents.onCreated( function() {
   $.getScript('/js/select2.min.js', function() {
     $(document).ready(function(){
       $('#search-students').select2({
-        allowClear: true
+        allowClear: true,
+        multiple: false,
+        tags:true
       });
-
+      $('.js-dept').select2({
+        placeholder: "Select a Dept...",
+        allowClear: true,
+        multiple: false,
+        tags:true
+      });
+      
+      $('#sel1').select2({
+        placeholder: "Select a Student type...",
+        allowClear: true,
+        multiple: false,
+        tags:false
+      });
     });
     //console.log('students:: chosen,jquery.min.js loaded...');
   }).fail( function(jqxhr, settings, exception ) {
@@ -156,20 +170,19 @@ Template.adminStudents.events({
    */
   'click .js-add-student'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
+    //e.stopImmediatePropagation();
+    
+    //DEPT MUST HAVE A VALUE
     
     let dpt = Departments.find({}).fetch();
   
-
+    //clear created by code options
+    $('.js-dept option').each(function(){
+      $(this).remove();
+    });
     
     Meteor.setTimeout(function(){
-                        $('.js-dept').select2({
-                    placeholder: "Select a Dept...",
-                    //allowClear: true,
-                    //multiple: false,
-                    tags:true
-                  });
-      
+
       $('.js-dept').append('<option></option>');
       for( let i = 0, l = dpt.length; i < l; i++){
         $('.js-dept').append('<option value="' + dpt[i]._id + '">' +
@@ -177,102 +190,72 @@ Template.adminStudents.events({
       }
     }, 500);
     
-    BootstrapDialog.show({
-      title: "Add Student",
-      message:  $('<div class="pop-up-area students">'                                  +
-                    '<div class="popup-body">'                                          +
-                      '<div class="row">'                                               +
-                        '<div class="col-sm-6">'                                        +
-                          '<input class="js-fn" type="text" placeholder="First Name"/>' +
-                        '</div>'                                                        +
-                        '<div class="col-sm-6">'                                        +
-                          '<input class="js-ln" type="text" placeholder="Last Name"/>'  +
-                        '</div>'                                                        +
-                      '</div>'                                                          +
-                      '<div class="row">'                                               +
-                        '<div class="col-sm-6">'                                        +
-                          '<input class="js-email" type="text" placeholder="Email"/>'   +
-                        '</div>'                                                        +
-                        '<div class="col-sm-6">'  +
-                        '<div id="dptdiv" class="inline">Select a Dept, or <button id="add-department" type="button" class="btn btn-success btn-xs">Add a Dept</button></div>' +
-                          '<select class="js-dept form-control" style="width:auto;"></select>' +
-                        '</div>'                                                        +
-                      '</div>'                                                          +
-                      '<div class="row">'                                               +
-                        '<div class="col-sm-6">'                                        +
-                          '<select class="form-control" id="sel1">'                     +
-                            '<option value="student">Student</option>'                  +
-                            '<option value="teacher">Teacher</option>'                  +
-                            '<option value="admin" >Admin</option>'                     +
-                          '</select>'                                                   +
-                        '</div>'                                                        +
-                        '<div class="col-sm-6"></div>'                                  +
-                      '</div>'                                                          +
-                    '</div>'                                                            +
-                  '</div>'),
-      onshown: function() {
-                  $('.js-dept').select2({
-                    placeholder: "Select a Dept...",
-                    //allowClear: true,
-                    //multiple: false,
-                    tags:true
-                  });
-                  
-                  $('#add-department').click(function(){
-                    //hide select
-                    $('.js-dept').remove();
-                    $('.js-dept').select2('destroy');
-                    
-                    $('#dptdiv').append('<input type="text" id="ndept" />');
-                    //add input
-                  });
-      },
-      buttons: [{
-              label: 'Add Student',
-              cssClass: 'btn-success',
-              action: function( dialog ) {
-
-                  let co = Companies.findOne({ _id: Meteor.user().profile.company_id });
-
-                  let fname     = $('.js-fn').val().trim();
-                  let lname     = $('.js-ln').val().trim();
-                  let email     = $('.js-email').val().trim();
-                  let dept      = $('.js-dept :selected').text();
-                  let opt       = $('#sel1').val();
-                  let password  = $('.js-password').val().trim();
-                  let url       = 'https://collective-university-nsardo.c9users.io/login';
-                  let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video:\n\nIf you have any questions, please contact: `;
-
-                  Meteor.call('addUser', email, password, fname, lname, opt, dept, co.name, co._id, password);
-
-                  Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
-                  
-                  /*
-                  Meteor.call('sendEmail',
-                              'nsardo@msn.com',
-                              'bob@example.com',
-                              'Hello from Meteor!',
-                              'This is a test of Email.send.');
-                  */
-                  
-                  Bert.alert('Account Created', 'success', 'growl-top-right');
-                  dialog.close();
-
-              } //action
-          },
-          {
-          label: 'Cancel Add',
-          cssClass: 'btn-danger',
-          action: function( dialog ) {
-            dialog.close();
-          }
-      }]
-    });
-
+    t.$('.js-fn').attr('placeholder', "");
+    t.$('.js-ln').attr('placeholder', "" );
+    t.$('.js-email').attr('placeholder', "");
 //-------------------------------------------------------------------
   },
 
 
+  'click .js-student-add-submit'( e, t ) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      //DEPT MUST HAVE A VALUE
+      //option value
+      //console.log( t.$('.js-dept').val() );
+      
+      //INSERT ADDED DEPT TO DEPT DB if it doesn't exist
+      let foo;
+      try {
+        foo = Departments.findOne({ _id: t.$('.js-dept option:selected').val()})._id;
+      } catch( e ) {
+        foo = Departments.insert({ company_id: Meteor.user().profile.company_id, name: t.$('.js-dept option:selected').text() });
+      }
+      
+      $('#addStudentModal').modal("hide");
+      return;
+
+      let co = Companies.findOne({ _id: Meteor.user().profile.company_id });
+
+      let fname     = $('.js-fn').val().trim();
+      let lname     = $('.js-ln').val().trim();
+      let email     = $('.js-email').val().trim();
+      let dept      = $('.js-dept :selected').text();
+      let opt       = $('#sel1').val();
+      
+      /* ASSIGN random password */
+      //todo: assign random password;
+      
+      let url       = 'https://collective-university-nsardo.c9users.io/login';
+      let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video:\n\nIf you have any questions, please contact: `;
+
+      //ALL FIELDS MUST BE FILLED OUT OR ERR
+      Meteor.call('addUser', email, password, fname, lname, opt, dept, co.name, co._id, password);
+
+      Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
+      
+      /*
+      Meteor.call('sendEmail',
+                  'nsardo@msn.com',
+                  'bob@example.com',
+                  'Hello from Meteor!',
+                  'This is a test of Email.send.');
+      */
+      
+      //clear created by code options
+      $('.js-dept option').each(function(){
+        $(this).remove();
+      });
+      
+      $('.js-fn').val('');
+      $('.js-ln').val('');
+      $('.js-email').val('');  
+      
+      Bert.alert('Account Created', 'success', 'growl-top-right');
+      $('#addStudentModal').modal("hide");
+//-------------------------------------------------------------------
+  }, 
 
   
   
@@ -281,12 +264,23 @@ Template.adminStudents.events({
    */
   'click .js-edit-student'( e, t ) {
       e.preventDefault();
-      e.stopImmediatePropagation();
+      //e.stopImmediatePropagation();
   
+      //DEPT MUST HAVE A VALUE
+      
       let id = t.$( e.currentTarget ).data('id');
       let s  = Students.findOne({_id: id});
       
+      t.$('.js-fn').attr('placeholder', s.fname);
+      t.$('.js-ln').attr('placeholder', s.lname );
+      t.$('.js-email').attr('placeholder', s.email);
+    
       let dpt = Departments.find({}).fetch();
+      
+      //clear created by code options
+      $('.js-dept option').each(function(){
+        $(this).remove();
+      });
       
       Meteor.setTimeout(function(){
         for( let i = 0, l = dpt.length; i < l; i++){
@@ -294,93 +288,74 @@ Template.adminStudents.events({
                                     dpt[i].name + '</option>');
         }
 
-        $('select[name="add-dept-select"]').find('option:contains("' + s.department + '")').attr("selected",true);
+        $('select[name="js-dept"]').find('option:contains("' + s.department + '")').attr("selected",true);
+        $('select[name="sel1"]').find('option:contains("' + capitalizeFirstLetter(s.role) + '")').attr("selected",true);
       }, 500);
-      
-      BootstrapDialog.show({
-        title: "Edit Student",
-        message:  '<div class="pop-up-area students">'  +
-                    '<div class="popup-body">'          +
-                      '<div class="row">'               +
-                        '<div class="col-sm-6">'        +
-                          '<input class="js-fn" type="text" placeholder="' + s.fname + '"' + 'readonly/>' +
-                        '</div>'                  +
-                        '<div class="col-sm-6">'  +
-                          '<input class="js-ln" type="text" placeholder="' + s.lname + '"' + 'readonly/>' +
-                        '</div>'  +
-                      '</div>'    +
-                      '<div class="row">'         +
-                        '<div class="col-sm-6">'  +
-                          '<input class="js-email" type="text" placeholder="' + s.email + '"' + '/>' +
-                        '</div>'  +
-                      '<div class="col-sm-6">' +
-                        '<select name="add-dept-select" class="js-dept form-control"></select>' +
-                      '</div>' +
-                      '</div>' +
-                      '<div class="row">'         +
-                        '<div class="col-sm-6">'  +
-                          '<select class="form-control" name="sel1" id="sel1">' +
-                            '<option ' + eval(s.role == "student" ? 'selected="selected"' : "" ) + ' value="student">Student</option>'  +
-                            '<option ' + eval(s.role == "teacher" ? 'selected="selected"' : "" ) + ' value="teacher">Teacher</option>'  +
-                            '<option ' + eval(s.role == "admin"   ? 'selected="selected"' : "" ) + ' value="admin">Admin</option>'      +
-                          '</select>' +
-                        '</div>'  +
-                      '</div>'    +
-                    '</div></div>',
-        buttons: [
-          {
-            label: 'Commit Edit',
-            cssClass: 'btn-success',
-            action: function( dialog ) {
-              let r   = $('#sel1').val()                || s.role,
-                  fn  = $('.js-fn').val()               || s.fname,
-                  //ln  = $('.js-ln').val()               || s.lname,
-                  e   = $('.js-email').val()            || s.email,
-                  d   = $('.js-dept :selected').text()  || s.department,
-                  url = 'https://collective-university-nsardo.c9users.io/login';
-                  //f   = fn + ' ' + ln;
-                  //n   = Newsfeeds.find({ owner_id: id}).fetch(),
-                  //c   = Comments.find({ poster_id: id}).fetch();
+//-------------------------------------------------------------------
+  },
   
-              Students.update({ _id: id },
-                              {$set:{ role:r,
-                                      //fname:fn,
-                                      //lname:ln,
-                                      email:e,
-                                      department:d,
-                                      //fullName:f,
-                                      updated_at: new Date() } });
   
-              Meteor.users.update({ _id: id }, {$set:{ roles: r } });
-              
-              if ( r == 'teacher' ) {
-                let text = `Hello ${fn},\n\nThe administrator of Collective University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${e}\nPass: ${s.password}`;
-                Meteor.call('sendEmail', e, 'admin@collectiveuniversity.com', 'Upgraded Account', text);
-              }
-              
-/*  
-              let nlim = n.length;
-              for ( let i = 0; i < nlim; i++ ) {
-                Meteor.call('changeNewsfeedAuthorName', n[i]._id, f );
-              }
-              let clim = c.length;
-              for ( let i = 0; i < clim; i++ ) {
-                Meteor.call('changeCommentsAuthorName', c[i]._id, f );
-              }
+  /*
+   * CLICK .JS-EDIT-STUDENT-SUBMIT
+   */
+  'click .js-student-edit-submit'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    //DEPT MUST HAVE A VALUE
+    let r   = $('#sel1').val()                || s.role,
+        fn  = $('.js-fn').val()               || s.fname,
+        //ln  = $('.js-ln').val()               || s.lname,
+        em  = $('.js-email').val()            || s.email,
+        d   = $('.js-dept :selected').text()  || s.department,
+        url = 'https://collective-university-nsardo.c9users.io/login';
+        //f   = fn + ' ' + ln;
+        //n   = Newsfeeds.find({ owner_id: id}).fetch(),
+        //c   = Comments.find({ poster_id: id}).fetch();
+
+    // ALL FIELDS MUST BE FILLED OUT OR ERROR
+    Students.update({ _id: id },
+                    {$set:{ role:r,
+                            //fname:fn,
+                            //lname:ln,
+                            email:e,
+                            department:d,
+                            //fullName:f,
+                            updated_at: new Date() } });
+
+    // ALL FIELDS MUST BE FILLED OUT OR ERROR
+    Meteor.users.update({ _id: id }, {$set:{ roles: r } });
+    
+    
+    if ( r == 'teacher' ) {
+      let text = `Hello ${fn},\n\nThe administrator of Collective University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${e}\nPass: ${s.password}`;
+      Meteor.call('sendEmail', em, 'admin@collectiveuniversity.com', 'Upgraded Account', text);
+    }
+    
+/*
+    unused
+    let nlim = n.length;
+    for ( let i = 0; i < nlim; i++ ) {
+      Meteor.call('changeNewsfeedAuthorName', n[i]._id, f );
+    }
+    let clim = c.length;
+    for ( let i = 0; i < clim; i++ ) {
+      Meteor.call('changeCommentsAuthorName', c[i]._id, f );
+    }
 */
-              Bert.alert('Edits to student record recorded', 'success', 'growl-top-right');
-              dialog.close();
-            }
-          },
-          {
-            label: 'Cancel Edit',
-            cssClass: 'btn-danger',
-            action: function( dialog ) {
-            dialog.close();
-              dialog.close();
-            }
-          }]
-      });
+
+    t.$('.js-fn').attr('placeholder', "");
+    t.$('.js-ln').attr('placeholder', "" );
+    t.$('.js-email').attr('placeholder', "");
+    
+    //clear created by code options
+    $('.js-dept option').each(function(){
+      $(this).remove();
+    });
+    
+    Bert.alert('Edits to student record recorded', 'success', 'growl-top-right');
+    $('#editStudentModal').modal("hide");
+    
 //-------------------------------------------------------------------
   },
 
@@ -390,43 +365,38 @@ Template.adminStudents.events({
    */
   'click .js-delete-student'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
+    //e.stopImmediatePropagation();
 
     /* ARE YOU SURE YOU WANT TO DELETE... */
-    let id = $( e.currentTarget ).data('id');
+    let id = t.$( e.currentTarget ).data('id');
     let s  = Students.findOne({_id: id});
-    BootstrapDialog.show({
-      title: "Delete Student",
-      message:  '<div class="pop-up-area students">' +
-                  '<div class="popup-body">' +
-                    '<div class="row">' +
-                      '<div class="col-sm-12">' +
-                        '<strong>Are you sure you want to delete this student?</strong>' +
-                        '<div class="name">' +
-                          '<span>' +
-                            '<img src="' + s.avatar + '"' + '>' +
-                          '</span>' +
-                        '</div>' +
-                        '<span style="color:white;">' + s.fname + ' &nbsp; ' + s.lname + ' </span>' +
-                  '</div></div></div></div>',
-      buttons: [{
-              label: 'Delete Student',
-              cssClass: 'btn-danger',
-              action: function( dialog ) {
-                Students.remove(id);
-                Meteor.users.remove(id);
-                Bert.alert('Student record deleted','danger');
-                dialog.close();
-              }
-        },
-        {
-            label: 'Cancel Delete',
-            cssClass: 'btn-primary',
-            action: function( dialog ) {
-              dialog.close();
-            }
-        }]
-    });
+    
+    t.$('#fnln').html(   s.fname + "&nbsp;" +  s.lname );
+    t.$('.name').data('id', id);
+    t.$('#stdimg').attr('src', s.avatar );
+    
+//-------------------------------------------------------------------    
+  },
+                  
+                  
+                  
+  'click .js-student-delete-submit'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    
+    let id = t.$('.name').data('id');
+    
+    Students.remove(id);
+    Meteor.users.remove(id);
+    
+    Bert.alert('Student record deleted','danger');
+    
+    t.$('#fnln').html( "" );
+    t.$('.name').data('id', "");
+    t.$('#stdimg').attr('src', "" );
+    
+    $('deleteStudentModal').modal('hide');
+    
 //-------------------------------------------------------------------
   },
 
@@ -463,4 +433,9 @@ Blaze.TemplateInstance.prototype.parentTemplate = function (levels) {
         }
         view = view.parentView;
     }
+};
+
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 };

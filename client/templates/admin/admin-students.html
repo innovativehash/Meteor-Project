@@ -27,7 +27,14 @@
   <div class="row">
     <div class="col-sm-8">
       <div class="filter-buttons studentpage">
-        <button type="button" id="add_students" class="js-add-student"><span>+</span>Add Student</button>
+        <button class="js-add-student"
+          type="button" 
+          id="add_students" 
+          data-toggle="modal" 
+          data-target="#addStudentModal">
+          <span>+</span>
+          Add Student
+        </button>
         <button id="import_student" class="js-import-students-csv">Import Students CSV</button>    
       </div><!-- filter buttons -->
     </div>
@@ -83,7 +90,22 @@
                         <td></td>
                       {{/if}}
                       <td>{{created_at}}</td>
-                      <td><button class="js-edit-student" data-id="{{_id}}" id="edit"><img src="/img/edit.png" alt=""></button><button class="js-delete-student" data-id="{{_id}}" id="delete"><img src="/img/delete.png" alt=""></button></td>
+                      <td>
+                        <button class="js-edit-student" 
+                                data-id="{{_id}}"
+                                data-toggle="modal" 
+                                data-target="#editStudentModal"
+                                id="edit">
+                          <img src="/img/edit.png" alt="">
+                        </button>
+                        <button class="js-delete-student" 
+                                data-id="{{_id}}"
+                                data-toggle="modal" 
+                                data-target="#deleteStudentModal"
+                                id="delete">
+                          <img src="/img/delete.png" alt="">
+                        </button>
+                      </td>
                     </tr>
                    
                     {{/each}}
@@ -100,4 +122,205 @@
     </div>
   </div>
 
+
+
+
+                <div  class="modal fade left" 
+                      id="addStudentModal" 
+                      role="dialog" 
+                      aria-labelledby="myModalLabel">
+                  <div class="modal-dialog">
+                    <div class="pop-up-area students">
+                      <button type="button" 
+                              id="popup-close" 
+                              data-dismiss="modal" 
+                              aria-label="Close">x</button>
+                      <div class="row">
+                        <div class="col-sm-6" style="padding-left:10%;">
+                          <h2>Add Student</h2>
+                        </div>
+                        <div class="col-sm-6"></div>
+                        <hr />
+                      </div>
+                      <div class="popup-body">
+                        <form action="">
+                          
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <div class="input-group input-group-lg">
+                                  <input class="js-fn form-control" type="text" placeholder="First Name" style="width:100%;"/>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="input-group input-group-lg">
+                                <input class="js-ln form-control" type="text" placeholder="Last Name" style="width:100%;"/>
+                              </div>
+                            </div>
+                          </div>
+                          <br />
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <div class="input-group input-group-lg">
+                                <input class="js-email form-control" type="text" placeholder="Email" style="width:100%;"/>
+                              </div>
+                            </div>
+                            <div class="col-sm-6"></div>
+                          </div>
+                          <br />
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <select class="form-control" id="sel1" style="width:60%%;">
+                                <option></option>
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="admin" >Admin</option>
+                              </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="js-dept form-control input-lg"></select>
+                            </div>  
+                          </div>
+                          <br />
+                          <br />
+                          <div class="row">
+                            <div class="col-sm-8"></div>
+                            <div class="col-sm-4 text-right">
+                              <input class="js-student-add-submit" type="button" value="SUBMIT">
+                            </div>
+                          </div>
+                          
+                        </form>
+                      </div>
+                    </div>                                         
+                  </div>
+                </div><!-- modal --> 
+                
+
+
+                <div  class="modal fade left" 
+                      id="editStudentModal" 
+                      role="dialog" 
+                      aria-labelledby="myModalLabel">
+                  <div class="modal-dialog">
+                    <div class="pop-up-area students">
+                      <button type="button" 
+                              id="popup-close" 
+                              data-dismiss="modal" 
+                              aria-label="Close">x</button>
+                      <div class="row">
+                        <div class="col-sm-6" style="padding-left:10%;">
+                          <h2>Edit Student</h2>
+                        </div>
+                        <div class="col-sm-6"></div>
+                        <hr />
+                      </div>
+                      <div class="popup-body">
+                        <form action="">
+                          
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <div class="input-group input-group-lg">
+                                <input class="js-fn form-control" type="text" placeholder="" style="width:100%;" readonly/>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="input-group input-group-lg">
+                                <input class="js-ln form-control" type="text" placeholder="" style="width:100%;" readonly/>
+                              </div>
+                            </div>
+                          </div>
+                          <br />
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <div class="input-group input-group-lg">
+                                <input class="js-email form-control" type="text" placeholder="" style="width:100%;"/>
+                              </div>
+                            </div>
+                            <div class="col-sm-6"></div>
+                          </div>
+                          <br />
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <select class="form-control" id="sel1" name="sel1" style="width:60%%;">
+                                <option></option>
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="admin" >Admin</option>
+                              </select>
+                            </div>
+                            <div class="col-sm-6">
+                                <select name="js-dept" class="js-dept form-control input-lg"></select>
+                            </div>  
+                          </div>
+                          <br />
+                          <br />
+                          <div class="row">
+                            <div class="col-sm-8"></div>
+                            <div class="col-sm-4 text-right">
+                              <input class="js-student-edit-submit" type="button" value="SUBMIT">
+                            </div>
+                          </div>
+                          
+                        </form>
+                      </div>
+                    </div>                                         
+                  </div>
+                </div><!-- modal --> 
+                
+                
+
+
+                
+                <div  class="modal fade left" 
+                      id="deleteStudentModal" 
+                      role="dialog" 
+                      aria-labelledby="myModalLabel">
+                  <div class="modal-dialog">
+                    <div class="pop-up-area students">
+                      <button type="button" 
+                              id="popup-close" 
+                              data-dismiss="modal" 
+                              aria-label="Close">x</button>
+                      <div class="row">
+                        <div class="col-sm-6" style="padding-left:10%;">
+                          <h2>Delete Student</h2>
+                        </div>
+                        <hr />
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6" style="width:auto;padding-left:5%;">
+                          <strong style="font-size:1.5em;">Are you sure you want to delete this student?</strong>
+                        </div>
+                        <div class="col-sm-6"></div>
+                      </div>
+                      <div class="popup-body">
+                        <form action="">
+                          
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <div class="input-group input-group-lg">
+                                <div class="name">
+                                  <span>
+                                    <img id="stdimg" src="">
+                                  </span>
+                                </div>
+                                <span id="fnln" style="color:white;font-size:2em;"></span>
+                              </div>
+                            </div>
+                            <div class="col-sm-6"></div>
+                          </div>
+                          <br />
+                          <br />
+                          <div class="row">
+                            <div class="col-sm-8"></div>
+                            <div class="col-sm-4 text-right">
+                              <input class="js-student-delete-submit" type="button" value="SUBMIT">
+                            </div>
+                          </div>
+                          
+                        </form>
+                      </div>
+                    </div>                                         
+                  </div>
+                </div><!-- modal --> 
 </template>

@@ -44,7 +44,7 @@ Template.newsfeed.helpers({
   newsfeeds() {
     let owner = Meteor.userId(); //reactivevariable
 
-    console.log( Meteor.user().profile.company_id );
+    //console.log( Meteor.user().profile.company_id );
     //var feed  = Newsfeeds.find({ owner_id: owner}, { sort: { date: -1 } }).fetch();
     let feed = Newsfeeds.find({ private: false, company_id: Meteor.user().profile.company_id }, { sort: { date: -1 } }).fetch(); //most recent at top
 
