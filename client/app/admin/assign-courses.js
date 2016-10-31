@@ -114,19 +114,25 @@ Template.assignCourses.events({
     $('.add-course').attr('data-credits', $(e.currentTarget).data('credits'));
     $('.add-course').attr('data-name', $(e.currentTarget).data('name'));
     
+    //selects
     $('#by-name').val(null).trigger('change');
-    $('#by-name').attr('disabled', true);  
+    $('#by-name').attr('disabled', true); 
     $('#by-dept').val(null).trigger('change');
     $('#by-dept').attr('disabled', true);
+    //input
     $('#assign-due-date').val('');
    
-    
-    $('#abd').prop('checked', false);
+   //switch assign-by-department
     $('#abd').bootstrapToggle('off');
-    $('#abn').prop('checked', false);
+    $('#abd').prop('checked', false).change();
+    
+    //switch assign-by-name
     $('#abn').bootstrapToggle('off');
-    $('#all-students').prop('checked', false);
-    //$('#all-students').bootstrapToggle('off');
+    $('#abn').prop('checked', false).change();
+    
+    $('#all-students').bootstrapToggle('off');
+    $('#all-students').prop('checked', false).change();
+    
     $('#assign-modal').modal('show'); 
 //-------------------------------------------------------------------
   },
@@ -259,9 +265,11 @@ Template.assignCourses.events({
     $('#by-name').attr('disabled', true);
     
     $('#assign-due-date').val('');
-    $('#abn').prop('checked', false);
-    $('#all-students').prop('checked', false);
-    $('#abd').prop('checked', false);
+    
+    $('#abn').prop('checked', false).change();
+    $('#all-students').prop('checked', false).change();
+    $('#abd').prop('checked', false).change();
+    
     $('#assign-modal').modal('hide');
 //-------------------------------------------------------------------
   },
@@ -282,10 +290,15 @@ Template.assignCourses.events({
     
     if (tog){
       $("#by-dept").val(null).trigger("change");
+      $('#by-dept').attr('disabled', true);
+      
       $("#by-name").val(null).trigger("change");
       $('#by-name').attr('disabled', true); 
-      $('#by-dept').attr('disabled', true);
+      
+      $('#abn').prop('checked', false).change();
       $('#abn').bootstrapToggle('off');
+      
+      $('#abn').prop('checked', false).change();
       $('#abd').bootstrapToggle('off');
     }
 //-----------------------------------------------------------------
@@ -293,7 +306,7 @@ Template.assignCourses.events({
   
   
   /*
-   * CHANGE #ABN
+   * CHANGE #ABN ( ASSIGN-BY-NAME )
    */
   'change #abn'( e, t ) {
     e.preventDefault();
@@ -302,10 +315,18 @@ Template.assignCourses.events({
     let tog = $(e.currentTarget).prop('checked');
     
     if (tog){
+      //selects
+      $('#by-name').val(null).trigger('change');
       $('#by-name').attr('disabled', false );
+      
       $('#by-dept').val(null).trigger('change');
       $('#by-dept').attr('disabled', true);
+      
+      //switches
+      $('#abd').prop('checked', false).change();
       $('#abd').bootstrapToggle('off');
+      
+      $('#all-students').prop('checked', false).change();
       $('#all-students').bootstrapToggle('off');
     } else {
       $('#by-name').val(null).trigger('change');
@@ -317,7 +338,7 @@ Template.assignCourses.events({
 
   
   /*
-   * CHANGE #ABD
+   * CHANGE #ABD ( ASSIGN-BY-DEPARTMENT )
    */
   'change #abd'( e, t ) {
     e.preventDefault();
@@ -326,10 +347,18 @@ Template.assignCourses.events({
     let tog = $(e.currentTarget).prop('checked');
     
     if (tog){
+      //selects
+      $('#by-dept').val(null).trigger('change');
       $('#by-dept').attr('disabled', false);
+      
       $('#by-name').val(null).trigger('change');
       $('#by-name').attr('disabled', true );
+      
+      //switches
+      $('#abn').prop('checked', false).change();
       $('#abn').bootstrapToggle('off');
+      
+      $('#all-students').prop('checked', false).change();
       $('#all-students').bootstrapToggle('off');
     } else {
       $('#by-dept').val(null).trigger('change');
