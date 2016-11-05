@@ -4073,11 +4073,17 @@ html .ui-button.ui-state-disabled:active {
 }
 */
 #cb-pdf-disp {
-  /*
-  height: auto !important; 
-  height: 500px;
-  width: 500px !important;
-  */
+  
+  /* height: auto !important; */
+  /* width: auto !important; */
+  /* margin-top:10px;
+  padding-top: 0px;
+  margin-left: 100px;
+  padding-left: 60px;
+  margin-bottom: 30px; */
+  height: 575px;
+  width: 500px;
+  
 }
 
 

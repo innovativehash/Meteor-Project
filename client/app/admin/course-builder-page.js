@@ -301,7 +301,7 @@ Template.courseBuilderPage.events({
   'click #cb-pdf-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+    /*
     Meteor.call( 'saveBuiltCoursePdf',
                   built_id, 
                   ig, 
@@ -309,7 +309,7 @@ Template.courseBuilderPage.events({
 
     Template.instance().page.set( Template.instance().page.get() + 1 );
     Template.instance().total.set( Template.instance().total.get() + 1 );
-
+*/
     t.$( '#fb-template' ).hide();
     /*
     let obj =
@@ -320,7 +320,7 @@ Template.courseBuilderPage.events({
     '</object>';
    */ 
     t.$( '#fb-template' ).hide();
-
+    t.$( '#media-enter' ).hide();
     //t.$('#cb-pdf-disp').html(obj);
     t.$( '#cb-pdf-disp' ).show();
 
