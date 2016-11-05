@@ -214,7 +214,7 @@ Template.adminStudents.events({
       }
       
       $('#addStudentModal').modal("hide");
-      return;
+     
 
       let co = Companies.findOne({ _id: Meteor.user().profile.company_id });
 
@@ -226,12 +226,13 @@ Template.adminStudents.events({
       
       /* ASSIGN random password */
       //todo: assign random password;
+      let password = 'afdsjkl83212';
       
       let url       = 'https://collective-university-nsardo.c9users.io/login';
       let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video:\n\nIf you have any questions, please contact: `;
 
       //ALL FIELDS MUST BE FILLED OUT OR ERR
-      Meteor.call('addUser', email, password, fname, lname, opt, dept, co.name, co._id, password);
+      Meteor.call('addUser', email, password, fname, lname, opt, dept, co.name, co._id);
 
       Meteor.call('sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text);
       

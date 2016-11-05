@@ -94,7 +94,7 @@ Meteor.methods({
       lname: lname,
       fullName: fname + ' ' + lname,
       email: email,
-      department:dept,
+      department: dept,
       company: company,
       company_id: company_id,
       role: opt,
