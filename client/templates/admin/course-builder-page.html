@@ -7,79 +7,100 @@
 </style>
 <div id="cover"></div>
 -->
-  <div class = "dashboard-header-area">
-    <div class = "container">
-      <div class = "row">
-        <div class = "col-sm-7">
-          
-          <!-- SEARCH BAR -->
-          <div class = "search-bar">
-            <form action = "">
-                <h3 style = "color:white;margin-left:10%;font-size:24px;display:inline-block;">
-                  BUILDING COURSE:&nbsp;&nbsp;<span id = "course-banner"></span>
-                </h3>
-              <!-- <input type="text" style="color: blue;" placeholder="Search Students"> -->
-              <!-- <input type="submit" value="Search"> -->
-            </form>
-          </div>
-          <!-- END SEARCH BAR -->
-          
-        </div>
-        <div class="col-sm-5">
-          <div class="profile-bar">
-            <ul>
-              <li>
-                <button>
-                  <img src="/img/message.png" alt="">
-                </button>
-              </li>
-              <li>
-                <button>
-                  <img src="/img/notification.png" alt="">
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="profile-link">
 
-          <a  class         = "dropdown-toggle" 
-              data-toggle   = "dropdown" 
-              href          = "#" 
-              role          = "button" 
-              aria-haspopup = "true" 
-              aria-expanded = "false">
-                <span class="diamonds">
-                  <img src="/img/profile-1.jpg" alt="">
-                </span>
-              
-                  {{fname}}
-          </a>
+<div id="dialog" title="Basic dialog" style="z-index:12">
 
-          <ul class="dropdown-menu">
-            <li>
-              <a href="javascript: void(0)">Account Settings</a>
-            </li>
-            <li>
-              <a href="javascript: void(0)">Upload Photo</a>
-            </li>
-            <li>
-              <a href="javascript: void(0)">Logout</a>
-            </li>
-          </ul>
-        </div>
-      </div>
+  <p>
+    <strong>Style:</strong>
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn btn-default active" style="margin-right:10px;">
+        <input type="checkbox" checked><i class="fa fa-bold" aria-hidden="true"></i>
+      </label>
+      <label class="btn btn-default" style="margin-right:10px;">
+        <input type="checkbox"><i class="fa fa-italic" aria-hidden="true"></i>
+      </label>
+      <label class="btn btn-default" style="margin-right:10px;">
+        <input type="checkbox"><i class="fa fa-underline" aria-hidden="true"></i>
+      </label>
     </div>
-  </div>
-  
+  </p>
+
+  <hr>
+
+  <p>
+    <strong>Opacity:</strong>
+    &nbsp;&nbsp;<label for="slider-range" style="vertical-allign:middle;display:inline-block;">100</label>
+    <div id="slider-range"></div>
+  </p>
+
+</div>
+
+
+        <div class="dashboard-header-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-7">
+                      <div class = "search-bar">
+                        <form action = "">
+
+                          <!-- NEED TO CONCATENATE LENGTH OF COURSE NAME -->
+
+                            <h3 style = "color:white;margin-left:10%;font-size:24px;width:100%;display:inline-block;">
+                              BUILDING COURSE:&nbsp;&nbsp;<span id = "course-banner"></span>
+                            </h3>
+
+                          <!-- <input type="text" style="color: blue;" placeholder="Search Students"> -->
+                          <!-- <input type="submit" value="Search"> -->
+                        </form>
+                      </div><!-- END SEARCH BAR -->
+                    </div>
+
+
+                    <div class="col-sm-5">
+                        <div class="profile-bar">
+                            <ul>
+                              <li><button><img src="/img/message.png" alt=""></button></li>
+                              <li><button><img src="/img/notification.png" alt=""></button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div><!-- row -->
+
+
+                <div class="row">
+                    <div class="profile-link">
+                      <a  class         = "dropdown-toggle"
+                          data-toggle   = "dropdown"
+                          href          = "#"
+                          role          = "button"
+                          aria-haspopup = "true"
+                          aria-expanded = "false">
+                            <span class="diamonds">
+                              <img src="/img/profile-1.jpg" alt="">
+                            </span>
+
+                              {{fname}}
+                      </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript: void(0)">Account Settings</a></li>
+                            <li><a href="javascript: void(0)">Upload Photo</a></li>
+                            <li><a href="javascript: void(0)">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
   <div class="dashboard-body-area">
-    
+
     <div class="container">
       <div class="row">
-        
+
         <div class="sidebar-menu-area course-builder-sidebar">
+
           <div class="buttons">
             <button id="open">
               <span></span>
@@ -91,32 +112,45 @@
               <span></span>
             </button>
           </div>
+
           <div class="page-back-home js-back-to-home">
             <a href="#">
               <i class="fa fa-long-arrow-left"></i>
                 Back To Home
             </a>
-            
+
             <h2>Drag & Drop</h2>
           </div>
-          
+
           <!-- COURSE BUILDER ITEMS -->
           <div class = "curse-builder-items">
             <ul>
+              <li></li>
               <li tabindex = "-1">
                 <span class = "area">
-                  <span style = "border:none !important;;cursor:move;" 
-                        class = "image draggable ui-widget-content" 
+                  <button class="btn btn-default btn-sm">
+                  <span style = ""
+                        class = "glyphicon glyphicon-eye-open"
+                        data-type = "preview">
+                  </span>
+                  PREVIEW
+                  </button>
+                </span>
+              </li>
+              <li tabindex = "-1">
+                <span class = "area">
+                  <span style = "border:none !important;cursor:move;z-index=5;"
+                        class = "image draggable ui-widget-content"
                         data-type = "title">
-                      <img src = "/img/p-icon-1.png" alt="">
+                      <img src = "/img/p-icon-1.png" alt="" style="z-index: 5;">
                   </span>
                   TITLE
                 </span>
               </li>
               <li tabindex = "-1">
                 <span class = "area">
-                  <span style = "border:none !important;cursor:move;" 
-                        class = "image draggable ui-widget-content" 
+                  <span style = "border:none !important;cursor:move;"
+                        class = "image draggable ui-widget-content"
                         data-type = "text">
                     <img src = "/img/p-icon-2.png" alt="">
                   </span>
@@ -125,8 +159,8 @@
               </li>
               <li tabindex = "-1">
                 <span class = "area">
-                  <span style = "border:none !important;" 
-                        class = "image draggable ui-widget-content" 
+                  <span style = "border:none !important;"
+                        class = "image draggable ui-widget-content"
                         data-type = "image">
                     <img src = "/img/p-icon-3.png" alt="">
                   </span>
@@ -135,8 +169,8 @@
               </li>
               <li tabindex = "-1">
                 <span class = "area">
-                  <span style = "border:none !important;" 
-                        class = "image draggable ui-widget-content" 
+                  <span style = "border:none !important;"
+                        class = "image draggable ui-widget-content"
                         data-type = "video">
                     <img src = "/img/p-icon-4.png" alt="">
                   </span>
@@ -145,8 +179,8 @@
               </li>
               <li tabindex = "-1">
                 <span class = "area">
-                  <span style = "border:none !important;" 
-                        class = "image draggable ui-widget-content" 
+                  <span style = "border:none !important;"
+                        class = "image draggable ui-widget-content"
                         data-type = "pdf">
                     <img src = "/img/p-icon-5.png" alt="">
                   </span>
@@ -155,8 +189,8 @@
               </li>
               <li tabindex = "-1">
                 <span class = "area">
-                  <span style = "border:none !important;" 
-                        class = "image draggable ui-widget-content" 
+                  <span style = "border:none !important;"
+                        class = "image draggable ui-widget-content"
                         data-type = "powerpoint">
                     <img src = "/img/p-icon-6.png" alt="">
                   </span>
@@ -165,8 +199,8 @@
               </li>
               <li tabindex = "-1">
                 <span class = "area">
-                  <span style = "border:none !important;" 
-                        class = "image draggable ui-widget-content" 
+                  <span style = "border:none !important;"
+                        class = "image draggable ui-widget-content"
                         data-type = "scorm">
                     <img src = "/img/p-icon-7.png" alt="">
                   </span>
@@ -175,8 +209,8 @@
               </li>
               <li tabindex = "-1">
                 <span class = "area">
-                  <span style = "border:none !important;" 
-                        class = "image draggable ui-widget-content" 
+                  <span style = "border:none !important;"
+                        class = "image draggable ui-widget-content"
                         data-type = "test">
                     <img src = "/img/p-icon-8.png" alt="">
                   </span>
@@ -185,33 +219,75 @@
               </li>
             </ul>
           </div>
-        </div>  
-        <div class = "col-sm-12 col-md-12">
 
-            <div  id = "fb-template" 
-                  class = "curse-builder-box">
-            </div>
-            <div id = "media-enter"></div>
+        </div><!-- sidebar -->
+      </div><!-- row -->
+      <div class="row">
 
-        </div>
+        <div class = "col-sm-10 col-md-10">
+          <!--
+          <svg preserveAspectRatio="none" style="width: 960px; height: 600px; pointer-events: none; opacity: 1; position: absolute;">
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="0%" x2="0%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="0%" x2="100%" y2="0%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="10%" y1="0%" x2="10%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="10%" x2="100%" y2="10%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="20%" y1="0%" x2="20%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="20%" x2="100%" y2="20%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="30%" y1="0%" x2="30%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="30%" x2="100%" y2="30%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="40%" y1="0%" x2="40%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="40%" x2="100%" y2="40%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="50%" y1="0%" x2="50%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="50%" x2="100%" y2="50%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="60%" y1="0%" x2="60%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="60%" x2="100%" y2="60%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="70%" y1="0%" x2="70%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="70%" x2="100%" y2="70%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="80%" y1="0%" x2="80%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="80%" x2="100%" y2="80%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="90%" y1="0%" x2="90%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="90%" x2="100%" y2="90%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="100%" y1="0%" x2="100%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="100%" x2="100%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+          </svg>
+          -->
+
+          <div  id    = "fb-template"
+                class = "curse-builder-box centered-block">
+          </div>
+
+          <!-- <div id = "media-enter"></div> -->
+<!--
         <div class="col-md-3 col-sm-3"></div>
+
         <div class="col-md-6 col-sm-6">
-                      <div  class = "" 
-                  id = "cb-pdf-disp" 
-                  style = "margin:0;padding:0;display:inline-block;">
-            </div>
+
+          <div  class = ""
+            id = "cb-pdf-disp"
+            style = "margin:0;padding:0;display:inline-block;">
+          </div>
+
         </div>
+
         <div class="col-md-3 col-sm-3"></div>
-      </div>
-    </div>
-  </div>
+-->
+
+        </div>
+
+      </div><!-- row -->
+     </div><!-- container -->
+
+
+  </div><!-- dashboard-body-area -->
+
+
 
   <div class = "dashboard-body-area footer-page cb-footer">
     <div class = "container">
       <div class = "row">
-        <div class = "col-sm-6">
+        <div class = "col-sm-4">
           <div class = "footer-filter">
-            <h2>Page {{page}}/{{total}} 
+            <h2>Page {{page}}/{{total}}
               <button class = "up">
                 <i class = "fa fa-arrow-up"></i>
               </button>
@@ -221,7 +297,12 @@
             </h2>
           </div>
         </div>
-        <div class = "col-sm-6">
+        <div class= "col-sm-4">
+          <div class="save-button">
+            <button id="cb-next">Next Page</button>
+          </div>
+        </div>
+        <div class = "col-sm-4">
           <div class = "save-button">
             <button id = "cb-save">Save Course</button>
           </div>
@@ -230,19 +311,18 @@
     </div>
   </div>
 
-
 <!-- IMAGE MODAL -->
-    <div  class="modal fade left" 
-          id="add-image" 
-          tabindex="-1" 
-          role="dialog" 
+    <div  class="modal fade left"
+          id="add-image"
+          tabindex="-1"
+          role="dialog"
           aria-labelledby="myModalLabel">
 
       <div class="modal-dialog">
         <div class="pop-up-area">
-          <button type="button" 
-                  id="popup-close" 
-                  data-dismiss="modal" 
+          <button type="button"
+                  id="popup-close"
+                  data-dismiss="modal"
                   aria-label="Close">x</button>
 
           <div class="popup-body" style="top: 20%;">
@@ -259,7 +339,7 @@
                 </div>
                 <div class="col-sm-7">
 
-                  <input  type="file" 
+                  <input  type="file"
                           id="course-builder-image" />
                 </div>
               </div>
@@ -272,30 +352,30 @@
                 <div class="col-sm-12 text-right">
 
                   <input  id="cb-image-save"
-                          type="submit" 
+                          type="submit"
                           value="SUBMIT">
                 </div>
               </div>
             </form>
           </div>
-        </div>                                         
+        </div>
       </div>
     </div><!-- modal -->
 
 
 
 <!-- PDF MODAL -->
-    <div  class="modal fade left" 
-          id="add-pdf" 
-          tabindex="-1" 
-          role="dialog" 
+    <div  class="modal fade left"
+          id="add-pdf"
+          tabindex="-1"
+          role="dialog"
           aria-labelledby="myModalLabel">
 
       <div class="modal-dialog">
         <div class="pop-up-area">
-          <button type="button" 
-                  id="popup-close" 
-                  data-dismiss="modal" 
+          <button type="button"
+                  id="popup-close"
+                  data-dismiss="modal"
                   aria-label="Close">x</button>
           <div class="popup-body" style="top: 20%;">
           <h3 style="color:white;">ADD PDF:</h3>
@@ -310,7 +390,7 @@
                 </div>
                 <div class="col-sm-7">
 
-                  <input  type="file" 
+                  <input  type="file"
                           id="course-builder-pdf" />
                 </div>
               </div>
@@ -318,31 +398,31 @@
               <div class="row">
                 <div class="col-sm-12 text-right">
 
-                  <input  id="cb-pdf-save" 
-                          type="submit" 
+                  <input  id="cb-pdf-save"
+                          type="submit"
                           value="SUBMIT">
                 </div>
               </div>
             </form>
           </div>
-        </div>                                         
+        </div>
       </div>
     </div><!-- modal -->
 
 
 
 <!-- POWERPOINT MODAL -->
-    <div  class="modal fade left" 
-          id="add-powerpoint" 
-          tabindex="-1" 
-          role="dialog" 
+    <div  class="modal fade left"
+          id="add-powerpoint"
+          tabindex="-1"
+          role="dialog"
           aria-labelledby="myModalLabel">
 
       <div class="modal-dialog">
         <div class="pop-up-area">
-          <button type="button" 
-                  id="popup-close" 
-                  data-dismiss="modal" 
+          <button type="button"
+                  id="popup-close"
+                  data-dismiss="modal"
                   aria-label="Close">x</button>
 
           <div class="popup-body" style="top: 20%;">
@@ -358,7 +438,7 @@
                 </div>
                 <div class="col-sm-7">
 
-                  <input  type="file" 
+                  <input  type="file"
                           id="course-builder-powerpoint" />
                 </div>
               </div>
@@ -366,32 +446,32 @@
               <div class="row">
                 <div class="col-sm-12 text-right">
 
-                  <input  id="cb-powerpoint-save" 
-                          type="submit" 
+                  <input  id="cb-powerpoint-save"
+                          type="submit"
                           value="SUBMIT" />
                 </div>
               </div>
             </form>
           </div>
-        </div>                                         
+        </div>
       </div>
     </div><!-- modal -->
 
 
 
 <!-- SCORM MODAL -->
-    <div  class="modal fade left" 
-          id="add-scorm" 
-          tabindex="-1" 
-          role="dialog" 
+    <div  class="modal fade left"
+          id="add-scorm"
+          tabindex="-1"
+          role="dialog"
           aria-labelledby="myModalLabel">
 
       <div class="modal-dialog">
         <div class="pop-up-area">
 
-          <button type="button" 
-                  id = "popup-close" 
-                  data-dismiss="modal" 
+          <button type="button"
+                  id = "popup-close"
+                  data-dismiss="modal"
                   aria-label="Close">x</button>
 
           <div class = "popup-body" style="top: 20%;">
@@ -407,7 +487,7 @@
                 </div>
                 <div class="col-sm-7">
 
-                  <input  type="text" 
+                  <input  type="text"
                           id="course-builder-scorm" />
                 </div>
               </div>
@@ -415,31 +495,31 @@
               <div class="row">
                 <div class="col-sm-12 text-right">
 
-                  <input  id="cb-scorm-save" 
-                          type="submit" 
+                  <input  id="cb-scorm-save"
+                          type="submit"
                           value="SUBMIT">
                 </div>
               </div>
             </form>
           </div>
-        </div>                                         
+        </div>
       </div>
     </div><!-- modal -->
 
 
 
 <!-- TEST MODAL -->
-    <div  class="modal fade left" 
-          id="add-test" 
-          tabindex="-1" 
-          role="dialog" 
+    <div  class="modal fade left"
+          id="add-test"
+          tabindex="-1"
+          role="dialog"
           aria-labelledby="myModalLabel">
 
       <div class="modal-dialog">
         <div class="pop-up-area">
-          <button type="button" 
-                  id="popup-close" 
-                  data-dismiss="modal" 
+          <button type="button"
+                  id="popup-close"
+                  data-dismiss="modal"
                   aria-label="Close">x</button>
           <div class="popup-body" style="top: 20%;">
           <h3 style="color:white;">ADD TEST:</h3>
@@ -464,24 +544,24 @@
               </div>
             </form>
           </div>
-        </div>                                         
+        </div>
       </div>
     </div><!-- modal -->
 
 
 
 <!-- INTRO MODAL -->
-    <div  class="modal fade left" 
-          id="intro-modal" 
-          tabindex="-1" 
-          role="dialog" 
+    <div  class="modal fade left"
+          id="intro-modal"
+          tabindex="-1"
+          role="dialog"
           aria-labelledby="myModalLabel">
 
       <div class="modal-dialog">
         <div class="pop-up-area">
-          <button type="button" 
-                  id="popup-close" 
-                  data-dismiss="modal" 
+          <button type="button"
+                  id="popup-close"
+                  data-dismiss="modal"
                   aria-label="Close">x</button>
 
           <div class = "popup-body" style="top: 30%;">
@@ -499,9 +579,9 @@
                   </span>
                   <br />
 
-                  <input  style = "width:100%;margin-top:2%;" 
+                  <input  style = "width:100%;margin-top:2%;"
                           class = "form-control"
-                          type  = "text" 
+                          type  = "text"
                           id    = "course-builder-name" />
 
                 </div>
@@ -533,34 +613,34 @@
                   </span>
                   <br />
                   <input  style="width:50%;margin-top:2%;"
-                          class="form-control" 
-                          type="number" 
+                          class="form-control"
+                          type="number"
                           id="course-builder-credits"
-                          min=".5" 
-                          max="120" 
+                          min=".5"
+                          max="120"
                           step="0.1"
                           onInput="return check(event,value)"/>
                 </div>
                 </div>
                 <br />
-                <div class = "col-sm-6" style = "display:inline-block;"> 
-                  <div class="input-group input-group-lg">               
+                <div class = "col-sm-6" style = "display:inline-block;">
+                  <div class="input-group input-group-lg">
                     <span style = "color:black;">
                       <!-- <em> -->
                         <strong>Passing percentage for tests:</strong>
                       <!-- </em> -->
                     </span>
-                
+
                 <br />
-                
-                    <input  style   = "width:50%;margin-top:2%;" 
-                            type    = "number" 
+
+                    <input  style   = "width:50%;margin-top:2%;"
+                            type    = "number"
                             onInput = "return check(event,value)"
                             id      = "course-builder-percent"
-                            min     = "0" 
-                            max     = "100" 
+                            min     = "0"
+                            max     = "100"
                             step    = "0.01"
-                            class   = "form-control" />           
+                            class   = "form-control" />
                 </div>
               </div>
               </div>
@@ -568,15 +648,15 @@
               <div class="row">
                 <div class="col-sm-12 text-right">
 
-                  <input  id="new-course-save" 
-                          type="submit" 
+                  <input  id="new-course-save"
+                          type="submit"
                           value="SUBMIT">
 
                 </div>
               </div>
             </form>
           </div>
-        </div>                                         
+        </div>
       </div>
     </div><!-- modal -->
 
@@ -589,7 +669,7 @@
     var idx = value.indexOf( '.' );
     if ( idx >= 0 && value.length - idx > 3 ) {
         e.target.value = value.substring( 0, value.length - 1 );
-        return false;            
+        return false;
     }
     return true;
   }

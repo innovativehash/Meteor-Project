@@ -127,14 +127,14 @@
                     <div class="col-xs-5 selectContainer">
                       <label class="checkbox-inline">
                         <input  id="abn" 
-                                style="margin-bottom:5px;" 
+                                style="" 
                                 type="checkbox" 
                                 data-toggle="toggle" 
                                 data-offstyle="danger" 
                                 data-onstyle="success">
                         <span style="color:white;">&nbsp;&nbsp;<strong>Names:</strong></span>
                       </label>
-                      <select data-placeholder="Select/type Name(s)..." id="by-name" multiple>
+                      <select data-placeholder="type name(s)..." id="by-name" style="" multiple>
                         {{#with names}}
                           {{#each this}}
                         <option>{{fullName}}</option>
@@ -152,7 +152,7 @@
                                 data-toggle="toggle">
                         <span style="color:white;">&nbsp;&nbsp;<strong>Departments:</strong></span>
                       </label>
-                      <select id="by-dept" data-placeholder="Select/type Dept(s)..." multiple>
+                      <select id="by-dept" data-placeholder="type dept(s)..." multiple>
                         {{#with dept}}
                           {{#each this}}
                         <option>{{name}}</option>

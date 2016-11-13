@@ -1,5 +1,5 @@
 /* Large Desktop Layout */
-@media only screen and (min-width:1500px){
+@media only screen and (min-width:1475px){
 .main-menu ul li a {font-size: 25px;}
 .promotion-content p {font-size: 20px;line-height: 28px;}
 .signup-form p {font-size: 25px;}
@@ -22,7 +22,6 @@
 
 .admin-dashbord .container,.admin .container,.container {width: 1050px;}
 .profile-link {top: -10px;right: 40px;}
-.sidebar-menu-area {width: 340px;left: 0 !important;}
 .profile-text h2 {font-size: 23px;line-height: 30px;}
 .profile-text h2 span {font-size: 20px;}
 .profile-text {width: 195px;margin-top: 10px;}
@@ -44,7 +43,8 @@
 .curse-builder-items ul li {width: 150px;min-height: 130px;font-size: 16px;}
 .curse-builder-items ul li span.area {padding: 18px 5px;}
 .curse-builder-items ul li span.image {width: auto;height: auto;margin: 0 auto 20px;min-height: 48px;}
-.curse-builder-box {min-height: 420px;}
+.curse-builder-box {min-height: 600px;min-width:1000px;}
+.sidebar-menu-area {left: 0 !important;} /* width: 340px; */
 .dash-post-content {width: 710px;}
 .dash-post-single-comment-form {width: 760px;}
 .certificate-area {padding-left: 340px;}
@@ -64,7 +64,9 @@ body.main .container {width: 1170px;}
 .admin-dashbord .container,.admin .container,.container {width: 765px;}
 .sidebar-menu-area {left: 0 !important;}
 body.main .container {width: 1170px;}
+.curse-builder-box {min-height: 600px;min-width:900px;}
 }
+
 
 /* Medium Desktop Layout */
 @media only screen and (min-width:1200px) and (max-width: 1375px){
@@ -72,7 +74,9 @@ body.main .container {width: 1170px;}
 .sidebar-menu-area {left: 0 !important;}
 .dashboard-body-area.admin .container {width: 1020px;right: 50%;position: relative;margin-right: -637px;}
 body.main .container {width: 1170px;}
+.curse-builder-box {min-height: 500px;min-width:800px;}
 }
+
 
 /* Small Desktop Layout */
 @media only screen and (min-width: 991px) and (max-width: 1200px) {
@@ -138,7 +142,7 @@ body.main .container {width: 1170px;}
 .filter-buttons.studentpage button#add_students span {font-size: 18px;top: 3px;left: 24px;}
 .curse-builder-box .notice h2 {font-size: 14px;padding: 10px 35px;}
 .curse-builder-box .notice {margin-left: -165px;margin-top: -20px;}
-.curse-builder-box {min-height: 285px;}
+.curse-builder-box {min-height: 500px;min-width:600px;}
 .dash-post-single-list .comment-text a,.dash-post-single-list .comment-text p {font-size: 15px;line-height: 25px;}
 .certificate-area {padding-left: 235px;}
 .certificate-input label {float: none;margin-bottom: 5px;margin-top: 0;margin-right: 0;}
@@ -254,7 +258,7 @@ body.main .container {width: 970px;}
 .filter-buttons.studentpage button {text-align: center;}
 .curse-builder-box .notice h2 {font-size: 14px;padding: 10px 35px;}
 .curse-builder-box .notice {margin-left: -165px;margin-top: -20px;}
-.curse-builder-box {min-height: 285px;}
+.curse-builder-box {min-height: 285px;min-height:400px;}
 .dash-post-single-list .comment-text a,.dash-post-single-list .comment-text p {font-size: 20px;line-height: 25px;}
 .admin-dashbord .logo a img,.admin-dashbord .footer-logo a img,.admin .logo a img,.admin .footer-logo a img {width: auto;}
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active,.ui-state-highlight,.ui-widget-content .ui-state-highlight,.ui-widget-header .ui-state-highlight,.ui-state-hover,.ui-state-default,.ui-widget-content .ui-state-default,.ui-widget-header .ui-state-default,.ui-button,html .ui-button.ui-state-disabled:hover,html .ui-button.ui-state-disabled:active {width: 25px;height: 25px;}
@@ -273,7 +277,7 @@ body.main .container {width: 750px;}
 
 
 /* Mobile Small Layout */
-@media only screen and (max-width: 767px) { 
+@media only screen and (max-width: 767px) {
 .logo {overflow: hidden;}
 .logo a {float: none;display: block;width: 200px;margin: auto;padding-left: 20px;}
 .main-menu ul {text-align: center;}
@@ -474,7 +478,7 @@ body.main .logo a img, .footer-logo a img {width: 55px;}
 .search-box button#close-search {height: 24px;width: 24px;font-size: 10px;}
 .search-list table,.search-list thead,.search-list tbody,.search-list th,.search-list td,.search-list tr {display: block;}
 .search-list thead tr {position: absolute;top: -9999px;left: -9999px;}
-.search-list td {border: none;border-bottom: 1px solid #eee;position: relative;padding-left: 50%;} 
+.search-list td {border: none;border-bottom: 1px solid #eee;position: relative;padding-left: 50%;}
 .search-list td::before {position: absolute;top: 8px;left: 10px;width: 45%;padding-right: 10px;white-space: nowrap;text-align: left;font-style: normal;color: #37ACE9;}
 .search-list td:nth-of-type(1):before { content: "# Of course"; }
 .search-list td:nth-of-type(2):before { content: "Credits"; }
@@ -496,8 +500,7 @@ body.main .logo a img, .footer-logo a img {width: 55px;}
 .pop-up-area.students .popup-body {margin-top: -280px;}
 .pop-up-area.students {min-height: 665px;}
 .curse-builder-box .notice h2 {font-size: 14px;padding: 10px 35px;}
-.curse-builder-box {min-height: 285px;margin-top: 0;padding: 20px;}
-.curse-builder-box {min-height: 285px;}
+.curse-builder-box {min-height: 285px;min-width:200px;margin-top:10;padding-top: 20px;}
 .curse-builder-box .notice {margin-left: 0;margin-top: -25px;left: 0;}
 .footer-page {padding: 20px 0;position: relative;text-align: center;}
 .save-button {text-align: center;margin-top: 20px;}
@@ -540,7 +543,7 @@ body.main .logo a img, .footer-logo a img {width: 55px;}
 
 
 /* Mobile Large Layout Layout */
-@media only screen and (min-width: 480px) and (max-width: 767px) { 
+@media only screen and (min-width: 480px) and (max-width: 767px) {
 .single-course-content h2 {font-size: 18px;}
 .single-course-content p {font-size: 14px;}
 
