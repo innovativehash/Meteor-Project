@@ -209,8 +209,7 @@ let ig      = ''
   , titles  = []
   , texts   = []
   , images  = []
-  , videos  = []
-  , objs    = [];
+  , videos  = [];
 
 /*******************************************************************************
  * EVENTS
@@ -229,9 +228,92 @@ Template.courseBuilderPage.events({
 */
 
 
-  /**
-   *
-   * #DB-TEST-SAVE  ::(CLICK)::
+  /*
+   * CLICK .JS-BACK-TO-HOME
+   */
+  'click .js-back-to-home'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    //t.currentScreen.set('courseBuilder');
+    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+//-------------------------------------------------------------------
+  },
+
+
+  /*
+   * CLICK #NEW-COURSE-SAVE
+   * id = intro-modal
+   * opening modal dialog
+   */
+  'click #new-course-save'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    let credits = t.$( '#course-builder-credits' ).val();
+    let name    = t.$( '#course-builder-name'    ).val();
+    let percent = t.$( '#course-builder-percent' ).val();
+    let keys    = t.$( '#tags' ).val();
+
+
+    tbo.name            = name;
+    tbo.credits         = credits;
+    tbo.passing_percent = percent;
+    tbo.pages           = [];
+    tbo.keywords        = keys;
+    tbo.num             = 1;
+    tbo.company_id      = Meteor.user().profile.company_id;
+    tbo.times_completed = 0;
+    tbo.icon            = "/img/icon-4.png";
+    tbo.public          = false;
+
+    t.$( '#intro-modal' ).modal( 'hide' );
+    t.$( '#course-banner' ).text( name );
+//-------------------------------------------------------------------
+  },
+
+
+
+  /*
+   * CLICK #CB-SAVE
+   * bottom of screen
+   */
+  'click #cb-save'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+/*
+    let built_id = BuiltCourses.insert({
+                                        name: tbo.name,
+                                        credits: tbo.credits,
+                                        passing_percent: tbo.percent,
+                                        pages: tbo.pages,
+                                        keywords: tbo.keywords
+                                      });
+
+    Courses.insert({
+                    built_id: built_id,
+                    credits: tbo.credits,
+                    num: tbo.num,
+                    name: tbo.name,
+                    passing_percent: tbo.percent,
+                    company_id: tbo.company_id,
+                    times_completed: tbo.times_completed,
+                    icon: tbo.icon,
+                    public: tbo.public,
+                    created_at: new Date()
+                  });
+*/
+console.log( texts );
+console.log( titles );
+console.log( images );
+console.log( videos );
+//-------------------------------------------------------------------
+  },
+
+
+
+  /*
+   * CLICK #DB-TEST-SAVE
    *
    * id = add-test
    * add-test dialog
@@ -245,6 +327,7 @@ Template.courseBuilderPage.events({
     t.$( '#add-test' ).modal( 'hide' );
 //-----------------------------------------------------------------------------
   },
+
 
 
 
@@ -356,11 +439,12 @@ Template.courseBuilderPage.events({
                                 ' width="100%" height="100%" style="margin:auto;padding:0;" />'
                               );
 
-    ig = null;
 
+    ig = null;
     t.$( '#add-pdf' ).modal( 'hide' );
 //-----------------------------------------------------------------------------
   },
+
 
 
 
@@ -582,6 +666,8 @@ console.log( videos );
       }
     }
 
+    t.$('.draggable').draggable();
+
 
 
     /* DON'T FORGET, SOME OF THESE MAY BE DELETED BY USER.  REMOVE THEM FROM ARRAY AT THAT TIME */
@@ -592,10 +678,10 @@ console.log( videos );
                                         style = "z-index:2;border-radius:5px;background-color:SkyBlue;font-size:18px;position:absolute;top:200px;left:300px;cursor:move;border:none !important;">
                                     <span style="font-size:20px;"
                                            id="tit-${tit_id}">&nbsp;&nbsp;&nbsp;&nbsp;<strong>${tit}</strong>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </span><sup id="tmp-${tit_id}"></sup>
+                                    </span><sup id="tmp-title-${tit_id}"></sup>
                                   </div>`);
 
-      t.$( `#tmp-${tit_id}` ).hide();
+      t.$( `#tmp-title-${tit_id}` ).hide();
 
       t.$( `#div_title-${tit_id}` ).draggable();
 
@@ -630,7 +716,7 @@ console.log( videos );
           $( `#${e.currentTarget.parentNode.id}` ).remove();
         });
       }
-      if ( ! t.$( `gear-title-${tit_id}` ).length ) {
+      if ( ! t.$( `#gear-title-${tit_id}` ).length ) {
           $( `#div_title-${tit_id}` ).prepend( `<button type="button"
                                                         id="gear-title-${tit_id}"
                                                         class="btn btn-danger btn-xs">
@@ -646,27 +732,27 @@ console.log( videos );
 
       // BUTTONS TIMER
       Meteor.setTimeout(function(){
-        if ( t.$( `#tmp-${tit_id}` ).css( 'display' ) == 'inline' ) {
-          t.$( `#tmp-${tit_id}` ).hide();
+        if ( t.$( `#tmp-title-${tit_id}` ).css( 'display' ) == 'inline' ) {
+          t.$( `#tmp-title-${tit_id}` ).hide();
         }
-        t.$( `#close-title-${tit_id}` ).unbind( "click" );
+        t.$( `#close-title-${tit_id}` ).off( "click" );
         t.$( `#close-title-${tit_id}` ).remove();
 
-        t.$( `#gear-title-${tit_id}` ).unbind( "click" );
+        t.$( `#gear-title-${tit_id}` ).off( "click" );
         t.$( `#gear-title-${tit_id}` ).remove();
 
-      }, 1500);
-
-      };//click
-    })(tit_id);
+      }, 2000);
 
       // TITLE OBJECT RESIZE EVENT
       t.$( `#tit-${tit_id}` ).on( "resize", function( event, ui ) {
         let factor = 2 +  Math.round( ui.size.height / 2 ) * 2;
-        t.$( `#tmp-${tit_id}` ).show();
-        t.$( `#tmp-${tit_id}` ).text( " " + factor + "px" ).css( 'background-color', 'red' ).css( 'color', 'white' );
+        t.$( `#tmp-title-${tit_id}` ).show();
+        t.$( `#tmp-title-${tit_id}` ).text( " " + factor + "px" ).css( 'background-color', 'red' ).css( 'color', 'white' );
         $( this ).css( 'font-size', factor );
       });
+
+      };//click
+    })(tit_id);
   //---------------------------------------------------------------------------
   },
 
@@ -698,10 +784,13 @@ console.log( videos );
     t.$( '#fb-template' ).append( `<span id="span_text-${txt_id}"
                                          style = "z-index:1;border-radius:5px;background-color:SkyBlue;position:absolute;top:200px;left:300px;border:none !important;cursor:move;"
                                          class = "draggable ui-widget-content">
-                                   <span style="font-size:16px;"
-                                                id="txt-${txt_id}">&nbsp;&nbsp;&nbsp;&nbsp;${txt}&nbsp;&nbsp;&nbsp;&nbsp;</span><sup id="tmp-${txt_id}"></sup></span>`);
+                                     <span style="font-size:16px;"
+                                                  id="txt-${txt_id}">&nbsp;&nbsp;&nbsp;&nbsp;${txt}&nbsp;&nbsp;&nbsp;&nbsp;
+                                     </span>
+                                     <sup id="tmp-txt-${txt_id}"></sup>
+                                  </span>`);
 
-    t.$( `#tmp-${txt_id}` ).hide();
+    t.$( `#tmp-txt-${txt_id}` ).hide();
 
     t.$( '.draggable' ).draggable();
 
@@ -751,26 +840,26 @@ console.log( videos );
 
       //BUTTONS TIMER
       Meteor.setTimeout(function(){
-        if ( t.$( `#tmp-${txt_id}` ).css( 'display' ) == 'inline' ) {
-          t.$( `#tmp-${txt_id}` ).hide();
+        if ( t.$( `#tmp-txt-${txt_id}` ).css( 'display' ) == 'inline' ) {
+          t.$( `#tmp-txt-${txt_id}` ).hide();
         }
         t.$( `#close-ta-${txt_id}` ).off( "click" );
         t.$( `#close-ta-${txt_id}` ).remove();
 
         t.$( `#gear-ta-${txt_id}` ).off( "click" );
         t.$( `#gear-ta-${txt_id}` ).remove();
-      }, 3000);
+      }, 2000);
+
+      //TEXT OBJECT RESIZE EVENT
+      t.$( `#txt-${txt_id}` ).on( "resize", function( event, ui ) {
+        let factor = 2 +  Math.round( ui.size.height / 2 ) * 2;
+        t.$( `#tmp-txt-${txt_id}` ).show();
+        t.$( `#tmp-txt-${txt_id}` ).text( " " + factor + "px" ).css( 'background-color', 'red' ).css( 'color', 'white' );
+        t.$( this ).css( 'font-size', factor );
+      });
 
     }//onclick
   })(txt_id);//anon func
-
-    //TEXT OBJECT RESIZE EVENT
-    t.$( `#txt-${txt_id}` ).on( "resize", function( event, ui ) {
-      let factor = 2 +  Math.round( ui.size.height / 2 ) * 2;
-      t.$( `#tmp-${txt_id}` ).show();
-      t.$( `#tmp-${txt_id}` ).text( " " + factor + "px" ).css( 'background-color', 'red' ).css( 'color', 'white' );
-      t.$( this ).css( 'font-size', factor );
-    });
 //-----------------------------------------------------------------------------
   },
 
@@ -800,11 +889,6 @@ console.log( videos );
     t.$('#media-enter').css( 'border', '' ).css( 'color', 'grey' );
 
     t.$( '#fb-template' ).html( vid );
-    //t.$( '#cb-vid-disp' ).addClass('draggable ui-widget-content');
-    //t.$('.draggable').draggable({
-        //cursor: "move",
-        //zIndex: 99
-    //});
 
     t.$( '#media-enter' ).hide();
     //t.$( '#cb-vid-disp' ).show();
@@ -860,8 +944,4 @@ function addVideo() {
     .css( 'border', '1px dashed grey' ).css( 'color', 'grey' );
   $( '#media-enter' ).show();
   $( 'div#media-enter' ).effect( "highlight", {}, 2000 );
-}
-
-function addImage() {
-
 }
