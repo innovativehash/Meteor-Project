@@ -9,17 +9,19 @@
 -->
 
 <div id="dialog" title="Basic dialog" style="z-index:12">
-
+  <p>
+    <input type="hidden" id="js-cb-text-dialog">
+  </p>
   <p>
     <strong>Style:</strong>
-    <div class="btn-group" data-toggle="buttons">
-      <label class="btn btn-default active" style="margin-right:10px;">
-        <input type="checkbox" checked><i class="fa fa-bold" aria-hidden="true"></i>
+    <div class="btn-group" data-toggle="buttons" autofocus>
+      <label id="js-bold-button" class="btn btn-default" style="margin-right:10px;"><!-- class active -->
+        <input type="checkbox"><i class="fa fa-bold" aria-hidden="true"></i><!-- checked -->
       </label>
-      <label class="btn btn-default" style="margin-right:10px;">
+      <label id="js-italic-button" class="btn btn-default" style="margin-right:10px;">
         <input type="checkbox"><i class="fa fa-italic" aria-hidden="true"></i>
       </label>
-      <label class="btn btn-default" style="margin-right:10px;">
+      <label id="js-underline-button" class="btn btn-default" style="margin-right:10px;">
         <input type="checkbox"><i class="fa fa-underline" aria-hidden="true"></i>
       </label>
     </div>
@@ -256,7 +258,7 @@
                 class = "curse-builder-box centered-block">
           </div>
 
-          <!-- <div id = "media-enter"></div> -->
+
 <!--
         <div class="col-md-3 col-sm-3"></div>
 
@@ -345,7 +347,9 @@
               </div>
               <div class="row">
                 <div class="col-sm-4">
-                  <div class="image-preview"></div>
+                  <div class="image-preview">
+                    <img id="preview-image" src="">
+                  </div>
                 </div>
               </div>
               <div class="row">

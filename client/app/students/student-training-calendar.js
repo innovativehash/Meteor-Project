@@ -9,11 +9,11 @@ import '../../templates/student/student-training-calendar.html';
 /*
  * CREATED
  */
-Template.studentTrainingCalendar.onCreated( function() {  
-  
+Template.studentTrainingCalendar.onCreated( function() {
+
   //$('#cover').show();
-  
-  
+
+
   /*
    * BOOTSTRAP3-DIALOG
    */
@@ -22,7 +22,7 @@ Template.studentTrainingCalendar.onCreated( function() {
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'load bootstrap-dialog.min.js fail' );
 //-------------------------------------------------------------------
-  }); 
+  });
 
 
   /*
@@ -31,23 +31,23 @@ Template.studentTrainingCalendar.onCreated( function() {
    $.getScript( '/bower_components/fullcalendar/dist/fullcalendar.min.js', function() {
     //console.log('studentDashboard:: fullcalendar.js loaded...' );
     $('#calendar').fullCalendar({
-   
+
       // put your options and callbacks here
       events: [
                 {
                     title  : 'Training Event',
-                    start  : '2016-09-16',
+                    start  : '2016-11-16',
                     description: 'In house, meeting room A.  Corporate Kum-bay-yah'
                 },
                 {
                     title  : 'Training Event',
-                    start  : '2016-09-19',
-                    end    : '2016-09-20',
+                    start  : '2016-11-19',
+                    end    : '2016-11-20',
                     description: 'In house, concourse.  "I\'m Special, you\'re Special!"'
                 },
                 {
                     title  : 'Training Event',
-                    start  : '2016-09-21T12:30:00',
+                    start  : '2016-11-21T12:30:00',
                     description: 'Team Spirit Fire Walk, Mosconi Center',
                     allDay : false // will make the time show
                 }
@@ -55,9 +55,9 @@ Template.studentTrainingCalendar.onCreated( function() {
       eventClick: function( calEvent, jsEvent, view ) {
                       BootstrapDialog.show({
                         title: calEvent.title,
-                        message:  'On ' 
-                                  + moment(calEvent.start).format( 'ddd, hA' ) 
-                                  + '\n\n' 
+                        message:  'On '
+                                  + moment(calEvent.start).format( 'ddd, hA' )
+                                  + '\n\n'
                                   + calEvent.description,
                         buttons: [{
                           label: 'Ok',
@@ -82,7 +82,7 @@ Template.studentTrainingCalendar.onCreated( function() {
       //console.log( 'calendarConnectReady);
   }).fail( function( jqxhr, settings, exception ) {
 //-------------------------------------------------------------------
-  }); 
+  });
 });
 
 
@@ -94,6 +94,6 @@ Template.studentTrainingCalendar.onRendered(function(){
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
-  });  
+  });
   */
 });

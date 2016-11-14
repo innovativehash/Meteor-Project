@@ -31,26 +31,74 @@ Template.courseBuilderPage.onCreated( function() {
    * JQUERY-UI
    */
   $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function() {
-    $( '#fb-template' ).show();
-    $( '#cb-vid-disp' ).hide();
-    $( '#cb-pdf-disp' ).hide();
-    $( '#img-preview' ).hide();
 
+    //-------------------------
+    //      DIALOG
+    //-------------------------
     $( "#dialog" ).dialog({
-      autoOpen: false
+      autoOpen: false,
+      close: function( event, ui ) {
+        $('#js-bold-button').removeClass('active');
+        $('#js-italic-button').removeClass('active');
+        $('#js-underline-button').removeClass('active');
+      }
     });
 
+    // DIALOG BOLD BUTTON
+    $('#js-bold-button').on("click", function(e){
+      let bold = $('#js-cb-text-dialog').val();
+
+      if ( $(this).hasClass('active') ) {
+        $(`${bold}`).css('font-weight', '');
+      } else {
+        $(`${bold}`).css('font-weight', 'bold');
+      }
+    });
+
+    // DIALOG ITALIC BUTTON
+    $('#js-italic-button').on("click", function(e){
+      let italic = $('#js-cb-text-dialog').val();
+
+      if ( $(this).hasClass('active') ) {
+        $(`${italic}`).css('font-style', '');
+      } else {
+        $(`${italic}`).css('font-style', 'italic');
+      }
+    });
+
+    // DIALOG UNDERLINE BUTTON
+    $('#js-underline-button').on("click", function(e){
+      let underline = $('#js-cb-text-dialog').val();
+
+      if ( $(this).hasClass('active') ) {
+        $(`${underline}`).css('text-decoration', '');
+      } else {
+        $(`${underline}`).css('text-decoration', 'underline');
+      }
+    });
+
+
+    //-------------------------------
+    //       DIALOG OPACITY SLIDER
+    //-------------------------------
     $( "#slider-range" ).slider({
 
       slide: function( event, ui ) {
+        let opacity = $('#js-cb-text-dialog').val();
+
         $("label[for='slider-range']").html( ui.value );
-        //$( "#val" ).val( ui.value );
+
+        $( `${opacity}`).css('opacity', ui.value/100 );
       }
     });
 
     $( "#slider-range" ).slider( "value", 100 );
 
 
+
+    //---------------------------
+    //        DRAGGABLE
+    //---------------------------
     $( ".draggable" ).draggable({
       start: function( event, ui ) {
 
@@ -60,6 +108,10 @@ Template.courseBuilderPage.onCreated( function() {
       zIndex: 9
     });
 
+
+    //-----------------------------
+    //        DROPPABLE
+    //----------------------------
     $( '#fb-template' ).droppable({
       accept: '.draggable',
       drop: function( evt, ui ) {
@@ -109,6 +161,7 @@ Template.courseBuilderPage.onCreated( function() {
         }
 
       }
+
     });
 
   //console.log('CourseBuilder:: jquery-ui.min.js loaded...');
@@ -236,7 +289,8 @@ Template.courseBuilderPage.events({
     e.stopImmediatePropagation();
 
     //t.currentScreen.set('courseBuilder');
-    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+    //FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+    location.href = 'https://collective-university-nsardo.c9users.io/admin/dashboard/course-builder/' + Meteor.userId();
 //-------------------------------------------------------------------
   },
 
@@ -567,7 +621,9 @@ console.log( videos );
     let fr  = new FileReader();
 
     let myimage = new Image();
+
     fr.onload   = function() {
+
       ig        = this.result;
 
       //orig
@@ -581,17 +637,20 @@ console.log( videos );
     };
 
     // reads in image, calls back fr.onload
-    fr.readAsDataURL(fil);
+    fr.readAsDataURL( fil );
 
     Meteor.setTimeout( function() {
       if ( ig ) {
-        let img = $( '<img id="logo-preview" />' );
-            img.attr( "src", ig ); // ig
-            img.appendTo( '.image-preview' );
+        let img = $( '#preview-image' );
+
+        img.attr( "src", ig ); // ig
+        img.appendTo( '.image-preview' );
       } else {
           img = null;
       }
     }, 200);
+
+    t.$( '#course-builder-image' ).val('');
 //-----------------------------------------------------------------------------
   },
 
@@ -611,25 +670,37 @@ console.log( videos );
     images.push({ page: Template.instance().page.get(), id: ++img_id, image: ig });
 
 
-    t.$( '#fb-template' ).append( `<div id="ig-${img_id}" style="display:inline-block;"><img id="img-preview${img_id}" src="${ig}" style="cursor:move;"></div>` );
-/*
-    t.$( '.draggable' ).draggable({
-      //zIndex: 9,
-    });
-*/
+    t.$( '#fb-template' ).append( `<div id="ig-${img_id}" style="display:inline-block;"><img id="img-preview-${img_id}" src="${ig}" style="cursor:move;"></div>` );
+
     $(`#ig-${img_id}`).draggable();
-    $(`#img-preview${img_id}`).resizable();
+    $(`#img-preview-${img_id}`).resizable();
 
 
-    t.$( `#img-preview${img_id}` ).on( 'mousedown',  (e) => {
+    t.$( `#img-preview-${img_id}` ).on( 'mousedown',  (e) => {
       e.preventDefault();
 
-      images[img_id].position = $( `#img-preview${img_id}` ).position();
-      console.log( $( `#img-preview${img_id}` ).position() );
+      images[img_id].position = $( `#img-preview-${img_id}` ).position();
+      console.log( $( `#img-preview-${img_id}` ).position() );
     });
+
+    if ( ! t.$( `#close-img-${img_id}` ).length ) {
+        $( `#ig-${img_id}` ).append( `<button type="button"
+                                                     id="close-img-${img_id}"
+                                                     class="btn btn-danger btn-xs">
+                                              <span class="glyphicon glyphicon-trash"></span>
+                                            </button>` );
+
+        //CLOSE BUTTON EVENT
+        t.$( `#close-img-${img_id}` ).on( "click", (e) => {
+          e.preventDefault();
+          $( `#${e.currentTarget.parentNode.id}` ).remove();
+        });
+    }
+
 
     ig  = null;
     ext = null;
+    $('#preview-image').attr( 'src', null );
     t.$( '#add-image' ).modal( 'hide' );
 
 //-----------------------------------------------------------------------------
@@ -675,7 +746,7 @@ console.log( videos );
 
 
     t.$( '#fb-template' ).append( `<div id="div_title-${tit_id}"
-                                        style = "z-index:2;border-radius:5px;background-color:SkyBlue;font-size:18px;position:absolute;top:200px;left:300px;cursor:move;border:none !important;">
+                                        style = "z-index:2;border-radius:5px;background-color:white;font-size:18px;position:absolute;top:200px;left:300px;cursor:move;border:none !important;">
                                     <span style="font-size:20px;"
                                            id="tit-${tit_id}">&nbsp;&nbsp;&nbsp;&nbsp;<strong>${tit}</strong>&nbsp;&nbsp;&nbsp;&nbsp;
                                     </span><sup id="tmp-title-${tit_id}"></sup>
@@ -694,9 +765,9 @@ console.log( videos );
       //`#tit${titles[tit_id].id}`
     (function(tit_id){
       document.getElementById( `div_title-${tit_id}` ).onclick = (e) => {
+        e.preventDefault();
 
         //titles[tit_id].position = $( `#tit${tit_id}` ).position();
-
         //console.log( titles[tit_id].position );
 
 
@@ -726,6 +797,7 @@ console.log( videos );
           //GEAR BUTTON EVENT
         t.$( `#gear-title-${tit_id}` ).on( "click", (e) => {
           e.preventDefault();
+          $('#js-cb-text-dialog').val( `#tit-${tit_id}` );
           $( '#dialog' ).dialog( "open" );
         });
       }
@@ -747,12 +819,12 @@ console.log( videos );
       t.$( `#tit-${tit_id}` ).on( "resize", function( event, ui ) {
         let factor = 2 +  Math.round( ui.size.height / 2 ) * 2;
         t.$( `#tmp-title-${tit_id}` ).show();
-        t.$( `#tmp-title-${tit_id}` ).text( " " + factor + "px" ).css( 'background-color', 'red' ).css( 'color', 'white' );
+        t.$( `#tmp-title-${tit_id}` ).text( " " + factor + "px" ).css( 'background-color', 'red' ).css( 'color', 'white' ).css('border-radius', '10px');
         $( this ).css( 'font-size', factor );
       });
 
-      };//click
-    })(tit_id);
+      };//onclick
+    })(tit_id);//anon function
   //---------------------------------------------------------------------------
   },
 
@@ -782,7 +854,7 @@ console.log( videos );
     texts.push( {page: Template.instance().page.get(), id:++txt_id, text: txt} );
 
     t.$( '#fb-template' ).append( `<span id="span_text-${txt_id}"
-                                         style = "z-index:1;border-radius:5px;background-color:SkyBlue;position:absolute;top:200px;left:300px;border:none !important;cursor:move;"
+                                         style = "z-index:1;border-radius:5px;background-color:white;position:absolute;top:200px;left:300px;border:none !important;cursor:move;"
                                          class = "draggable ui-widget-content">
                                      <span style="font-size:16px;"
                                                   id="txt-${txt_id}">&nbsp;&nbsp;&nbsp;&nbsp;${txt}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -792,15 +864,15 @@ console.log( videos );
 
     t.$( `#tmp-txt-${txt_id}` ).hide();
 
-    t.$( '.draggable' ).draggable();
+    t.$( `#span_text-${txt_id}` ).draggable();
 
     t.$( `#txt-${txt_id}` ).resizable();
 
     //--------------------------
     // TEXT OBJECT CLICK EVENT
     //--------------------------
-  (function(txt_id) {
-    document.getElementById( `txt-${txt_id}` ).onclick =  (e) => {
+  (function(txt_id) { // txt-${txt_id}
+    document.getElementById( `span_text-${txt_id}` ).onclick =  (e) => {
       e.preventDefault();
 
       texts[txt_id].position = $( `#span_text-${txt_id}` ).position();
@@ -833,7 +905,7 @@ console.log( videos );
         //GEAR BUTTON EVENT
         t.$( `#gear-ta-${txt_id}` ).on( "click", (e) => {
           e.preventDefault();
-
+          $('#js-cb-text-dialog').val( `#txt-${txt_id}` );
           $( '#dialog' ).dialog( "open" );
         });
       }
@@ -854,7 +926,7 @@ console.log( videos );
       t.$( `#txt-${txt_id}` ).on( "resize", function( event, ui ) {
         let factor = 2 +  Math.round( ui.size.height / 2 ) * 2;
         t.$( `#tmp-txt-${txt_id}` ).show();
-        t.$( `#tmp-txt-${txt_id}` ).text( " " + factor + "px" ).css( 'background-color', 'red' ).css( 'color', 'white' );
+        t.$( `#tmp-txt-${txt_id}` ).text( " " + factor + "px" ).css( 'background-color', 'red' ).css( 'color', 'white' ).css('border-radius', '10px');
         t.$( this ).css( 'font-size', factor );
       });
 
@@ -886,11 +958,23 @@ console.log( videos );
 
     videos.push( {page: Template.instance().page.get(), id: ++vid_id, url: vid} );
 
-    t.$('#media-enter').css( 'border', '' ).css( 'color', 'grey' );
-
     t.$( '#fb-template' ).html( vid );
 
-    t.$( '#media-enter' ).hide();
+    if ( ! t.$( `#close-vid-${vid_id}` ).length ) {
+        $( '#fb-template' ).append( `<button type="button"
+                                                     id="close-vid-${vid_id}"
+                                                     class="btn btn-danger btn-xs">
+                                              <span class="glyphicon glyphicon-trash"></span>
+                                            </button>` );
+
+        //CLOSE BUTTON EVENT
+        t.$( `#close-vid-${vid_id}` ).on( "click", (e) => {
+          e.preventDefault();
+          $( '#fb-template iframe' ).remove();
+          $( `#close-vid-${vid_id}` ).remove();
+        });
+    }
+
     //t.$( '#cb-vid-disp' ).show();
 
    // t.$( '#fb-template' ).hide()
@@ -918,7 +1002,7 @@ console.log( videos );
 
 function addTitle() {
 
-  let holder = $( '<input id="added-title" type="text" style="z-index:2;position:absolute;margin-left:12%;margin-right:12%" autofocus/>' )
+  let holder = $( '<input id="added-title" type="text" style="border-radius:5px;z-index:2;position:absolute;width:65%;margin-left:12%;margin-right:12%" autofocus/>' )
     .css( 'color', 'grey' );
   $( '#fb-template' ).append(holder);
 
@@ -927,9 +1011,9 @@ function addTitle() {
 
 
 function addText() {
-  $( '#fb-template' ).show();
 
-  $( '#fb-template' ).append( '<textarea id="added-text" rows="3" style="z-index:2;position:absolute;margin-left:10%;margin-right:10%;width:73%;" autofocus></textarea>' )
+
+  $( '#fb-template' ).append( '<textarea id="added-text" rows="3" style="z-index:2;border-radius:5px;position:absolute;margin-left:10%;margin-right:10%;width:73%;" autofocus></textarea>' )
     .css( 'color', 'grey' );
 
   $( '#added-text' ).effect( "highlight", {}, 2000 );
@@ -938,10 +1022,7 @@ function addText() {
 
 
 function addVideo() {
-  console.log( 'in addVideo()' );
-  $( '#fb-template' ).show();
-  $( '#media-enter' ).append( '<input id="added-video" type="text" style="width:75%;margin-left:12%;margin-right:12%;"/>' )
-    .css( 'border', '1px dashed grey' ).css( 'color', 'grey' );
-  $( '#media-enter' ).show();
-  $( 'div#media-enter' ).effect( "highlight", {}, 2000 );
+
+  $( '#fb-template' ).append( '<input id="added-video" type="text" style="border-radius:5px;width:75%;margin-left:12%;margin-right:12%;"/>' )
+    .css( 'border', '1px dashed grey' ); //.effect( "highlight", {}, 2000 );
 }
