@@ -1516,7 +1516,7 @@ body.login {
     height: 100vh;
     padding: 30px 0;
     width: 255px;
-    /*overflow-y: auto; */
+    /* overflow-y: auto; HAD TO BE REMOVED FOR DRAG AND DROP FUNCTIONALITY -nfs*/
     top: 0;
 }
 
@@ -1524,11 +1524,11 @@ body.login {
 .sidebar-menu-area .buttons button {
     border: 0;
     background: #37ACE9;
-    position: fixed; /* absolute */
+    position: absolute;
     right: -52px;
     top: 10px;
     padding: 10px;
-    z-index: 9; /* 999 */
+    z-index: 12; /* 999 */
     display: none;
     border: 1px solid #fff;
 }
@@ -1749,7 +1749,7 @@ body.login {
     background-color: #d3cbcb;
 }
 
-.profile-bar {}
+.profile-bar { margin-right: 150px; } /*might need to be empty */
 
 .profile-bar ul {
     margin: 0;
@@ -1783,6 +1783,8 @@ body.login {
     top: -10px;
 }
 
+/*
+MIGHT NEED TO SWITCH BACK
 .profile-link a {
     color: #fff;
     font-size: 20px;
@@ -1790,6 +1792,18 @@ body.login {
     transition: .4s;
     margin-top: 29px;
     display: block;
+}
+*/
+
+.profile-link > a {
+	color: #fff;
+	font-size: 15px;
+	-webkit-transition: .4s;
+	transition: .4s;
+	margin-top: 0;
+	display: table-cell;
+	vertical-align: middle;
+	height: 82px;
 }
 
 .profile-link a span.image {
@@ -1814,6 +1828,7 @@ body.login {
 }
 
 .dashboard-body-area {
+z-index: 2;
     padding: 125px 0 50px;
 }
 
@@ -2157,7 +2172,7 @@ body.login {
 
 .dash-post-single-comment-form {
     float: left;
-    width: 478px;
+    width: 80%; /* 478px; */
 }
 
 .dash-post-single-comment-form textarea {
@@ -2551,7 +2566,8 @@ body.login {
     left: 50%;
     margin-left: -275px;
 }
-/*
+
+/*TODO: ORIGINAL FUGLY LABEL STYLE
 .popup-body label {
     background: #A7A7A7 url("/img/bg-1.png") repeat-x scroll 0px 0px / auto 100%;
     border: 1px solid #777;
@@ -2975,6 +2991,7 @@ body.login {
 }
 
 .course-builder-sidebar {
+
     padding: 15px 0;
 }
 
@@ -3055,9 +3072,9 @@ body.login {
 }
 
 .curse-builder-box {
-    background: #fff; /* #f5f5f5; */
+    background: #f5f5f5; /* #f5f5f5; */
     border: 1px solid #c7c7c7;
-
+/*
     background-color: #f1f2f3;
     background-image:
       -webkit-linear-gradient(0deg, transparent .05em, rgba(0,0,0,.05) .05em, rgba(0,0,0,.05) .125000em, transparent .125000em),
@@ -3076,6 +3093,7 @@ body.login {
       inear-gradient(rgba(0,0,0,.05) .062500em, transparent .062500em);
     background-size: .75em .75em;
     background-position: 0 -0.5em;
+*/
 /*
   background-color: #00004f;
   background-image: linear-gradient(rgba(25, 70, 91, 0.5) 1px, transparent 1px), linear-gradient(#19465b 1px, transparent 1px), linear-gradient(90deg, rgba(25, 70, 91, 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(25, 70, 91, 0.7) 1px, transparent 1px), linear-gradient(transparent 3px, #00004f 3px, #00004f 58px, transparent 58px), linear-gradient(90deg, rgba(25, 70, 91, 0.7) 3px, transparent 3px, transparent 58px, rgba(25, 70, 91, 0.7) 58px);
@@ -3102,56 +3120,12 @@ body.login {
     background-size: .75em .75em;
     background-position: 0 -0.5em;
     */
-    padding-left:     30px;
-    padding-right:    30px;
-    padding-top:      20px;
-    padding-bottom:   20px;
-
-    position: relative;
-    z-index: 1;
-}
-
-/* centered columns styles */
-.row-centered {
-    text-align:center;
-}
-
-.col-centered {
-    display:inline-block;
-    float:none;
-    /* reset the text-align */
-    text-align:left;
-    /* inline-block space fix */
-    margin-right:-4px;
-}
-
-
-#media-enter {
-    background: #f5f5f5;
-    border: 1px solid c7c7c7;
-    padding: 30px;
-    margin-top: 20px;
-    margin-left: 90px;
-    min-height: 100px;
-    width: 100%;
-    height: 20%;
-    position: relative;
-    z-index: 1;
-}
-
-.course-viewer-box {
-    background: #f5f5f5;
-    border: 1px solid #c7c7c7;
-    margin-left:50px;
-    margin-right:50px;
     padding: 30px;
     margin-top: 60px;
-    min-height: 600px;
-    width: 90%;
-    height: 90%;
+    min-height: 375px;
     position: relative;
-    z-index: 1;
 }
+
 
 .curse-builder-box .notice {
     text-align: center;
@@ -3182,11 +3156,7 @@ body.login {
     bottom: 0;
 }
 
-.cb-footer {
-
-}
-
-/* .footer-filter {} */
+.footer-filter {}
 
 .footer-filter h2 {
     color: #fff;
@@ -3507,8 +3477,8 @@ body.certificate {
 }
 
 .certificate-course ul li:hover {
-    /* opacity: 0.4; */
-    /* filter: alpha(opacity=40); */
+  opacity: 0.4;
+  filter: alpha(opacity=40);
 }
 
 .certificate-body {
@@ -4128,20 +4098,19 @@ html .ui-button.ui-state-disabled:active {
   bottom: 0;
 }
 */
+/*
 #cb-pdf-disp {
-
   /* height: auto !important; */
   /* width: auto !important; */
   /* margin-top:10px;
   padding-top: 0px;
   margin-left: 100px;
   padding-left: 60px;
-  margin-bottom: 30px; */
+  margin-bottom: 30px;
   height: 575px;
   width: 500px;
-
 }
-
+*/
 
 
 

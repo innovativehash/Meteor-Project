@@ -46,10 +46,10 @@ FlowRouter.route( '/verify-email/:token', {
       if ( error ) {
         console.log( error.reason, 'danger' );
       } else {
-        
+
         //TODO: Display success page with temporary password
         //TODO: create user settings, incl passwoed change
-        
+
         console.log( params.token );
         console.log(Meteor.user().emails[0].verified)
        // FlowRouter.go( '/' );
@@ -151,7 +151,7 @@ adminRoutes.route('/dashboard/courses/add-from-library/:_id', {
 adminRoutes.route('/dashboard/course-builder/:_id', {
   name: 'admin-course-builder',
   action: () =>
-    BlazeLayout.render( 'courseBuilderLayout', {main:"courseBuilderPage"})
+    BlazeLayout.render( 'adminDashboardLayout', {main:"courseBuilderPage"})
 });
 
 /*
@@ -262,7 +262,7 @@ adminRoutes.route('/dashboard/assign-courses/:_id', {
    action: () =>
     BlazeLayout.render( 'adminDashboardLayout', {main: 'adminAdvanced'})
  });
- 
+
   FlowRouter.route( '/verify-email/:token', {
     name: 'verify-email',
     action( params ) {

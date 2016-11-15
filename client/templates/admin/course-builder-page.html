@@ -8,7 +8,7 @@
 <div id="cover"></div>
 -->
 
-<div id="dialog" title="Basic dialog" style="z-index:12">
+<div id="dialog" title="Text Options" style="z-index:12">
   <p>
     <input type="hidden" id="js-cb-text-dialog">
   </p>
@@ -38,195 +38,182 @@
 </div>
 
 
-        <div class="dashboard-header-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-7">
-                      <div class = "search-bar">
-                        <form action = "">
+<div class="dashboard-header-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
 
-                          <!-- NEED TO CONCATENATE LENGTH OF COURSE NAME -->
-
-                            <h3 style = "color:white;margin-left:10%;font-size:24px;width:100%;display:inline-block;">
-                              BUILDING COURSE:&nbsp;&nbsp;<span id = "course-banner"></span>
-                            </h3>
-
-                          <!-- <input type="text" style="color: blue;" placeholder="Search Students"> -->
-                          <!-- <input type="submit" value="Search"> -->
-                        </form>
-                      </div><!-- END SEARCH BAR -->
-                    </div>
-
-
-                    <div class="col-sm-5">
-                        <div class="profile-bar">
-                            <ul>
-                              <li><button><img src="/img/message.png" alt=""></button></li>
-                              <li><button><img src="/img/notification.png" alt=""></button></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div><!-- row -->
-
-
-                <div class="row">
-                    <div class="profile-link">
-                      <a  class         = "dropdown-toggle"
-                          data-toggle   = "dropdown"
-                          href          = "#"
-                          role          = "button"
-                          aria-haspopup = "true"
-                          aria-expanded = "false">
-                            <span class="diamonds">
-                              <img src="/img/profile-1.jpg" alt="">
-                            </span>
-
-                              {{fname}}
-                      </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="javascript: void(0)">Account Settings</a></li>
-                            <li><a href="javascript: void(0)">Upload Photo</a></li>
-                            <li><a href="javascript: void(0)">Logout</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
+        <div>
+          <ul style="margin: 0;padding: 0;list-style: none;">
+            <li style="display: inline-block;color: white;font-size: 18px;position: relative;"><a style="color: white;" href="javascript:void(0)" id="cb-dashboard-page"><i class="fa fa-home"></i>&nbsp;&nbsp;Dashboard/</a></li>
+            <li style="display: inline-block;color: white;font-size: 18px;position: relative;"><a style="color: white;" href="javascript:void(0)" id="cb-courses-page">Courses/</a></li>
+            <li style="display: inline-block;color: white;font-size: 18px;position: relative;color:blue;text-decoration:underline;">Course Builder</li>
+          </ul>
         </div>
 
+      </div><!-- col-sm-6 -->
+
+      <div class="col-sm-6">
+        <div class="profile-bar">
+          <ul>
+            <li><button><img src="/img/message.png" alt=""></button></li>
+            <li><button><img src="/img/notification.png" alt=""></button></li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- row -->
 
 
-  <div class="dashboard-body-area">
+    <div class="row">
+      <div class="profile-link">
+        <a  class         = "dropdown-toggle"
+            data-toggle   = "dropdown"
+            href          = "#"
+            role          = "button"
+            aria-haspopup = "true"
+            aria-expanded = "false">
+              <span class="diamonds">
+                <img src="/img/profile-1.jpg" alt="">
+              </span>
 
-    <div class="container">
-      <div class="row">
+                {{fname}}
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="javascript: void(0)">Account Settings</a></li>
+            <li><a href="javascript: void(0)">Upload Photo</a></li>
+            <li><a href="javascript: void(0)">Logout</a></li>
+        </ul>
+      </div>
+    </div>
 
-        <div class="sidebar-menu-area course-builder-sidebar">
+  </div><!-- container -->
+</div><!-- dashboard-header-area -->
 
-          <div class="buttons">
-            <button id="open">
-              <span></span>
-              <span></span>
-              <span></span>
+
+<div class="dashboard-body-area">
+	<div class="sidebar-menu-area course-builder-sidebar">
+		<div class="buttons">
+			<button id="open">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+			<button id="close">
+				<span></span>
+				<span></span>
+			</button>
+		</div>
+		<div class="page-back-home">
+			<a href="#"><i class="fa fa-long-arrow-left"></i>Back To Home</a>
+			<h2>Drag &amp; Drop</h2>
+		</div>
+
+    <!-- COURSE BUILDER ITEMS -->
+    <div class = "curse-builder-items">
+      <ul>
+        <li></li>
+        <li tabindex = "-1">
+          <span class = "area">
+            <button class="btn btn-default btn-sm">
+            <span style = ""
+                  class = "glyphicon glyphicon-eye-open"
+                  data-type = "preview">
+            </span>
+            PREVIEW
             </button>
-            <button id="close">
-              <span></span>
-              <span></span>
-            </button>
-          </div>
+          </span>
+        </li>
+        <li tabindex = "-1">
+          <span class = "area">
+            <span style = "border:none !important;cursor:move;z-index=5;"
+                  class = "image draggable ui-widget-content"
+                  data-type = "title">
+                <img src = "/img/p-icon-1.png" alt="" style="z-index: 5;">
+            </span>
+            TITLE
+          </span>
+        </li>
+        <li tabindex = "-1">
+          <span class = "area">
+            <span style = "border:none !important;cursor:move;"
+                  class = "image draggable ui-widget-content"
+                  data-type = "text">
+              <img src = "/img/p-icon-2.png" alt="">
+            </span>
+            TEXT
+          </span>
+        </li>
+        <li tabindex = "-1">
+          <span class = "area">
+            <span style = "border:none !important;"
+                  class = "image draggable ui-widget-content"
+                  data-type = "image">
+              <img src = "/img/p-icon-3.png" alt="">
+            </span>
+            IMAGES
+          </span>
+        </li>
+        <li tabindex = "-1">
+          <span class = "area">
+            <span style = "border:none !important;"
+                  class = "image draggable ui-widget-content"
+                  data-type = "video">
+              <img src = "/img/p-icon-4.png" alt="">
+            </span>
+            VIDEOS
+          </span>
+        </li>
+        <li tabindex = "-1">
+          <span class = "area">
+            <span style = "border:none !important;"
+                  class = "image draggable ui-widget-content"
+                  data-type = "pdf">
+              <img src = "/img/p-icon-5.png" alt="">
+            </span>
+            PDF
+          </span>
+        </li>
+        <li tabindex = "-1">
+          <span class = "area">
+            <span style = "border:none !important;"
+                  class = "image draggable ui-widget-content"
+                  data-type = "powerpoint">
+              <img src = "/img/p-icon-6.png" alt="">
+            </span>
+            POWERPOINT
+          </span>
+        </li>
+        <li tabindex = "-1">
+          <span class = "area">
+            <span style = "border:none !important;"
+                  class = "image draggable ui-widget-content"
+                  data-type = "scorm">
+              <img src = "/img/p-icon-7.png" alt="">
+            </span>
+            SCORM
+          </span>
+        </li>
+        <li tabindex = "-1">
+          <span class = "area">
+            <span style = "border:none !important;"
+                  class = "image draggable ui-widget-content"
+                  data-type = "test">
+              <img src = "/img/p-icon-8.png" alt="">
+            </span>
+            TEST
+          </span>
+        </li>
+      </ul>
+    </div>
 
-          <div class="page-back-home js-back-to-home">
-            <a href="#">
-              <i class="fa fa-long-arrow-left"></i>
-                Back To Home
-            </a>
+  </div><!-- sidebar-menu-area course-builder-sidebar -->
 
-            <h2>Drag & Drop</h2>
-          </div>
 
-          <!-- COURSE BUILDER ITEMS -->
-          <div class = "curse-builder-items">
-            <ul>
-              <li></li>
-              <li tabindex = "-1">
-                <span class = "area">
-                  <button class="btn btn-default btn-sm">
-                  <span style = ""
-                        class = "glyphicon glyphicon-eye-open"
-                        data-type = "preview">
-                  </span>
-                  PREVIEW
-                  </button>
-                </span>
-              </li>
-              <li tabindex = "-1">
-                <span class = "area">
-                  <span style = "border:none !important;cursor:move;z-index=5;"
-                        class = "image draggable ui-widget-content"
-                        data-type = "title">
-                      <img src = "/img/p-icon-1.png" alt="" style="z-index: 5;">
-                  </span>
-                  TITLE
-                </span>
-              </li>
-              <li tabindex = "-1">
-                <span class = "area">
-                  <span style = "border:none !important;cursor:move;"
-                        class = "image draggable ui-widget-content"
-                        data-type = "text">
-                    <img src = "/img/p-icon-2.png" alt="">
-                  </span>
-                  TEXT
-                </span>
-              </li>
-              <li tabindex = "-1">
-                <span class = "area">
-                  <span style = "border:none !important;"
-                        class = "image draggable ui-widget-content"
-                        data-type = "image">
-                    <img src = "/img/p-icon-3.png" alt="">
-                  </span>
-                  IMAGES
-                </span>
-              </li>
-              <li tabindex = "-1">
-                <span class = "area">
-                  <span style = "border:none !important;"
-                        class = "image draggable ui-widget-content"
-                        data-type = "video">
-                    <img src = "/img/p-icon-4.png" alt="">
-                  </span>
-                  VIDEOS
-                </span>
-              </li>
-              <li tabindex = "-1">
-                <span class = "area">
-                  <span style = "border:none !important;"
-                        class = "image draggable ui-widget-content"
-                        data-type = "pdf">
-                    <img src = "/img/p-icon-5.png" alt="">
-                  </span>
-                  PDF
-                </span>
-              </li>
-              <li tabindex = "-1">
-                <span class = "area">
-                  <span style = "border:none !important;"
-                        class = "image draggable ui-widget-content"
-                        data-type = "powerpoint">
-                    <img src = "/img/p-icon-6.png" alt="">
-                  </span>
-                  POWERPOINT
-                </span>
-              </li>
-              <li tabindex = "-1">
-                <span class = "area">
-                  <span style = "border:none !important;"
-                        class = "image draggable ui-widget-content"
-                        data-type = "scorm">
-                    <img src = "/img/p-icon-7.png" alt="">
-                  </span>
-                  SCORM
-                </span>
-              </li>
-              <li tabindex = "-1">
-                <span class = "area">
-                  <span style = "border:none !important;"
-                        class = "image draggable ui-widget-content"
-                        data-type = "test">
-                    <img src = "/img/p-icon-8.png" alt="">
-                  </span>
-                  TEST
-                </span>
-              </li>
-            </ul>
-          </div>
-
-        </div><!-- sidebar -->
-      </div><!-- row -->
-      <div class="row">
-
-        <div class = "col-sm-10 col-md-10">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
           <!--
           <svg preserveAspectRatio="none" style="width: 960px; height: 600px; pointer-events: none; opacity: 1; position: absolute;">
             <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="0%" x2="0%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
@@ -256,413 +243,426 @@
 
           <div  id    = "fb-template"
                 class = "curse-builder-box centered-block">
+            <div class="notice">
+                <h2>DRAG &amp; DROP ELEMENTS IN THIS CANVAS</h2>
+            </div>
           </div>
 
+          <!--
+                  <div class="col-md-3 col-sm-3"></div>
 
-<!--
-        <div class="col-md-3 col-sm-3"></div>
+                  <div class="col-md-6 col-sm-6">
 
-        <div class="col-md-6 col-sm-6">
+                    <div  class = ""
+                      id = "cb-pdf-disp"
+                      style = "margin:0;padding:0;display:inline-block;">
+                    </div>
 
-          <div  class = ""
-            id = "cb-pdf-disp"
-            style = "margin:0;padding:0;display:inline-block;">
+                  </div>
+
+                  <div class="col-md-3 col-sm-3"></div>
+          -->
+
+        </div><!-- row -->
+      </div><!-- col-sm-12 -->
+    </div><!-- row -->
+  </div><!-- container -->
+
+</div><!-- dashboard-body-area -->
+
+
+<div class="dashboard-body-area footer-page">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="footer-filter">
+          <h2>Page {{page}}/{{total}}
+
+            <button class = "up">
+              <i class = "fa fa-arrow-up"></i>
+            </button>
+            <button class = "down">
+              <i class = "fa fa-arrow-down"></i>
+            </button>
+          </h2>
+
+        </div><!-- footer-filter -->
+      </div><!-- col-sm-4 -->
+
+      <div class= "col-sm-4">
+        <div class="save-button">
+          <button id="cb-next">Next Page</button>
+        </div>
+      </div>
+      <div class = "col-sm-4">
+        <div class = "save-button">
+          <button id = "cb-save">Save Course</button>
+        </div>
+      </div>
+
+    </div><!-- row -->
+  </div><!-- container -->
+</div><!-- dashboard-body-areaa footer-page -->
+
+
+
+<!-- IMAGE MODAL -->
+<div  class="modal fade left"
+      id="add-image"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel">
+
+  <div class="modal-dialog">
+    <div class="pop-up-area">
+      <button type="button"
+              id="popup-close"
+              data-dismiss="modal"
+              aria-label="Close">x</button>
+
+      <div class="popup-body" style="top: 20%;">
+
+      <h3 style="color:white;">ADD IMAGE:</h3>
+        <form action="">
+          <div class="row">
+            <div class="col-sm-4">
+              <span style="margin-left: 50px;">
+                <em>
+                  <strong>UPLOAD IMAGE:</strong>
+                </em>
+              </span>
+            </div>
+            <div class="col-sm-7">
+
+              <input  type="file"
+                      id="course-builder-image" />
+            </div>
           </div>
-
-        </div>
-
-        <div class="col-md-3 col-sm-3"></div>
--->
-
-        </div>
-
-      </div><!-- row -->
-     </div><!-- container -->
-
-
-  </div><!-- dashboard-body-area -->
-
-
-
-  <div class = "dashboard-body-area footer-page cb-footer">
-    <div class = "container">
-      <div class = "row">
-        <div class = "col-sm-4">
-          <div class = "footer-filter">
-            <h2>Page {{page}}/{{total}}
-              <button class = "up">
-                <i class = "fa fa-arrow-up"></i>
-              </button>
-              <button class = "down">
-                <i class = "fa fa-arrow-down"></i>
-              </button>
-            </h2>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="image-preview">
+                <img id="preview-image" src="">
+              </div>
+            </div>
           </div>
-        </div>
-        <div class= "col-sm-4">
-          <div class="save-button">
-            <button id="cb-next">Next Page</button>
+          <div class="row">
+            <div class="col-sm-12 text-right">
+
+              <input  id="cb-image-save"
+                      type="submit"
+                      value="SUBMIT">
+            </div>
           </div>
-        </div>
-        <div class = "col-sm-4">
-          <div class = "save-button">
-            <button id = "cb-save">Save Course</button>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
-
-<!-- IMAGE MODAL -->
-    <div  class="modal fade left"
-          id="add-image"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel">
-
-      <div class="modal-dialog">
-        <div class="pop-up-area">
-          <button type="button"
-                  id="popup-close"
-                  data-dismiss="modal"
-                  aria-label="Close">x</button>
-
-          <div class="popup-body" style="top: 20%;">
-
-          <h3 style="color:white;">ADD IMAGE:</h3>
-            <form action="">
-              <div class="row">
-                <div class="col-sm-4">
-                  <span style="margin-left: 50px;">
-                    <em>
-                      <strong>UPLOAD IMAGE:</strong>
-                    </em>
-                  </span>
-                </div>
-                <div class="col-sm-7">
-
-                  <input  type="file"
-                          id="course-builder-image" />
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-4">
-                  <div class="image-preview">
-                    <img id="preview-image" src="">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-12 text-right">
-
-                  <input  id="cb-image-save"
-                          type="submit"
-                          value="SUBMIT">
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div><!-- modal -->
+</div><!-- modal -->
 
 
 
 <!-- PDF MODAL -->
-    <div  class="modal fade left"
-          id="add-pdf"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel">
+<div  class="modal fade left"
+      id="add-pdf"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel">
 
-      <div class="modal-dialog">
-        <div class="pop-up-area">
-          <button type="button"
-                  id="popup-close"
-                  data-dismiss="modal"
-                  aria-label="Close">x</button>
-          <div class="popup-body" style="top: 20%;">
-          <h3 style="color:white;">ADD PDF:</h3>
-            <form action="">
-              <div class="row">
-                <div class="col-sm-4">
-                  <span style="margin-left:50px;">
-                    <em>
-                      <strong>UPLOAD PDF</strong>
-                    </em>
-                  </span>
-                </div>
-                <div class="col-sm-7">
+  <div class="modal-dialog">
+    <div class="pop-up-area">
+      <button type="button"
+              id="popup-close"
+              data-dismiss="modal"
+              aria-label="Close">x</button>
+      <div class="popup-body" style="top: 20%;">
+      <h3 style="color:white;">ADD PDF:</h3>
+        <form action="">
+          <div class="row">
+            <div class="col-sm-4">
+              <span style="margin-left:50px;">
+                <em>
+                  <strong>UPLOAD PDF</strong>
+                </em>
+              </span>
+            </div>
+            <div class="col-sm-7">
 
-                  <input  type="file"
-                          id="course-builder-pdf" />
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-sm-12 text-right">
-
-                  <input  id="cb-pdf-save"
-                          type="submit"
-                          value="SUBMIT">
-                </div>
-              </div>
-            </form>
+              <input  type="file"
+                      id="course-builder-pdf" />
+            </div>
           </div>
-        </div>
+
+          <div class="row">
+            <div class="col-sm-12 text-right">
+
+              <input  id="cb-pdf-save"
+                      type="submit"
+                      value="SUBMIT">
+            </div>
+          </div>
+        </form>
       </div>
-    </div><!-- modal -->
+    </div>
+  </div>
+</div><!-- modal -->
 
 
 
 <!-- POWERPOINT MODAL -->
-    <div  class="modal fade left"
-          id="add-powerpoint"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel">
+<div  class="modal fade left"
+      id="add-powerpoint"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel">
 
-      <div class="modal-dialog">
-        <div class="pop-up-area">
-          <button type="button"
-                  id="popup-close"
-                  data-dismiss="modal"
-                  aria-label="Close">x</button>
+  <div class="modal-dialog">
+    <div class="pop-up-area">
+      <button type="button"
+              id="popup-close"
+              data-dismiss="modal"
+              aria-label="Close">x</button>
 
-          <div class="popup-body" style="top: 20%;">
-          <h3 style="color:white;">ADD POWERPOINT:</h3>
-            <form action="">
-              <div class="row">
-                <div class="col-sm-4">
-                  <span style="margin-left:10px;">
-                    <em>
-                      <strong>UPLOAD POWERPOINT</strong>
-                    </em>
-                  </span>
-                </div>
-                <div class="col-sm-7">
+      <div class="popup-body" style="top: 20%;">
+      <h3 style="color:white;">ADD POWERPOINT:</h3>
+        <form action="">
+          <div class="row">
+            <div class="col-sm-4">
+              <span style="margin-left:10px;">
+                <em>
+                  <strong>UPLOAD POWERPOINT</strong>
+                </em>
+              </span>
+            </div>
+            <div class="col-sm-7">
 
-                  <input  type="file"
-                          id="course-builder-powerpoint" />
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-sm-12 text-right">
-
-                  <input  id="cb-powerpoint-save"
-                          type="submit"
-                          value="SUBMIT" />
-                </div>
-              </div>
-            </form>
+              <input  type="file"
+                      id="course-builder-powerpoint" />
+            </div>
           </div>
-        </div>
+
+          <div class="row">
+            <div class="col-sm-12 text-right">
+
+              <input  id="cb-powerpoint-save"
+                      type="submit"
+                      value="SUBMIT" />
+            </div>
+          </div>
+        </form>
       </div>
-    </div><!-- modal -->
+    </div>
+  </div>
+</div><!-- modal -->
 
 
 
 <!-- SCORM MODAL -->
-    <div  class="modal fade left"
-          id="add-scorm"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel">
+<div  class="modal fade left"
+      id="add-scorm"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel">
 
-      <div class="modal-dialog">
-        <div class="pop-up-area">
+  <div class="modal-dialog">
+    <div class="pop-up-area">
 
-          <button type="button"
-                  id = "popup-close"
-                  data-dismiss="modal"
-                  aria-label="Close">x</button>
+      <button type="button"
+              id = "popup-close"
+              data-dismiss="modal"
+              aria-label="Close">x</button>
 
-          <div class = "popup-body" style="top: 20%;">
-            <h3 style="color:white;">ADD SCORM:</h3>
-            <form action="">
-              <div class="row">
-                <div class="col-sm-4">
-                  <span style="margin-left:50px;">
-                    <em>
-                      <strong>UPLOAD SCORM</strong>
-                    </em>
-                  </span>
-                </div>
-                <div class="col-sm-7">
+      <div class = "popup-body" style="top: 20%;">
+        <h3 style="color:white;">ADD SCORM:</h3>
+        <form action="">
+          <div class="row">
+            <div class="col-sm-4">
+              <span style="margin-left:50px;">
+                <em>
+                  <strong>UPLOAD SCORM</strong>
+                </em>
+              </span>
+            </div>
+            <div class="col-sm-7">
 
-                  <input  type="text"
-                          id="course-builder-scorm" />
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-sm-12 text-right">
-
-                  <input  id="cb-scorm-save"
-                          type="submit"
-                          value="SUBMIT">
-                </div>
-              </div>
-            </form>
+              <input  type="text"
+                      id="course-builder-scorm" />
+            </div>
           </div>
-        </div>
+
+          <div class="row">
+            <div class="col-sm-12 text-right">
+
+              <input  id="cb-scorm-save"
+                      type="submit"
+                      value="SUBMIT">
+            </div>
+          </div>
+        </form>
       </div>
-    </div><!-- modal -->
+    </div>
+  </div>
+</div><!-- modal -->
 
 
 
 <!-- TEST MODAL -->
-    <div  class="modal fade left"
-          id="add-test"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel">
+<div  class="modal fade left"
+      id="add-test"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel">
 
-      <div class="modal-dialog">
-        <div class="pop-up-area">
-          <button type="button"
-                  id="popup-close"
-                  data-dismiss="modal"
-                  aria-label="Close">x</button>
-          <div class="popup-body" style="top: 20%;">
-          <h3 style="color:white;">ADD TEST:</h3>
-            <form action="">
-              <div class="row">
-                <div class="col-sm-4">
-                  <span style="margin-left: 50px;">
-                    <em>
-                      <strong>SELECT TEST:</strong>
-                    </em>
-                  </span>
-                </div>
-                <div class="col-sm-7">
-                  <input type="file" id="course-builder-test"/>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-sm-12 text-right">
-                  <input id="cb-test-save" type="submit" value="SUBMIT">
-                </div>
-              </div>
-            </form>
+  <div class="modal-dialog">
+    <div class="pop-up-area">
+      <button type="button"
+              id="popup-close"
+              data-dismiss="modal"
+              aria-label="Close">x</button>
+      <div class="popup-body" style="top: 20%;">
+      <h3 style="color:white;">ADD TEST:</h3>
+        <form action="">
+          <div class="row">
+            <div class="col-sm-4">
+              <span style="margin-left: 50px;">
+                <em>
+                  <strong>SELECT TEST:</strong>
+                </em>
+              </span>
+            </div>
+            <div class="col-sm-7">
+              <input type="file" id="course-builder-test"/>
+            </div>
           </div>
-        </div>
+
+          <div class="row">
+            <div class="col-sm-12 text-right">
+              <input id="cb-test-save" type="submit" value="SUBMIT">
+            </div>
+          </div>
+        </form>
       </div>
-    </div><!-- modal -->
+    </div>
+  </div>
+</div><!-- modal -->
 
 
 
 <!-- INTRO MODAL -->
-    <div  class="modal fade left"
-          id="intro-modal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="myModalLabel">
+<div  class="modal fade left"
+      id="intro-modal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel">
 
-      <div class="modal-dialog">
-        <div class="pop-up-area">
-          <button type="button"
-                  id="popup-close"
-                  data-dismiss="modal"
-                  aria-label="Close">x</button>
+  <div class="modal-dialog">
+    <div class="pop-up-area">
+      <button type="button"
+              id="popup-close"
+              data-dismiss="modal"
+              aria-label="Close">x</button>
 
-          <div class = "popup-body" style="top: 30%;">
-          <h3 style = "color:white;">NEW COURSE</h3>
-          <br />
-            <form action = "">
+      <div class = "popup-body" style="top: 30%;">
+      <h3 style = "color:white;">NEW COURSE</h3>
 
-              <div class = "row">
-                <div class = "col-sm-6">
-                  <div class="input-group input-group-lg">
-                  <span style = "color:black;">
-                    <!-- <em> -->
-                      <strong>Please choose a course name:</strong>
-                    <!-- </em> -->
-                  </span>
-                  <br />
+      <br />
 
-                  <input  style = "width:100%;margin-top:2%;"
-                          class = "form-control"
-                          type  = "text"
-                          id    = "course-builder-name" />
+        <form action = "">
 
-                </div>
-                </div>
-                <div class="col-sm-6">
-                  <span class="color:black;">
-                    <!-- <em> -->
-                      <strong>Keywords:</strong>
-                    <!-- </em> -->
-                  </span>
-                  <br />
+          <div class = "row">
+            <div class = "col-sm-6">
+              <div class="input-group input-group-lg">
+              <span style = "color:black;">
+                <!-- <em> -->
+                  <strong>Please choose a course name:</strong>
+                <!-- </em> -->
+              </span>
+              <br />
 
-                    <select id="tags"  multiple>
-                      <option></option>
-                    </select>
+              <input  style = "width:100%;margin-top:2%;"
+                      class = "form-control"
+                      type  = "text"
+                      id    = "course-builder-name" />
 
               </div>
-              <br /><br />
-              </div>
-              <div class="row">
-                <div class="col-sm-6">
-                  <br />
-                  <div class="input-group input-group-lg">
+            </div>
+            <div class="col-sm-6">
+              <span class="color:black;">
+                <!-- <em> -->
+                  <strong>Keywords:</strong>
+                <!-- </em> -->
+              </span>
+              <br />
 
-                  <span style="color:black;">
-                    <!-- <em> -->
-                      <strong>How many credits for this course?</strong>
-                    <!-- </em> -->
-                  </span>
-                  <br />
-                  <input  style="width:50%;margin-top:2%;"
-                          class="form-control"
-                          type="number"
-                          id="course-builder-credits"
-                          min=".5"
-                          max="120"
-                          step="0.1"
-                          onInput="return check(event,value)"/>
-                </div>
-                </div>
-                <br />
-                <div class = "col-sm-6" style = "display:inline-block;">
-                  <div class="input-group input-group-lg">
-                    <span style = "color:black;">
-                      <!-- <em> -->
-                        <strong>Passing percentage for tests:</strong>
-                      <!-- </em> -->
-                    </span>
-
-                <br />
-
-                    <input  style   = "width:50%;margin-top:2%;"
-                            type    = "number"
-                            onInput = "return check(event,value)"
-                            id      = "course-builder-percent"
-                            min     = "0"
-                            max     = "100"
-                            step    = "0.01"
-                            class   = "form-control" />
-                </div>
-              </div>
-              </div>
-
-              <div class="row">
-                <div class="col-sm-12 text-right">
-
-                  <input  id="new-course-save"
-                          type="submit"
-                          value="SUBMIT">
-
-                </div>
-              </div>
-            </form>
+                <select id="tags"  multiple>
+                  <option></option>
+                </select>
           </div>
-        </div>
+
+          <br /><br />
+
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <br />
+              <div class="input-group input-group-lg">
+
+              <span style="color:black;">
+                <!-- <em> -->
+                  <strong>How many credits for this course?</strong>
+                <!-- </em> -->
+              </span>
+
+              <br />
+
+              <input  style="width:50%;margin-top:2%;"
+                      class="form-control"
+                      type="number"
+                      id="course-builder-credits"
+                      min=".5"
+                      max="120"
+                      step="0.1"
+                      onInput="return check(event,value)"/>
+              </div>
+            </div>
+
+            <br />
+
+            <div class = "col-sm-6" style = "display:inline-block;">
+              <div class="input-group input-group-lg">
+                <span style = "color:black;">
+                  <!-- <em> -->
+                    <strong>Passing percentage for tests:</strong>
+                  <!-- </em> -->
+                </span>
+
+                <br />
+
+                <input  style   = "width:50%;margin-top:2%;"
+                        type    = "number"
+                        onInput = "return check(event,value)"
+                        id      = "course-builder-percent"
+                        min     = "0"
+                        max     = "100"
+                        step    = "0.01"
+                        class   = "form-control" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12 text-right">
+
+              <input  id="new-course-save"
+                      type="submit"
+                      value="SUBMIT">
+
+            </div>
+          </div>
+        </form>
       </div>
-    </div><!-- modal -->
+    </div>
+  </div>
+</div><!-- modal -->
 
 <script type="text/javascript">
   check = function ( e, value ) {

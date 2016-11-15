@@ -32,7 +32,7 @@ Template.studentTrainingCalendar.onCreated( function() {
     //console.log('studentDashboard:: fullcalendar.js loaded...' );
     $('#calendar').fullCalendar({
 
-      // put your options and callbacks here
+      // options and callbacks here
       events: [
                 {
                     title  : 'Training Event',

@@ -105,7 +105,7 @@ Template.courseBuilderPage.onCreated( function() {
       },
       //cursor: "move",
       helper: "clone",
-      zIndex: 9
+      zIndex: 1000
     });
 
 
@@ -252,6 +252,7 @@ Template.courseBuilderPage.helpers({
 //-------------------------------------------------------------------
 
 
+
 let ig      = ''
   , ext     = ''
   , tbo     = {}
@@ -281,22 +282,27 @@ Template.courseBuilderPage.events({
 */
 
 
-  /*
-   * CLICK .JS-BACK-TO-HOME
+  /**
+   *
+   * .JS-BACK-TO-HOME  ::(CLICK)::
    */
-  'click .js-back-to-home'( e, t ) {
+  'click .page-back-home'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     //t.currentScreen.set('courseBuilder');
-    //FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-    location.href = 'https://collective-university-nsardo.c9users.io/admin/dashboard/course-builder/' + Meteor.userId();
+    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+
 //-------------------------------------------------------------------
   },
 
 
-  /*
-   * CLICK #NEW-COURSE-SAVE
+
+
+ /**
+   *
+   * #NEW-COURSE-SAVE  ::(CLICK)::
+   *
    * id = intro-modal
    * opening modal dialog
    */
@@ -304,10 +310,13 @@ Template.courseBuilderPage.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    let credits = t.$( '#course-builder-credits' ).val();
-    let name    = t.$( '#course-builder-name'    ).val();
-    let percent = t.$( '#course-builder-percent' ).val();
-    let keys    = t.$( '#tags' ).val();
+    let credits = t.$( '#course-builder-credits' ).val()
+
+      , name    = t.$( '#course-builder-name'    ).val()
+
+      , percent = t.$( '#course-builder-percent' ).val()
+
+      , keys    = t.$( '#tags' ).val();
 
 
     tbo.name            = name;
@@ -321,15 +330,19 @@ Template.courseBuilderPage.events({
     tbo.icon            = "/img/icon-4.png";
     tbo.public          = false;
 
+    //built_id = BuiltCourses.findOne({ name: name })._id;
+
     t.$( '#intro-modal' ).modal( 'hide' );
-    t.$( '#course-banner' ).text( name );
-//-------------------------------------------------------------------
+//-----------------------------------------------------------------------------
   },
 
 
 
-  /*
-   * CLICK #CB-SAVE
+
+  /**
+   *
+   * #CB-SAVE  ::(CLICK)::
+   *
    * bottom of screen
    */
   'click #cb-save'( e, t ) {
@@ -366,8 +379,11 @@ console.log( videos );
 
 
 
-  /*
-   * CLICK #DB-TEST-SAVE
+
+
+  /**
+   *
+   * #DB-TEST-SAVE  ::(CLICK)::
    *
    * id = add-test
    * add-test dialog
@@ -504,102 +520,6 @@ console.log( videos );
 
   /**
    *
-   * #NEW-COURSE-SAVE  ::(CLICK)::
-   *
-   * id = intro-modal
-   * opening modal dialog
-   */
-  'click #new-course-save'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    let credits = t.$( '#course-builder-credits' ).val()
-
-      , name    = t.$( '#course-builder-name'    ).val()
-
-      , percent = t.$( '#course-builder-percent' ).val()
-
-      , keys    = t.$( '#tags' ).val();
-
-
-    tbo.name            = name;
-    tbo.credits         = credits;
-    tbo.passing_percent = percent;
-    tbo.pages           = [];
-    tbo.keywords        = keys;
-    tbo.num             = 1;
-    tbo.company_id      = Meteor.user().profile.company_id;
-    tbo.times_completed = 0;
-    tbo.icon            = "/img/icon-4.png";
-    tbo.public          = false;
-
-    //built_id = BuiltCourses.findOne({ name: name })._id;
-
-    t.$( '#intro-modal' ).modal( 'hide' );
-    t.$( '#course-banner' ).text( name );
-//-----------------------------------------------------------------------------
-  },
-
-
-
-  /**
-   *
-   * .JS-BACK-TO-HOME  ::(CLICK)::
-   *
-   */
-  'click .js-back-to-home'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    //t.currentScreen.set('courseBuilder');
-    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-//-----------------------------------------------------------------------------
-  },
-
-
-
-  /**
-   *
-   * #CB-SAVE ::(CLICK)::
-   *
-   * bottom of screen
-   */
-  'click #cb-save'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-/*
-    let built_id = BuiltCourses.insert({
-                                        name: tbo.name,
-                                        credits: tbo.credits,
-                                        passing_percent: tbo.percent,
-                                        pages: tbo.pages,
-                                        keywords: tbo.keywords
-                                      });
-
-    Courses.insert({
-                    built_id: built_id,
-                    credits: tbo.credits,
-                    num: tbo.num,
-                    name: tbo.name,
-                    passing_percent: tbo.percent,
-                    company_id: tbo.company_id,
-                    times_completed: tbo.times_completed,
-                    icon: tbo.icon,
-                    public: tbo.public,
-                    created_at: new Date()
-                  });
-*/
-console.log( texts );
-console.log( titles );
-console.log( images );
-console.log( videos );
-//-----------------------------------------------------------------------------
-  },
-
-
-
-  /**
-   *
    * #COURSE-BUILDER-IMAGE ::(CHANGE)::
    *
    */
@@ -676,19 +596,19 @@ console.log( videos );
     $(`#img-preview-${img_id}`).resizable();
 
 
-    t.$( `#img-preview-${img_id}` ).on( 'mousedown',  (e) => {
+    t.$( `#ig-${img_id}` ).on( 'mousedown',  (e) => {
       e.preventDefault();
 
-      images[img_id].position = $( `#img-preview-${img_id}` ).position();
-      console.log( $( `#img-preview-${img_id}` ).position() );
+      images[img_id].position = $( `#ig-${img_id}` ).position();
+      console.log( images[img_id].position );
     });
 
     if ( ! t.$( `#close-img-${img_id}` ).length ) {
         $( `#ig-${img_id}` ).append( `<button type="button"
-                                                     id="close-img-${img_id}"
-                                                     class="btn btn-danger btn-xs">
-                                              <span class="glyphicon glyphicon-trash"></span>
-                                            </button>` );
+                                              id="close-img-${img_id}"
+                                              class="btn btn-danger btn-xs">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                      </button>` );
 
         //CLOSE BUTTON EVENT
         t.$( `#close-img-${img_id}` ).on( "click", (e) => {
@@ -767,8 +687,8 @@ console.log( videos );
       document.getElementById( `div_title-${tit_id}` ).onclick = (e) => {
         e.preventDefault();
 
-        //titles[tit_id].position = $( `#tit${tit_id}` ).position();
-        //console.log( titles[tit_id].position );
+        titles[tit_id].position = $( `#div_title-${tit_id}` ).position();
+        console.log( titles[tit_id].position );
 
 
       //------------------------------
@@ -876,7 +796,7 @@ console.log( videos );
       e.preventDefault();
 
       texts[txt_id].position = $( `#span_text-${txt_id}` ).position();
-      console.log( $( `#span_text-${txt_id}` ).position() );
+      console.log( texts[txt_id].position );
 
       //---------------------------
       // TEXT OBJECT WIDGET BUTTONS
@@ -1023,6 +943,6 @@ function addText() {
 
 function addVideo() {
 
-  $( '#fb-template' ).append( '<input id="added-video" type="text" style="border-radius:5px;width:75%;margin-left:12%;margin-right:12%;"/>' )
+  $( '#fb-template' ).append( '<input id="added-video" type="text" style="border-radius:5px;width:75%;margin-left:12%;margin-right:12%;" placeholder="Add YouTube URL here" autofocus/>' )
     .css( 'border', '1px dashed grey' ); //.effect( "highlight", {}, 2000 );
 }
