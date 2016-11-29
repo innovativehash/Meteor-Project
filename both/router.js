@@ -71,6 +71,10 @@ let studentRoutes = FlowRouter.group({
   }]
 });
 
+
+/*
+ * STUDENT DASHBOARD
+ */
 studentRoutes.route( '/dashboard/:_id', {
   name: 'student-dashboard',
   action: () =>
@@ -80,11 +84,16 @@ studentRoutes.route( '/dashboard/:_id', {
   }]
 });
 
+
+/*
+ * STUDENT COURSES
+ */
 studentRoutes.route( '/dashboard/courses/:_id', {
   name: 'student-courses',
   action: () =>
     BlazeLayout.render( 'studentDashboardLayout', {main: "studentCourseListing" })
 });
+
 
 studentRoutes.route( '/dashboard/request-credit/:_id', {
   name: 'student-request-credit',
@@ -92,12 +101,33 @@ studentRoutes.route( '/dashboard/request-credit/:_id', {
     BlazeLayout.render( 'studentDashboardLayout', {main: "studentRequestCredit" })
 });
 
+
+/*
+ * STUDENT COURSE VIEW
+ */
+studentRoutes.route( '/dashboard/course-view/:_id', {
+  name: 'student-course-view',
+  action: () => {
+        //console.log("Params:", params);
+        //console.log("Query Params:", queryParams);
+    BlazeLayout.render( 'adminDashboardLayout', {main:"courseView"});
+  }
+});
+
+
+/*
+ * STUDENT RECORDS
+ */
 studentRoutes.route( '/dashboard/student-records/:_id', {
   name: 'student-records',
   action: () =>
     BlazeLayout.render( 'studentDashboardLayout', {main: "studentRecords" })
 });
 
+
+/*
+ * STUDENT TRAINING CALENDAR
+ */
 studentRoutes.route( '/dashboard/student-training-calendar/:_id', {
   name: 'student-training-calendar',
   action: () =>
@@ -105,9 +135,115 @@ studentRoutes.route( '/dashboard/student-training-calendar/:_id', {
 });
 
 
-/**
- * ADMIN ROUTES
+
+
+/************************************
+ * TEACHER ROUTES
+ ************************************/
+let teacherRoutes = FlowRouter.group({
+  prefix: '/teacher',
+  name: 'teacher',
+  triggersEnter: [function( context, redirect ) {
+    //...
+  }]
+});
+
+
+/*
+ * TEACHER DASHBOARD
  */
+teacherRoutes.route('/dashboard/:_id', {
+  name: 'teacher-dashboard',
+  action: () =>
+    BlazeLayout.render( 'studentDashboardLayout', {main: "studentDashboard"})
+});
+
+
+/*
+ * TEACHER CALENDAR
+ */
+teacherRoutes.route( '/dashboard/teacher-calendar/:_id', {
+  name: 'teacher-calendar',
+  action: () =>
+    BlazeLayout.render( 'studentDashboardLayout', {main: "teacherCalendar"})
+});
+
+
+/*
+ * TEACHER COURSE-BUILDER
+ */
+teacherRoutes.route( '/dashboard/course-builder/:_id', {
+  name: 'teacher-course-builder',
+  action: (params, queryParams) =>
+    BlazeLayout.render( 'courseBuilderLayout', {main:"courseBuilderPage"})
+});
+
+
+/*
+ * TEACHER COURSES
+ */
+teacherRoutes.route( '/dashboard/courses/:_id', {
+  name: 'teacher-courses',
+  action: () =>
+    BlazeLayout.render( 'studentDashboardLayout', {main: "studentCourseListing" })
+});
+
+
+/*
+ * TEACHER COURSE VIEW
+ */
+teacherRoutes.route( '/dashboard/course-view/:_id', {
+  name: 'teacher-course-view',
+  action: (params, queryParams) => {
+        console.log("Params:", params);
+        console.log("Query Params:", queryParams);
+    BlazeLayout.render( 'adminDashboardLayout', {main:"courseView"});
+  }
+});
+
+
+/*
+ * TEACHER REQUEST CREDIT
+ */
+teacherRoutes.route( '/dashboard/request-credit/:_id', {
+  name: 'teacher-request-credit',
+  action: () =>
+    BlazeLayout.render( 'studentDashboardLayout', {main: "studentRequestCredit" })
+});
+
+
+/*
+ * TEACHER RECORDS
+ */
+teacherRoutes.route( '/dashboard/student-records/:_id', {
+  name: 'teacher-records',
+  action: () =>
+    BlazeLayout.render( 'studentDashboardLayout', {main: "studentRecords" })
+});
+
+/*
+ * TEACHER TRAINING CALENDAR
+ */
+teacherRoutes.route( '/dashboard/student-training-calendar/:_id', {
+  name: 'teacher-training-calendar',
+  action: () =>
+    BlazeLayout.render( 'studentDashboardLayout', {main: "studentTrainingCalendar" })
+});
+
+
+/* TEST-CREATOR */
+teacherRoutes.route('/dashboard/test-maker/:_id', {
+  name: 'teacher-test-creator',
+  action: () =>
+    BlazeLayout.render( 'courseBuilderLayout', {main:"adminTestCreator"})
+});
+
+
+
+
+/**************************************
+ * ADMIN ROUTES
+ **************************************/
 
 /* ADMIN ROUTE GROUP */
 let adminRoutes = FlowRouter.group({
@@ -130,7 +266,7 @@ adminRoutes.route( '/dashboard/:_id', {
 
 
 /**
- * COURSES GROUP
+ * ADMIN COURSES GROUP
  */
 
 /* COURSES */
@@ -151,11 +287,11 @@ adminRoutes.route('/dashboard/courses/add-from-library/:_id', {
 adminRoutes.route('/dashboard/course-builder/:_id', {
   name: 'admin-course-builder',
   action: () =>
-    BlazeLayout.render( 'adminDashboardLayout', {main:"courseBuilderPage"})
+    BlazeLayout.render( 'courseBuilderLayout', {main:"courseBuilderPage"})
 });
 
 /*
- * COURSE-VIEWER
+ * ADMIN COURSE-VIEWER
  */
 adminRoutes.route('/dashboard/course-viewer/:id', {
   name: 'admin-course-viewer',
@@ -173,33 +309,7 @@ adminRoutes.route('/dashboard/test-maker/:_id', {
 
 
 /**
- * STUDENTS GROUP
- */
-
-/* STUDENTS */
-adminRoutes.route('/dashboard/students/:_id', {
-  name: "admin-students",
-  action: ( params, queryParams ) =>
-    BlazeLayout.render( 'adminDashboardLayout', {main: "adminStudents"})
-});
-
-/* STUDENT-RECORD */
-adminRoutes.route('/dashboard/students/student-record/:_id', {
-  name: "student-record",
-  action: () =>
-    BlazeLayout.render( 'adminDashboardLayout', {main: "studentRecord"})
-});
-
-/* IMPORT CSV */
-adminRoutes.route('/dashboard/students/import-csv/:_id', {
-  name: 'admin-import-csv',
-  action: () =>
-    BlazeLayout.render('adminDashboardLayout', {main: "importCV"})
-});
-
-
-/**
- * DEGREES & CERTS GROUP
+ * ADMIN DEGREES & CERTS GROUP
  */
 
 /* DEGREES & CERTIFICATIONS */
@@ -225,7 +335,7 @@ adminRoutes.route('/dashboard/degrees-and-certifications/certifications/:_id', {
 
 
 /**
- * ASSIGN COURSES
+ * ADMIN ASSIGN COURSES
  */
 adminRoutes.route('/dashboard/assign-courses/:_id', {
   name: 'admin-assign-courses',
@@ -235,7 +345,7 @@ adminRoutes.route('/dashboard/assign-courses/:_id', {
 
 
 /**
- * ANALYTICS
+ * ADMIN ANALYTICS
  */
  adminRoutes.route('/dashboard/analytics/:_id', {
    name: 'admin-analytics',
@@ -245,7 +355,7 @@ adminRoutes.route('/dashboard/assign-courses/:_id', {
 
 
 /**
- * DESIGN
+ * ADMIN DESIGN
  */
  adminRoutes.route('/dashboard/design/:_id', {
    name: 'admin-design',
@@ -255,7 +365,7 @@ adminRoutes.route('/dashboard/assign-courses/:_id', {
 
 
 /**
- * ADVANCED
+ * ADMIN ADVANCED
  */
  adminRoutes.route('/dashbaord/advanced/:_id', {
    name: 'admin-advanced',
@@ -276,3 +386,28 @@ adminRoutes.route('/dashboard/assign-courses/:_id', {
       });
     }
   });
+
+/**
+ * ADMIN STUDENTS GROUP
+ */
+
+/* STUDENTS */
+adminRoutes.route('/dashboard/students/:_id', {
+  name: "admin-students",
+  action: ( params, queryParams ) =>
+    BlazeLayout.render( 'adminDashboardLayout', {main: "adminStudents"})
+});
+
+/* STUDENT-RECORD */
+adminRoutes.route('/dashboard/students/student-record/:_id', {
+  name: "student-record",
+  action: () =>
+    BlazeLayout.render( 'adminDashboardLayout', {main: "studentRecord"})
+});
+
+/* IMPORT CSV */
+adminRoutes.route('/dashboard/students/import-csv/:_id', {
+  name: 'admin-import-csv',
+  action: () =>
+    BlazeLayout.render('adminDashboardLayout', {main: "importCV"})
+});

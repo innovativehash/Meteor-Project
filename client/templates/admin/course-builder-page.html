@@ -1,13 +1,13 @@
 
 
 <template name = "courseBuilderPage">
-<!--
+
 <style>
   #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
 </style>
 <div id="cover"></div>
--->
 
+{{#if or isTeacher isAdmin}}
 <div id="dialog" title="Text Options" style="z-index:12">
   <p>
     <input type="hidden" id="js-cb-text-dialog">
@@ -112,18 +112,6 @@
     <!-- COURSE BUILDER ITEMS -->
     <div class = "curse-builder-items">
       <ul>
-        <li></li>
-        <li tabindex = "-1">
-          <span class = "area">
-            <button class="btn btn-default btn-sm">
-            <span style = ""
-                  class = "glyphicon glyphicon-eye-open"
-                  data-type = "preview">
-            </span>
-            PREVIEW
-            </button>
-          </span>
-        </li>
         <li tabindex = "-1">
           <span class = "area">
             <span style = "border:none !important;cursor:move;z-index=5;"
@@ -247,21 +235,7 @@
                 <h2>DRAG &amp; DROP ELEMENTS IN THIS CANVAS</h2>
             </div>
           </div>
-
-          <!--
-                  <div class="col-md-3 col-sm-3"></div>
-
-                  <div class="col-md-6 col-sm-6">
-
-                    <div  class = ""
-                      id = "cb-pdf-disp"
-                      style = "margin:0;padding:0;display:inline-block;">
-                    </div>
-
-                  </div>
-
-                  <div class="col-md-3 col-sm-3"></div>
-          -->
+          <img id="foo">
 
         </div><!-- row -->
       </div><!-- col-sm-12 -->
@@ -291,7 +265,7 @@
 
       <div class= "col-sm-4">
         <div class="save-button">
-          <button id="cb-next">Next Page</button>
+          <button id="cb-next-btn">Next Page</button>
         </div>
       </div>
       <div class = "col-sm-4">
@@ -552,14 +526,16 @@
       id="intro-modal"
       tabindex="-1"
       role="dialog"
-      aria-labelledby="myModalLabel">
+      aria-labelledby="myModalLabel"
+      data-backdrop="static"
+      data-keyboard="false">
 
   <div class="modal-dialog">
     <div class="pop-up-area">
-      <button type="button"
+     <!-- <button type="button"
               id="popup-close"
               data-dismiss="modal"
-              aria-label="Close">x</button>
+              aria-label="Close">x</button> -->
 
       <div class = "popup-body" style="top: 30%;">
       <h3 style = "color:white;">NEW COURSE</h3>
@@ -663,7 +639,7 @@
     </div>
   </div>
 </div><!-- modal -->
-
+{{/if}}
 <script type="text/javascript">
   check = function ( e, value ) {
     if ( !e.target.validity.valid ) {

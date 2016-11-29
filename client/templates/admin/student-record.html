@@ -3,7 +3,7 @@
   #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
 </style>
 <div id="cover"></div>
-
+{{#if isAdmin}}
 <div class="dashboard-body-area admin">
   <div class="container">
     <div class="row">
@@ -36,7 +36,7 @@
                 <span style="text-align:left;"><em>Total Credits Accumulated:&nbsp; &nbsp;</em><strong>{{current_credits}}</strong></span>
               </div>
               <br />
-      
+
             {{#if certificates}}
             <center><h3>Certifications</h3></center>
               <table class="table">
@@ -60,7 +60,7 @@
               {{/if}}
               <br />
             {{/if}}
-      
+
             {{#if degrees}}
               <center><h3>Degrees</h3></center>
                 <table class="table">
@@ -82,7 +82,7 @@
                 {{/if}}
                 <br />
             {{/if}}
-      
+
             {{#if completed_courses}}
                 <center><h3>Completed Courses</h3></center>
                 <table class="table">
@@ -94,7 +94,7 @@
                     <th></th>
                   </thead>
                   <tbody>
-                    
+
                     {{#each completed_courses}}
                     <tr>
                       <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{name}}</th>
@@ -104,11 +104,11 @@
                       <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
                     </tr>
                     {{/each}}
-                    
+
                   </tbody>
                 </table>
             {{/if}}
-            
+
             {{#if approved_courses}}
                 <center><h3>Approved Courses</h3></center>
                 <table class="table">
@@ -120,7 +120,7 @@
                     <th></th>
                   </thead>
                   <tbody>
-                    
+
                     {{#each approved_courses}}
                     <tr>
                       <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{course}}</th>
@@ -130,11 +130,11 @@
                       <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
                     </tr>
                     {{/each}}
-                    
+
                   </tbody>
                 </table>
-            {{/if}}            
-            
+            {{/if}}
+
             {{#if current_courses}}
                 <center><h3>Current Courses</h3></center>
                 <table class="table">
@@ -146,7 +146,7 @@
                     <th>Due Date</th>
                   </thead>
                   <tbody>
-                    
+
                     {{#each current_courses}}
                     <tr>
                       <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{name}}</th>
@@ -157,7 +157,7 @@
                       <!-- <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td> -->
                     </tr>
                     {{/each}}
-                   
+
                   </tbody>
                 </table>
                 {{#if more}}
@@ -166,12 +166,13 @@
                 </div>
                 {{/if}}
             {{/if}}
-            
+
             </div>
           </div>
-        </div> 
+        </div>
       </div>
     </div>
   </div>
 </div>
+{{/if}}
 </template>

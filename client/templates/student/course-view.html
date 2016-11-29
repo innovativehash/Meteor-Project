@@ -1,0 +1,179 @@
+
+<template name = "courseView">
+
+<style>
+  #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
+</style>
+<div id="cover"></div>
+
+
+<div class="dashboard-header-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
+
+        <div>
+          <ul style="margin: 0;padding: 0;list-style: none;">
+            <li style="display: inline-block;color: white;font-size: 18px;position: relative;"><a style="color: white;" href="javascript:void(0)" id="cb-dashboard-page"><i class="fa fa-home"></i>&nbsp;&nbsp;Dashboard/</a></li>
+            <li style="display: inline-block;color: white;font-size: 18px;position: relative;"><a style="color: white;" href="javascript:void(0)" id="cb-courses-page">Courses/</a></li>
+            <li style="display: inline-block;color: white;font-size: 18px;position: relative;color:blue;text-decoration:underline;">Course Viewer</li>
+          </ul>
+        </div>
+
+      </div><!-- col-sm-6 -->
+
+      <div class="col-sm-6">
+        <div class="profile-bar">
+          <ul>
+            <li><button><img src="/img/message.png" alt=""></button></li>
+            <li><button><img src="/img/notification.png" alt=""></button></li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- row -->
+
+
+    <div class="row">
+      <div class="profile-link">
+        <a  class         = "dropdown-toggle"
+            data-toggle   = "dropdown"
+            href          = "#"
+            role          = "button"
+            aria-haspopup = "true"
+            aria-expanded = "false">
+              <span class="diamonds">
+                <img src="/img/profile-1.jpg" alt="">
+              </span>
+
+                {{fname}}
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href="javascript: void(0)">Account Settings</a></li>
+            <li><a href="javascript: void(0)">Upload Photo</a></li>
+            <li><a href="javascript: void(0)">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- container -->
+</div><!-- dashboard-header-area -->
+
+
+<div class="dashboard-body-area">
+	<div class="sidebar-menu-area course-builder-sidebar">
+		<div class="buttons">
+			<button id="open">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+			<button id="close">
+				<span></span>
+				<span></span>
+			</button>
+		</div>
+		<div class="page-back-home">
+			<a href="#"><i class="fa fa-long-arrow-left"></i>Back To Home</a>
+			<h2></h2>
+		</div>
+
+    <!-- COURSE BUILDER ITEMS -->
+    <div class = "curse-builder-items">
+      <ul>
+
+      </ul>
+    </div>
+
+  </div><!-- sidebar-menu-area course-builder-sidebar -->
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <!--
+          <svg preserveAspectRatio="none" style="width: 960px; height: 600px; pointer-events: none; opacity: 1; position: absolute;">
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="0%" x2="0%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="0%" x2="100%" y2="0%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="10%" y1="0%" x2="10%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="10%" x2="100%" y2="10%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="20%" y1="0%" x2="20%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="20%" x2="100%" y2="20%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="30%" y1="0%" x2="30%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="30%" x2="100%" y2="30%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="40%" y1="0%" x2="40%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="40%" x2="100%" y2="40%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="50%" y1="0%" x2="50%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="50%" x2="100%" y2="50%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="60%" y1="0%" x2="60%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="60%" x2="100%" y2="60%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="70%" y1="0%" x2="70%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="70%" x2="100%" y2="70%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="80%" y1="0%" x2="80%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="80%" x2="100%" y2="80%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="90%" y1="0%" x2="90%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="90%" x2="100%" y2="90%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="100%" y1="0%" x2="100%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+            <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="100%" x2="100%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
+          </svg>
+          -->
+            <div  id    = "fb-template"
+                style = "background-color:white"
+                class = "curse-builder-box centered-block">
+               <img id="pg" data="{{course}}">
+          <!-- <iframe src="https://drive.google.com/file/d/0B95ONdgFGqdVbTR3T01FLXc1Rnc/preview" width="640" height="300"></iframe> -->
+          </div>
+
+        </div><!-- row -->
+      </div><!-- col-sm-12 -->
+    </div><!-- row -->
+  </div><!-- container -->
+
+</div><!-- dashboard-body-area -->
+
+
+<div class="dashboard-body-area footer-page">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="footer-filter">
+          <h2>Page {{page}}/{{total}}</h2>
+        </div><!-- footer-filter -->
+      </div><!-- col-sm-4 -->
+
+      <div class= "col-sm-4">
+        <div class="save-button">
+          <button id="cv-prev-btn">Prev</button>
+        </div>
+      </div>
+      <div class = "col-sm-4">
+        <div class="save-button">
+          <button id="cv-next-btn">Next</button>
+        </div>
+      </div>
+
+    </div><!-- row -->
+  </div><!-- container -->
+</div><!-- dashboard-body-areaa footer-page -->
+
+
+
+
+
+<script type="text/javascript">
+  check = function ( e, value ) {
+    if ( !e.target.validity.valid ) {
+        e.target.value = value.substring( 0, value.length - 1 );
+        return false;
+    }
+    var idx = value.indexOf( '.' );
+    if ( idx >= 0 && value.length - idx > 3 ) {
+        e.target.value = value.substring( 0, value.length - 1 );
+        return false;
+    }
+    return true;
+  }
+
+</script>
+</template>

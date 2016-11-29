@@ -9,16 +9,16 @@ import '../../templates/admin/courses.html';
  * CREATED
  */
 Template.courses.onCreated(function(){
- 
+
   //$("#courses-cover").show();
-    
+
   /*
    * BOOTSTRAP3-DIALOG
    */
-  $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
+  $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function(){
       //console.log('Course:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'Course:: load bootstrap-dialog.min.js fail' );
+    console.log( 'Courses:: load bootstrap-dialog.min.js fail' );
   });
 //-------------------------------------------------------------------
 
@@ -27,8 +27,8 @@ Template.courses.onCreated(function(){
  * SELECT2
  * multi-select combo box
  */
-  $.getScript('/js/select2.min.js', function() {
-    $(document).ready(function(){
+  $.getScript( '/js/select2.min.js', function(){
+    $( document ).ready(function(){
       $('#search-courses').select2({
         allowClear: true
       });
@@ -45,12 +45,12 @@ Template.courses.onCreated(function(){
  * RENDERED
  */
 Template.courses.onRendered(function(){
-/* 
+/*
   $( '#courses-cover' ).delay( 100 ).fadeOut( 'slow', function() {
     $("#courses-cover").hide();
     $( ".filter-buttons" ).fadeIn( 'slow' );
-  });  
-*/  
+  });
+*/
 });
 
 
@@ -58,9 +58,9 @@ Template.courses.onRendered(function(){
  * DESTROYED
  */
 Template.courses.onDestroyed(function(){
-  
+
   Session.set( 'searchTerm', null );
-  
+
 });
 
 //Courses.find({ $or: [ {company_id:Meteor.user().profile.company_id}, {public:true}] }).fetch()
@@ -68,10 +68,10 @@ Template.courses.onDestroyed(function(){
  * HELPERS
  */
 Template.courses.helpers({
-  
-   courses: () => 
-    Courses.find({ company_id: Meteor.user().profile.company_id}).fetch()
-      
+
+   courses: () =>
+    Courses.find({ company_id: Meteor.user().profile.company_id }).fetch()
+
 });
 
 
@@ -79,21 +79,21 @@ Template.courses.helpers({
  * EVENTS
  */
 Template.courses.events({
-  
+
   /*
-   * CLICK .JS-ADD-COURSE-FROM-LIBRARY
+   * .JS-ADD-COURSE-FROM-LIBRARY  ::(CLICK)::
    */
   'click .js-add-course-from-library'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK .JS-CREATE-TEST
+   * .JS-CREATE-TEST  ::(CLICK)::
    */
   'click .js-create-test'( e, t ) {
     e.preventDefault();
@@ -102,43 +102,43 @@ Template.courses.events({
     FlowRouter.go( 'admin-test-creator', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CHANGE #SEARCH-COURSES
+   * #SEARCH-COURSES  ::(CHANGE)::
    * scroll to selected course
    */
   'change #search-courses'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     let idx = $( e.currentTarget ).val();
-    $('tr').css('border', '');
-    $('tr#' + idx ).css('border', '1px solid');
-    $('html, body').animate({
-      scrollTop: $('tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
+    $( 'tr').css( 'border', '' );
+    $( 'tr#' + idx ).css( 'border', '1px solid' );
+    $( 'html, body' ).animate({
+      scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK .JS-EDIT-COURSE
+   * .JS-EDIT-COURSE  ::(CLICK)::
    */
   'click .js-edit-course'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
      /* OPEN EDIT DIALOG */
-      let idx = $( e.currentTarget ).data('id');
-      
-      idx = String(idx);
+      let idx = $( e.currentTarget ).data( 'id' );
+
+      idx = String( idx );
       let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
-      
+
       BootstrapDialog.show({
         title: "Edit Course",
         message:  '<div class="pop-up-area students">' +
-                      '<div class="popup-body">' + 
+                      '<div class="popup-body">' +
                           '<div class="row">' +
                               '<div class="col-sm-6">' +
                                 '<label>Course Name:</label>'+
@@ -155,11 +155,11 @@ Template.courses.events({
             label: 'Commit Edit',
             cssClass: 'btn-success',
             action: function( dialog ) {
-              let nm = $(".js-name").val().trim()    || c.name;
-              let cr = $(".js-credits").val().trim() || c.credits;
-             
+              let nm = $( ".js-name" ).val().trim()    || c.name;
+              let cr = $( ".js-credits" ).val().trim() || c.credits;
+
               Courses.update( { _id: c._id  },
-                              { 
+                              {
                                 $set: { "name": nm, "credits": cr }
                               });
               dialog.close();
@@ -170,27 +170,27 @@ Template.courses.events({
             cssClass: 'btn-danger',
             action: function( dialog ) {
               dialog.close();
-            }        
+            }
           }]
         });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK .JS-DELETE-COURSE
+   * .JS-DELETE-COURSE  ::(CLICK)::
    */
   'click .js-delete-course'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     /* ARE YOU SURE YOU WANT TO DELETE... */
-    let idx = $( e.currentTarget ).data('id');
-    let nm  = $( e.currentTarget ).data('name');
+    let idx = $( e.currentTarget ).data( 'id' );
+    let nm  = $( e.currentTarget ).data( 'name' );
     BootstrapDialog.show({
       title: "Delete Course",
       message:  '<div class="pop-up-area students">' +
-                  '<div class="popup-body">' + 
+                  '<div class="popup-body">' +
                     '<div class="row">' +
                       '<div class="col-sm-12">' +
                         '<strong>Are you sure you want to delete this course?</strong>' +
@@ -201,7 +201,7 @@ Template.courses.events({
               label: 'Delete Course',
               cssClass: 'btn-danger',
               action: function( dialog ) {
-                Courses.remove({ _id: idx});
+                Courses.remove({ _id: idx });
                 //maybe some logic to remove this course from students currently taking it?
                 dialog.close();
               }
@@ -215,45 +215,45 @@ Template.courses.events({
         }]
     });
 //-------------------------------------------------------------------
-  }, 
-  
-  
+  },
+
+
   /*
-   * KEYPRESS #SEARCH-COURSES
+   * #SEARCH-COURSES  ::(KEYPRESS)::
    */
   'keypress #search-courses': function(event){
     if ( event.which == 13){
       event.preventDefault();
       event.stopImmediatePropagation();
-      
-      let idx = $("#search-courses").val(), 
+
+      let idx = $ ("#search-courses" ).val(),
           item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
-      console.log( 'item = ' + item );
+
       return item;
     }
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK #DASHBOARD-PAGE
+   * #DASHBOARD-PAGE  ::(CLICK)::
    */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK .JS-COURSE-BUILDER
+   * .JS-COURSE-BUILDER  ::(CLICK)::
    */
   'click .js-course-builder'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     //t.currentScreen.set('courseBuilder');
     FlowRouter.go( 'admin-course-builder', { _id: Meteor.userId() });
   }

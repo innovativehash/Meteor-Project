@@ -18,9 +18,9 @@ Template.registerHelper('not', function(obj){
  * CREATED
  */
 Template.adminDashboard.onCreated( function() {
-  
-  $('#cover').show();
-  
+
+  $( '#cover' ).show();
+
 });
 
 
@@ -28,12 +28,12 @@ Template.adminDashboard.onCreated( function() {
  * RENDERED
  */
 Template.adminDashboard.onRendered( function() {
-  
+
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
-    $("#cover").hide();
+    $( "#cover" ).hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
-  
+
 });
 
 
@@ -41,7 +41,7 @@ Template.adminDashboard.onRendered( function() {
  * HELPERS
  */
 Template.adminDashboard.helpers({
-  
+
  showAdminCreditRequests() {
    if ( Newsfeeds.find({ type: "CR" }).count() > 0 ) {
     return true;
@@ -50,7 +50,7 @@ Template.adminDashboard.helpers({
    }
 //-------------------------------------------------------------------
   },
-  
+
 });
 
 
@@ -58,23 +58,23 @@ Template.adminDashboard.helpers({
  * EVENTS
  */
 Template.adminDashboard.events({
-  
+
   /*
-   * CLICK #VIEW-REQUEST-DOC
+   * #VIEW-REQUEST-DOC  ::(CLICK)::
    */
   'click #view-request-doc'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    let id = t.$(e.currentTarget).data('id');
-    let imgsrc = Newsfeeds.findOne({ _id: id}).file;
-    let largeImage = document.createElement('img');
-    largeImage.style.display = 'block';
-    largeImage.style.width=200+"px";
-    largeImage.style.height=200+"px";
-    largeImage.src = imgsrc;
+    let id = t.$( e.currentTarget ).data( 'id' );
+    let imgsrc = Newsfeeds.findOne({ _id: id }).file;
+    let largeImage = document.createElement( 'img' );
+    largeImage.style.display  = 'block';
+    largeImage.style.width    = 200+"px";
+    largeImage.style.height   = 200+"px";
+    largeImage.src            = imgsrc;
     //let url= imgsrc;
-    window.open(imgsrc,'Image','width=500,height=500,resizable=0, location=0');
+    window.open( imgsrc,'Image','width=500,height=500,resizable=0, location=0' );
 //-------------------------------------------------------------------
   },
 

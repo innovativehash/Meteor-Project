@@ -10,24 +10,24 @@ import '../../templates/home/home.html';
  * CREATED
  */
 Template.home.onCreated(function homeOnCreated() {
-  
-  $("#cover").show();
 
-  
+  $( "#cover" ).show();
+
+
   /*
    * JQUERY.PRETTYPHOTO
    */
-    $.getScript('/js/jquery.prettyPhoto.js', function() {
+    $.getScript( '/js/jquery.prettyPhoto.js', function() {
       //console.log( 'home:: jquery.prettyPhoto.js loaded...' );
       //Video
-      $("a[rel^='prettyPhoto']").prettyPhoto({
+      $( "a[rel^='prettyPhoto']").prettyPhoto({
           deeplinking: false,
           social_tools: false,
           allow_resize: true,
           default_width: 700,
           default_height: 444,
           horizontal_padding: 20
-      }); 
+      });
     }).fail( function( jqxhr, settings, exception ) {
       console.log( 'home:: load jquery.prettyPhoto.js failed' );
       //console.log( 'jqxhr ' + jqxhr );
@@ -36,27 +36,27 @@ Template.home.onCreated(function homeOnCreated() {
   });
 //-------------------------------------------------------------------
 
-    
+
     /*
      * OWL.CAROUSEL
      */
-    $.getScript('/js/owl.carousel.min.js', function(){
+    $.getScript( '/js/owl.carousel.min.js', function(){
       //console.log( 'home:: owl.carousel.min.js loaded' );
       // Slider
-      $(".slider-area").owlCarousel({
+      $( ".slider-area" ).owlCarousel({
         items: 1,
         loop: true,
         autoplay: true,
         dots: false,
         nav: true,
-        navText: ['<img src="img/slider-arrow-1.png" alt="" />','<img src="img/slider-arrow-2.png" alt="" />'],
+        navText: [ '<img src="img/slider-arrow-1.png" alt="" />','<img src="img/slider-arrow-2.png" alt="" />' ],
         navSpeed: 500,
         autoplaySpeed: 500,
         autoplayTimeout: 7000
       });
 
-      //Sponsor 
-      $(".sponsor-list ul").owlCarousel({
+      //Sponsor
+      $( ".sponsor-list ul" ).owlCarousel({
         responsive: {
           0: {
             items: 2
@@ -73,7 +73,7 @@ Template.home.onCreated(function homeOnCreated() {
         },
         dots: false,
         nav: true,
-        navText: ['<img src="img/arrow-left.png" alt="" />','<img src="img/arrow-right.png" alt="" />'],
+        navText: [ '<img src="img/arrow-left.png" alt="" />','<img src="img/arrow-right.png" alt="" />' ],
         loop: true,
         autoplay: true
       });
@@ -86,7 +86,7 @@ Template.home.onCreated(function homeOnCreated() {
     /*
      * SELECT2
      */
-    $.getScript('/js/select2.min.js', function(){
+    $.getScript( '/js/select2.min.js', function(){
       //console.log( 'home:: select2.min.js loaded' );
     }).fail( function(jqxhr, settings, exception ) {
     console.log( 'home:: select2.min.js failed' );
@@ -96,11 +96,11 @@ Template.home.onCreated(function homeOnCreated() {
   });
 //-------------------------------------------------------------------
 
-  
+
     /*
      * SCRIPTS
      */
-    $.getScript('/js/scripts.js', function() {
+    $.getScript( '/js/scripts.js', function() {
       //Session.set('connectReady', true);
       //console.log('home:: scripts.js loaded');
     }).fail( function(jqxhr, settings, exception ) {
@@ -108,7 +108,7 @@ Template.home.onCreated(function homeOnCreated() {
     //console.log( 'jqxhr ' + jqxhr );
     //console.log( 'settings ' + settings );
     //console.log( 'exception: ' + exception );
-  }); 
+  });
 //-------------------------------------------------------------------
 
 });
@@ -119,7 +119,7 @@ Template.home.onCreated(function homeOnCreated() {
  */
 Template.home.onRendered(function() {
       $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
-        $("#cover").hide();
+        $( "#cover" ).hide();
         $( ".slider-area" ).fadeIn( 'slow' );
       });
 });

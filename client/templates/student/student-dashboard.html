@@ -5,10 +5,11 @@
 </style>
 <div id="cover"></div>
 -->
+{{#if or isTeacher isStudent}}
     {{> userProfile }}
-  
+
     {{> postbox }}
 
     {{> newsfeed }}
-
+{{/if}}
 </template>

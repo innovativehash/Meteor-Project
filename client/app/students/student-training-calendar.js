@@ -20,7 +20,7 @@ Template.studentTrainingCalendar.onCreated( function() {
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
       //console.log('studentDashboard:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'load bootstrap-dialog.min.js fail' );
+    console.log( 'STUDENT-TRAINING-CALENDAR:: load bootstrap-dialog.min.js fail' );
 //-------------------------------------------------------------------
   });
 
@@ -30,7 +30,7 @@ Template.studentTrainingCalendar.onCreated( function() {
    */
    $.getScript( '/bower_components/fullcalendar/dist/fullcalendar.min.js', function() {
     //console.log('studentDashboard:: fullcalendar.js loaded...' );
-    $('#calendar').fullCalendar({
+    $( '#calendar' ).fullCalendar({
 
       // options and callbacks here
       events: [
@@ -56,13 +56,13 @@ Template.studentTrainingCalendar.onCreated( function() {
                       BootstrapDialog.show({
                         title: calEvent.title,
                         message:  'On '
-                                  + moment(calEvent.start).format( 'ddd, hA' )
+                                  + moment( calEvent.start ).format( 'ddd, hA' )
                                   + '\n\n'
                                   + calEvent.description,
                         buttons: [{
                           label: 'Ok',
                           cssClass: 'btn-success',
-                          action: function(dialog) {
+                          action: function( dialog ) {
                             dialog.close();
                           }
                         }]
@@ -76,11 +76,12 @@ Template.studentTrainingCalendar.onCreated( function() {
                         //alert('View: ' + view.name);
 
                         // change the border color just for fun
-                        $(this).css('border-color', 'red');
+                        $(this).css( 'border-color', 'red' );
       }
     })
       //console.log( 'calendarConnectReady);
   }).fail( function( jqxhr, settings, exception ) {
+    console.log( 'STUDENT-TRAINING-CALENDAR:: load bootstrap-dialog.min.js fail' );
 //-------------------------------------------------------------------
   });
 });

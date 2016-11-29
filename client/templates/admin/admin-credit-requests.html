@@ -1,5 +1,6 @@
 
 <template name = "adminCreditRequests">
+{{#if isAdmin}}
   {{#each requests}}
     <!-- <div class = "dashboard-body-area"> -->
       <!-- <div class = "container"> -->
@@ -19,7 +20,7 @@
                 </p>
               </div>
               <div class = "credit-request-footer">
-                <h2>Attached File : 
+                <h2>Attached File :
                   <span>
                     <a href="#" data-id="{{_id}}" id="view-request-doc">
                       {{filename}}
@@ -45,4 +46,5 @@
      <!-- </div> -->
     <!-- </div> -->
   {{/each}}
+{{/if}}
 </template>

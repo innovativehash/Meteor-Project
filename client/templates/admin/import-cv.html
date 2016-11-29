@@ -5,7 +5,7 @@
   #csv-cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
 </style>
 <div id="csv-cover"></div>
-
+{{#if isAdmin}}
 <div class="dashboard-body-area admin">
   <div class="container">
     <div class="row">
@@ -17,7 +17,7 @@
       <div class="import-cv-title">
         <h2>Import CSV</h2>
       </div>
-      
+
       <div class="import-navigation">
           <ul>
               <li><a href="#" id="dashboard-page"><i class="fa fa-home"></i>Dashboard</a></li>
@@ -27,12 +27,12 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-sm-12">
       <div class="import-body">
         <label class="import" for="csv">
-          <img src="/img/import.png" alt=""> 
+          <img src="/img/import.png" alt="">
           <input type="file" id="csv" style="display:none;" />
           Import CSV
         </label>
@@ -48,7 +48,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                      
+
                   <tr>
                       <td>
                           <select class="selectpicker p0">
@@ -124,7 +124,7 @@
                       </td>
                       <td>{{names.col4}}</td>
                   </tr>
-                 
+
               </tbody>
           </table>
       </div>
@@ -168,7 +168,7 @@
                 <td>{{td.row0.col4}}</td><!-- col 0 -->
                 <td>{{td.row1.col4}}</td><!-- col 1 -->
                 <td>{{td.row2.col4}}</td><!-- col 2 -->
-            </tr>       
+            </tr>
               </tbody>
             </table>
           </div>
@@ -179,7 +179,7 @@
       </div>
     </div>
   </div>
-  
+
   </div>
   </div>
   </div>
@@ -190,5 +190,5 @@
     Your files have been successfully imported..
   </p>
 </div>
-
+{{/if}}
 </template>

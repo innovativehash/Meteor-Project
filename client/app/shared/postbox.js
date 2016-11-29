@@ -31,19 +31,19 @@ let ig = ''
 Template.postbox.events({
 
   /*
-   * CLICK #CANCEL
+   * #CANCEL  ::(CLICK)::
    */
   'click #cancel':  _.throttle( function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    $('').hide();
+    $( '' ).hide();
   }, 1000),
 //-------------------------------------------------------------------
 
 
   /*
-   * CHANGE #UL
+   * #UL  ::(CHANGE)::
    */
   'change #ul'( e, t ) {
     e.preventDefault();
@@ -54,26 +54,25 @@ Template.postbox.events({
       return;
     }
 
-    let mark = (e.currentTarget.files[0].name).lastIndexOf('.') + 1;
+    let mark = ( e.currentTarget.files[0].name ).lastIndexOf( '.' ) + 1;
 
-    ext  = (e.currentTarget.files[0].name).slice( mark );
-    ext = (ext == ('jpg' || 'jpeg') ) ? 'jpeg' : 'png';
+    ext  = ( e.currentTarget.files[0].name ).slice( mark );
+    ext = ( ext == ('jpg' || 'jpeg' ) ) ? 'jpeg' : 'png';
 
-    let fil = t.$('#ul').get(0).files[0];
+    let fil = t.$( '#ul' ).get(0).files[0];
     let fr = new FileReader();
 
     fr.onload = function() {
       ig  = this.result;
     };
 
-    fr.readAsDataURL(fil);
+    fr.readAsDataURL( fil );
 
-    var img = $('<img height="32" width="32" />');
+    var img = $( '<img height="32" width="32" />' );
     Meteor.setTimeout( function() {
-      console.log(ig);
       if ( ig ) {
-        img.attr("src", ig );
-        img.appendTo('#thumbnail');
+        img.attr( "src", ig );
+        img.appendTo( '#thumbnail' );
       } else {
         img = null;
       }
@@ -85,7 +84,7 @@ Template.postbox.events({
 
 
   /*
-   * CLICK #POST  CLICK #POST SUBMIT
+   * #POST, #POSTSUBMIT  ::(CLICK)::
    */
   'click #post, click #postSubmit':  function( e, t ) {
      e.preventDefault();
@@ -94,18 +93,18 @@ Template.postbox.events({
      // $(event.currentTarget).attr('class')
 
      //TRANSITION ENTRY
-      t.$('.postText').css("outline", "#0000FF solid thick");
+      t.$( '.postText' ).css( "outline", "#0000FF solid thick" );
 
-      let content = t.$('.postText').val().trim();
+      let content = t.$( '.postText' ).val().trim();
 
       if ( content === null || content === 'undefined' || content === "" ) {
         return;
       }
 
-      let name = Meteor.user() && Meteor.user().username;
+      let name  = Meteor.user() && Meteor.user().username;
       let co_id = Meteor.user() && Meteor.user().profile.company_id;
       //let co_id = Students.findOne({_id: Meteor.userId()}).company_id;
-      
+
       if ( ig ) {
         Newsfeeds.insert({  owner_id: Meteor.userId(),
                             poster: name,
@@ -134,20 +133,20 @@ Template.postbox.events({
 
       Meteor.setTimeout(function() {
 
-        t.$('.postText').val('');
-        t.$('#thumbnail img:last-child').remove();
+        t.$( '.postText' ).val('');
+        t.$( '#thumbnail img:last-child' ).remove();
         ig  = '';
         ext = '';
       }, 100);
 
       //TRANSITION EXIT
-      t.$('.postText').fadeOut( "slow", function() {
+      t.$( '.postText' ).fadeOut( "slow", function() {
         // Animation complete.
-        t.$('.postText').css("outline", "");
-      }).fadeIn('slow');
+        t.$( '.postText' ).css( "outline", "" );
+      }).fadeIn( 'slow' );
 
 		// NOTIFICATION
-    Bert.alert("Your post has been submitted!", 'success', 'growl-top-right');
+    Bert.alert( "Your post has been submitted!", 'success', 'growl-top-right' );
 //-------------------------------------------------------------------
   },
 

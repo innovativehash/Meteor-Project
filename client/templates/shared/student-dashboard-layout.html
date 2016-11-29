@@ -23,7 +23,7 @@
     </head>
 
     <body>
-    {{#if currentUser}}
+  {{#if or isTeacher isStudent}}
       {{#if showStudentNewsfeed }}
       <div class="feedback-form">
           <button onclick="location.href='http://cu.collectiveinnovation.com/';">Share Your Feedback</button>
@@ -34,9 +34,9 @@
           </form>
       </div>
       {{/if}}
-    
+
     <div class="sidebar-menu-area">
-    
+
         <div class="buttons">
             <button id="open">
                 <span></span>
@@ -49,9 +49,9 @@
             </button>
         </div>
         <div class="logo">
-            
+
             <a href="#" id="logo-click"><img src="{{logo}}" alt=""></a> <!-- src="/img/logo_d.png" -->
-            
+
             <button type="button"
                     class="navbar-toggle collapsed"
                     data-toggle="collapse"
@@ -73,20 +73,28 @@
                 <h2>Hello, {{fname}}<span>Welcome Back</span></h2>
             </div>
         </div>
-        
+
         <div class="sidebar-menu collapse navbar-collapse">
-        
+
           <ul>
-            <li class="menu-icon-1"><a id = "st-courses" href="#">Courses</a></li>
-            <li class="menu-icon-2"><a id = "st-request-credit" href="#">Request Credit</a></li>
-            <li class="menu-icon-3"><a id = "st-records" href="#">Records</a></li>
-            <li class="menu-icon-4"><a id = "st-training-calendar" href="#">Training Calendar</a></li>
+            <li class="menu-icon-1">
+              <a id = "st-courses" href="#">Courses</a>
+            </li>
+            <li class="menu-icon-2">
+              <a id = "st-request-credit" href="#">Request Credit</a>
+            </li>
+            <li class="menu-icon-3">
+              <a id = "st-records" href="#">Records</a>
+            </li>
+            <li class="menu-icon-4">
+              <a id = "st-training-calendar" href="#">Training Calendar</a>
+            </li>
           </ul>
         </div>
     </div>
-    
+
     <div class="dashboard-header-area">
-    
+
         <div class="container">
             <div class="row">
                 <div class="col-sm-7">
@@ -125,14 +133,21 @@
                         {{fname}}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a id="account-settings" href="#">Account Settings</a></li>
-                        <li><a id="account-upload-photo" href="#">Upload Photo</a></li>
-                        <li><a id="logout" href="#">Logout</a></li>
+                        <li>
+                          <a id="account-settings" href="#">Account Settings</a>
+                        </li>
+                        <li>
+                          <a id="account-upload-photo" href="#">Upload Photo</a>
+                        </li>
+                        <li>
+                          <a id="logout" href="#">Logout</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="dashboard-body-area admin">
       <div class="container">
         <div class="row">
@@ -142,6 +157,7 @@
         </div>
       </div>
     </div>
-    {{/if}}
+  {{/if}}
   </body>
+
 </template>

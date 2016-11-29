@@ -5,10 +5,22 @@
 </style>
 <div id="cover"></div>
 -->
+{{#if or isStudent isTeacher}}
   <div class="row">
     <div class="col-sm-12">
       <div class="search-list">
         <h3 style="text-align:center;">Available Courses</h3>
+
+        {{#if isTeacher}}
+        <form>
+          <div class="form-group">
+            <div class="col-sm-4 col-md-2 col-md-offset-2">
+              <button class="js-teacher-cb btn btn-lg btn-primary">Build Course</button>
+            </div>
+          </div>
+        </form>
+        {{/if}}
+
         <table class="table">
           <thead>
             <tr>
@@ -22,7 +34,8 @@
           <tbody>
             {{#with courses}}
             {{#each this}}
-            <tr>
+            {{#unless dontShow}}
+            <tr id="{{_id}}">
               <th class="name"><img src="/img/icon-4.png" alt="">
                 {{#if completed}}
                   <span style="text-decoration: line-through;">{{name}}</span>
@@ -38,7 +51,7 @@
               <td></td>
               {{/if}}
               <td>
-                <a href="#">{{buttonText}}</a>
+                <a id="course-button" data-id="{{_id}}" href="#">{{buttonText}}</a>
                 <!--
                 <button id="" type="button" class="btn btn-info">{{buttonText}}</button>
                 <button id="edit">
@@ -50,6 +63,7 @@
                 -->
               </td>
             </tr>
+            {{/unless}}
             {{/each}}
             {{/with}}
           </tbody>
@@ -59,5 +73,6 @@
         </div>
       </div>
     </div>
-  </div> 
+  </div>
+  {{/if}}
 </template>

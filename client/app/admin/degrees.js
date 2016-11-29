@@ -3,94 +3,190 @@ import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 
 import { Courses }      from '../../../both/collections/api/courses.js';
-import { Diplomas }      from '../../../both/collections/api/diplomas.js';
+import { Diplomas }     from '../../../both/collections/api/diplomas.js';
 
 import '../../templates/admin/degrees.html';
 
 
-let degree      = {};
+let degree      = {}
+  , count       = 0;
+
 degree.courses  = [];
+
+
+function mapCount( s ) {
+  switch( s ) {
+    case 1:
+      return 'firDrag';
+    case 2:
+      return 'secDrag';
+    case 3:
+      return 'thrDrag';
+    case 4:
+      return 'fouDrag';
+    case 5:
+      return 'fivDrag';
+    case 6:
+      return 'sixDrag';
+    case 7:
+      return 'sevDrag'
+    default:
+      return -1;
+  }
+}
+
+
 /*
  * CREATED
  */
 Template.degrees.onCreated(function() {
-  
-  $("#degree-cover").show();
-  
+
+  $( "#degree-cover" ).show();
+
   /*
-   * JQUERY-UI
+   * MULTI-SELECT AUTOCOMPLETE COMBOBOX
    */
-  $.getScript('/jquery-ui-1.12.0.custom/jquery-ui.min.js', function() {
-    
-    $( ".draggable" ).draggable({
-      cursor: "move",
-      helper: "clone"
+  $.getScript( '/js/select2.min.js', function() {
+    $( document ).ready(function(){
+
+      $( '#deg-find-course' ).select2({
+        allowClear: true
+      });
+
+      $( '#deg-find-course' ).on( 'select2:select', function (evt){
+
+         $( 'div.certificate-course ul' ).append(
+            `
+            <li id="${mapCount(++count)}" tabindex="-1">
+              <span>
+                <img id="deg-img-${count}" src="/img/icon-7.png" alt="" data-dt="" class="draggable">
+              </span>
+            </li>
+            `
+          );
+
+          $( `#deg-img-${count}` ).draggable({  //count already incremented
+            cursor: "move",
+            helper: "clone"
+          });
+
+          let idx = $( "#deg-find-course" ).val();
+          //let item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
+          let item = Courses.find({ name: {$regex: idx  }}).fetch()[0];
+
+          //need idx returned from search!!!
+          //$('#deg-find-course').val('');
+          //console.log( $('#firDrag').contents().eq(0).text().indexOf('Sample'));
+          //console.log( $('#firDrag').text().indexOf('Sample'));
+
+      if( count == 1 ) {
+        if ( $( 'li#firDrag span' ).children().is( 'img' ) ) {
+
+          if ( degree && degree.courses ) degree.courses[0] = item;
+
+          $( '#firDrag span img' ).data( 'dt', item.name );
+          replaceTextNode( $( '#firDrag' ), item );
+          $( '#firDrag' ).css( 'color', 'green' );
+          $( '#firDrag span img' ).css( 'cursor', 'move' ).effect( "highlight", {}, 3000 );
+        }
+      } else if ( count == 2 ) {
+        if ( $( 'li#secDrag span' ).children().is( 'img' ) ) {
+
+          if( degree && degree.courses ) degree.courses[1] = item;
+
+          $( '#secDrag span img' ).data( 'dt', item.name );
+          replaceTextNode( $( '#secDrag' ), item );
+          $( '#secDrag' ).css( 'color', 'green' );
+          $( '#secDrag span img' ).css( 'cursor', 'move' ).effect( "highlight", {}, 3000 );
+        }
+      } else  if ( count == 3 ) {
+        if ( $( 'li#thrDrag span' ).children().is( 'img' ) ) {
+          if ( degree && degree.courses ) degree.courses[2] = item;
+
+          $( '#thrDrag span img' ).data( 'dt', item.name );
+          replaceTextNode( $( '#thrDrag' ), item );
+          $( '#thrDrag' ).css( 'color', 'green' );
+          $( '#thrDrag span img' ).css( 'cursor', 'move' ).effect( "highlight", {}, 3000 );
+        }
+      } else if ( count == 4 ) {
+        if ( $( 'li#fouDrag span' ).children().is( 'img' ) ) {
+          if ( degree && degree.courses ) degree.courses[3] = item;
+          $( '#fouDrag span img' ).data( 'dt', item.name );
+          replaceTextNode( $( '#fouDrag' ), item );
+          $( '#fouDrag' ).css( 'color', 'green' );
+          $( '#fouDrag span img' ).css( 'cursor', 'move' ).effect( "highlight", {}, 3000 );
+        }
+      } else  if ( count == 5 ) {
+        if ( $( 'li#fivDrag span' ).children().is( 'img' ) ) {
+          if ( degree && degree.courses ) degree.courses[4] = item;
+          $( '#fivDrag span img' ).data( 'dt', item.name );
+          replaceTextNode( $( '#fivDrag' ), item );
+          $( '#fivDrag' ).css( 'color', 'green' );
+          $( '#fivDrag span img' ).css( 'cursor', 'move' ).effect( "highlight", {}, 3000 );
+        }
+      } else if ( count == 6 ) {
+        if ( $( 'li#sixDrag span' ).children().is( 'img' ) ) {
+          if ( degree && degree.courses ) degree.courses[5] = item;
+          $( '#sixDrag span img' ).data( 'dt', item.name );
+          replaceTextNode( $( '#sixDrag' ), item );
+          $( '#sixDrag' ).css( 'color', 'green' );
+          $( '#sixDrag span img' ).css( 'cursor', 'move' ).effect( "highlight", {}, 3000 );
+        }
+      } else if ( count == 7 ) {
+        if ( $( 'li#sevDrag span' ).children().is( 'img' ) ) {
+          if ( degree && degree.courses ) degree.courses[6] = item;
+          $( '#sevDrag span img' ).data( 'dt', item.name );
+          replaceTextNode( $( '#sevDrag' ), item );
+          $( '#sevDrag' ).css( 'color', 'green' );
+          $( '#sevDrag span img' ).css( 'cursor', 'move' ).effect( "highlight", {}, 3000 );
+        }
+      }
+          //unnecessary, but just because
+          idx  = null;
+          item = null;
+      });
+
+      Meteor.setTimeout(() => {
+        $( '#deg-find-course' ).select2( "open" ); //.val(null).trigger('change.select2');
+      }, 1000);
     });
-  
-    $('#drop1,#drop2, #drop3, #drop4, #drop5, #drop6, #drop7').droppable({
+    //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
+  }).fail( function( jqxhr, settings, exception ) {
+    console.log( 'DEGREES:: load select2.js fail' );
+  });
+
+
+
+  /*
+   * JQUERY-UI DRAG & DROP
+   */
+  $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function(){
+    /*
+        $( ".draggable" ).draggable({
+          cursor: "move",
+          helper: "clone"
+        });
+    */
+    $( '#drop1,#drop2, #drop3, #drop4, #drop5, #drop6, #drop7' ).droppable({
       drop: function( evt, ui ) {
         $(this).html( ui.draggable.data('dt'));
-        $(this).css('border', '1px dashed blue').css('color', 'blue');
+        $(this).css( 'border', '1px dashed blue' ).css( 'color', 'blue' );
+
+        let text = $( ui.draggable[0].parentNode.parentNode );
+        text.css( 'text-decoration', 'line-through' );
+        $( text[0] ).find( 'span' ).remove()
+
+        $( '#deg-find-course' ).select2( "val", "" );
+        $( '#select2-deg-find-course-container' ).text('');
+        $( '#deg-find-course' ).select2( "open" );
       }
     });
-  
-    $( "#deg-find-course" ).autocomplete({
-    minLength:3,
-    delay:100,
-  
-    source: function( request, response ){
-      let rslt  = [],
-          arr   = [],
-          re    = '/^' + request.term + '/i';
-          Session.set( 'searchTerm', re );
-          rslt  = searchTerms();
-      
-      response( $.map( rslt, function( value, key ){
-          return value;//{
-          //   label: value,
-          //   value: key
-          //};
-      }));
-    },
-    focus:      function( event, ui ) {
-                    $( '#deg-find-course' ).val( ui.item.name ); //id
-                    return false;
-                  },
-                  
-      select:     function( event, ui ){
-                    $( '#deg-find-course' ).val( ui.item.name ); //id
-                    return false;
-                  }
-    })
-    .autocomplete( "instance" )._renderItem =
-          function( ul, item ) {
-            return $( "<li>" )
-              .append(  "<a><strong id = 'name'>"       +
-                        item.name +
-                        
-                        "</strong><br />"               +
-                        //"<em id = 'id'>" +
-                        //item.id </em>                   +
-                        "</a>" )
-              .appendTo( ul );
-      };
-    
-        
-      function searchTerms() {
-      let arr     = [], 
-          result  = [],
-          str = eval(Session.get('searchTerm' )); //harden this!!!
-      arr = Courses.find( { name: {$regex: str  }}, { limit:50 } ).fetch();
-      for ( var i = 0; i < arr.length; i++ ) { 
-        result.push({ name: arr[i].name }); //, id: arr[i]._id });
-      }
-      return result; 
-    }
+
   //console.log('degree:: jquery-ui.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'degree:: load jquery-ui.min.js fail' );
   });
-//-------------------------------------------------------------------  
+//-------------------------------------------------------------------
 
 });
 
@@ -101,11 +197,12 @@ Template.degrees.onCreated(function() {
 Template.degrees.onRendered(function(){
 
   $( '#degree-cover' ).delay( 100 ).fadeOut( 'slow', function() {
-    $("#degree-cover").hide();
+    $( "#degree-cover" ).hide();
     $( ".certificate-area" ).fadeIn( 'slow' );
-  }); 
-  
+  });
+
 });
+
 
 
 /*
@@ -117,49 +214,62 @@ Template.degrees.onDestroyed(function(){
 
 
 /*
+ * HELPERS
+ */
+Template.degrees.helpers({
+
+  courses: () =>
+    Courses.find({ company_id: Meteor.user().profile.company_id }).fetch(),
+
+});
+
+
+
+/*
  * EVENTS
  */
 Template.degrees.events({
 
   /*
-   * BLUR #ENTER-DEGREE-NAME
+   * #ENTER-DEGREE-NAME  ::(BLUR)::
    */
   'blur #enter-degree-name'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
-    $('#dName').text( $('#enter-degree-name').val() );
+
+    $( '#dName' ).text( $( '#enter-degree-name' ).val() );
 //-------------------------------------------------------------------
   },
 
-  
+
+
   /*
-   * CLICK .JS-DEGREE-SAVE
+   * .JS-DEGREE-SAVE ::(CLICK)::
    */
   'click .js-degree-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     let credits_total = 0,
-        ids = [],
-        course_name = $('#enter-degree-name').val();
-        
-    if ( degree.courses.length <= 0) {
-      console.log( 'No courses selected' );
+        ids           = [],
+        course_name   = $( '#enter-degree-name' ).val();
+
+    if ( degree && degree.courses && degree.courses.length <= 0) {
+      Bert.alert( 'No Courses Selected!', 'danger' );
       return;
     }
-    
+
     if ( course_name == "" ) {
-      console.log( 'Must give degree a name' );
+      Bert.alert( 'You Must Give the Degree a Name!', 'danger' );
       return;
     }
-    
+
     for ( let i = 0; i<degree.courses.length; i++ ){
-      credits_total += Number(degree.courses[i].credits);
-      ids[i] = degree.courses[i]._id;
+      credits_total += Number( degree.courses[i].credits );
+      ids[i]        = degree.courses[i]._id;
     }
-    
-    Diplomas.insert({ 
+
+    Diplomas.insert({
       name: course_name,
       courses: ids,
       credits: credits_total,
@@ -168,126 +278,58 @@ Template.degrees.events({
       type: "degree",
       times_completed: 0
     });
-    
-    Session.set("doc", "degreeCertificate");
+
+    Bert.alert( 'Degree Created!', 'success', 'growl-top-right' );
+
+    Meteor.setTimeout(function(){
+      FlowRouter.go( 'admin-degrees-and-certifications', { _id: Meteor.userId() });
+    }, 1500);
 //-------------------------------------------------------------------
   },
-  
+
+
 
   /*
-   * KEYPRESS #FIND-COURSE
-   */
-  'keypress #deg-find-course': function( event, t ){
-    
-    if ( event.which === 13 ) {
-      event.preventDefault();
-      
-      let idx = $("#deg-find-course").val();
-      //let item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
-      let item = Courses.find({ name: {$regex: idx  }}).fetch()[0];
-      //need idx returned from search!!!
-
-      t.$('#deg-find-course').val('');
-      //console.log( $('#firDrag').contents().eq(0).text().indexOf('Sample'));
-      //console.log( $('#firDrag').text().indexOf('Sample'));
-    
-      
-      if ( t.$('#firDrag').text().indexOf(' ') == 0 ) {
-        degree.courses[0] = item;
-        t.$('#firDrag span img').data('dt', item.name);
-        replaceTextNode( t.$('#firDrag'), item );
-        t.$('#firDrag').css('color', 'green');
-        t.$('#firDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
-      } 
-      else if ( t.$('#secDrag').text().indexOf(' ') == 0 ) {
-        degree.courses[1] = item;
-        t.$('#secDrag span img').data('dt', item.name);
-        replaceTextNode( t.$('#secDrag'), item );
-        t.$('#secDrag').css('color', 'green');
-        t.$('#secDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
-      }
-      else if ( t.$('#thrDrag').text().indexOf(' ') == 0 ) {
-        degree.courses[2] = item;
-        t.$('#thrDrag span img').data('dt', item.name);
-        replaceTextNode( t.$('#thrDrag'), item );
-        t.$('#thrDrag').css('color', 'green');
-        t.$('#thrDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
-      }
-      else if ( t.$('#fouDrag').text().indexOf(' ') == 0 ) {
-        degree.courses[3] = item;
-        t.$('#fouDrag span img').data('dt', item.name);
-        replaceTextNode( t.$('#fouDrag'), item );
-        t.$('#fouDrag').css('color', 'green');
-        t.$('#fouDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
-      }
-      else if ( t.$('#fivDrag').text().indexOf(' ') == 0 ) {
-        degree.courses[4] = item;
-        t.$('#fivDrag span img').data('dt', item.name);
-        replaceTextNode( t.$('#fivDrag'), item );
-        t.$('#fivDrag').css('color', 'green');
-        t.$('#fivDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
-      }
-      else if ( t.$('#sixDrag').text().indexOf(' ') == 0 ) {
-        degree.courses[5] = item;
-        t.$('#sixDrag span img').data('dt', item.name);
-        replaceTextNode( t.$('#sixDrag'), item );
-        t.$('#sixDrag').css('color', 'green');
-        t.$('#sixDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
-      }
-      else if ( t.$('#sevDrag').text().indexOf(' ') == 0 ) {
-        degree.courses[6] = item;
-        t.$('#sevDrag span img').data('dt', item.name);
-        replaceTextNode( t.$('#sevDrag'), item );
-        t.$('#sevDrag').css('color', 'green');
-        t.$('#sevDrag span img').css('cursor', 'move').effect("highlight", {}, 3000);
-      }
-      //unnecessary, but just because
-      idx  = null;
-      item = null;
-    }
-//-------------------------------------------------------------------
-  },
-  
-
-  /*
-   * CLICK #FC
+   * #FC  ::(CLICK)::
    */
   'click #fc'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 //-------------------------------------------------------------------
   },
-  
+
 
   /*
-   * CLICK #DEGREE-CERTIFICATE-PAGE
+   * #DEGREE-CERTIFICATE-PAGE  ::(CLICK)::
    */
   'click #degree-certificate-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
-    FlowRouter.go( 'admin-degrees-and-certifications', { _id: Meteor.userId() });
+
+    FlowRouter.go( 'admin-degrees-and-certifications', { _id: Meteor.userId() } );
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK #DASHBOARD-PAGE
+   * #DASHBOARD-PAGE  ::(CLICK)::
    */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },
 });
 
+
+
 /*
  * REPLACE TEXT NODE()
  */
 function replaceTextNode( t, item ) {
-  
+
   let textNode    = t.contents().first();
   let replaceWith = `${item.name}`;
   textNode.replaceWith( replaceWith );

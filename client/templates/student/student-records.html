@@ -6,6 +6,7 @@
 </style>
 <div id="cover"></div>
 -->
+{{#if or isStudent isTeacher}}
   <div class="row">
     <div class="col-md-12">
       <div class="search-list">
@@ -15,7 +16,7 @@
           <span style="text-align:left;">Total Credits Accumulated:</span>
         </div>
         <br />
-          
+
       {{#if certificates}}
       <center><h3>Certifications</h3></center>
         <table class="table">
@@ -37,7 +38,7 @@
           </tbody>
         </table>
         {{/if}}
-        
+
         {{#if more}}
         <div class="more">
           <button><img src="/img/more.png" alt=""></button>
@@ -61,7 +62,7 @@
             </tbody>
           </table>
           {{/if}}
-          
+
           {{#if more}}
           <div class="more">
             <button><img src="/img/more.png" alt=""></button>
@@ -97,7 +98,7 @@
             </tbody>
           </table>
           {{/if}}
-          
+
           {{#if more}}
           <div class="more">
             <button><img src="/img/more.png" alt=""></button>
@@ -136,7 +137,7 @@
             </tbody>
           </table>
           {{/if}}
-          
+
           {{#if more}}
           <div class="more">
             <button><img src="/img/more.png" alt=""></button>
@@ -184,5 +185,6 @@
 
       </div>
     </div>
-  </div> 
+  </div>
+{{/if}}
 </template>

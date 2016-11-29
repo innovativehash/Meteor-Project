@@ -24,7 +24,7 @@ import '../../templates/shared/admin-dashboard-layout.html';
  */
 Template.adminDashboardLayout.onCreated(function(){
 
-  $("#cover").show();
+  $( "#cover" ).show();
 
 });
 
@@ -35,7 +35,7 @@ Template.adminDashboardLayout.onCreated(function(){
 Template.adminDashboardLayout.onRendered(function(){
 
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
-    $("#cover").hide();
+    $( "#cover" ).hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
 
@@ -94,7 +94,7 @@ Template.adminDashboardLayout.helpers({
 Template.adminDashboardLayout.events({
 
   /*
-   * CLICK #ACCOUNT-SETTINGS
+   * #ACCOUNT-SETTINGS  ::(CLICK)::
    */
   'click #account-settings'( e, t ){
 //-------------------------------------------------------------------
@@ -102,19 +102,19 @@ Template.adminDashboardLayout.events({
 
 
   /*
-   * CLICK #ACCOUNT-UPLOAD-PHOTO
+   * #ACCOUNT-UPLOAD-PHOTO  ::(CLICK)::
    */
   'click #account-upload-photo'( e, t ){
-    
-    console.log('account-layout account-upload-photo');
-    
-    $('#profile-modal').modal('show');
+
+    console.log( 'account-layout account-upload-photo' );
+
+    $( '#profile-modal' ).modal( 'show' );
 //-------------------------------------------------------------------
   },
 
 
   /*
-   * CLICK #LOGOUT
+   * #LOGOUT  ::(CLICK)::
    */
   'click #logout': function( e, t ) {
     e.preventDefault();
@@ -127,21 +127,21 @@ Template.adminDashboardLayout.events({
 
 
   /*
-   * CLICK #LOGO-CLICK
+   * #LOGO-CLICK  ::(CLICK)::
    */
   'click #logo-click': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
-    console.log('account-layout logo-click');
-    
+
+    console.log( 'account-layout logo-click' );
+
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() } );
 //-------------------------------------------------------------------
   },
 
 
   /*
-   * CLICK #ADMIN-COURSES
+   * #ADMIN-COURSES  ::(CLICK)::
    */
   'click #admin-courses': function ( e, t ) {
     e.preventDefault();
@@ -153,7 +153,7 @@ Template.adminDashboardLayout.events({
 
 
   /*
-   * CLICK #ADMIN-STUDENTS
+   * #ADMIN-STUDENTS  ::(CLICK)::
    */
   'click #admin-students': function ( e, t ) {
     e.preventDefault();
@@ -165,7 +165,7 @@ Template.adminDashboardLayout.events({
 
 
   /*
-   * CLICK #ADMIN-DEGREES
+   * #ADMIN-DEGREES  ::(CLICK)::
    */
   'click #admin-degrees': function ( e, t ) {
     e.preventDefault();
@@ -177,7 +177,7 @@ Template.adminDashboardLayout.events({
 
 
   /*
-   * CLICK #ADMIN-ASSIGN COURSES
+   * #ADMIN-ASSIGN COURSES  ::(CLICK)::
    */
   'click #admin-assignCourses': function( e, t ) {
     e.preventDefault();
@@ -189,7 +189,7 @@ Template.adminDashboardLayout.events({
 
 
   /*
-   * CLICK #ADMIN-ANALYTICS
+   * #ADMIN-ANALYTICS  ::(CLICK)::
    */
   'click #admin-analytics': function( e, t ) {
     e.preventDefault();
@@ -201,7 +201,7 @@ Template.adminDashboardLayout.events({
 
 
   /*
-   * CLICK #ADMIN-DESIGN
+   * #ADMIN-DESIGN  ::(CLICK)::
    */
   'click #admin-design': function( e, t ) {
     e.preventDefault();
@@ -213,7 +213,7 @@ Template.adminDashboardLayout.events({
 
 
   /*
-   * CLICK #ADMIN-ADVANCED
+   * #ADMIN-ADVANCED  ::(CLICK)::
    */
   'click #admin-advanced': function( e, t ) {
     e.preventDefault();

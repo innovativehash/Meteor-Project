@@ -12,10 +12,10 @@ import '../../templates/admin/degree-certificate.html';
  * CREATED
  */
 Template.degreeCertificate.onCreated( function() {
-  
+
   //$("#degree-cert-cover").show();
-    
-  Session.setDefault('doc', 'degreeCertificate');
+
+  Session.setDefault( 'doc', 'degreeCertificate' );
 
   /*
    * BOOTSTRAP3-DIALOG
@@ -25,15 +25,15 @@ Template.degreeCertificate.onCreated( function() {
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'degreeCertificate:: load bootstrap-dialog.min.js fail' );
   });
- //------------------------------------------------------------------- 
-  
+ //-------------------------------------------------------------------
+
 /*
  * SELECT2
  * multi-select auto-complete box
  */
-  $.getScript('/js/select2.min.js', function() {
-    $(document).ready(function(){
-      $('#search-cert-deg').select2({
+  $.getScript( '/js/select2.min.js', function() {
+    $( document ).ready(function(){
+      $( '#search-cert-deg' ).select2({
         allowClear: true
       });
     });
@@ -53,8 +53,8 @@ Template.degreeCertificate.onRendered( function() {
   $( '#degree-cert-cover' ).delay( 100 ).fadeOut( 'slow', function() {
     $("#degree-cert-cover").hide();
     $( ".dashboard-body-area" ).fadeIn( 'slow' );
-  }); 
-*/  
+  });
+*/
 });
 
 
@@ -62,11 +62,11 @@ Template.degreeCertificate.onRendered( function() {
  * HELPERS
  */
 Template.degreeCertificate.helpers({
- 
+
   list: () => {
-    let c = Certifications.find({company_id:1}).fetch();
-    let d = Diplomas.find({company_id:1}).fetch();
-    c.push.apply(c, d);
+    let c = Certifications.find({ company_id:1 }).fetch();
+    let d = Diplomas.find({ company_id:1 }).fetch();
+    c.push.apply( c, d );
     return c;
   }
 //-------------------------------------------------------------------
@@ -79,73 +79,73 @@ Template.degreeCertificate.helpers({
 Template.degreeCertificate.events({
 
   /*
-   * CLICK .JS-DEGREE
+   * .JS-DEGREE  ::(CLICK)::
    */
   'click .js-degree'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     //console.log( UI._parentData() );
     //t.currentScreen.set("degree");
-    FlowRouter.go('admin-degrees', { _id: Meteor.userId() });
+    FlowRouter.go( 'admin-degrees', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK .JS-CERTIFICATE
+   * .JS-CERTIFICATE  ::(CLICK)::
    */
   'click .js-certificate'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
-    FlowRouter.go('admin-certifications', { _id: Meteor.userId() });
+
+    FlowRouter.go( 'admin-certifications', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CHANGE #SEARCH-CERT-DEG
+   * #SEARCH-CERT-DEG  ::(CHANGE)::
    */
   'change #search-cert-deg'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     let idx = $( e.currentTarget ).val();
-    $('tr').css('border', '');
-    $('tr#' + idx ).css('border', '1px solid');
-    $('html, body').animate({
-      scrollTop: $('tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
+    $( 'tr' ).css( 'border', '' );
+    $( 'tr#' + idx ).css('border', '1px solid' );
+    $( 'html, body' ).animate({
+      scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK .JS-EDIT
+   * .JS-EDIT  ::(CLICK)::
    */
   'click .js-edit'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
      /* OPEN EDIT DIALOG */
-      let idx = $( e.currentTarget ).data('id'),
-          type = $( e.currentTarget ).data('type');
+      let idx = $( e.currentTarget ).data( 'id' ),
+          type = $( e.currentTarget ).data( 'type' );
           db = undefined;
-          
+
       switch( type ) {
         case "certificate":
           db = Certifications.findOne({ _id:idx },{ "name":1, "credits":1 } );
           break;
         case "degree":
-          db = Diplomas.findOne({_id:idx}, {"name":1, "credits":1 });
+          db = Diplomas.findOne({ _id:idx }, { "name":1, "credits":1 });
           break;
       }
 
       BootstrapDialog.show({
         title: this.type == "degree" ? "Edit Degree" : "Edit Certificate",
         message:  '<div class="pop-up-area students">' +
-                      '<div class="popup-body">' + 
+                      '<div class="popup-body">' +
                           '<div class="row">' +
                               '<div class="col-sm-6">' +
                                 '<label>' + db.type + ' Name:</label>'+
@@ -162,18 +162,18 @@ Template.degreeCertificate.events({
             label: 'Commit Edit',
             cssClass: 'btn-success',
             action: function( dialog ) {
-              let nm = $(".js-name").val().trim()    || c.name;
-              let cr = $(".js-credits").val().trim() || c.credits;
+              let nm = $( ".js-name" ).val().trim()    || c.name;
+              let cr = $( ".js-credits" ).val().trim() || c.credits;
               switch( type ) {
                 case "certificate":
                         Certificates.update(  { _id: c._id  },
-                                              { 
+                                              {
                                                 $set: { "name": nm, "credits": cr }
-                                              }); 
+                                              });
                         break;
               case "degree":
                       Diplomas.update(  { _id: c._id  },
-                                        { 
+                                        {
                                           $set: { "name": nm, "credits": cr }
                                         });
                       break;
@@ -187,29 +187,29 @@ Template.degreeCertificate.events({
             cssClass: 'btn-danger',
             action: function( dialog ) {
               dialog.close();
-            }        
+            }
           }]
         });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK .JS-DELETE
+   * .JS-DELETE  ::(CLICK)::
    */
   'click .js-delete'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     /* ARE YOU SURE YOU WANT TO DELETE... */
-    let idx = $( e.currentTarget ).data('id');
-    let nm  = $( e.currentTarget ).data('name');
+    let idx = $( e.currentTarget ).data( 'id' );
+    let nm  = $( e.currentTarget ).data( 'name' );
     let type = this.type;
-    
+
     BootstrapDialog.show({
       title: this.type == "degree" ? "Delete Degree" : "Delete Certificate",
       message:  '<div class="pop-up-area students">' +
-                  '<div class="popup-body">' + 
+                  '<div class="popup-body">' +
                     '<div class="row">' +
                       '<div class="col-sm-12">' +
                         '<strong>Are you sure you want to delete this ' + type + ' ?</strong>' +
@@ -220,19 +220,17 @@ Template.degreeCertificate.events({
               label: this.type == "degree" ? 'Delete Degree' : "Delete Certificate",
               cssClass: 'btn-danger',
               action: function( dialog ) {
-                console.log(type);
+
                 switch ( type ) {
                   case "certificate":
-                    console.log(type);
                     Certifications.remove({ _id: idx});
                     break;
                   case "degree":
-                    console.log(type);
                     Diplomas.remove({ _id: idx});
                     break;
                 }
                 dialog.close();
-                
+
                 //maybe some logic to remove this course from students currently taking it?
               }
         },
@@ -246,15 +244,15 @@ Template.degreeCertificate.events({
     });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK #DASHBOARD-PAGE
+   * #DASHBOARD-PAGE  ::(CLICK)::
    */
   'click #dashboard-page'( e, t ) {
     e.preventDefault()
     e.stopImmediatePropagation();
-    
+
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },

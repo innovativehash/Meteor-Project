@@ -27,8 +27,7 @@
   </head>
 
   <body>
-
-   {{#if currentUser}}
+{{#if isAdmin}}
 
       {{#if showNewsfeed }}
       <div class="feedback-form">
@@ -157,7 +156,7 @@
     <div class="dashboard-header-area">
         <div class="container">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-7">
                     <div class="search-bar">
                         <form>
                           <!-- <h2 style="color:yellow;">SCOTT: Please don't test menu items right now</h2> -->
@@ -176,7 +175,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <div class="profile-bar">
                         <ul>
                             <li><button><img src="/img/message.png" alt=""></button></li>
@@ -210,6 +209,6 @@
 
     {{> Template.dynamic template=main  }}
 
-    {{/if}}
+  {{/if}}
   </body>
 </template>

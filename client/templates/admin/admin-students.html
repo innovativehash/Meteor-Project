@@ -7,6 +7,7 @@
 </style>
 <div id="students-cover"></div>
 -->
+{{#if isAdmin}}
 <div class="dashboard-body-area admin">
   <div class="container">
     <div class="row">
@@ -28,14 +29,14 @@
     <div class="col-sm-8">
       <div class="filter-buttons studentpage">
         <button class="js-add-student"
-          type="button" 
-          id="add_students" 
-          data-toggle="modal" 
+          type="button"
+          id="add_students"
+          data-toggle="modal"
           data-target="#addStudentModal">
           <span>+</span>
           Add Student
         </button>
-        <button id="import_student" class="js-import-students-csv">Import Students CSV</button>    
+        <button id="import_student" class="js-import-students-csv">Import Students CSV</button>
       </div><!-- filter buttons -->
     </div>
   </div>
@@ -61,7 +62,7 @@
             </div>
          </div><!-- col-sm-12 -->
       </div><!-- row -->
-      
+
       <div class="row">
           <div class="col-sm-12">
               <div class="search-list students">
@@ -91,23 +92,23 @@
                       {{/if}}
                       <td>{{created_at}}</td>
                       <td>
-                        <button class="js-edit-student" 
+                        <button class="js-edit-student"
                                 data-id="{{_id}}"
-                                data-toggle="modal" 
+                                data-toggle="modal"
                                 data-target="#editStudentModal"
                                 id="edit">
                           <img src="/img/edit.png" alt="">
                         </button>
-                        <button class="js-delete-student" 
+                        <button class="js-delete-student"
                                 data-id="{{_id}}"
-                                data-toggle="modal" 
+                                data-toggle="modal"
                                 data-target="#deleteStudentModal"
                                 id="delete">
                           <img src="/img/delete.png" alt="">
                         </button>
                       </td>
                     </tr>
-                   
+
                     {{/each}}
                   </tbody>
                 </table>
@@ -116,7 +117,7 @@
                 </div>
               </div>
             </div>
-          </div>                        
+          </div>
         </div>
       </div>
     </div>
@@ -125,15 +126,15 @@
 
 
 
-                <div  class="modal fade left" 
-                      id="addStudentModal" 
-                      role="dialog" 
+                <div  class="modal fade left"
+                      id="addStudentModal"
+                      role="dialog"
                       aria-labelledby="myModalLabel">
                   <div class="modal-dialog">
                     <div class="pop-up-area students">
-                      <button type="button" 
-                              id="popup-close" 
-                              data-dismiss="modal" 
+                      <button type="button"
+                              id="popup-close"
+                              data-dismiss="modal"
                               aria-label="Close">x</button>
                       <div class="row">
                         <div class="col-sm-6" style="padding-left:10%;">
@@ -144,7 +145,7 @@
                       </div>
                       <div class="popup-body">
                         <form action="">
-                          
+
                           <div class="row">
                             <div class="col-sm-6">
                               <div class="input-group input-group-lg">
@@ -178,7 +179,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <select class="js-dept form-control input-lg"></select>
-                            </div>  
+                            </div>
                           </div>
                           <br />
                           <br />
@@ -188,24 +189,24 @@
                               <input class="js-student-add-submit" type="button" value="SUBMIT">
                             </div>
                           </div>
-                          
+
                         </form>
                       </div>
-                    </div>                                         
+                    </div>
                   </div>
-                </div><!-- modal --> 
-                
+                </div><!-- modal -->
 
 
-                <div  class="modal fade left" 
-                      id="editStudentModal" 
-                      role="dialog" 
+
+                <div  class="modal fade left"
+                      id="editStudentModal"
+                      role="dialog"
                       aria-labelledby="myModalLabel">
                   <div class="modal-dialog">
                     <div class="pop-up-area students">
-                      <button type="button" 
-                              id="popup-close" 
-                              data-dismiss="modal" 
+                      <button type="button"
+                              id="popup-close"
+                              data-dismiss="modal"
                               aria-label="Close">x</button>
                       <div class="row">
                         <div class="col-sm-6" style="padding-left:10%;">
@@ -216,7 +217,7 @@
                       </div>
                       <div class="popup-body">
                         <form action="">
-                          
+
                           <div class="row">
                             <div class="col-sm-6">
                               <div class="input-group input-group-lg">
@@ -241,16 +242,11 @@
                           <br />
                           <div class="row">
                             <div class="col-sm-6">
-                              <select class="form-control" id="sel1" name="sel1" style="width:60%%;">
-                                <option></option>
-                                <option value="student">Student</option>
-                                <option value="teacher">Teacher</option>
-                                <option value="admin" >Admin</option>
-                              </select>
+                              <select class="js-role form-control" name="js-role" style="width:60%;"></select>
                             </div>
                             <div class="col-sm-6">
                                 <select name="js-dept" class="js-dept form-control input-lg"></select>
-                            </div>  
+                            </div>
                           </div>
                           <br />
                           <br />
@@ -260,26 +256,26 @@
                               <input class="js-student-edit-submit" type="button" value="SUBMIT">
                             </div>
                           </div>
-                          
+
                         </form>
                       </div>
-                    </div>                                         
+                    </div>
                   </div>
-                </div><!-- modal --> 
-                
-                
+                </div><!-- modal -->
 
 
-                
-                <div  class="modal fade left" 
-                      id="deleteStudentModal" 
-                      role="dialog" 
+
+
+
+                <div  class="modal fade left"
+                      id="deleteStudentModal"
+                      role="dialog"
                       aria-labelledby="myModalLabel">
                   <div class="modal-dialog">
                     <div class="pop-up-area students">
-                      <button type="button" 
-                              id="popup-close" 
-                              data-dismiss="modal" 
+                      <button type="button"
+                              id="popup-close"
+                              data-dismiss="modal"
                               aria-label="Close">x</button>
                       <div class="row">
                         <div class="col-sm-6" style="padding-left:10%;">
@@ -295,7 +291,7 @@
                       </div>
                       <div class="popup-body">
                         <form action="">
-                          
+
                           <div class="row">
                             <div class="col-sm-6">
                               <div class="input-group input-group-lg">
@@ -317,10 +313,11 @@
                               <input class="js-student-delete-submit" type="button" value="SUBMIT">
                             </div>
                           </div>
-                          
+
                         </form>
                       </div>
-                    </div>                                         
+                    </div>
                   </div>
-                </div><!-- modal --> 
+                </div><!-- modal -->
+{{/if}}
 </template>

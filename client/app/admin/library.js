@@ -11,9 +11,9 @@ import '../../templates/admin/library.html';
  * CREATED
  */
 Template.library.onCreated(function() {
-  
-  $("#library-cover").show();
-  
+
+  $( "#library-cover" ).show();
+
   /*
    * BOOTSTRAP3-DIALOG
    */
@@ -22,16 +22,16 @@ Template.library.onCreated(function() {
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'Library:: load bootstrap-dialog.min.js fail' );
 //-------------------------------------------------------------------
-  }); 
-  
-  
+  });
+
+
 /*
  * SELECT2
  * multi-select combo box
  */
-  $.getScript('/js/select2.min.js', function() {
-    $(document).ready(function(){
-      $('#search-courses').select2({
+  $.getScript( '/js/select2.min.js', function() {
+    $( document ).ready(function(){
+      $( '#search-courses' ).select2({
         allowClear: true
       });
     });
@@ -50,9 +50,9 @@ Template.library.onCreated(function() {
 Template.library.onRendered(function(){
 
   $( '#library-cover' ).delay( 100 ).fadeOut( 'slow', function() {
-    $("#library-cover").hide();
+    $( "#library-cover" ).hide();
     $( ".filter-buttons" ).fadeIn( 'slow' );
-  });  
+  });
 });
 
 
@@ -60,7 +60,7 @@ Template.library.onRendered(function(){
  * DESTROYED
  */
 Template.library.onDestroyed(function(){
-  Session.set( 'searchTerm', null );    
+  Session.set( 'searchTerm', null );
 });
 
 
@@ -72,25 +72,25 @@ Template.library.helpers({
       let discard = []
         , c = []
         , cids = [];
-        
+
       let own = Courses.find({ company_id: Meteor.user().profile.company_id }).fetch();
       own.forEach(function(el){
         cids.push( el.cid );
       });
 
-      let pub = Courses.find( {$and: [ {public:true},{company_id:{$ne: Meteor.user().profile.company_id}}]}, { _id:1, name:1, credits:1, icon:1, cid:1 }).fetch();
+      let pub = Courses.find( {$and: [ { public:true },{ company_id:{ $ne: Meteor.user().profile.company_id }}]}, { _id:1, name:1, credits:1, icon:1, cid:1 }).fetch();
 
       /* Cycle through pub, and cherry pick out where pub[i].cid == own.cid */
       for( let ii = 0, ilen = pub.length; ii < ilen; ii++ ) {
         for( let i = 0, len = cids.length; i < len; i++ ) {
           if( pub[ii].cid == cids[i] ) discard.push( ii ); //place matches in discard pile
         }
-      }    
+      }
 
     let ought = 0; // need ought to keep delivery array 0 indexed
     for( let i = 0, len = pub.length; i < len; i++ ) {
-      if ( discard.includes(i)) continue; //if in discard pile, move on to next
-      c[ought++] = pub[i];  //not in discard pile, add it to delivery array
+      if ( discard.includes(i) ) continue; //if in discard pile, move on to next
+      c[ ought++ ] = pub[i];  //not in discard pile, add it to delivery array
     }
 
     //c = pub.slice(2);
@@ -103,65 +103,65 @@ Template.library.helpers({
  * EVENTS
  */
 Template.library.events({
-  
+
   /*
-   * CLICK #COURSES-PAGE
+   * #COURSES-PAGE  ::(CLICK)::
    */
   'click #courses-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CLICK #DASHBOARD-PAGE
+   * #DASHBOARD-PAGE  ::(CLICK)::
    */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },
-  
-  
+
+
   /*
-   * CHANGE #SEARCH-COURSES
+   * #SEARCH-COURSES  ::(CHANGE)::
    */
   'change #search-courses'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     let idx = $( e.currentTarget ).val();
-    $('tr').css('border', '');
-    $('tr#' + idx ).css('border', '1px solid');
-    $('html, body').animate({
-      scrollTop: $('tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
+    $( 'tr' ).css( 'border', '' );
+    $( 'tr#' + idx ).css( 'border', '1px solid' );
+    $( 'html, body' ).animate({
+      scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
 //-------------------------------------------------------------------
   },
-  
-  
+
+
    /*
-    * CLICK #ADD
+    * #ADD  ::(CLICK)::
     */
    'click #add'( e, t ) {
      e.preventDefault();
      e.stopImmediatePropagation();
-     
-     let idx = $(e.currentTarget).data('id');
-     let nm  = $(e.currentTarget).data('name');
-     
-     idx = String(idx);
+
+     let idx = $( e.currentTarget ).data( 'id' );
+     let nm  = $( e.currentTarget ).data( 'name' );
+
+     idx = String( idx );
      let c = Courses.findOne({ _id: idx });
 
       BootstrapDialog.show({
         title: "Add Course",
         message:  '<div class="pop-up-area students">' +
-                    '<div class="popup-body">' + 
+                    '<div class="popup-body">' +
                       '<div class="row">' +
                         '<div class="col-sm-6">' +
                             '<p>Add the following course?<br /><span style="color:white;">"' + nm + '"</span></p>' +
@@ -175,10 +175,10 @@ Template.library.events({
             cssClass: 'btn-success',
             action: function( dialog ) {
               /* ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY */
-                            Courses.insert({company_id:Meteor.user().profile.company_id, 
+                            Courses.insert({ company_id:Meteor.user().profile.company_id,
                               cid: c.cid, name: c.name, "icon": "/img/icon-4.png",
-                              credits: c.credits, public: false, times_completed:0});
-              Bert.alert('Class added to your courses', 'success', 'growl-top-right');
+                              credits: c.credits, public: false, times_completed:0 });
+              Bert.alert( 'Class added to your courses', 'success', 'growl-top-right' );
               dialog.close();
             }
           },
@@ -187,7 +187,7 @@ Template.library.events({
             cssClass: 'btn-danger',
             action: function( dialog ) {
               dialog.close();
-            }        
+            }
           }]
         });
 //-------------------------------------------------------------------

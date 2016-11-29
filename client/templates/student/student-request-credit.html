@@ -6,6 +6,7 @@
 </style>
 <div id="cover"></div>
 -->
+{{#if or isStudent isTeacher}}
   <div class="credit-request">
     <div class="credit-request-header">
       <h2>Credit Request</h2>
@@ -35,7 +36,7 @@
         <h4 style="display: inline-block;">
           <input class="js-credit-attachment" style="color: blue;" id="file" type="file" />
         </h4>
-      </span> 
+      </span>
       <br />
       <div class="credit-request-footer-link">
         <button id="cancel" class="disapprove">Cancel</button>
@@ -43,4 +44,5 @@
       </div>
     </div>
   </div>
+{{/if}}
 </template>

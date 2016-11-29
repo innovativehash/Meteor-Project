@@ -7,6 +7,7 @@
 </style>
 <div id="assign-courses-cover"></div>
 -->
+{{#if isAdmin}}
 <div class="dashboard-body-area admin">
   <div class="container">
     <div class="row">
@@ -59,12 +60,12 @@
                       <tr id="{{_id}}">
                         <th class="name"><img src="{{icon}}" alt="">{{name}}</th>
                         <td>
-                          <button id="assign" 
-                                  data-credits="{{credits}}" 
-                                  data-name="{{name}}" 
+                          <button id="assign"
+                                  data-credits="{{credits}}"
+                                  data-name="{{name}}"
                                   data-id="{{_id}}">Click To Assign</button>
-                                  <!-- 
-                                  data-toggle="modal" 
+                                  <!--
+                                  data-toggle="modal"
                                   data-target="#assignCourse"
                                   -->
                         </td>
@@ -78,24 +79,24 @@
               </div>
             </div>
           </div>
-        </div>   
-                                                           
-        <div  id="assign-modal" 
-              class="modal fade left" 
-              tabindex="-1" 
-              role="dialog" 
+        </div>
+
+        <div  id="assign-modal"
+              class="modal fade left"
+              tabindex="-1"
+              role="dialog"
               aria-labelledby="myModalLabel">
           <div class="modal-dialog">
             <div class="pop-up-area">
               <div class="modal-header">
                 <h3 class="modal-title">
-                  Assign Course: 
+                  Assign Course:
                   <span id="course-name" style="color:white;"></span>
                 </h3>
               </div>
-              <button type="button" 
-                      id="popup-close" 
-                      data-dismiss="modal" 
+              <button type="button"
+                      id="popup-close"
+                      data-dismiss="modal"
                       aria-label="Close">
                 <strong>x</strong>
               </button>
@@ -106,9 +107,9 @@
                     <div class="form-group">
                       <div class="col-xs-5">
                         <label class="checkbox-inline">
-                          <input  id="all-students" 
-                                  type="checkbox" 
-                                  data-toggle="toggle" 
+                          <input  id="all-students"
+                                  type="checkbox"
+                                  data-toggle="toggle"
                                   data-offstyle="danger"
                                   data-onstyle="success">
                           <span style="color:white;">&nbsp;&nbsp;<strong>All students</strong></span>
@@ -126,11 +127,11 @@
                     <div class="form-group">
                     <div class="col-xs-5 selectContainer">
                       <label class="checkbox-inline">
-                        <input  id="abn" 
-                                style="" 
-                                type="checkbox" 
-                                data-toggle="toggle" 
-                                data-offstyle="danger" 
+                        <input  id="abn"
+                                style=""
+                                type="checkbox"
+                                data-toggle="toggle"
+                                data-offstyle="danger"
                                 data-onstyle="success">
                         <span style="color:white;">&nbsp;&nbsp;<strong>Names:</strong></span>
                       </label>
@@ -144,11 +145,11 @@
                     </div>
                     <div class="col-xs-5 selectContainer">
                       <label class="checkbox-inline">
-                        <input  id="abd" 
-                                style="margin-bottom:5px;" 
-                                type="checkbox" 
-                                data-offstyle="danger" 
-                                data-onstyle="success" 
+                        <input  id="abd"
+                                style="margin-bottom:5px;"
+                                type="checkbox"
+                                data-offstyle="danger"
+                                data-onstyle="success"
                                 data-toggle="toggle">
                         <span style="color:white;">&nbsp;&nbsp;<strong>Departments:</strong></span>
                       </label>
@@ -169,12 +170,13 @@
                   </div>
                 </form>
               </div>
-            </div>                                         
+            </div>
           </div>
-        </div>   
-        
+        </div>
+
       </div>
     </div>
   </div>
 </div>
+{{/if}}
 </template>

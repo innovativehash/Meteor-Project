@@ -5,6 +5,7 @@
 </style>
 <div id="cover"></div>
 -->
+{{#if isAdmin}}
   <div class="dashboard-body-area">
             <div class="container">
                 <div class="row">
@@ -26,9 +27,9 @@
                                                 <label id="credit-on" for="yes_credit"><img src="/img/on.png" alt=""></label>
                                                 -->
                                               <label class="checkbox-inline">
-                                                <input  id="cr-on" 
-                                                        type="checkbox" 
-                                                        data-toggle="toggle" 
+                                                <input  id="cr-on"
+                                                        type="checkbox"
+                                                        data-toggle="toggle"
                                                         data-offstyle="danger"
                                                         data-onstyle="success">
                                                 <span style="color:white;">&nbsp;&nbsp;<strong>On</strong></span>
@@ -38,7 +39,7 @@
                                             <div class="single-credit-required">
                                                 <input name="credit-required" id="no_credit" type="radio" class="hidden">
                                                 <label id="credit-off" for="no_credit"><img src="/img/off.png" alt=""></label>
-                                            </div>  
+                                            </div>
                                             -->
                                         </div>
                                     </div>
@@ -51,7 +52,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="advance-time-input">
-                                           <input class="js-credits-required" type="number" value="145"> 
+                                           <input class="js-credits-required" type="number" value="145">
                                         </div>
                                     </div>
                                     <div class="col-sm-8">
@@ -86,5 +87,5 @@
                 </div>
             </div>
         </div>
-		
+{{/if}}
 </template>
