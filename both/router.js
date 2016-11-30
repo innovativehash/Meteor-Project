@@ -110,7 +110,7 @@ studentRoutes.route( '/dashboard/course-view/:_id', {
   action: () => {
         //console.log("Params:", params);
         //console.log("Query Params:", queryParams);
-    BlazeLayout.render( 'adminDashboardLayout', {main:"courseView"});
+    BlazeLayout.render( 'courseBuilderLayout', {main:"courseView"});
   }
 });
 
@@ -197,7 +197,7 @@ teacherRoutes.route( '/dashboard/course-view/:_id', {
   action: (params, queryParams) => {
         console.log("Params:", params);
         console.log("Query Params:", queryParams);
-    BlazeLayout.render( 'adminDashboardLayout', {main:"courseView"});
+    BlazeLayout.render( 'courseBuilderLayout', {main:"courseView"});
   }
 });
 

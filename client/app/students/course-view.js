@@ -16,8 +16,8 @@ let b, c, len;
  * CREATED
  *******************************************************************************/
 Template.courseView.onCreated( function() {
-
-  $( '#cover' ).show();
+console.log( 'on created');
+  //$( '#cover' ).show();
 
   this.page   = new ReactiveVar(1);
   this.total  = new ReactiveVar(1);
@@ -29,19 +29,21 @@ Template.courseView.onCreated( function() {
  * RENDERED
  *******************************************************************************/
 Template.courseView.onRendered( function() {
-
+  console.log('in rendered');
+/*
   $( '#cover' ).delay( 1000 ).fadeOut( 'slow',
                                       function() {
                                         $( "#cover" ).hide();
                                         $( ".dashboard-header-area" ).fadeIn( 'slow' );
                                       }
   );
-
+*/
   //let self = this;
   //self.subscribe("name", function() {
 
     this.autorun(function() { //self
       try {
+        console.log( 'in try' );
         let no  = Template.instance().page.get();
         let b   = Courses.findOne({ _id: FlowRouter.getQueryParam( "course" ) }).built_id;
         let c   = BuiltCourses.findOne({ _id: b });
@@ -53,21 +55,24 @@ Template.courseView.onRendered( function() {
 
           // REGULAR PAGES
           if ( c.pages[no].page.indexOf( "data" ) != -1) {
+            console.log('data');
             $( '#fb-template' ).html( '<img id="pg" data="{{course}}">' );
             $( '#pg' ).attr( 'src', c.pages[no].page );
             $( '#pg' ).show();
 
           // VIDEO PAGES
           } else if ( c.pages[no].page.indexOf( "<iframe" ) != -1) {
+            console.log('video')
             $( '#pg' ).hide();
             $( '#fb-template' ).html( c.pages[no].page );
           }
           // WILL NEED TO CODE PP, PDF, SCORM
         }
       } catch(e) {
+        console.log( e );
         return;
       }
-    });
+    }); //autorun
   //});
 
 });
@@ -81,9 +86,11 @@ Template.courseView.onRendered( function() {
 Template.courseView.helpers({
 
   course: () => {
-    /*
-      THIS IS JUST HERE TO "CALL" THE ONRENDERED AUTORUN FUNCTION
-    */
+    console.log('in course');
+    //
+    //  THIS IS JUST HERE TO "CALL" THE ONRENDERED AUTORUN FUNCTION
+    //
+    return;
   },
 
   fname: () => {
@@ -99,6 +106,7 @@ Template.courseView.helpers({
 
   total: () =>
     Template.instance().total.get()
+
 });
 //-------------------------------------------------------------------
 
@@ -112,14 +120,14 @@ Template.courseView.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
-/*
-    if ( p != -1 ) {
+    if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
-    } else {
+    } else if ( Meteor.user().roles.admin ) {
       FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+    } else if ( Meteor.user().roles.student ) {
+      FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
     }
-*/
+
 //-------------------------------------------------------------------
   },
 

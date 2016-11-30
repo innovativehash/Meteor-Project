@@ -1,11 +1,11 @@
 
 <template name = "courseView">
-
+<!--
 <style>
   #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
 </style>
 <div id="cover"></div>
-
+-->
 
 <div class="dashboard-header-area">
   <div class="container">
@@ -121,7 +121,7 @@
             <div  id    = "fb-template"
                 style = "background-color:white"
                 class = "curse-builder-box centered-block">
-               <img id="pg" data="{{course}}">
+              <img id="pg" data="{{course}}">
           <!-- <iframe src="https://drive.google.com/file/d/0B95ONdgFGqdVbTR3T01FLXc1Rnc/preview" width="640" height="300"></iframe> -->
           </div>
 
@@ -157,23 +157,4 @@
   </div><!-- container -->
 </div><!-- dashboard-body-areaa footer-page -->
 
-
-
-
-
-<script type="text/javascript">
-  check = function ( e, value ) {
-    if ( !e.target.validity.valid ) {
-        e.target.value = value.substring( 0, value.length - 1 );
-        return false;
-    }
-    var idx = value.indexOf( '.' );
-    if ( idx >= 0 && value.length - idx > 3 ) {
-        e.target.value = value.substring( 0, value.length - 1 );
-        return false;
-    }
-    return true;
-  }
-
-</script>
 </template>

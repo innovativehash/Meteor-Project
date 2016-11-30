@@ -43,6 +43,7 @@ Template.studentRecords.helpers({
     try {
       a = ( Students.find({ _id: Meteor.userId() }, {}).fetch()[0].approved_courses );
     } catch( e ) {
+      console.log( e );
       return;
     }
     var lim = a.length;
@@ -59,6 +60,7 @@ Template.studentRecords.helpers({
     try {
       c = ( Students.find({ _id: Meteor.userId() }, {}).fetch()[0].current_courses );
     } catch(e) {
+      console.log( e );
       return;
     } 
     var lim = c.length;

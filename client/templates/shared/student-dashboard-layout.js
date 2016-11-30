@@ -89,7 +89,8 @@ Template.studentDashboardLayout.helpers({
 */
   avatar() {
     try{
-      return Students.findOne({ _id: Meteor.userId() }).avatar;
+      //return Students.findOne({ _id: Meteor.userId() }).avatar;
+      return Meteor.user().profile.avatar;
     } catch(e) {
       return;
     }

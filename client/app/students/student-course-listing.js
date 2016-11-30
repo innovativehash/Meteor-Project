@@ -154,16 +154,16 @@ Template.studentCourseListing.events = {
   'click #course-button': function ( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+/*
     //teacher to assign this course
     if ( $(this)[0].buttonText == 'ASSIGN' ) {
 
       console.log( 'bufu');
     } else {
-
+*/    //BEGIN button should use student route
       let course = $( e.currentTarget ).data( 'id' );
-      FlowRouter.go( '/student/dashboard/course-view/' + Meteor.userId() + `?course=${course}`);
-    }
+      FlowRouter.go( '/teacher/dashboard/course-view/' + Meteor.userId() + `?course=${course}`);
+//    }
 
     //text value of button: begin, continue, completed/retake
     //console.log( e.currentTarget.firstChild.nodeValue );
