@@ -2945,6 +2945,7 @@ body.login {
     padding: 30px;
     margin-top: 60px;
     min-height: 375px;
+    max-height: 425px;
     position: relative;
 }
 

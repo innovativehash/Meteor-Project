@@ -5,6 +5,7 @@ import { ReactiveVar }    from 'meteor/reactive-var';
 import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
 import { Courses }        from '../../../both/collections/api/courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
+import { Scratch }        from '../../../both/collections/api/scratch.js';
 
 import '../../templates/student/course-view.html';
 
@@ -16,11 +17,11 @@ let b, c, len;
  * CREATED
  *******************************************************************************/
 Template.courseView.onCreated( function() {
-console.log( 'on created');
+  
   //$( '#cover' ).show();
 
-  this.page   = new ReactiveVar(1);
-  this.total  = new ReactiveVar(1);
+  this.page       = new ReactiveVar(1);
+  this.total      = new ReactiveVar(1);
 });
 
 
@@ -29,7 +30,7 @@ console.log( 'on created');
  * RENDERED
  *******************************************************************************/
 Template.courseView.onRendered( function() {
-  console.log('in rendered');
+  $('#yosco').hide();
 /*
   $( '#cover' ).delay( 1000 ).fadeOut( 'slow',
                                       function() {
@@ -43,30 +44,52 @@ Template.courseView.onRendered( function() {
 
     this.autorun(function() { //self
       try {
-        console.log( 'in try' );
         let no  = Template.instance().page.get();
         let b   = Courses.findOne({ _id: FlowRouter.getQueryParam( "course" ) }).built_id;
         let c   = BuiltCourses.findOne({ _id: b });
 
         Template.instance().total.set( c.pages.length -1 );
 
-
         if ( c.pages[no].page != null ) {
 
           // REGULAR PAGES
           if ( c.pages[no].page.indexOf( "data" ) != -1) {
-            console.log('data');
+            $( '#test_v' ).hide();
             $( '#fb-template' ).html( '<img id="pg" data="{{course}}">' );
             $( '#pg' ).attr( 'src', c.pages[no].page );
-            $( '#pg' ).show();
-
+            $( '#fb-template' ).show();
+            
           // VIDEO PAGES
           } else if ( c.pages[no].page.indexOf( "<iframe" ) != -1) {
-            console.log('video')
-            $( '#pg' ).hide();
+            Bert.alert({
+                        title: 'Loading Video',
+                        message: 'Give it a few seconds to load...',
+                        type: 'success',
+                        style: 'growl-top-right',
+                        icon: 'fa-youtube'
+                      });
+                      
+            $( '#test_v' ).hide();
             $( '#fb-template' ).html( c.pages[no].page );
-          }
+            $( '#fb-template' ).show();
+            
+          // TEST PAGES
+          } else if ( c.pages[no].type == 'test') {
+            ////////////////////////////////////////////////////////////////////
+            //  NOTES:                                                        //
+            //  Need to pre-seed scratch db so that it is ready BEFORE this   //
+            //  this point is reached.  Then need to remove this record before//
+            //  Module is left, so that there is only ever one record in      //
+            //  scratch.  If there are x tests, preseed the first, remove     //
+            //  after test is taken.  Seed for the next, lather, rinse, repeat//
+            ////////////////////////////////////////////////////////////////////
+            
+            $( '#fb-template' ).hide();
+    Scratch.insert({ id:  c.pages[no].page });
+            $( '#test_v' ).show();
+            
           // WILL NEED TO CODE PP, PDF, SCORM
+          }
         }
       } catch(e) {
         console.log( e );
@@ -86,10 +109,8 @@ Template.courseView.onRendered( function() {
 Template.courseView.helpers({
 
   course: () => {
-    console.log('in course');
     //
     //  THIS IS JUST HERE TO "CALL" THE ONRENDERED AUTORUN FUNCTION
-    //
     return;
   },
 
@@ -119,7 +140,7 @@ Template.courseView.events({
   'click .page-back-home'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
     } else if ( Meteor.user().roles.admin ) {

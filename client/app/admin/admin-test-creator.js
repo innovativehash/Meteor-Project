@@ -1,3 +1,7 @@
+/*
+ * programmer: Nick Sardo <nsardo@msn.com>
+ * copyright : 2016-2017 Collective Innovation
+ */
 
 import { Tests }     from '../../../both/collections/api/tests.js';
 
@@ -42,7 +46,10 @@ Template.adminTestCreator.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    //todo: if a test hasn't been saved, remove() the _id
+    //////////////////////////////////////////////////////////
+    // TODO: if a test hasn't been saved, remove() the _id  //
+    /////////////////////////////////////////////////////////
+
     //if ( FlowRouter.current().path.indexOf( 'teacher' ) != -1 ) {
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
@@ -60,7 +67,15 @@ Template.adminTestCreator.events({
    * .JS-TEST-COMPLETE  ::(CLICK)::
    */
   'click .js-test-complete'( e, t ){
-    let lastId      = t.$( 'div#ans-mc input:last' ).attr( 'id' );
+    let lastId  = t.$( 'div#ans-mc input:last' ).attr( 'id' );
+    let tot_q   =  t.$( '[ name="qnum" ]' ).val();
+    
+    Number(total_questions--);
+    
+    Tests.update( { _id: testidnum },
+                  {$set: {total_questions: tot_q} }
+                );
+                
     //clear out added dom elements
     if ( lastId != 'C' ){
       for( let i = 3; i <= spread; i++ ){
@@ -79,6 +94,13 @@ Template.adminTestCreator.events({
 
     if ( ! t.$( '#ans-mc' ).hasClass( 'hide' ) )
       t.$( '#ans-mc' ).addClass( 'hide' );
+
+    //RETURN TO COURSE BUILDER
+    if ( Meteor.user().roles.teacher ) {
+      FlowRouter.go( `/teacher/dashboard/course-builder/${Meteor.userId()}?rtn=test&id=${testidnum}` );
+    } else if ( Meteor.user().roles.admin ) {
+      FlowRouter.go( `/admin/dashboard/course-builder/${Meteor.userId()}?rtn=test&id=${testidnum}` );
+    }
 //-------------------------------------------------------------------
   },
 
@@ -88,16 +110,16 @@ Template.adminTestCreator.events({
    * #TEST-NAME  ::(BLUR)::
    */
   'blur #test-name'( e, t ){
-    console.log( FlowRouter.current().path.slice( FlowRouter.current().path.indexOf('?') + 1 ) );
-    return;
-      Tests.insert({
-        test_name: t.$( '#test-name' ).val(),
-        company_id: Meteor.user().profile.company_id
-      });
+    //let course_name = FlowRouter.current().path.slice( FlowRouter.current().path.indexOf('?') + 1 );
+
+      testidnum = Tests.insert({
+                                test_name: t.$( '#test-name' ).val(),
+                                company_id: Meteor.user().profile.company_id
+                              });
 
       Meteor.setTimeout(function(){
         let testName  = t.$( '#test-name' ).val();
-        testidnum     = Tests.findOne({ test_name: testName })._id;
+        //testidnum     = Tests.findOne({ test_name: testName })._id;
       }, 200);
 
       t.$( '#test-name' ).attr( 'readonly', true);
@@ -108,48 +130,68 @@ Template.adminTestCreator.events({
 
   /*
    * #TF  ::(CLICK)::
+   *
+   * SELECT TRUE/FALSE ANSWER TYPE
    */
   'click #tf'( e, t ) {
 
     t.$( '#ans-tf' ).removeClass( 'hide' );
-    t.$( '#ans-mc' ).addClass( 'hide' );
+    t.$( '#ans-mc' ).addClass(    'hide' );
 //-------------------------------------------------------------------
   },
 
 
   /*
    * #MC  ::(CLICK)::
+   *
+   * SELECt MULTIPLE CHOICE ANSWER TYPE
    */
   'click #mc'( e, t ){
 
     t.$( '#ans-mc' ).removeClass( 'hide' );
-    t.$( '#ans-tf' ).addClass( 'hide' );
+    t.$( '#ans-tf' ).addClass(    'hide' );
 //-------------------------------------------------------------------
   },
 
 
   /*
    * #MC-SUBMIT  ::(CLICK)::
+   *
+   * SUBMIT MULTIPLE CHOICE ANSWERS FOR CURRENT QUESTION
    */
   'click #mc-submit'( e, t ){
 
-    let answers   = [];
+    let answers     = [];
+
     //test name
-    let nm  = t.$( '#test-name' ).val();
+    let nm          = t.$( '#test-name' ).val();
+
     //question
     let q           = t.$( '#question' ).val();
+
     //correct answer
-    let correct_a   = $( '#correct_ans' ).val();
+    let correct_a   = $( '#correct_ans' ).val(); //A, B, C
+    let correct_ans;
+    
     //id of last multiple choice answer
     let lastId      = t.$( 'div#ans-mc input:last' ).attr( 'id' );
+
     //converted to ascii code
     let lastIdAscii = lastId.charCodeAt(0);
+
     //compute end of answers
     let spread      = lastIdAscii - 65; // 0 = 65, 1 = 66, 2 = 67, etc.
+
     //serialize
     for( let i = 0; i <= spread; i++ ){
-      answers[i] = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
+      if ( t.$( '#' + String.fromCharCode( i + 65 ) ).val() != '' ) {
+        answers[i] = t.$( '#' + String.fromCharCode( i + 65 ) ).val(); //65 = A
+        if ( t.$( '#' + String.fromCharCode( i + 65 ) ) == correct_a ) {
+          correct_ans = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
+        }
+      }
     }
+    
     //clear out added dom elements
     if ( lastId != 'C' ){
       for( let i = 3; i <= spread; i++ ){
@@ -163,13 +205,34 @@ Template.adminTestCreator.events({
     //current question number
     let questionNum    =  t.$( '[ name="qnum" ]' ).val();
     let currentQuestionNumber = questionNum;
+
     //bump question number to next
     Number( questionNum++ );
     t.$( '[ name="qnum" ]' ).val( questionNum );
 
-    Tests.update({ _id: testidnum }, { $addToSet:{ questions: {
-      question_num:currentQuestionNumber, question: q, answers: answers, correct_answer: correct_a, question_type: 'mc' }}}
+    let num_ans = answers.length;
+    Tests.update( { _id: testidnum },
+                  { $addToSet:
+                    { questions:
+                      {
+                        question_num:currentQuestionNumber,
+                        question: q,
+                        answers: answers,
+                        num_answers: num_ans,
+                        correct_answer: correct_ans,
+                        question_type: 'mc'
+                      }
+                    }
+                  }
     );
+
+    //CLEAR INITIAL MULTIPLE CHOICE ANSWER BOXES
+    t.$('#A').val('');
+    t.$('#B').val('');
+    t.$('#C').val('');
+
+    //CLEAR QUESTION
+    t.$( '#question' ).val('');
 
     t.$( '#ans-mc' ).addClass( 'hide' );
 //-------------------------------------------------------------------
@@ -178,6 +241,8 @@ Template.adminTestCreator.events({
 
   /*
    * #TF-SUBMIT  ::(CLICK)::
+   *
+   * SUBMIT TRUE/FALSE ANSWERS TO CURRENT QUESTION
    */
   'click #tf-submit'( e, t ){
     e.preventDefault();
@@ -194,8 +259,18 @@ Template.adminTestCreator.events({
     //and set it
     t.$( '[ name="qnum" ]' ).val( questionNum );
 
-    Tests.update({ _id: testidnum}, {$addToSet:{ questions: {
-      question_num:currentQuestionNumber, question: q, correct_answer: correct_a, question_type: 'tf' }}}
+    Tests.update( { _id: testidnum},
+                  { $addToSet:
+                    { questions:
+                      {
+                        question_num:currentQuestionNumber,
+                        question: q,
+                        correct_answer:
+                        correct_a,
+                        question_type: 'tf'
+                      }
+                    }
+                  }
     );
 
     //clean up the ui
@@ -209,6 +284,8 @@ Template.adminTestCreator.events({
 
   /*
    * #PLUS  ::(CLICK)::
+   *
+   * ADD ADDITIONAL MULTIPLE CHOICE ANSWERS
    */
   'click #plus'( e, t ){
 

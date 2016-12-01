@@ -118,13 +118,26 @@
             <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="100%" x2="100%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
           </svg>
           -->
+            <div class="centered-block">
+              <h1 style="display:inline-block;">
+                <span class="label label-primary">Course Viewer</span>
+              </h1>
+              <h1 style="margin-left:300px;display:inline-block;" id="yosco">
+                <span class="label label-primary">Your Score: </span>
+                <span id="score" class="label"></span>
+              </h1>
+            </div>
+          
             <div  id    = "fb-template"
-                style = "background-color:white"
+                style = "background-color:white;"
                 class = "curse-builder-box centered-block">
-              <img id="pg" data="{{course}}">
-          <!-- <iframe src="https://drive.google.com/file/d/0B95ONdgFGqdVbTR3T01FLXc1Rnc/preview" width="640" height="300"></iframe> -->
-          </div>
-
+                <!-- <iframe src="https://drive.google.com/file/d/0B95ONdgFGqdVbTR3T01FLXc1Rnc/preview" width="640" height="300"></iframe> -->
+            </div>
+            <div  id="test_v" 
+                  class="curse-builder-box centered-block"
+                  style="overflow-y:scroll;">
+              {{> testView}}
+            </div>
         </div><!-- row -->
       </div><!-- col-sm-12 -->
     </div><!-- row -->

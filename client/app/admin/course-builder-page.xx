@@ -48,8 +48,7 @@ Template.courseBuilderPage.onCreated( function() {
                           pdfs:0,
                           ppts:0,
                           videos:0,
-                          scorms:0,
-                          tests:0
+                          scorms:0
                         };
 
   this.titlesTracker  = [];
@@ -57,7 +56,6 @@ Template.courseBuilderPage.onCreated( function() {
   this.imagesTracker  = [];
 
   let that = this;
-
   /*
    * JQUERY-UI
    */
@@ -94,7 +92,6 @@ Template.courseBuilderPage.onCreated( function() {
 
     // DIALOG ITALIC BUTTON
     $( '#js-italic-button' ).on( "click", function(e){
-
       let italic  = $( '#js-cb-text-dialog' ).val()
         , id      = italic.slice( italic.lastIndexOf( '-' ) + 1 );
 
@@ -112,7 +109,6 @@ Template.courseBuilderPage.onCreated( function() {
 
     // DIALOG UNDERLINE BUTTON
     $( '#js-underline-button' ).on( "click", function(e){
-
       let underline = $( '#js-cb-text-dialog' ).val()
         , id        = underline.slice( underline.lastIndexOf( '-' ) + 1);
 
@@ -236,13 +232,12 @@ Template.courseBuilderPage.onCreated( function() {
                   Bert.alert( 'A Test must be the only item on the page!', 'danger', 'fixed-top', 'fa-frown-o' );
                   return;
             } else {
-
-              Session.set( 'obj', tbo );
+              //$( '#add-test' ).modal( 'show' );
 
               if ( Meteor.user().roles.teacher ) {
                 FlowRouter.go( '/teacher/dashboard/test-maker/' + Meteor.userId() + `?${tbo.name}` );
               } else if ( Meteor.user().roles.admin ) {
-                FlowRouter.go( '/admin/dashboard/test-maker/' + Meteor.userId()   + `?${tbo.name}` );
+                FlowRouter.go( '/admin/dashboard/test-maker/' + Meteor.userId() + `?${tbo.name}` );
               }
             }
             break;
@@ -285,7 +280,7 @@ Template.courseBuilderPage.onCreated( function() {
         tags: true
       });
     });
-    //console.log('CB:: chosen,jquery.min.js loaded...');
+    //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'CB:: load select2.js fail' );
   });
@@ -296,7 +291,7 @@ Template.courseBuilderPage.onCreated( function() {
    * HTML2CANVAS
    */
   $.getScript( '/js/html2canvas.js', function() {
-    //console.log('CB:: chosen,jquery.min.js loaded...');
+    //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'CB:: load html2canvas.js fail' );
   });
@@ -318,19 +313,7 @@ Template.courseBuilderPage.onRendered( function() {
                                       }
   );
 
-  if (  FlowRouter.getQueryParam( "rtn" ) &&
-        FlowRouter.getQueryParam( "id"  )
-     )
-  {
-    //RESTORE THE SESSION
-    tbo = Session.get('obj');
-    Session.set( 'obj', null );
-    Session.set( 'test_id', FlowRouter.getQueryParam("id"));
-
-    //Save the test
-    $('#cb-next-btn').click();
-    return;
-  }
+  //let exp = p.indexOf( 'admin' );
 
   Meteor.setTimeout(function(){
     $( '#intro-modal' ).modal( 'show' );
@@ -383,6 +366,12 @@ let tbo         = {};
   tbo.videos  = [];
   tbo.pages   = [];
 
+    tbo.name            = "Bobo Dobo";
+    tbo.credits         = 3;
+    tbo.passing_percent = 60;
+    tbo.keywords        = ['this','that'];
+    tbo.icon            = "/img/icon-4.png";
+
 
 /* *****************************************************************************
  * EVENTS
@@ -427,48 +416,16 @@ Template.courseBuilderPage.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if ( t.page.get() < tbo.page ) {
-        t.page.set( tbo.page );
-    }
-    if ( t.total.get() < tbo.total ) {
-      t.total.set( tbo.total );
-    }
-
-    //SAVE TEST (IT'S OUTSIDE MAIN FLOW SO NEEDS TO BE CHECKED FIRST)
-    if ( Session.get('test_id') ) {
-
-      tbo.pages[ t.page.get() ] = {
-                                    no: tbo.page,
-                                    page: Session.get('test_id'),
-                                    type: "test"
-                                  };
-
-      Session.set('test_id', null);
-      t.contentTracker.tests = 0;
-
-      t.page.set( t.page.get()    + 1);
-      t.total.set( t.total.get()  + 1);
-
-      tbo.page  = t.page.get();
-      tbo.total = t.total.get();
-      Bert.alert( 'Page successfully added.', 'success', 'growl-top-right' );
-
-      return;
-    }
-
-
     if (  t.contentTracker.titles == 0 &&
           t.contentTracker.texts  == 0 &&
           t.contentTracker.images == 0 &&
           t.contentTracker.videos == 0 &&
           t.contentTracker.pdfs   == 0 &&
           t.contentTracker.ppts   == 0 &&
-          t.contentTracker.scorms == 0 &&
-          t.contentTracker.tests  == 0
+          t.contentTracker.scorms == 0
         )
     {
           Bert.alert( 'There is no content!', 'danger', 'fixed-top', 'fa-frown-o' );
-          $(e.currentTarget).prop('disabled', false);
           return;
     }
 
@@ -489,38 +446,33 @@ Template.courseBuilderPage.events({
       $(`#ig-${el}`).off("mouseup");
     });
 
-    //SAVE VIDEO
+
     if ( tbo.videos.length ) {
-      tbo.pages[ t.page.get() ] = tbo.videos[0];
-      tbo.videos                = [];
+      tbo.pages[ Template.instance().page.get() ] = tbo.videos[0];
+      tbo.videos  = [];
 
       // CLEAR THE DIV
       $( '#fb-template' ).empty();
 
       // CLEAR CONTENT TRACKER
-      t.contentTracker.videos = 0;
+      contentTracker.videos = 0;
 
       // ADVANCE PAGE COUNTS
-      t.page.set(  t.page.get()    + 1 );
-      t.total.set( t.total.get()   + 1 );
-
-      tbo.page  = t.page.get();
-      tbo.total = t.total.get();
+      Template.instance().page.set( Template.instance().page.get()    + 1 );
+      Template.instance().total.set( Template.instance().total.get()  + 1 );
       Bert.alert( 'Page successfully added.', 'success', 'growl-top-right' );
-
       return;
     }
 
-
-    //SAVE TITLES, TEXT, IMAGES
     Bert.alert( 'Adding...', 'success', 'growl-top-right' );
-    let p   = t.page.get();
+    let p   = Template.instance().page.get();
 
     //LOCK THINGS OUT FOR NORMAL ITEM INFO POP-UP TIMER
     Meteor.setTimeout(function(){
+
       let img = new Image();
 
-      html2canvas(document.getElementById( 'fb-template' )).then( function(canvas) {
+      html2canvas(document.getElementById('fb-template')).then(function(canvas) {
         //document.body.appendChild(canvas);
         img = canvas.toDataURL()
 
@@ -532,7 +484,7 @@ Template.courseBuilderPage.events({
 
         //document.getElementById("foo").src = img;
       });
-    }, 2000);
+    }, 2200);
 
     // CLEAR THE CONTENT TRACKER
     t.contentTracker.titles = 0;
@@ -542,7 +494,6 @@ Template.courseBuilderPage.events({
     t.contentTracker.pdfs   = 0;
     t.contentTracker.ppts   = 0;
     t.contentTracker.scorms = 0;
-    t.contentTracker.tests  = 0;
 
     t.titlesTracker = [];
     t.textsTracker  = [];
@@ -551,11 +502,6 @@ Template.courseBuilderPage.events({
     // ADVANCE PAGE COUNTS
     t.page.set(   p   + 1 );
     t.total.set(  p   + 1 );
-    //shadow page counts
-    tbo.page = t.page.get();
-    tbo.total = t.total.get();
-
-
 /*
     // RE-INITIALIZE VARIABLES
     tbo.titles  = [];
@@ -599,11 +545,6 @@ Template.courseBuilderPage.events({
 
       , keys    = t.$( '#tags' ).val();
 
-      if ( name == '' || credits == '' || percent == '' || keys == '' ) {
-        Bert.alert( 'All fields must be filled out!', 'danger', 'fixed-top', 'fa-frown-o' );
-        return;
-      }
-      
       tbo.name            = name;
       tbo.credits         = credits;
       tbo.passing_percent = percent;
@@ -618,24 +559,7 @@ Template.courseBuilderPage.events({
 
 
 
-  /*
-   * #EXIT-CB  ::(CLICK)::
-   *
-   * Intro Modal Dialog
-   */
-  'click #exit-cb'( e, t ) {
-    t.$( '#intro-modal' ).modal( 'hide' );
-    
-    if ( Meteor.user().roles.teacher ) {
-      FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles.admin ) {
-      FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-    } 
-  },
-  
-  
-  
-  
+
   /*
    *
    * #CB-SAVE  ::(CLICK)::
@@ -695,14 +619,6 @@ Template.courseBuilderPage.events({
     Meteor.setTimeout(function(){
       Bert.alert( 'Your test was saved!', 'success', 'growl-top-right' );
     }, 500);
-    
-    Meteor.setTimeout(function(){
-      if ( Meteor.user().roles.teacher ) {
-        FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
-      } else if ( Meteor.user().roles.admin ) {
-        FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-      }
-    }, 1000);
 
     Template.instance().page.set( 1 );
     Template.instance().total.set( 1 );

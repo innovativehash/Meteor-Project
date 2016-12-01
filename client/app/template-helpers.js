@@ -9,6 +9,10 @@ Template.registerHelper( 'or', ( a, b  ) => {
   return a || b;
 });
 
+Template.registerHelper('eq', function (a, b) {
+  return a === b;
+});
+
 Template.registerHelper( 'isStudent', () => {
   try {
     return Meteor.user().roles.student;
