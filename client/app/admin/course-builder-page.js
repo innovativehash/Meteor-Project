@@ -56,6 +56,9 @@ Template.courseBuilderPage.onCreated( function() {
   this.textsTracker   = [];
   this.imagesTracker  = [];
 
+  this.page.set(1);
+  this.total.set(1);
+  
   let that = this;
 
   /*
@@ -645,7 +648,7 @@ Template.courseBuilderPage.events({
   'click #cb-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    t.$( '#intro-modal' ).modal( 'hide' );
     if (
         t.page.get() === 1
        )
@@ -664,7 +667,8 @@ Template.courseBuilderPage.events({
     let role  = ( Meteor.user().roles.teacher ) ? "teacher" : "admin"
       , cid   = Meteor.user().profile.company_id
       , uid   = Meteor.userId()
-      , apv   = ( Meteor.user().roles.teacher ) ? false : true
+      //, apv   = ( Meteor.user().roles.teacher ) ? false : true
+      , apv   = true
       , cd    = new Date();
 
     let built_id = BuiltCourses.insert({
@@ -696,16 +700,21 @@ Template.courseBuilderPage.events({
       Bert.alert( 'Your test was saved!', 'success', 'growl-top-right' );
     }, 500);
     
-    Meteor.setTimeout(function(){
+
       if ( Meteor.user().roles.teacher ) {
-        FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
+
+      let params      = { _id: Meteor.userId() };
+      let routeName   = "teacher-dashboard";
+      let path        = FlowRouter.path( routeName, params );
+      FlowRouter.go( path );
+      //FlowRouter.go( '/teacher/dashboard/' + Meteor.userId() );
       } else if ( Meteor.user().roles.admin ) {
         FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
       }
-    }, 1000);
 
-    Template.instance().page.set( 1 );
-    Template.instance().total.set( 1 );
+
+    //Template.instance().page.set( 1 );
+    //Template.instance().total.set( 1 );
 //-------------------------------------------------------------------
   },
 

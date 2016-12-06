@@ -70,7 +70,7 @@ Template.adminTestCreator.events({
     let lastId  = t.$( 'div#ans-mc input:last' ).attr( 'id' );
     let tot_q   =  t.$( '[ name="qnum" ]' ).val();
     
-    Number(total_questions--);
+    Number(tot_q--);
     
     Tests.update( { _id: testidnum },
                   {$set: {total_questions: tot_q} }
@@ -185,8 +185,8 @@ Template.adminTestCreator.events({
     //serialize
     for( let i = 0; i <= spread; i++ ){
       if ( t.$( '#' + String.fromCharCode( i + 65 ) ).val() != '' ) {
-        answers[i] = t.$( '#' + String.fromCharCode( i + 65 ) ).val(); //65 = A
-        if ( t.$( '#' + String.fromCharCode( i + 65 ) ) == correct_a ) {
+        answers[i] = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
+        if ( String.fromCharCode( i + 65 ) == correct_a ) {
           correct_ans = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
         }
       }

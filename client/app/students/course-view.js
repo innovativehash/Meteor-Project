@@ -54,6 +54,12 @@ Template.courseView.onRendered( function() {
 
           // REGULAR PAGES
           if ( c.pages[no].page.indexOf( "data" ) != -1) {
+            
+            //pre-cache test id if it's the next question
+            if ( c.pages[no + 1].type == "test" ) {
+              Scratch.insert({ id:  c.pages[no + 1].page });
+            }
+            
             $( '#test_v' ).hide();
             $( '#fb-template' ).html( '<img id="pg" data="{{course}}">' );
             $( '#pg' ).attr( 'src', c.pages[no].page );
@@ -61,6 +67,12 @@ Template.courseView.onRendered( function() {
             
           // VIDEO PAGES
           } else if ( c.pages[no].page.indexOf( "<iframe" ) != -1) {
+            
+            //pre-cache test id if it's the next question
+            if ( c.pages[no + 1].type == "test" ) {
+              Scratch.insert({ id:  c.pages[no + 1].page });
+            }
+            
             Bert.alert({
                         title: 'Loading Video',
                         message: 'Give it a few seconds to load...',
@@ -85,7 +97,6 @@ Template.courseView.onRendered( function() {
             ////////////////////////////////////////////////////////////////////
             
             $( '#fb-template' ).hide();
-    Scratch.insert({ id:  c.pages[no].page });
             $( '#test_v' ).show();
             
           // WILL NEED TO CODE PP, PDF, SCORM

@@ -162,7 +162,12 @@ Template.studentCourseListing.events = {
     } else {
 */    //BEGIN button should use student route
       let course = $( e.currentTarget ).data( 'id' );
-      FlowRouter.go( '/teacher/dashboard/course-view/' + Meteor.userId() + `?course=${course}`);
+      //FlowRouter.go( '/teacher/dashboard/course-view/' + Meteor.userId() + `?course=${course}`);
+      let queryParams = { course: `${course}` };
+      let params      = { _id: Meteor.userId() };
+      let routeName   = "teacher-course-view";
+      let path = FlowRouter.path( routeName, params, queryParams );
+      FlowRouter.go( path );
 //    }
 
     //text value of button: begin, continue, completed/retake

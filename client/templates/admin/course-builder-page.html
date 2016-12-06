@@ -7,37 +7,8 @@
 </style>
 <div id="cover"></div>
 
+
 {{#if or isTeacher isAdmin}}
-<div id="dialog" title="Text Options" style="z-index:12">
-  <p>
-    <input type="hidden" id="js-cb-text-dialog">
-  </p>
-  <p>
-    <strong>Style:</strong>
-    <div class="btn-group" data-toggle="buttons" autofocus>
-      <label id="js-bold-button" class="btn btn-default" style="margin-right:10px;"><!-- class active -->
-        <input type="checkbox"><i class="fa fa-bold" aria-hidden="true"></i><!-- checked -->
-      </label>
-      <label id="js-italic-button" class="btn btn-default" style="margin-right:10px;">
-        <input type="checkbox"><i class="fa fa-italic" aria-hidden="true"></i>
-      </label>
-      <label id="js-underline-button" class="btn btn-default" style="margin-right:10px;">
-        <input type="checkbox"><i class="fa fa-underline" aria-hidden="true"></i>
-      </label>
-    </div>
-  </p>
-
-  <hr>
-
-  <p>
-    <strong>Opacity:</strong>
-    &nbsp;&nbsp;<label for="slider-range" style="vertical-allign:middle;display:inline-block;">100</label>
-    <div id="slider-range"></div>
-  </p>
-
-</div>
-
-
 <div class="dashboard-header-area">
   <div class="container">
     <div class="row">
@@ -277,6 +248,9 @@
     </div><!-- row -->
   </div><!-- container -->
 </div><!-- dashboard-body-areaa footer-page -->
+
+
+
 
 
 
@@ -644,20 +618,7 @@
     </div>
   </div>
 </div><!-- modal -->
-{{/if}}
-<script type="text/javascript">
-  check = function ( e, value ) {
-    if ( !e.target.validity.valid ) {
-        e.target.value = value.substring( 0, value.length - 1 );
-        return false;
-    }
-    var idx = value.indexOf( '.' );
-    if ( idx >= 0 && value.length - idx > 3 ) {
-        e.target.value = value.substring( 0, value.length - 1 );
-        return false;
-    }
-    return true;
-  }
 
-</script>
+{{/if}}
+
 </template>

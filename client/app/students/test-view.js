@@ -7,18 +7,26 @@ import { Scratch }        from '../../../both/collections/api/scratch.js';
 
 import '../../templates/student/test-view.html';
 
+let id;
+
+
 Template.testView.onCreated(function(){
     
 });
 
+
+
 Template.testView.onRendered(function(){
+  
 });
+
+
 
 Template.testView.helpers({
   
   test() {
 
-    let id = Scratch.findOne({});
+    id = Scratch.findOne({});
     try{
       return Tests.findOne({ _id: id.id });
     } catch(e) {
@@ -62,6 +70,8 @@ Template.testView.events({
     $('#score').text( percent + '%' );
     
     $('#submit-answers').prop('disabled', true);
+    
+    Scratch.remove({ _id: id._id });
   }
 });
 
