@@ -1,0 +1,192 @@
+<template name="addEditEventModal">
+    
+  <div  class           = "modal fade" 
+        id              = "add-edit-event-modal" 
+        tabindex        = "-1" 
+        role            = "dialog" 
+        aria-labelledby = "add-edit-event-modal">
+      
+  <div  class = "modal-dialog" 
+        role  = "document">
+      
+    <div class = "modal-content">
+      
+      <div class = "modal-header">
+        <button type          = "button" 
+                class         = "close" 
+                data-dismiss  = "modal" 
+                aria-label    = "Close">
+          <span aria-hidden   = "true">
+            &times;
+          </span>
+        </button>
+        
+        <h4 class = "modal-title" 
+            id    = "add-edit-event">
+          {{modalLabel.label}} Event
+        </h4>
+        
+      </div>
+      
+      <form id = "add-edit-event-form">
+        <div class = "modal-body">
+          
+          <div class = "form-group">
+            <div class= "row">
+              
+              <div class="col-xs-3 col-sm-3">
+                <label>Search by:</label>
+              </div>
+              <div class="col-xs-9 col-sm-8">
+                <label class = "radio-inline">
+                  <input  type  = "radio" 
+                          name  = "s_type_radio" 
+                          value = "all_students"
+                          checked>
+                  All Students
+                </label>
+                <label class = "radio-inline">
+                  <input  type  = "radio" 
+                          name  = "s_type_radio" 
+                          value = "stu_names">
+                  Student Names
+                </label>
+                <label class = "radio-inline">
+                  <input  type  = "radio" 
+                          name  = "s_type_radio" 
+                          value = "departments">
+                  Departments
+                </label> 
+              </div>
+              
+            </div><!--row-->
+          </div><!--form-group-->
+          
+          
+          <div class = "form-group">
+            <div class = "row">
+
+<!--PARTICIPANTS-->              
+              <div class = "col-xs-12 col-sm-4">
+                <label  id  = "lbl_type" 
+                        for = "type">
+                  <!--Event Type-->
+                  Search
+                </label>
+                <select name  = "type" 
+                        class = "form-control" multiple>
+              
+                    {{#each cntx}}
+                        <option selected  = "{{selected event.type _id }}"
+                                value     = "{{_id}}">
+                          {{or name fullName}}
+                        </option>
+                    {{/each}}
+              
+                  <!--
+                  <option selected = "{{selected event.type 'Birthday' }}" 
+                          value="Birthday">
+                    Birthday
+                  </option>
+                  
+                  <option selected  = "{{selected event.type 'Corporate' }}" 
+                          value     = "Corporate">
+                    Corporate
+                  </option>
+                  
+                  <option selected  = "{{selected event.type 'Miscellaneous' }}" 
+                          value     = "Miscellaneous">
+                    Miscellaneous
+                  </option>
+                  
+                  <option selected  = "{{selected event.type 'Wedding' }}" 
+                          value     = "Wedding">
+                    Wedding
+                  </option>
+                  -->
+                  
+                </select>
+              </div>
+              
+<!-- EVENT START -->
+              <div class="col-xs-12 col-sm-3">
+                <label for = "start">
+                  Event Starts
+                </label>
+                <!--disabled-->
+                <input  type  = "date" 
+                        name  = "start" 
+                        class = "form-control" 
+                        value = "{{event.start}}">
+              </div>
+              
+<!-- EVENT END -->
+              <div class = "col-xs-12 col-sm-3">
+                <label for = "end">
+                  Event End
+                </label>
+                <!--disabled-->
+                <input  type    = "date" 
+                        name    = "end" 
+                        class   = "form-control" 
+                        value   = "{{#if event.end}}{{event.end}}{{else}}{{event.start}}{{/if}}">
+              </div>
+              
+            </div><!-- row -->
+          </div><!-- form-group -->
+         
+<!-- EVENT TITLE --> 
+          <div class = "form-group">
+            <label for = "title">
+              Event Title
+            </label>
+            <input  type  = "text" 
+                    name  = "title" 
+                    class = "form-control" 
+                    value = "{{event.title}}">
+          </div>
+          
+          <div class="row">
+
+<!-- COURSES -->            
+            <div class="col-xs-12 col-sm-4">
+              <label for = "guests">
+                Course
+              </label>
+              <select id    = "t-courses" 
+                      class = "form-control" multiple>
+                {{#each courses}}
+                  <option selected  = "{{selected event.courses _id }}"
+                          value="{{_id}}">
+                    {{name}}
+                  </option>
+                {{/each}}
+              </select>
+            </div>
+            
+          </div><!-- row -->
+        </div><!-- MODAL-BODY -->
+        
+        <div class = "modal-footer">
+          {{#if modalType 'edit'}}
+            <button class="btn btn-danger pull-left delete-event">Delete Event</button>
+          {{/if}}
+          <button type          = "button" 
+                  class         = "btn btn-default" 
+                  data-dismiss  = "modal">
+            Cancel
+          </button>
+          
+          <button type  = "submit" 
+                  class = "btn btn-success">
+            {{modalLabel.button}} Event
+          </button>
+        </div><!-- MODAL-FOOTER -->
+        
+      </form>
+      
+    </div><!-- MODAL-CONTENT -->
+  </div><!-- class MDOAL-DIALOG -->
+</div><!-- id ADD-EDIT-EVENT-MODAL -->
+
+</template>

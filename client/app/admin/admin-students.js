@@ -1,3 +1,9 @@
+/*
+ * @module adminStudents
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 

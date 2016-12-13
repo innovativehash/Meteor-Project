@@ -1,90 +1,35 @@
+/*
+ * @module studentTrainingCalendar
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 
-import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
-import '../../../public/bower_components/fullcalendar/dist/fullcalendar.min.css';
+import { Events } from '../../../both/collections/api/events.js';
+
 import '../../templates/student/student-training-calendar.html';
+
+
+let isPast = ( date ) => {
+  let today = moment().format();
+  return moment( today ).isAfter( date );
+};
+
 
 
 /*
  * CREATED
  */
-Template.studentTrainingCalendar.onCreated( function() {
-
+Template.studentTrainingCalendar.onCreated( () => {
   //$('#cover').show();
-
-
-  /*
-   * BOOTSTRAP3-DIALOG
-   */
-  $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
-      //console.log('studentDashboard:: bootstrap-dialog loaded...');
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'STUDENT-TRAINING-CALENDAR:: load bootstrap-dialog.min.js fail' );
-//-------------------------------------------------------------------
-  });
-
-
-  /*
-   * FULLCALENDAR
-   */
-   $.getScript( '/bower_components/fullcalendar/dist/fullcalendar.min.js', function() {
-    //console.log('studentDashboard:: fullcalendar.js loaded...' );
-    $( '#calendar' ).fullCalendar({
-
-      // options and callbacks here
-      events: [
-                {
-                    title  : 'Training Event',
-                    start  : '2016-11-16',
-                    description: 'In house, meeting room A.  Corporate Kum-bay-yah'
-                },
-                {
-                    title  : 'Training Event',
-                    start  : '2016-11-19',
-                    end    : '2016-11-20',
-                    description: 'In house, concourse.  "I\'m Special, you\'re Special!"'
-                },
-                {
-                    title  : 'Training Event',
-                    start  : '2016-11-21T12:30:00',
-                    description: 'Team Spirit Fire Walk, Mosconi Center',
-                    allDay : false // will make the time show
-                }
-              ],
-      eventClick: function( calEvent, jsEvent, view ) {
-                      BootstrapDialog.show({
-                        title: calEvent.title,
-                        message:  'On '
-                                  + moment( calEvent.start ).format( 'ddd, hA' )
-                                  + '\n\n'
-                                  + calEvent.description,
-                        buttons: [{
-                          label: 'Ok',
-                          cssClass: 'btn-success',
-                          action: function( dialog ) {
-                            dialog.close();
-                          }
-                        }]
-                      });
-                      /*
-                        alert('Event: ' + );
-                        alert('Day/Time: ' + moment(calEvent.start).format('ddd, hA') );
-                        alert('Description: ' + calEvent.description );
-                      */
-                        //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-                        //alert('View: ' + view.name);
-
-                        // change the border color just for fun
-                        $(this).css( 'border-color', 'red' );
-      }
-    })
-      //console.log( 'calendarConnectReady);
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'STUDENT-TRAINING-CALENDAR:: load bootstrap-dialog.min.js fail' );
-//-------------------------------------------------------------------
-  });
+  
+  let template = Template.instance();
+  template.subscribe( 'events' );
+  //---------------------------------------------------------------------------
 });
+
 
 
 /*
@@ -97,4 +42,83 @@ Template.studentTrainingCalendar.onRendered(function(){
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
   */
+  
+ /*
+  * FULLCALENDAR
+  */
+  $( '#calendar' ).fullCalendar({
+
+    // options and callbacks here
+    events( start, end, timezone, callback ) {
+      let data = Events.find().fetch().map( ( event ) => {
+        event.editable = !isPast( event.start );
+        return event;
+      });
+
+      if ( data ) {
+        callback( data );
+      }
+    },
+    
+    
+    /*
+     * each element rendered to the calendar will pass through this method
+     * and take on the appropriate formatting
+     */
+    eventRender(  event   /* actual event item on the calendar, NOT JS Event */, 
+                  element /* the element where the item is being rendered as
+                             a JQuery elem*/                                ) {
+      element.find( '.fc-content' ).html(
+        `<h4>${ event.title }</h4>
+        `
+      );
+    },
+    
+    
+    eventDrop( event, delta, revert ) {
+      let date = event.start.format();
+      if ( !isPast( date ) ) {
+        let update = {
+          _id:    event._id,
+          start:  date,
+          end:    date
+        };
+
+        Meteor.call( 'editEvent', update, ( error ) => {
+          if ( error ) {
+            Bert.alert( error.reason, 'danger' );
+          }
+        });
+      } else {
+        revert();
+        Bert.alert( 'Sorry, you can\'t move items to the past!', 'danger' );
+      }
+    },
+    
+    
+    /*
+     * fired whenever we click on the actual day square in the calendar
+     */
+    dayClick( date ) {
+      Session.set( 'eventModal', { type: 'add', date: date.format() } );
+      $( '#add-edit-event-modal' ).modal( 'show' );
+    },
+    
+    
+    /*
+     * fired whenever we click directly on an event
+     */
+    eventClick( event /* literally the rendered event’s data,
+                         returned from the event()            */ ) {
+      Session.set( 'eventModal', { type: 'edit', event: event._id } );
+      $( '#add-edit-event-modal' ).modal( 'show' );
+    }
+
+  }); //fullcalendar
+  
+  Tracker.autorun( () => {
+    Events.find().fetch();
+    $( '#calendar' ).fullCalendar( 'refetchEvents' );
+  });
+
 });

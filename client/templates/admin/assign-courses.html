@@ -40,9 +40,9 @@
                 <select id="search-courses">
                   <option>Search Courses...</option>
                   {{#with courses}}
-                  {{#each courses}}
-                  <option value="{{_id}}">{{name}}</option>
-                  {{/each}}
+                    {{#each courses}}
+                      <option value="{{_id}}">{{name}}</option>
+                    {{/each}}
                   {{/with}}
                 </select>
                 <!--

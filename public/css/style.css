@@ -2483,9 +2483,9 @@ body.login {
 }
 
 .popup-body label {
-    background: #A7A7A7 url("/img/bg-1.png") repeat-x scroll 0px 0px / auto 100%;
+    /* background: #A7A7A7 url("/img/bg-1.png") repeat-x scroll 0px 0px / auto 100%; */
     border: 1px solid #777;
-    border-radius: 12px;
+    border-radius: 5px; /* 12px; */
     color: #474848;
     font-size: 13px;
     font-weight: 700;

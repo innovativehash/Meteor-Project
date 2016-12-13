@@ -1,4 +1,9 @@
-
+/*
+ * @module studentCourseListing
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
@@ -113,7 +118,7 @@ Template.studentCourseListing.helpers({
                    o[i].approved && Meteor.user().roles.teacher &&
                    o[i].creator_id == Meteor.userId() ) {
 
-              o[i].buttonText = 'ASSIGN';
+              o[i].buttonText = 'begin'; //ASSIGN
             //TEACHER IS CURRENT STUDENT, COURSE IS TEACHER CREATED, BUT NOT APPROVED
             } else if ( ( o[i].creator_type && o[i].creator_type == 'teacher' ) &&
                           ! o[i].approved &&

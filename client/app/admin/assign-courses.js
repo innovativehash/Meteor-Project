@@ -1,5 +1,10 @@
-
-import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
+/*
+ * @module assignCourses
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
+//import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
 
 import { Students }     from '../../../both/collections/api/students.js';
 import { Courses }      from '../../../both/collections/api/courses.js';
@@ -38,7 +43,7 @@ Template.assignCourses.onCreated(function() {
 
   /*
    * BOOTSTRAP TOGGLE
-   */
+   *
   $.getScript( '/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js', function() {
     $( '#abd' ).bootstrapToggle();
     $( '#abn' ).bootstrapToggle();
@@ -47,7 +52,7 @@ Template.assignCourses.onCreated(function() {
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'Assign Courses:: bootstrap-toggle.min.js fail' );
   });
-
+*/
 });
 
 
@@ -127,14 +132,14 @@ Template.assignCourses.events({
     $( '#assign-due-date' ).val('');
 
    //switch assign-by-department
-    $( '#abd' ).bootstrapToggle( 'off' );
+    //$( '#abd' ).bootstrapToggle( 'off' );
     $( '#abd' ).prop( 'checked', false ).change();
 
     //switch assign-by-name
-    $( '#abn' ).bootstrapToggle( 'off' );
+    //$( '#abn' ).bootstrapToggle( 'off' );
     $( '#abn' ).prop( 'checked', false ).change();
 
-    $( '#all-students' ).bootstrapToggle( 'off' );
+    //$( '#all-students' ).bootstrapToggle( 'off' );
     $( '#all-students' ).prop( 'checked', false ).change();
 
     $( '#assign-modal' ).modal( 'show' );
@@ -300,10 +305,10 @@ Template.assignCourses.events({
       $( '#by-name' ).attr( 'disabled', true );
 
       $( '#abn' ).prop( 'checked', false ).change();
-      $( '#abn' ).bootstrapToggle( 'off' );
+      //$( '#abn' ).bootstrapToggle( 'off' );
 
       $( '#abn' ).prop( 'checked', false ).change();
-      $( '#abd' ).bootstrapToggle( 'off' );
+      //$( '#abd' ).bootstrapToggle( 'off' );
     }
 //-----------------------------------------------------------------
   },
@@ -328,10 +333,10 @@ Template.assignCourses.events({
 
       //switches
       $( '#abd' ).prop( 'checked', false ).change();
-      $( '#abd' ).bootstrapToggle( 'off' );
+      //$( '#abd' ).bootstrapToggle( 'off' );
 
       $( '#all-students' ).prop( 'checked', false ).change();
-      $( '#all-students' ).bootstrapToggle( 'off' );
+      //$( '#all-students' ).bootstrapToggle( 'off' );
     } else {
       $( '#by-name' ).val( null ).trigger( 'change' );
       $( '#by-name' ).attr( 'disabled', true );
@@ -360,10 +365,10 @@ Template.assignCourses.events({
 
       //switches
       $( '#abn' ).prop( 'checked', false ).change();
-      $( '#abn' ).bootstrapToggle( 'off' );
+      //$( '#abn' ).bootstrapToggle( 'off' );
 
       $( '#all-students' ).prop( 'checked', false ).change();
-      $( '#all-students' ).bootstrapToggle( 'off' );
+      //$( '#all-students' ).bootstrapToggle( 'off' );
     } else {
       $( '#by-dept' ).val( null ).trigger( 'change' );
       $( '#by-dept' ).attr( 'disabled', true );

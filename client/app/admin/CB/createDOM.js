@@ -1,4 +1,8 @@
-
+/*
+ * @module createDOM
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ */
 export class CreateDOM {
 
   constructor( o ) {

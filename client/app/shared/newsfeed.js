@@ -1,4 +1,10 @@
-
+/*
+ * @module newsfeed
+ * 
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
+ 
 /*
   Upon login:
     Check for viewable newsfeeds, and display

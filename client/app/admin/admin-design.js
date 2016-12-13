@@ -1,4 +1,9 @@
-
+/*
+ * @module adminDesign
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 import '../../../public/css/bootstrap-colorpicker.min.css';
 
 

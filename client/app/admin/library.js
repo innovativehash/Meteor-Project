@@ -1,4 +1,9 @@
-
+/*
+ * @module library
+ *
+ * @programmer Nick Sardo <nsardo@oal.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 
 import { Courses }    from '../../../both/collections/api/courses.js';
 

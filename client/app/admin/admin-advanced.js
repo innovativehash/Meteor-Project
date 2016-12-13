@@ -1,3 +1,9 @@
+/*
+ * @module adminAdvanced
+ * 
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
 
 import { Students }    from '../../../both/collections/api/students.js';

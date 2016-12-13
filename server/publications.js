@@ -3,6 +3,7 @@
  */
 import { Comments }     from '../both/collections/api/comments.js';
 import { Students }     from '../both/collections/api/students.js';
+import { Events   }     from '../both/collections/api/events.js';
 
 Meteor.publish("userRoles", function() {
   if ( this.userId ) {
@@ -25,4 +26,14 @@ Meteor.publish("company_id", function( id ){
     id: {type: String}
   }).validate({ id });
   return Students.find({ _id: id},{fields:{company_id:1}} );
+});
+
+/*
+Meteor.publish( 'students', function() {
+  return Students.find({});
+});
+*/
+
+Meteor.publish( 'events', function() { 
+  return Events.find(); 
 });

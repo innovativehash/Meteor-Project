@@ -1,3 +1,9 @@
+/*
+ * @module main
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovations
+ */
 import { Meteor     }   from 'meteor/meteor';
 import { Mongo      }   from 'meteor/mongo';
 import { Email } from 'meteor/email'

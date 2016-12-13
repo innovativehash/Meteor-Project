@@ -1,4 +1,9 @@
-
+/*
+ * @module titleHandling
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 
   let tit_id = -1;
 

@@ -1,4 +1,9 @@
-
+/*
+ * @module accounts
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 
     Accounts.onCreateUser( ( options, user ) => {
       user.roles    = options.roles;

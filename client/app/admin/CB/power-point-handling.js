@@ -1,4 +1,9 @@
-
+/*
+ * @module powerPointHandling
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovations
+ */
 
 
 

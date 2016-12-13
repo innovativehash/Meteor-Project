@@ -1,231 +1,248 @@
 <template name="adminTestCreator">
+<!-- adminTestCreator Template -->
+<!-- Nicholas Sardo <nsardo@aol.com> -->
 <!--
 <style>
   #cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
 </style>
 <div id="cover"></div>
 -->
-<!--
-  <div class="dashboard-header-area">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-7">
-
-        </div>
-        <div class="col-sm-5">
-          <div class="profile-bar">
-            <ul>
-              <li><button><img src="/img/message.png" alt=""></button></li>
-              <li><button><img src="/img/notification.png" alt=""></button></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="profile-link">
-          <a  class="dropdown-toggle"
-              data-toggle="dropdown"
-              href="#"
-              role="button"
-              aria-haspopup="true"
-              aria-expanded="false">
-                <span class="diamonds">
-                  <img src="/img/profile-1.jpg" alt="">
-                </span>
-
-                  {{fname}}
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Account Settings</a></li>
-            <li><a href="#">Upload Photo</a></li>
-            <li><a href="#">Logout</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="dashboard-body-area">
-
-        <div class="sidebar-menu-area course-builder-sidebar">
-          <div class="buttons">
-            <button id="open">
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
-            <button id="close">
-              <span></span>
-              <span></span>
-            </button>
-          </div>
-          <div class="page-back-home js-back-to-home">
-            <a href="#">
-              <i class="fa fa-long-arrow-left"></i>
-                Back To Home
-            </a>
-          </div>
-        </div>
-
-    <div class="container">
-      <div class="row">
--->
 {{#if or isTeacher isAdmin}}
-        <div class="col-xs-12 col-md-offset-2 col-lg-8 col-lg-offset-2">
-
+        <div class="col-xs-12 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2">
+          <div class="row">
+            
             <header>
                 <h4 style=""><a id="test-go-home" href="#">Go Home</a></h4>
                 <br />
-                <h1 style="">
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                <h1 style="display:inline-block;border-radius:5px;">
                   Test Creator
                   <input type="hidden" name="qnum" value="1">
                 </h1>
-
-            </header>
-
-            <section>
-
-              <!-- TEST NAME -->
-              <div class="input-group">
-                <span class="input-group-addon">Test Name</span>
-
-                <input  type        ="text"
-                        id          ="test-name"
-                        class       ="form-control input-lg"
-                        placeholder ="enter test name..."
-                        style       ="width:50%;"/>
-              </div>
-
-              <br />
-
-              <!-- QUESTION TEXT -->
-              <div class="input-group">
-                <span class="input-group-addon">Question&nbsp;</span>
-
-                <input  type        ="text"
-                        id          ="question"
-                        class       ="form-control input-lg"
-                        placeholder ="enter question... "
-                        style       ="width:50%;"/>
-              </div>
-              <br /><br />
-
-              <!-- SELECT ANSWER TYPE -->
-              <h3 style="text-decoration: underline;">ANSWER TYPE</h3>
-
-              <div class="btn-group" role="group" aria-label="...">
-
-                <button id    ="tf"
-                        type  ="button"
-                        class ="btn btn-info">
-                  True/False
-                </button>
-
-                <button id    ="mc"
-                        type  ="button"
-                        class ="btn btn-warning">
-                  Multiple Choice
-                </button>
-
-                <button class="btn btn-success js-test-complete float-left" style="margin-left:50px;">
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                <button class="btn btn-success btn-lg js-test-complete push-right" 
+                        style="display:inline-block;">
                   Test Complete
                 </button>
-              </div>
+                </div>
+            </header>
+          </div><!-- row -->
+            <section>
 
+<!-- TEST NAME -->
+              <article>
+                <div class="input-group">
+                  <span class="input-group-addon">Test Name&nbsp;&nbsp;&nbsp;&nbsp;</span>
+  
+                  <input  type        ="text"
+                          id          ="test-name"
+                          class       ="form-control input-lg"
+                          placeholder ="enter test name..."
+                          style       ="width:70%;"/>
+                </div>
+  
+                <br />
+  
+<!-- QUESTION TEXT -->
+                <div class="input-group">
+                  <span class="input-group-addon">Question <span id="q_num" class="badge">1</span></span>
+  
+                  <input  type        ="text"
+                          id          ="question"
+                          class       ="form-control input-lg"
+                          placeholder ="enter question... "
+                          style       ="width:70%;"/>
+                </div>
+              </article>
+              <br /><br />
+
+            
+
+<!-- SELECT ANSWER TYPE -->
+            <div class="row">
+              <article>
+                <div class="col-xs-4 col-md-4 col-lg-4">
+                  <h3 style="text-decoration: underline;">ANSWER TYPE</h3>
+    
+                  <div class="btn-group" role="group" aria-label="...">
+    
+                    <button id    ="tf"
+                            type  ="button"
+                            class ="btn btn-info">
+                      True/False
+                    </button>
+    
+                    <button id    ="mc"
+                            type  ="button"
+                            class ="btn btn-warning">
+                      Multiple Choice
+                    </button>
+    
+                  </div>
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                  <h3 style="text-decoration:underline;">Navigate Saved Questions</h3>
+                  <div  class="btn-group"
+                        role="group" 
+                        aria-label="...">
+                    <div style="margin-left:60px;">
+                      <button id = "t-btn-prev"
+                              type = "button"
+                              class="btn btn-primary">
+                        <i class="fa fa-chevron-left fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;Prev
+                      </button>
+                      <button id="t-btn-next"
+                              type="button"
+                              class="btn btn-primary">
+                        Next&nbsp;&nbsp;<i class="fa fa-chevron-right fa-lg" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div><!-- row -->
               <br /><br /><br />
 
-              <!-- TRUE/FALSE ANSWERS -->
-              <div id="ans-tf" class="hide">
-                <p>Answer:</p>
 
-                <div class="form-group">
-
-                  <label class="radio-inline">
-
-                    <input  class ="js-tf"
-                            type  ="radio"
-                            name  ="optradio"
-                            value ="true">
-                    True
-                  </label>
-
-                  <label class="radio-inline">
-
-                    <input  class ="js-tf"
-                            type  ="radio"
-                            name  ="optradio"
-                            value ="false">
-                    False
-                  </label>
-
-                  <br /><br />
-
-                  <button class="btn btn-primary" id="tf-submit">
-                    Add Question/Answer
-                  </button>
-
-                </div>
-              </div>
-
-              <!-- MULTIPLE CHOICE ANSWERS -->
-              <div id="ans-mc" class="hide form-group">
-                <p>Answer:</p>
-                <div>
-                  <label class="">A
-                    <input  id          ="A"
-                            type        ="text"
-                            class       ="form-control"
-                            placeholder ="enter answer...">
-                  </label>
-
-                  <label class="">B
-                    <input  id          ="B"
-                            type        ="text"
-                            class       ="form-control"
-                            placeholder ="enter answer...">
-                  </label>
-
-                  <label class="">C
-                    <input  id          ="C"
-                            type        ="text"
-                            class       ="form-control"
-                            placeholder ="enter answer...">
-                  </label>
-
-                  <button id="plus">
-                    <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
-                  </button>
-
-                  <br /><br /><br />
+<!-- TRUE/FALSE ANSWERS -->
+            
+              <article class="col-xs-12 col-md-8 col-lg-8">
+                <div id="ans-tf" class="hide">
+                  <p>Answer:</p>
+  
                   <div class="form-group">
-
-                    <select class ="form-control"
-                            id    ="correct_ans"
-                            style ="width:20%;">
-                      <option>Correct Answer</option>
-                      <option value="A">A</option>
-                      <option value="B">B</option>
-                      <option value="C">C</option>
-                    </select>
-
+  
+                    <label class="radio-inline">
+  
+                      <input  id    = "t"
+                              class ="js-tf"
+                              type  ="radio"
+                              name  ="optradio"
+                              value ="true">
+                      True
+                    </label>
+  
+                    <label class="radio-inline">
+  
+                      <input  id    = "f"
+                              class ="js-tf"
+                              type  ="radio"
+                              name  ="optradio"
+                              value ="false">
+                      False
+                    </label>
+  
+                    <br /><br />
+  
+                    <button class="btn btn-primary" id="tf-submit">
+                      Add Question/Answer
+                    </button>
+                    <button class="btn btn-success" id="tf-edit">
+                      Save Any Edits
+                    </button>
+  
                   </div>
-                  <br />
-
-                  <button id="mc-submit" class="btn btn-primary">
-                    Add Question/Answer
-                  </button>
-
                 </div>
-              </div>
-
+              </article>
+              
+<!-- MULTIPLE CHOICE ANSWERS -->
+              <article>
+                <div class="row">
+                  <div class="col-xs-12 col col-md-8 col-lg-8">
+                    <div id="ans-mc" class="hide form-group">
+                      <p>Answer:</p>
+                      <div>
+                        <label class="">A
+                          <input  id          ="A"
+                                  type        ="text"
+                                  class       ="form-control"
+                                  placeholder ="enter answer...">
+                        </label>
+      
+                        <label class="">B
+                          <input  id          ="B"
+                                  type        ="text"
+                                  class       ="form-control"
+                                  placeholder ="enter answer...">
+                        </label>
+      
+                        <label class="">C
+                          <input  id          ="C"
+                                  type        ="text"
+                                  class       ="form-control"
+                                  placeholder ="enter answer...">
+                        </label>
+      
+                        <button id="plus">
+                          <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                    
+                
+                      <br /><br /><br />
+                
+                      <div class="col-xs-8 col-xs-offset-2 col-md-4 col-md-offset-2 col-lg-4 col-lg-offset-2">
+                        <div class="form-group">
+        
+                          <select class ="form-control"
+                                  id    ="correct_ans">
+                            <option>Correct Answer</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                          </select>
+        
+                        </div>
+                    
+                        <br />
+        
+                        <button id="mc-submit" class="btn btn-primary">
+                          Add Question/Answer
+                        </button>
+                        <button id="mc-edit" class="btn btn-success">
+                          Save Any Edits
+                        </button>
+                      </div>
+                    </div><!-- ans_mc -->
+                  </div><!-- col -->
+                </div><!-- row -->
+              </article>
+              
+              <br><br>
+              
+              <article>
+                <div class="row">
+                  <div class="col-xs-12 col col-md-8 col-lg-8">
+                    <p>
+                      <h4>INSTRUCTIONS</h4>
+                      Enter a <em>Test Name</em> and press <strong>[TAB]</strong><br>
+                      <strong>[STEP-1]</strong><br>
+                      Enter your <em>First Question's</em> Text<br>
+                      <strong>[STEP-2]</strong><br>
+                      Click either the <strong>[True/False]</strong> or <strong>[Multiple Choice]</strong> button, depending on your intended question type<br>
+                      <strong>[STEP-3]</strong><br>
+                      <em>For TRUE/FALSE</em> select what the correct answer for your question is by clicking either the <strong>[TRUE]</strong> or <strong>[FALSE]</strong> radio button, then click the <strong>[Add Question/Answer]</strong> button to add the question and answer to your test<br>
+                      <em>For MULTIPLE CHOICE</em> enter the possible answers in each answer input box.  If you only have two possible answers, just enter two.  If you have more than three possible answers, click the <strong>[+]</strong> button to add each additional answer.  When you have finished entering all possible answers, click the <strong>[Add Question/Answer]</strong> button to add the question and answers to your test.<br>
+                      For <em>Each additional</em> test question, follow steps 1-3.<br>
+                      When you are done creating your test, click the green <strong>[Test Complete]</strong> button.<br><br>
+                      To go over your questions/answers, and/or to edit them:
+                      Click either the <strong>[PREV]</strong> or <strong>[NEXT]</strong> button to view your previously entered questions and answers.  If you want to edit the currently displayed question/answer(s), do so, and then click the green <strong>[Save Any Edits]</strong> button to save the changes.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            
             </section>
 
             <br /><br />
 
             <footer>
+              <!--
               <p>
                 &copy; 2016 Collective Innovation
               </p>
+              -->
             </footer>
         </div>
 {{/if}}

@@ -1,4 +1,9 @@
-
+/*
+ * @module videoHandling
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 
   let vid_id = -1;
 
