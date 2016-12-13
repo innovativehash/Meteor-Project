@@ -28,7 +28,6 @@ Template.studentRequestCredit.onCreated(function() {
   $.getScript( '/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js', function(){
 
     $( '.selectpicker' ).selectpicker({
-      style:  'btn-primary',
       title:  'Choose One',
       size:   'auto',
       width:  'auto',
