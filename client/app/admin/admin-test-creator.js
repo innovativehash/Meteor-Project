@@ -36,6 +36,7 @@ Template.adminTestCreator.onRendered(function(){
 */
 $( '#tf-edit' ).hide();
 $( '#mc-edit' ).hide();
+$( '.test-help-contents' ).hide();
 });
 
 
@@ -64,6 +65,19 @@ Template.adminTestCreator.events({
   },
 
 
+  /*
+   *
+   * .JS-SHOW-TEST-HELP  ::(CLICK)::
+   */
+   'click .js-show-test-help'( e, t ) {
+     e.preventDefault();
+     e.stopImmediatePropagation();
+     
+     t.$( '.test-help-contents' ).slideToggle();
+   },
+   
+   
+   
   /*
    * .JS-TEST-COMPLETE  ::(CLICK)::
    */
