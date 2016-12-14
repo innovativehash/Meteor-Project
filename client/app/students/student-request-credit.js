@@ -30,7 +30,7 @@ Template.studentRequestCredit.onCreated(function() {
     $( '.selectpicker' ).selectpicker({
       title:  'Choose One',
       size:   'auto',
-      width:  'auto',
+      //width:  'auto',
       showTick: true
     });
     //console.log('studentRequestCredit:: bootstrap.min.js loaded...');
@@ -107,6 +107,8 @@ Template.studentRequestCredit.events({
     };
 
     fr.readAsDataURL( fil );
+    
+    $( '.js-credit-attachment' ).css('color', 'blue');
     return;
 //-------------------------------------------------------------------
   },
