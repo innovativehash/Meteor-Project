@@ -26,10 +26,11 @@ Template.login.events({
 
 
     Meteor.loginWithPassword( email, password, ( error ) => {
-
+  
       //console.log( 'login with pw uid & roles ' + Meteor.userId() + ' ' + Meteor.user().roles[0]) /* DEBUG */
       if ( error ) {
         console.log( 'log in error ' + error );
+        Bert.alert( 'Either you have no account, or have entered an incorrect password!', 'danger', 'fixed-top', 'fa-frown-o' );  
       } else {
 
 

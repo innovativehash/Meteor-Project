@@ -1895,7 +1895,7 @@ body.login {
 
 .credit-request-footer-link {
     overflow: hidden;
-    width: 336px;
+    width: 366px; /* 336px; */
     border-radius: 3px 3px 0px;
     margin-left: auto;
 }
