@@ -185,10 +185,10 @@ Template.courseBuilderPage.onCreated( function() {
         let draggedType = ui.draggable.data( 'type' );
         switch ( draggedType ) {
           case 'title':
-            addTitle();
+            addTitle( evt.pageX, evt.pageY );
             break;
           case 'text':
-            addText();
+            addText( evt.pageX, evt.pageY );
           /*
             $( '#add-text' ).modal( 'show' );
             Meteor.setTimeout( function() {
@@ -880,21 +880,31 @@ Template.courseBuilderPage.events({
 
 
 
-function addTitle() {
+function addTitle( x, y ) {
 
-  let holder = $( '<input id="added-title" type="text" style="border-radius:5px;z-index:2;position:absolute;width:65%;margin-left:12%;margin-right:12%" autofocus/>' )
+  let holder = $( `<input id="added-title" type="text" style="fdborder-radius:5px;z-index:2;position:absolute;width:65%;margin-left:12%;margin-right:12%" autofocus/>` )
     .css( 'color', 'grey' );
   $( '#fb-template' ).append(holder);
+  
+  let pos = $('#added-title').position();
+  let x1 = pos.left;
+  let y1 = pos.top;
 
+  $( '#added-title').offset({ left: x - x1, top: y - y1 });
   $(holder).effect( "highlight", {}, 2000 );
 }
 
 
-function addText() {
-
+function addText( x, y ) {
+d
   $( '#fb-template' ).append( '<textarea id="added-text" rows="3" style="z-index:2;border-radius:5px;position:absolute;margin-left:10%;margin-right:10%;width:73%;" autofocus></textarea>' )
     .css( 'color', 'grey' );
 
+  let pos = $('#added-text').position();
+  let x1  = pos.left;
+  let y1  = pos.top;
+  
+  $( '#added-text' ).offset({ left: x - x1, top:  y - y1 });
   $( '#added-text' ).effect( "highlight", {}, 2000 );
 }
 
