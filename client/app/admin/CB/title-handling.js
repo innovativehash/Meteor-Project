@@ -39,6 +39,7 @@
 
 
     let tit = t.$( '#added-title' ).val();
+    let pos = t.$( '#added-title' ).offset();
 
     if ( t.$( '#added-title' ).length ) {
       try {
@@ -54,11 +55,12 @@
 
     ++tit_id;
 
-    t.$( '#fb-template' ).append( `<div id="div_title-${tit_id}" style = "z-index:2;border-radius:5px;background-color:white;font-size:18px;position:absolute;top:200px;left:300px;cursor:move;border:none !important;">
+    t.$( '#fb-template' ).append( `<div id="div_title-${tit_id}" style = "z-index:2;border-radius:5px;background-color:white;font-size:18px;position:absolute;cursor:move;border:none !important;">
     <span id="tit-${tit_id}" style="font-size:18px;font-weight:800;">&nbsp;&nbsp;&nbsp;&nbsp;${tit}&nbsp;&nbsp;&nbsp;&nbsp;</span><sup id="tmp-title-${tit_id}"></sup></span></div>`);
 
       t.$( `#tmp-title-${tit_id}` ).hide();
 
+      t.$( `#div_title-${tit_id}` ).offset({ left: pos.left, top: pos.top });
       t.$( `#div_title-${tit_id}` ).draggable();
 
       t.$( `#tit-${tit_id}` ).resizable();

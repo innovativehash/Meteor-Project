@@ -849,7 +849,7 @@ Template.courseBuilderPage.events({
   'blur #added-title'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    
     CBTitle.cbAddedTitleBlur( e, t, tbo, t.contentTracker, t.titlesTracker );
   },
 

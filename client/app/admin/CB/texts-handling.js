@@ -41,7 +41,7 @@
     ++txt_id;
 
     t.$( '#fb-template' ).append( `<span id="span_text-${txt_id}"
-                                         style = "z-index:1;border-radius:5px;background-color:white;position:absolute;top:200px;left:300px;border:none !important;cursor:move;"
+                                         style = "z-index:1;border-radius:5px;background-color:white;position:absolute;border:none !important;cursor:move;"
                                          class = "draggable ui-widget-content">
                                      <span style="font-size:16px;"
                                                   id="txt-${txt_id}">&nbsp;&nbsp;&nbsp;&nbsp;${txt}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -51,6 +51,8 @@
 
     t.$( `#tmp-txt-${txt_id}` ).hide();
 
+    t.$( `#span-text-${txt_id}` ).offset({ left: pos.left, top: pos.top });
+    
     t.$( `#span_text-${txt_id}` ).draggable();
 
     t.$( `#txt-${txt_id}` ).resizable();
