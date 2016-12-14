@@ -44,7 +44,7 @@
 .curse-builder-items ul li {width: 150px;min-height: 130px;font-size: 16px;}
 .curse-builder-items ul li span.area {padding: 18px 5px;}
 .curse-builder-items ul li span.image {width: auto;height: auto;margin: 0 auto 20px;min-height: 48px;}
-.curse-builder-box {min-height: 420px;}
+.curse-builder-box {min-height: 725px;} /* changed from 420px -nfs */
 .dash-post-single-comment-form {width: 87%;}
 .comment-text {width: 90%;}
 .certificate-area {padding-left: 380px;}
@@ -139,7 +139,7 @@ body.main .container {width: 1170px;}
 .filter-buttons.studentpage button#add_students span {font-size: 18px;top: 3px;left: 24px;}
 .curse-builder-box .notice h2 {font-size: 14px;padding: 10px 35px;}
 .curse-builder-box .notice {margin-left: -165px;margin-top: -20px;}
-.curse-builder-box {min-height: 285px;}
+.curse-builder-box {min-height: 600px;} /* changed from 285px -nfs */
 .dash-post-single-list .comment-text a,.dash-post-single-list .comment-text p {font-size: 15px;line-height: 25px;}
 .certificate-area {padding-left: 235px;}
 .certificate-input label {float: none;margin-bottom: 5px;margin-top: 0;margin-right: 0;}

@@ -79,19 +79,20 @@
 		</div>
 
     <!-- COURSE BUILDER ITEMS -->
+    <!--
     <div class = "curse-builder-items">
       <ul>
 
       </ul>
     </div>
-
+    -->
   </div><!-- sidebar-menu-area course-builder-sidebar -->
 
 
   <div class="container">
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="row">
+  
+
+      
           <!--
           <svg preserveAspectRatio="none" style="width: 960px; height: 600px; pointer-events: none; opacity: 1; position: absolute;">
             <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="0%" x2="0%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
@@ -118,29 +119,40 @@
             <line vector-effect="non-scaling-stroke" transform="translate(0.5,0.5)" stroke-width="1" x1="0%" y1="100%" x2="100%" y2="100%" stroke="rgba(199,199,199,.4)"></line>
           </svg>
           -->
-            <div class="centered-block">
-              <h1 style="display:inline-block;">
-                <span class="label label-primary">Course Viewer</span>
-              </h1>
-              <h1 style="margin-left:300px;display:inline-block;" id="yosco">
-                <span class="label label-primary">Your Score: </span>
-                <span id="score" class="label"></span>
-              </h1>
+            <!-- <div class="centered-block"> -->
+
+            <!-- </div> -->
+            
+            <div class="row">
+              <div class="col-xs-12 col-md-12 col-lg-12">
+                <div  id    = "fb-template"
+                    style = "background-color:white;"
+                    class = "curse-builder-box centered-block">
+                    <!-- <iframe src="https://drive.google.com/file/d/0B95ONdgFGqdVbTR3T01FLXc1Rnc/preview" width="640" height="300"></iframe> -->
+                </div>
+              </div>
             </div>
-          
-            <div  id    = "fb-template"
-                style = "background-color:white;"
-                class = "curse-builder-box centered-block">
-                <!-- <iframe src="https://drive.google.com/file/d/0B95ONdgFGqdVbTR3T01FLXc1Rnc/preview" width="640" height="300"></iframe> -->
+
+            <div class="row">
+              <div class="col-xs-12 col-md-12 col-lg-12">
+                <h1 style="display:inline-block;" id="yosco">
+                  <span class="label label-primary">Your Score: </span>
+                  <span id="score" class="label"></span>
+                </h1>
+              </div>
             </div>
-            <div  id="test_v" 
-                  class="curse-builder-box centered-block"
-                  style="overflow-y:scroll;">
-              {{> testView}}
+              
+            <div class="row">
+              <div class="col-xs-12 col-md-12 col-lg-12">
+                <!-- curse-builder-box centered-block style="overflow-y:scroll;" -->
+                <div  id="test_v">
+                  {{> testView}}
+                </div>
+              </div>
             </div>
-        </div><!-- row -->
-      </div><!-- col-sm-12 -->
-    </div><!-- row -->
+        
+      
+
   </div><!-- container -->
 
 </div><!-- dashboard-body-area -->

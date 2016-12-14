@@ -3,7 +3,7 @@
 <!-- Nicholas Sardo <nsardo@aol.com> -->
 {{#with test}}
 <div class="row">
-  <div class="col-xs-10 col-md-10 col-lg-10">
+  <div class="col-xs-12 col-md-12 col-lg-12">
     <div class="panel panel-primary">
       <input id="tot_q" type="hidden" value="{{total_questions}}">
       <div class="panel-heading">Test:&nbsp;&nbsp;<strong>{{test_name}}</strong></div>
@@ -38,7 +38,7 @@
             <div class="panel-body">
               <div class="form-group" id="q-{{question_num}}">
                 <span>Question:&nbsp;&nbsp;<span class="label label-primary">{{question_num}}</span></span><br><br>
-                <input id="a-{{question_num}}" type="hidden" value="{{correct_answer}}">
+                <input id="a-{{question_num}}"  type="hidden" value="{{correct_answer}}">
                 <input id="na-{{question_num}}" type="hidden" value="{{num_answers}}">
                 <input id="qt-{{question_num}}" type="hidden" value="{{question_type}}">
                 <span><em>{{question}}</em></span><br><br>

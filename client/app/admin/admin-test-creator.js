@@ -100,12 +100,12 @@ Template.adminTestCreator.events({
     let testObj = Test.find().fetch()[0];
     
     //TRANSFER LOCAL DB TO PERMANENT STORE
-    Tests.insert({ 
-                  company_id: testObj.company_id,
-                  test_name: testObj.test_name,
-                  total_questions: testObj.total_questions,
-                  questions: testObj.questions
-                });
+    testidnum = Tests.insert({ 
+                              company_id: testObj.company_id,
+                              test_name: testObj.test_name,
+                              total_questions: testObj.total_questions,
+                              questions: testObj.questions
+                            });
 
     //clear out added dom elements
     if ( lastId != 'C' ){
