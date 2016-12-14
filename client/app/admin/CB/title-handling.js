@@ -112,7 +112,7 @@
           titlesTracker.splice( tit_id, 1 );
 
           contentTracker.titles--;
-          console.log( contentTracker.titles );
+          
           $( `#${ e.currentTarget.parentNode.id}` ).remove();
         });
       }
@@ -120,7 +120,7 @@
       if ( ! t.$( `#gear-title-${tit_id}` ).length ) {
         $( `#div_title-${tit_id}` ).prepend( `<button type="button"
                                                       id="gear-title-${tit_id}"
-                                                      class="btn btn-danger btn-xs">
+                                                      class="btn btn-primary btn-xs">
                                                 <span class="glyphicon glyphicon-cog"></span>
                                               </button>` );
 
