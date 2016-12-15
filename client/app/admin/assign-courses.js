@@ -4,7 +4,7 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-//import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
+import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
 
 import { Students }     from '../../../both/collections/api/students.js';
 import { Courses }      from '../../../both/collections/api/courses.js';
@@ -43,7 +43,7 @@ Template.assignCourses.onCreated(function() {
 
   /*
    * BOOTSTRAP TOGGLE
-   *
+   */
   $.getScript( '/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js', function() {
     $( '#abd' ).bootstrapToggle();
     $( '#abn' ).bootstrapToggle();
@@ -52,7 +52,7 @@ Template.assignCourses.onCreated(function() {
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'Assign Courses:: bootstrap-toggle.min.js fail' );
   });
-*/
+
 });
 
 
@@ -307,7 +307,7 @@ Template.assignCourses.events({
       $( '#abn' ).prop( 'checked', false ).change();
       //$( '#abn' ).bootstrapToggle( 'off' );
 
-      $( '#abn' ).prop( 'checked', false ).change();
+      $( '#abd' ).prop( 'checked', false ).change();
       //$( '#abd' ).bootstrapToggle( 'off' );
     }
 //-----------------------------------------------------------------

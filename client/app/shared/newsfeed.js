@@ -52,10 +52,12 @@ Template.newsfeed.helpers({
 
     //console.log( Meteor.user().profile.company_id );
     //var feed  = Newsfeeds.find({ owner_id: owner}, { sort: { date: -1 } }).fetch();
-    let feed = Newsfeeds.find({ private: false, company_id: Meteor.user().profile.company_id }, { sort: { date: -1 } }).fetch(); //most recent at top
+    let feed = Newsfeeds.find(  { private: false, company_id: Meteor.user().profile.company_id }, 
+                                { sort: { date: -1 } }).fetch();           //most recent at top
 
     for( let i = 0; i < feed.length; i++ ) {
-      var com = Comments.find({ owner_id: feed[i]._id }, { sort: { date: -1 } }).fetch(); //most recent at top
+      var com = Comments.find(  { owner_id: feed[i]._id }, 
+                                { sort: { date: -1 } }).fetch(); //most recent at top
       if( com.length > 0 ) {
         feed[i].comments = [];
 
@@ -137,14 +139,14 @@ Template.newsfeed.events({
 
     Session.set( 'active_click_id', '' );                 //clear actively clicked js-more
     // data-id is id of POST
-    var master_id = $( e.currentTarget ).data( 'id' );      //get currently selected js-more
+    var master_id = $( e.currentTarget ).data( 'id' );    //get currently selected js-more
     Session.set( 'active_click_id', master_id );         //set selected js-more
 
-    let myid = $( e.currentTarget ).parent().prev().attr( 'id' );             // get id of closest sibling comment
+    let myid = $( e.currentTarget ).parent().prev().attr( 'id' );   // get id of closest sibling comment
 
     let tempScrollTop = $('div#' + myid ).offset().top;                   // scroll top of that comment
     Newsfeeds.update({ _id: master_id }, { $inc: {comment_limit: 3} });  // add next 3 comments
-    $( window ).scrollTop( tempScrollTop );                                   // reposition scroll top
+    $( window ).scrollTop( tempScrollTop );                             // reposition scroll top
 
   }, 1000),
 //-------------------------------------------------------------------

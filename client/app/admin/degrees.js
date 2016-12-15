@@ -77,7 +77,7 @@ Template.degrees.onCreated(function() {
 
           let idx = $( "#deg-find-course" ).val();
           //let item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
-          let item = Courses.find({ name: {$regex: idx  }}).fetch()[0];
+          let item = Courses.find({ name: { $regex: idx } }).fetch()[0];
 
           //need idx returned from search!!!
           //$('#deg-find-course').val('');
