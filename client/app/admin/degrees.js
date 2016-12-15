@@ -151,10 +151,11 @@ Template.degrees.onCreated(function() {
           item = null;
       });
 
-      Meteor.setTimeout(() => {
-        $( '#deg-find-course' ).select2( "open" ); //.val(null).trigger('change.select2');
-      }, 1000);
+      //Meteor.setTimeout(() => {
+        //$( '#deg-find-course' ).select2( "open" ); //.val(null).trigger('change.select2');
+      //}, 1000);
     });
+    
     //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'DEGREES:: load select2.js fail' );

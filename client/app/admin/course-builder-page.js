@@ -896,7 +896,7 @@ function addTitle( x, y ) {
 
 
 function addText( x, y ) {
-d
+
   $( '#fb-template' ).append( '<textarea id="added-text" rows="3" style="z-index:2;border-radius:5px;position:absolute;margin-left:10%;margin-right:10%;width:73%;" autofocus></textarea>' )
     .css( 'color', 'grey' );
 
