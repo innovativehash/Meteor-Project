@@ -50,31 +50,37 @@ Template.courseView.onRendered( function() {
     this.autorun(function() { //self
       try {
         let no  = Template.instance().page.get();
-        let b   = Courses.findOne({ _id: FlowRouter.getQueryParam( "course" ) }).built_id;
-        let c   = BuiltCourses.findOne({ _id: b });
+        let c   = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" ) }).fetch()[0];
 
         Template.instance().total.set( c.pages.length -1 );
 
-        if ( c.pages[no].page != null ) {
-
+        if ( c && c.pages ) {
+          
           // REGULAR PAGES
-          if ( c.pages[no].page.indexOf( "data" ) != -1) {
-            
+          if ( c && c.pages && c.pages[no].type == 'page' ) {
+            $( '#test_v' ).hide();
             //pre-cache test id if it's the next question
-            if ( c.pages[no + 1].type == "test" ) {
+            if ( c && c.pages && c.pages[no + 1].type == "test" ) {
               Scratch.insert({ id:  c.pages[no + 1].page });
             }
             
-            $( '#test_v' ).hide();
+            $( '#fb-template' ).empty();
+            
+            //let im  = document.createElement('img');
+            //let doc = document.getElementById('fb-template');
+            //im.src  = c.pages[no].page;
+            //doc.appendChild(im);
+          
             $( '#fb-template' ).html( '<img id="pg" data="{{course}}">' );
             $( '#pg' ).attr( 'src', c.pages[no].page );
-            $( '#fb-template' ).show();
+            $( '#fb-template' ).show();  
             
           // VIDEO PAGES
-          } else if ( c.pages[no].page.indexOf( "<iframe" ) != -1) {
+          } else if ( c && c.pages && c.pages[no].type == 'video' ) {
+            $( '#test_v' ).hide();
             
             //pre-cache test id if it's the next question
-            if ( c.pages[no + 1].type == "test" ) {
+            if ( c && c.pages && c.pages[no + 1].type == "test" ) {
               Scratch.insert({ id:  c.pages[no + 1].page });
             }
             
@@ -86,12 +92,35 @@ Template.courseView.onRendered( function() {
                         icon: 'fa-youtube'
                       });
                       
+            console.log( c.pages[no].url );
+            $( '#fb-template' ).empty();
+            $( '#fb-template' ).html( c.pages[no].url );
+            $( '#fb-template' ).show();
+          
+          // PDF PAGE
+          } else if ( c && c.pages && c.pages[no].type == 'pdf' ) {
             $( '#test_v' ).hide();
-            $( '#fb-template' ).html( c.pages[no].page );
+            //pre-cache test id if it's the next question
+            if ( c && c.pages && c.pages[no + 1].type == 'test' ) {
+              Scratch.insert({ id: c.pages[no + 1].page });
+            }
+
+            Bert.alert({
+                        title: 'Loading PDF',
+                        message: 'Give it a few seconds to load...',
+                        type: 'success',
+                        style: 'growl-top-right',
+                        icon: 'fa-youtube'
+                      });    
+                      
+            
+            $( '#fb-template' ).empty();
+            $( '#fb-template' ).html( c.pages[no].url );
             $( '#fb-template' ).show();
             
           // TEST PAGES
-          } else if ( c.pages[no].type == 'test') {
+          } else if ( c && c.pages && c.pages[no].type == 'test') {
+            console.log( 'in test' );
             ////////////////////////////////////////////////////////////////////
             //  NOTES:                                                        //
             //  Need to pre-seed scratch db so that it is ready BEFORE this   //
@@ -102,6 +131,8 @@ Template.courseView.onRendered( function() {
             ////////////////////////////////////////////////////////////////////
             
             $( '#fb-template' ).hide();
+            $( '#fb-template' ).empty();
+            
             $( '#test_v' ).show();
             
           // WILL NEED TO CODE PP, PDF, SCORM

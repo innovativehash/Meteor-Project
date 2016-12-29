@@ -46,19 +46,20 @@ Template.adminStudents.onCreated( function() {
   $.getScript( '/js/select2.min.js', function() {
     $( document ).ready(function(){
       $( '#search-students' ).select2({
+        placeholder: "Search students",
         allowClear: true,
         multiple: false,
-        tags:true
+        tags:false
       });
       $( '.js-dept' ).select2({
-        placeholder: "Select a Dept...",
+        placeholder: "Department",
         allowClear: true,
-        multiple: false,
+        multiple: true,
         tags:true
       });
 
       $( '.js-role' ).select2({
-        placeholder: "Select a Student type...",
+        placeholder: "User class",
         allowClear: true,
         multiple: false,
         tags:false
@@ -196,10 +197,11 @@ Template.adminStudents.events({
                                   dpt[i].name + '</option>' );
       }
     }, 500);
-
+    /*
     t.$( '.js-fn' ).attr( 'placeholder', "" );
     t.$( '.js-ln' ).attr( 'placeholder', "" );
     t.$( '.js-email' ).attr( 'placeholder', "" );
+    */
 //-------------------------------------------------------------------
   },
 

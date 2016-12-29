@@ -28,12 +28,63 @@ Meteor.publish("company_id", function( id ){
   return Students.find({ _id: id},{fields:{company_id:1}} );
 });
 
-/*
-Meteor.publish( 'students', function() {
-  return Students.find({});
-});
-*/
 
 Meteor.publish( 'events', function() { 
   return Events.find(); 
+});
+
+Meteor.publish( 'certifications', function(){
+  return Certifications.find();
+});
+
+Meteor.publish( 'comments', function(){
+  return Comments.find();
+});
+
+Meteor.publish( 'companies', function(){
+  return Companies.find();
+});
+
+Meteor.publish( 'courses', function(){
+  return Courses.find();
+});
+
+Meteor.publish( 'departments', function(){
+  return Departments.find();
+});
+
+Meteor.publish( 'diplomas', function(){
+  return Diplomas.find();
+});
+
+Meteor.publish( 'images', function(){
+  return Images.find();
+});
+
+Meteor.publish( 'newsfeeds', function(){
+  return Newsfeeds.find();
+});
+
+Meteor.publish( 'pdfs', function(){
+  return Pdfs.find();
+});
+
+Meteor.publish( 'powerpoints', function(){
+  return Powerpoints.find();
+});
+
+Meteor.publish( 'scorms', function(){
+  return Scorms.find();
+});
+
+Meteor.publish( 'scratch', function(){
+  return Scratch.find();
+});
+
+Meteor.publish( 'students', function(){
+  return Students.find();
+});
+
+Meteor.publish( 'tests', function(){
+  return Tests.find();
 });

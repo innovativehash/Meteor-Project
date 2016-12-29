@@ -44,7 +44,7 @@
 .curse-builder-items ul li {width: 150px;min-height: 130px;font-size: 16px;} 
 .curse-builder-items ul li span.area {padding: 18px 5px;}
 /* .curse-builder-items ul li span.image {width: auto;height: auto;margin: 0 auto 20px;min-height: 48px;} -nfs this line kills d&d*/
-.curse-builder-box {min-height: 725px;} /* changed from 420px -nfs */
+.curse-builder-box {min-height: 650px;} /* changed from 420px -nfs */
 .dash-post-single-comment-form {width: 87%;}
 .comment-text {width: 90%;}
 .certificate-area {padding-left: 380px;}

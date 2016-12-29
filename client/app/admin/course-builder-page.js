@@ -4,7 +4,6 @@
  * @programmer <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
 
 import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
@@ -12,6 +11,9 @@ import { ReactiveVar }    from 'meteor/reactive-var';
 import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
 import { Courses }        from '../../../both/collections/api/courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
+import { Images }         from '../../../both/collections/api/images.js';
+import { Pdfs }           from '../../../both/collections/api/pdfs.js';
+import { PowerPoints }    from '../../../both/collections/api/powerpoints.js';
 
 import '../../templates/admin/course-builder-page.html';
 
@@ -29,12 +31,7 @@ import * as CBSCORM from './CB/scorm-handling.js';
 
 //import {CreateDOM}  from './CB/createDOM.js';
 
-/*
-import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.min.css';
-import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.structure.min.css';
-import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.theme.min.css';
-*/
-
+let contentTracker = {};
 
 /* *****************************************************************************
  * CREATED
@@ -42,13 +39,16 @@ import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.theme.min.css';
 Template.courseBuilderPage.onCreated( function() {
   //p  = FlowRouter.current().path;
 
+  Blaze._allowJavascriptUrls();
+
   $( '#cover' ).show();
 
   this.page   = new ReactiveVar(1);
   this.total  = new ReactiveVar(1);
 
   //tracker to make sure page always has content before it can be saved/next(ed)
-  this.contentTracker = { titles:0,
+  this.contentTracker = { 
+                          titles:0,
                           texts:0,
                           images:0,
                           pdfs:0,
@@ -61,9 +61,15 @@ Template.courseBuilderPage.onCreated( function() {
   this.titlesTracker  = [];
   this.textsTracker   = [];
   this.imagesTracker  = [];
+  this.pdfsTracker    = [];
+  this.pptsTracker    = [];
+  this.scormsTracker  = [];
+  this.testsTracker   = [];
+  this.videosTracker  = [];
 
   this.page.set(1);
   this.total.set(1);
+  
   
   let that = this;
 
@@ -72,90 +78,6 @@ Template.courseBuilderPage.onCreated( function() {
    */
   $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function() {
 
-    //-------------------------
-    //      DIALOG
-    //-------------------------
-    $( "#dialog" ).dialog({
-      autoOpen: false,
-      close: function( event, ui ) {
-        $( '#js-bold-button' ).removeClass( 'active' );
-        $( '#js-italic-button' ).removeClass( 'active' );
-        $( '#js-underline-button' ).removeClass( 'active' );
-      }
-    });
-
-    // DIALOG BOLD BUTTON
-    $( '#js-bold-button' ).on( "click", function(e){
-      let bold  = $( '#js-cb-text-dialog' ).val()
-        , id    = bold.slice( bold.lastIndexOf( '-' ) + 1 );
-
-      if ( $(this).hasClass( 'active' ) ) {
-         ( `${bold}` ).css( 'font-weight', '' );
-      } else {
-        $( `${bold}` ).css( 'font-weight', 'bold' );
-      }
-      if ( bold.indexOf( 'txt' ) != -1 ) {
-        tbo.texts[id].fontWeight = $( `${bold}` ).css( 'font-weight' );
-      } else if ( italic.indexOf( 'tit' ) != -1 ) {
-        tbo.titles[id].fontWeight = $( `${bold}` ).css( 'font-weight' );
-      }
-    });
-
-    // DIALOG ITALIC BUTTON
-    $( '#js-italic-button' ).on( "click", function(e){
-
-      let italic  = $( '#js-cb-text-dialog' ).val()
-        , id      = italic.slice( italic.lastIndexOf( '-' ) + 1 );
-
-      if ( $(this).hasClass( 'active' ) ) {
-        $( `${italic}` ).css( 'font-style', '');
-      } else {
-        $( `${italic}` ).css( 'font-style', 'italic' );
-      }
-      if ( italic.indexOf( 'txt' ) != -1 ) {
-        tbo.texts[id].fontStyle = $( `${italic}` ).css( 'font-style' );
-      } else if ( italic.indexOf( 'tit' ) != -1 ) {
-        tbo.titles[id].fontStyle = $( `${italic}` ).css( 'font-style' );
-      }
-    });
-
-    // DIALOG UNDERLINE BUTTON
-    $( '#js-underline-button' ).on( "click", function(e){
-
-      let underline = $( '#js-cb-text-dialog' ).val()
-        , id        = underline.slice( underline.lastIndexOf( '-' ) + 1);
-
-      if ( $(this).hasClass( 'active' ) ) {
-        $( `${underline}` ).css( 'text-decoration', '' );
-      } else {
-        $( `${underline}` ).css( 'text-decoration', 'underline' );
-      }
-      if ( underline.indexOf( 'txt' ) != -1 ) {
-        tbo.texts[id].textDecoration = $( `${underline}` ).css( 'text-decoration' );
-      } else if ( underline.indexOf('tit') != -1 ) {
-        tbo.titles[id].textDecoration = $( `${underline}` ).css( 'text-decoration' );
-      }
-    });
-
-
-    //-------------------------------
-    //       DIALOG OPACITY SLIDER
-    //-------------------------------
-    $( "#slider-range" ).slider({
-
-      slide: function( event, ui ) {
-        let opacity = $( '#js-cb-text-dialog' ).val();
-
-        $( "label[for='slider-range']" ).html( ui.value );
-
-        $( `${opacity}`).css( 'opacity', ui.value/100 );
-      }
-    });
-
-    $( "#slider-range" ).slider( "value", 100 );
-
-
-
     //---------------------------
     //        DRAGGABLE
     //---------------------------
@@ -163,9 +85,10 @@ Template.courseBuilderPage.onCreated( function() {
       start: function( event, ui ) {
 
       },
-      //cursor: "move",
+      cursor: "move",
       helper: "clone",
-      zIndex: 1000
+      snap: true,
+      /*handle: "img"*/
     });
 
 
@@ -173,22 +96,25 @@ Template.courseBuilderPage.onCreated( function() {
     //        DROPPABLE
     //-----------------------------
     $( '#fb-template' ).droppable({
+      
       accept: '.draggable',
+      
       drop: function( evt, ui ) {
-        //$( this )
-          //.addClass( "ui-state-highlight" )
-        //$(this).html( ui.draggable.data('dt'));
-        //.css( 'border', '1px dashed blue' ).css( 'color', 'grey' );
         $( '.notice' ).remove();
         $( '#fb-template' ).css( 'background-color', 'white' );
 
         let draggedType = ui.draggable.data( 'type' );
         switch ( draggedType ) {
+          
           case 'title':
+            $( '#cb-toolbar-media' ).hide();
             addTitle( evt.pageX, evt.pageY );
             break;
+            
           case 'text':
+            $( '#cb-toolbar-media' ).hide();
             addText( evt.pageX, evt.pageY );
+
           /*
             $( '#add-text' ).modal( 'show' );
             Meteor.setTimeout( function() {
@@ -199,51 +125,104 @@ Template.courseBuilderPage.onCreated( function() {
             }, 300);
             */
             break;
+            
           case 'image':
-          $( '#add-image' ).modal( 'show' );
-            //addImage();
+            $( '#cb-toolbar-text' ).hide();
+            
+            if( S3.collection.findOne() ) {
+              let id = S3.collection.findOne()._id;
+              S3.collection.remove({ _id: id });
+            }
+            
+            $( '#add-image' ).modal( 'show' );
             break;
+            
           case 'video':
+            $( '#cb-toolbar-text' ).hide();
+            
             if ( testForItemsOnPage(that.contentTracker) )
             {
-             Bert.alert( 'Video must be the only item on the page!', 'danger', 'fixed-top', 'fa-frown-o' );
+              
+             Bert.alert(  
+                        'Video must be the only item on the page!', 
+                        'danger', 
+                        'fixed-top', 
+                        'fa-frown-o' 
+                       );
              return;
+             
             } else {
               addVideo();
             }
             break;
+            
           case 'pdf':
+            $( '#cb-toolbar-text' ).hide();
+            
             if ( testForItemsOnPage(that.contentTracker) )
             {
-                  Bert.alert( 'PDF must be the only item on the page!', 'danger', 'fixed-top', 'fa-frown-o' );
+                  Bert.alert( 
+                              'PDF must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
                   return;
+                  
             } else {
               $( '#add-pdf' ).modal( 'show' );
             }
             break;
+            
           case 'powerpoint':
+            $( '#cb-toolbar-text' ).hide();
+            
             if ( testForItemsOnPage(that.contentTracker) )
             {
-                  Bert.alert( 'PowerPoint must be the only item on the page!', 'danger', 'fixed-top', 'fa-frown-o' );
+                  Bert.alert( 
+                              'PowerPoint must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
                   return;
+                  
             } else {
               $( '#add-powerpoint' ).modal( 'show' );
             }
             break;
+            
           case 'scorm':
+            $( '#cb-toolbar-text' ).hide();
+            
             if ( testForItemsOnPage(that.contentTracker) )
             {
-                  Bert.alert( 'SCORM must be the only item on the page!', 'danger', 'fixed-top', 'fa-frown-o' );
+                  Bert.alert( 
+                              'SCORM must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
                   return;
+                  
             } else {
               $( '#add-scorm' ).modal( 'show' );
             }
             break;
+            
           case 'test':
+            $( '#cb-toolbar-text' ).hide();
+            
             if ( testForItemsOnPage(that.contentTracker) )
             {
-                  Bert.alert( 'A Test must be the only item on the page!', 'danger', 'fixed-top', 'fa-frown-o' );
+                  Bert.alert( 
+                              'A Test must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
                   return;
+                  
             } else {
 
               Session.set( 'obj', tbo );
@@ -251,10 +230,11 @@ Template.courseBuilderPage.onCreated( function() {
               if ( Meteor.user().roles.teacher ) {
                 FlowRouter.go( '/teacher/dashboard/test-maker/' + Meteor.userId() + `?${tbo.name}` );
               } else if ( Meteor.user().roles.admin ) {
-                FlowRouter.go( '/admin/dashboard/test-maker/' + Meteor.userId()   + `?${tbo.name}` );
+                FlowRouter.go( '/admin/dashboard/test-maker/'   + Meteor.userId() + `?${tbo.name}` );
               }
             }
             break;
+            
           default:
             return;
         }
@@ -288,10 +268,11 @@ Template.courseBuilderPage.onCreated( function() {
    * SELECT2 INSTANTIATE
    */
   $.getScript( '/js/select2.min.js', function() {
-    $(document).ready(function(){
+    $( document ).ready(function(){
       $( '#tags' ).select2({
-        allowClear: true,
-        tags: true
+        allowClear:   true,
+        tags:         true,
+        placeholder: "Keywords"
       });
     });
     //console.log('CB:: chosen,jquery.min.js loaded...');
@@ -332,12 +313,13 @@ Template.courseBuilderPage.onRendered( function() {
      )
   {
     //RESTORE THE SESSION
-    tbo = Session.get('obj');
+    tbo = Session.get( 'obj' );
     Session.set( 'obj', null );
-    Session.set( 'test_id', FlowRouter.getQueryParam("id"));
+    Session.set( 'test_id', FlowRouter.getQueryParam("id") );
+console.log( Session.get('test_id'));
 
     //Save the test
-    $('#cb-next-btn').click();
+    $( '#cb-next-btn' ).click();
     return;
   }
 
@@ -356,10 +338,9 @@ Template.courseBuilderPage.onRendered( function() {
 
 
 
-
 /* *****************************************************************************
  * HELPERS
- *******************************************************************************/
+ ******************************************************************************/
 Template.courseBuilderPage.helpers({
 
   fname: () => {
@@ -370,7 +351,13 @@ Template.courseBuilderPage.helpers({
       return;
     }
   },
-
+  
+	"files": function(){
+	  
+		return S3.collection.find();
+		
+	},
+	
   page: () =>
     Template.instance().page.get(),
 
@@ -384,13 +371,17 @@ Template.courseBuilderPage.helpers({
 /*
  * MODULE LEVEL VARIABLES
  */
-let tbo         = {};
+let tbo       = {};
 
-  //tbo.titles  = [];
-  //tbo.texts   = [];
-  //tbo.images  = [];
+  tbo.titles  = [];
+  tbo.texts   = [];
+  tbo.images  = [];
   tbo.videos  = [];
   tbo.pages   = [];
+  tbo.pdfs    = [];
+  tbo.ppts    = [];
+  tbo.scorms  = [];
+  tbo.tests   = [];
 
 
 /* *****************************************************************************
@@ -408,7 +399,9 @@ Template.courseBuilderPage.events({
 //-----------------------------------------------------------------------------
   },
 */
-
+  
+  
+  
 
   /*
    *
@@ -439,29 +432,49 @@ Template.courseBuilderPage.events({
     if ( t.page.get() < tbo.page ) {
         t.page.set( tbo.page );
     }
+    
     if ( t.total.get() < tbo.total ) {
       t.total.set( tbo.total );
     }
 
     //SAVE TEST (IT'S OUTSIDE MAIN FLOW SO NEEDS TO BE CHECKED FIRST)
-    if ( Session.get('test_id') ) {
+    if ( Session.get( 'test_id' ) ) {
 
       tbo.pages[ t.page.get() ] = {
-                                    no: tbo.page,
-                                    page: Session.get('test_id'),
+                                    no: t.page.get(),
+                                    page: Session.get( 'test_id' ),
                                     type: "test"
                                   };
-
-      Session.set('test_id', null);
+      
       t.contentTracker.tests = 0;
 
-      t.page.set( t.page.get()    + 1);
-      t.total.set( t.total.get()  + 1);
+      Session.set( 'test_id', null );
+      
+      t.contentTracker.tests = 0;
+
+      // CLEAR THE CONTENT TRACKER
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+      
+      t.page.set(   t.page.get()  + 1 );
+      t.total.set(  t.total.get() + 1 );
 
       tbo.page  = t.page.get();
       tbo.total = t.total.get();
-      Bert.alert( 'Page successfully added.', 'success', 'growl-top-right' );
+      
+      Bert.alert( 
+                  'Page successfully added.', 
+                  'success', 
+                  'growl-top-right' 
+                );
 
+    
       return;
     }
 
@@ -476,7 +489,13 @@ Template.courseBuilderPage.events({
           t.contentTracker.tests  == 0
         )
     {
-          Bert.alert( 'There is no content!', 'danger', 'fixed-top', 'fa-frown-o' );
+          Bert.alert( 
+                      'There is no content!', 
+                      'danger', 
+                      'fixed-top', 
+                      'fa-frown-o' 
+                    );
+                    
           $(e.currentTarget).prop('disabled', false);
           return;
     }
@@ -487,20 +506,30 @@ Template.courseBuilderPage.events({
 
     //DISABLE CLICK EVENT FOR ITEM INFO POP-UPS SO IT ISN"T CAPTURED
     t. titlesTracker.forEach(function(el){
-      $(`#div_title-${el}`).off("mouseup");
+      if ( el )
+        $(`#tit-${el}`).off("mouseup");
     });
 
     t.textsTracker.forEach(function(el){
-      $(`#span_text-${el}`).off("mouseup");
+      if ( el )
+        $(`#txt-${el}`).off("mouseup");
     });
 
     t.imagesTracker.forEach(function(el){
-      $(`#ig-${el}`).off("mouseup");
+      if ( el )
+        $(`#ig-${el}`).off("mouseup");
     });
 
-    //SAVE VIDEO
+
+    //SAVE VIDEO no, page, type
     if ( tbo.videos.length ) {
-      tbo.pages[ t.page.get() ] = tbo.videos[0];
+    
+      tbo.pages[ t.page.get() ] = {
+                                    no: t.page.get(),
+                                    url: tbo.videos[0],
+                                    type: "video"
+                                  };
+                                  
       tbo.videos                = [];
 
       // CLEAR THE DIV
@@ -509,39 +538,175 @@ Template.courseBuilderPage.events({
       // CLEAR CONTENT TRACKER
       t.contentTracker.videos = 0;
 
+      // CLEAR THE CONTENT TRACKER
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+      
       // ADVANCE PAGE COUNTS
       t.page.set(  t.page.get()    + 1 );
       t.total.set( t.total.get()   + 1 );
 
       tbo.page  = t.page.get();
       tbo.total = t.total.get();
-      Bert.alert( 'Page successfully added.', 'success', 'growl-top-right' );
+      
+      Bert.alert( 
+                  'Page successfully added.', 
+                  'success', 
+                  'growl-top-right' 
+                );
 
       return;
     }
 
+    //SAVE PDF
+    if ( tbo.pdfs.length ) {
+      let p   = t.page.get();
+      
+      // STORE THE PAGE
+      tbo.pages[p] = {
+                        no:   t.page.get(),
+                        url:  tbo.pdfs[0].url,
+                        type: "pdf",
+                        pdf_id: tbo.pdfs[0].pdf_id
+                     };
+ 
+      // CLEAR PDF'S ARRAY     
+      tbo.pdfs                = [];
+      
+      //CLEAR THE DIV
+      $( '#fb-template' ).empty();
+      
+      //CLEAR CONTENT TRACKER
+      t.contentTracker.pdfs = 0;
+      
+      // CLEAR THE CONTENT TRACKER
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+  
+      // ADVANCE PAGE COUNTS
+      t.page.set(   p + 1 );
+      t.total.set(  p + 1 );
+      
+      //shadow page counts
+      tbo.page  = t.page.get();
+      tbo.total = t.total.get();
+      
+      Bert.alert( 
+                  'Page successfully added.', 
+                  'success', 
+                  'growl-top-right' 
+                );
+      
+      return;
+    }
 
+    //SAVE PPT
+    if ( tbo.ppts.length ) {
+      tbo.pages[ t.page.get() ] = {
+                                    no: t.page.get(),
+                                    url: tbo.ppts[0],
+                                    type: "ppt"
+                                  };
+                                  
+      tbo.ppts                  = [];
+      
+      //CLEAR THE DIV
+      $( '#fb-template' ).empty();
+      
+      //CLEAR CONTENT TRACKER
+      t.contentTracker.ppts = 0;
+      
+      // CLEAR THE CONTENT TRACKER
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+      
+      //ADVANCE PAGE COUNTS
+      t.page.set(   t.page.get()  + 1 );
+      t.total.set(  t.total.get() + 1 );
+      
+      tbo.page  = t.page.get();
+      tbo.total = t.total.get();
+      
+      Bert.alert( 
+                  'Page successfully added.', 
+                  'success', 
+                  'growl-top-right' 
+                );
+      
+      return;
+    }
+    
+    //SAVE SCORM
+    if ( tbo.scorms.length ) {
+      tbo.pages[ t.page.get() ] = {
+                                    no:   t.page.get(),
+                                    url:  tbo.scorms[0],
+                                    type: "scorm"
+                                  };
+                                  
+      tbo.scorms                = [];
+      
+      //CLEAR THE DIV
+      $( '#fb-template' ).empty();
+      
+      //CLEAR CONTENT TRACKER
+      t.contentTracker.scorms = 0;
+      
+      //ADVANCE PAGE COUNTS
+      t.page.set(   t.page.get()  + 1 );
+      t.total.set(  t.total.get() + 1 );
+      
+      Bert.alert( 
+                  'Page.successfully added.', 
+                  'success', 
+                  'growl-top-right' 
+                );
+      
+      return;
+      
+    }
+    
+    
     //SAVE TITLES, TEXT, IMAGES
     Bert.alert( 'Adding...', 'success', 'growl-top-right' );
-    let p   = t.page.get();
+    let p   = t.page.get()
+      , url = ''
+      , img;
 
-    //LOCK THINGS OUT FOR NORMAL ITEM INFO POP-UP TIMER
-    Meteor.setTimeout(function(){
-      let img = new Image();
+      img = new Image();
 
-      html2canvas(document.getElementById( 'fb-template' )).then( function(canvas) {
+      html2canvas( document.getElementById( 'fb-template' ) ).then( function( canvas ) {
         //document.body.appendChild(canvas);
         img = canvas.toDataURL()
-
          // STORE THE PAGE
-        tbo.pages[p] = { no: p, page: img }; //cd.buildDOM();
+        tbo.pages[p] = { 
+                        no: p, 
+                        page: img, 
+                        type: "page" 
+                       }; //cd.buildDOM();
 
         // CLEAR THE DIV
         $( '#fb-template' ).empty();
-
-        //document.getElementById("foo").src = img;
       });
-    }, 2000);
+  	
 
     // CLEAR THE CONTENT TRACKER
     t.contentTracker.titles = 0;
@@ -560,6 +725,7 @@ Template.courseBuilderPage.events({
     // ADVANCE PAGE COUNTS
     t.page.set(   p   + 1 );
     t.total.set(  p   + 1 );
+    
     //shadow page counts
     tbo.page = t.page.get();
     tbo.total = t.total.get();
@@ -609,7 +775,13 @@ Template.courseBuilderPage.events({
       , keys    = t.$( '#tags' ).val();
 
       if ( name == '' || credits == '' || percent == '' || keys == '' ) {
-        Bert.alert( 'All fields must be filled out!', 'danger', 'fixed-top', 'fa-frown-o' );
+        
+        Bert.alert( 
+                    'All fields must be filled out!', 
+                    'danger', 
+                    'fixed-top', 
+                    'fa-frown-o' 
+                  );
         return;
       }
       
@@ -654,21 +826,31 @@ Template.courseBuilderPage.events({
   'click #cb-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
+    
     t.$( '#intro-modal' ).modal( 'hide' );
     if (
         t.page.get() === 1
        )
     {
-          Bert.alert( 'There is no content!', 'danger', 'fixed-top', 'fa-frown-o' );
+          Bert.alert( 
+                      'There is no content!', 
+                      'danger', 
+                      'fixed-top', 
+                      'fa-frown-o' 
+                    );
           return;
     }
 
     if ( BuiltCourses.findOne({ name: tbo.name }) != undefined )
     {
-      Bert.alert( 'There is already a course with that name in your database!', 'danger', 'fixed-top', 'fa-grown-o' );
+      Bert.alert( 
+                  'There is already a course with that name in your database!', 
+                  'danger', 
+                  'fixed-top', 
+                  'fa-grown-o' 
+                );
       return;
     }
-
 
     let role  = ( Meteor.user().roles.teacher ) ? "teacher" : "admin"
       , cid   = Meteor.user().profile.company_id
@@ -703,7 +885,11 @@ Template.courseBuilderPage.events({
                   });
 
     Meteor.setTimeout(function(){
-      Bert.alert( 'Your test was saved!', 'success', 'growl-top-right' );
+      Bert.alert( 
+                  'Your test was saved!', 
+                  'success', 
+                  'growl-top-right' 
+                );
     }, 500);
     
 
@@ -737,8 +923,8 @@ Template.courseBuilderPage.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    Template.instance().page.set( Template.instance().page.get() + 1 );
-    Template.instance().total.set( Template.instance().total.get() + 1 );
+    Template.instance().page.set(   Template.instance().page.get()  + 1 );
+    Template.instance().total.set(  Template.instance().total.get() + 1 );
     t.$( '#add-test' ).modal( 'hide' );
 //-----------------------------------------------------------------------------
   },
@@ -757,13 +943,27 @@ Template.courseBuilderPage.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    Template.instance().page.set( Template.instance().page.get()    + 1 );
-    Template.instance().total.set( Template.instance().total.get()  + 1 );
+    Template.instance().page.set(   Template.instance().page.get()  + 1 );
+    Template.instance().total.set(  Template.instance().total.get() + 1 );
     t.$( '#add-scorm' ).modal( 'hide' );
 //-----------------------------------------------------------------------------
   },
 
 
+
+  /*
+   *
+   * #COURSE-BUILDER-POWERPOINT  ::(CHANGE)::
+   *
+   */
+   'change #course-builder-powerpoint'( e, t ) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      
+      CBPP.cbPowerPointChange( e, t, tbo, PowerPoints );  
+   },
+   
+   
 
   /*
    *
@@ -794,7 +994,7 @@ Template.courseBuilderPage.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    CBPDF.cbPDFChange( e, t, tbo );
+    CBPDF.cbPDFChange( e, t, tbo, Pdfs );
 //-----------------------------------------------------------------------------
   },
 
@@ -822,7 +1022,8 @@ Template.courseBuilderPage.events({
    *
    */
   'change #course-builder-image'( e, t ) {
-    CBImage.cbImageChange( e, t, tbo );
+
+    CBImage.cbImageChange( e, t, tbo, Images );
   },
 
 
@@ -849,7 +1050,6 @@ Template.courseBuilderPage.events({
   'blur #added-title'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
     CBTitle.cbAddedTitleBlur( e, t, tbo, t.contentTracker, t.titlesTracker );
   },
 
@@ -874,8 +1074,248 @@ Template.courseBuilderPage.events({
   'change #added-video'( e, t ) {
 
     CBVideo.addedVideoURL( e, t, tbo, t.contentTracker );
-  }
+  },
+  
+  
+  /*
+   * KEEP VALUES CONSTRAINED
+   */
+  'blur #course-builder-credits'( e, t ) {
+    let v = t.$( '#course-builder-credits' ).val();
+    if ( v > 120 )  t.$( '#course-builder-credits' ).val( 120 );
+    if ( v < 0   )  t.$( '#course-builder-credits' ).val(  0  );
+  },
 
+  
+  /*
+   * KEEP VALUES CONSTRAINED
+   */
+  'blur #course-builder-percent'( e, t ) {
+    let v = t.$( '#course-builder-percent' ).val();
+    if ( v > 100 )  t.$( '#course-builder-percent' ).val( 100 );
+    if ( v < 0   )  t.$( '#course-builder-percent' ).val(  0  );
+  },
+  
+  
+  
+  /* *****************************************************************
+   * MOUSE OVER'S AND HOVER'S FOR CB DRAG AND DROP
+   *
+   ***************************************************************** */
+   
+   /*
+    * MOUSEOVER TITLE
+    */
+  'mouseover .cb-img-title'( e, t ) { //hover
+    $( '.cb-img-title' ).prop( 'src', '/img/title-dark.png' );
+  },
+//---------------------------------------------------------
+
+
+  /*
+   * MOUSEOUT TITLE
+   */
+  'mouseout .cb-img-title'( e, t ) {
+    $( '.cb-img-title' ).prop( 'src', '/img/title.png' );
+  },
+//---------------------------------------------------------
+
+  /*
+   * MOUSEUP TITLE
+   */
+  'mouseup .cb-img-title'( e, t ) {
+    $( '.cb-img-title' ).prop( 'src', '/img/title.png' );
+  },
+//---------------------------------------------------------
+
+
+  /*
+   * MOUSEOVER TEXT
+   */
+  'mouseover .cb-img-text'( e, t ) {
+    $( '.cb-img-text' ).prop( 'src', '/img/text-dark.png' );
+  },
+//----------------------------------------------------------
+
+
+  /*
+   * MOUSEOUT TEXT
+   */
+  'mouseout .cb-img-text'( e, t ) {
+    $( '.cb-img-text' ).prop( 'src', '/img/text.png' );
+  },
+//-----------------------------------------------------------
+
+
+  /*
+   * MOUSEUP TEXT
+   */
+  'mouseup .cb-img-text'( e, t ) {
+    $( '.cb-img-text' ).prop( 'src', '/img/text.png' );
+  },
+//---------------------------------------------------------
+
+
+  /*
+   * MOUSEOVER IMAGE
+   */
+  'mouseover .cb-img-image'( e, t ) {
+     $( '.cb-img-image' ).prop( 'src', '/img/images-dark.png' );
+   },
+//------------------------------------------------------------
+
+
+   /*
+    * MOUSEOUT IMAGE
+    */
+  'mouseout .cb-img-image'( e, t ) {
+    $( '.cb-img-image' ).prop( 'src', '/img/images.png' );
+  },
+//-------------------------------------------------------------
+
+
+  /*
+   * MOUSEUP IMAGE
+   */
+  'mouseup .cb-img-image'( e, t ) {
+    $( '.cb-img-image' ).prop( 'src', '/img/images.png' );
+  },
+//---------------------------------------------------------  
+
+
+  /*
+   * MOUSEOVER PDF
+   */
+  'mouseover .cb-img-pdf'( e, t ) {
+    $( '.cb-img-pdf' ).prop( 'src', '/img/pdf-dark.png' );
+  },
+//-------------------------------------------------------------
+
+
+  /*
+   * MOUSEOUT PDF
+   */
+  'mouseout .cb-img-pdf'( e, t ) {
+    $( '.cb-img-pdf' ).prop( 'src', '/img/pdf.png' );
+  },
+//--------------------------------------------------------------
+
+
+  /*
+   * MOUSEUP PDF
+   */
+  'mouseup .cb-img-pdf'( e, t ) {
+    $( '.cb-img-pdf' ).prop( 'src', '/img/pdf.png' );
+  },
+//---------------------------------------------------------
+
+
+  /*
+   * MOUSEOVER PPT
+   */
+  'mouseover .cb-img-ppt'( e, t ) {
+    $( '.cb-img-ppt' ).prop( 'src', '/img/ppt-dark.png' );
+  },
+//--------------------------------------------------------------
+
+
+  /*
+   * MOUSEOUT PPT
+   */
+  'mouseout .cb-img-ppt'( e, t ) {
+    $( '.cb-img-ppt' ).prop( 'src', '/img/ppt.png' );
+  },
+//--------------------------------------------------------------
+
+
+  /*
+   * MOUSEUP PPT
+   */
+  'mouseup .cb-img-ppt'( e, t ) {
+    $( '.cb-img-ppt' ).prop( 'src', '/img/ppt.png' );
+  },
+//---------------------------------------------------------
+
+
+  /*
+   * MOUSEOVER SCORM
+   */
+  'mouseover .cb-img-scorm'( e, t ) {
+    $( '.cb-img-scorm' ).prop( 'src', '/img/scorm-dark.png' );
+  },
+//---------------------------------------------------------------
+
+
+  /*
+  * MOUSEOUT SCORM
+  */
+  'mouseout .cb-img-scorm'( e, t ) {
+    $( '.cb-img-scorm' ).prop( 'src', '/img/scorm.png' );
+  },
+//----------------------------------------------------------------
+
+
+  /*
+   * MOUSEUP SCORM
+   */
+  'mouseup .cb-img-scorm'( e, t ) {
+    $( '.cb-img-scorm' ).prop( 'src', '/img/scorm.png' );
+  },
+//---------------------------------------------------------
+
+
+  /*
+   * MOUSEOVER TEST
+   */
+  'mouseover .cb-img-test'( e, t ) {
+    $( '.cb-img-test' ).prop( 'src', '/img/test-dark.png' );
+  },
+//-----------------------------------------------------------------
+
+
+  /*
+   * MOUSEOUT TEST
+   */
+  'mouseout .cb-img-test'( e, t ) {
+    $( '.cb-img-test' ).prop( 'src', '/img/test.png' );
+  },
+//-----------------------------------------------------------------
+
+
+  /*
+   * MOUSEUP TEST
+   */
+  'mouseup .cb-img-test'( e, t ) {
+    $( '.cb-img-test' ).prop( 'src', '/img/test.png' );
+  },
+//---------------------------------------------------------
+
+
+  /*
+   * MOUSEOVER VIDEO
+   */
+  'mouseover .cb-img-video'( e, t ) {
+    $( '.cb-img-video' ).prop( 'src', '/img/videos-dark.png' );
+  },
+//------------------------------------------------------------------
+
+
+  /*
+   * MOUSEOUT VIDEO
+   */
+  'mouseout .cb-img-video'( e, t ) {
+    $( '.cb-img-video' ).prop( 'src', '/img/videos.png' );
+  },
+//------------------------------------------------------------------
+
+
+  /*
+   * MOUSEUP VIDEO
+   */
+  'mouseup .cb-img-video'( e, t ) {
+    $( '.cb-img-video' ).prop( 'src', '/img/videos.png' );
+  },
+//---------------------------------------------------------
 });
 
 
@@ -887,8 +1327,8 @@ function addTitle( x, y ) {
   $( '#fb-template' ).append(holder);
   
   let pos = $('#added-title').position();
-  let x1 = pos.left;
-  let y1 = pos.top;
+  let x1  = pos.left;
+  let y1  = pos.top;
 
   $( '#added-title').offset({ left: x - x1, top: y - y1 });
   $(holder).effect( "highlight", {}, 2000 );

@@ -32,15 +32,21 @@
 ////////////////////////////
 
     let vid = t.$( '#added-video' ).val()
-      , m   = vid.slice( vid.indexOf('=') +1)
-      , url;
+      , m   = /(v=)(.*)(#)/g
+      , match = m.exec(vid)
+      , url
+      , patt
+      , conv;
 
-    url = `<iframe  width="640"
-                    height="360"
-                    src="https://www.youtube.com/embed/${m}"
-                    frameborder="0"
-                    allowfullscreen>
-            </iframe>`
+    conv = match[2];
+    
+    //is there an &list in the video id?
+    patt = new RegExp("[?&]list");
+    
+    //if so, change it to ?list
+    if( patt.test( conv ) ) conv = conv.replace("&list", "?list");
+    
+    url = `<iframe width="854" height="480" src="https://www.youtube.com/embed/${conv}" frameborder="0" allowfullscreen></iframe>`;
 
     t.$( '#added-video' ).remove();
 
@@ -48,11 +54,18 @@
     ++vid_id;
 
     //tbo.videos.push( {page: Template.instance().page.get(), id: ++vid_id, url: vid} );
-    tbo.videos[vid_id] = { no: Template.instance().page.get(), page: url };
+    tbo.videos[vid_id] = url;
 
     //add to the canvas
     t.$( '#fb-template' ).html( url );
-
+    
+    
+    t.$( '#fb-template iframe' ).on( "click", (e) => {
+        $( '#cb-toolbar-media' ).show();
+        $( '#cb-current' ).val( '#vid' );
+    });
+    
+/*
     if ( ! t.$( `#close-vid-${vid_id}` ).length ) {
         $( '#fb-template' ).append( `<button  type="button"
                                               id="close-vid-${vid_id}"
@@ -73,7 +86,7 @@
           $( `#close-vid-${vid_id}` ).remove();
         });
     }
-
+*/
 
 //    BuiltCourses.update({ _id: built_id },
 //                        { $addToSet:
@@ -85,4 +98,4 @@
 //                          }
 //                        });
 //-----------------------------------------------------------------------------
-  }
+}

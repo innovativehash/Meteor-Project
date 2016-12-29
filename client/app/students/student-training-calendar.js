@@ -26,7 +26,9 @@ Template.studentTrainingCalendar.onCreated( () => {
   //$('#cover').show();
   
   let template = Template.instance();
+  
   template.subscribe( 'events' );
+  
   //---------------------------------------------------------------------------
 });
 
@@ -50,7 +52,9 @@ Template.studentTrainingCalendar.onRendered(function(){
 
     // options and callbacks here
     events( start, end, timezone, callback ) {
+      
       let data = Events.find().fetch().map( ( event ) => {
+        
         event.editable = !isPast( event.start );
         return event;
       });
@@ -74,8 +78,12 @@ Template.studentTrainingCalendar.onRendered(function(){
       );
     },
     
+    eventDragStart( event ) {
+      console.log( 'event drag start' ); 
+    },
     
     eventDrop( event, delta, revert ) {
+      
       let date = event.start.format();
       if ( !isPast( date ) ) {
         let update = {
@@ -83,13 +91,21 @@ Template.studentTrainingCalendar.onRendered(function(){
           start:  date,
           end:    date
         };
-
+        
+        //STUDENT CAN'T CHANGE CALENDAR ITEM
+        if ( ! Meteor.user().roles.teacher ) {
+          revert();
+          return;
+        };
+        
         Meteor.call( 'editEvent', update, ( error ) => {
           if ( error ) {
             Bert.alert( error.reason, 'danger' );
           }
         });
+        
       } else {
+        
         revert();
         Bert.alert( 'Sorry, you can\'t move items to the past!', 'danger' );
       }
@@ -100,7 +116,9 @@ Template.studentTrainingCalendar.onRendered(function(){
      * fired whenever we click on the actual day square in the calendar
      */
     dayClick( date ) {
+      
       Session.set( 'eventModal', { type: 'add', date: date.format() } );
+      
       $( '#add-edit-event-modal' ).modal( 'show' );
     },
     
@@ -110,15 +128,19 @@ Template.studentTrainingCalendar.onRendered(function(){
      */
     eventClick( event /* literally the rendered event’s data,
                          returned from the event()            */ ) {
+                           
       Session.set( 'eventModal', { type: 'edit', event: event._id } );
+      
       $( '#add-edit-event-modal' ).modal( 'show' );
     }
 
   }); //fullcalendar
   
   Tracker.autorun( () => {
+    
     Events.find().fetch();
     $( '#calendar' ).fullCalendar( 'refetchEvents' );
+    
   });
 
 });

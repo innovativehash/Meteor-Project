@@ -10,9 +10,293 @@ import { Comments }     from '../both/collections/api/comments.js';
 import { Companies }    from '../both/collections/api/companies.js';
 import { BuiltCourses } from '../both/collections/api/built-courses.js';
 import { Events }       from '../both/collections/api/events.js';
-
+import { Scorms }       from '../both/collections/api/scorms.js';
 
 Meteor.methods({
+  
+  
+  /*
+   * get URL of  course for student (requires username pass  and course_id)
+   * http://scorm.academy-smart.org.ua/player/get
+   * POST BODY
+   * { “user”: "demo_user", “pass”: "1", “course”: "1" } 
+   * returns full url to play a course
+   */
+   'scormGetCoursePlayURL': function( user, pass, course ) {
+     HTTP.post( 'http://scorm.academy-smart.org.ua/player/get',
+                {
+                  data: {
+                    "user": `${user}`, "pass": `${pass}`, "course": `${course}`
+                  }
+                },
+                function( error, response ){
+                  if( error ){
+                    console.log( error );
+                  } else {
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE:');
+                   console.log( response );
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE.DATA:');
+                   console.log( response.data );
+                   console.log('-------------------------------------------------------------------');
+                  }
+    });
+   },
+   
+   
+  /*
+   * DELETE COURSE
+   * DELETE http://scorm.academy-smart.org.ua/player/deleteCourse
+   * body
+   * {"company_id":"<your_company>"  "course_id":"<existing course>"}
+   */
+   'scormDeleteCourse': function( company_id, course ) {
+     HTTP.delete( 'http://scorm.academy-smart.org.ua/player/deleteCourse',
+                  {
+                    data: {
+                      "company_id": `${company_id}`, "course_id": `${course}k`
+                    }
+                  },
+                  function( error, response ){
+                    if( error ){
+                      console.log( error );
+                    } else {
+                     console.log('-------------------------------------------------------------------');
+                     console.log( 'RESPONSE:');
+                     console.log( response );
+                     console.log('-------------------------------------------------------------------');
+                     console.log( 'RESPONSE.DATA:');
+                     console.log( response.data );
+                     console.log('-------------------------------------------------------------------');
+                    }
+    });
+   },
+   
+   
+  /*
+   * GET STATUS OF COURSE
+   * GET http://scorm.academy-smart.org.ua/player/courseStatus/<company_id>/<user_id>
+   */
+   'scormStudentCourseStatus': function() {
+     HTTP.get( `http://scorm.academy-smart.org.ua/player/courseStatus/${company_id}/${user_id}`,
+                {},
+                function( error, response ){
+                  if( error ){
+                    console.log( error );
+                  } else {
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE:');
+                   console.log( response );
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE.DATA:');
+                   console.log( response.data );
+                   console.log('-------------------------------------------------------------------');
+                  }
+    });
+   },
+   
+   
+  /*
+   * NO INPUTS OUTPUT - ALL LOADED COURSES
+   * GET http://scorm.academy-smart.org.ua/player/listAllCourses
+   */
+   'scormListAllCourses': function() {
+     HTTP.get( 'http://scorm.academy-smart.org.ua/player/listAllCourses',
+                {},
+                function( error, response ){
+                  if( error ) {
+                    console.log(error);
+                  } else {
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE:');
+                   console.log( response );
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE.DATA:');
+                   console.log( response.data );
+                   console.log('-------------------------------------------------------------------');
+                  }
+    });
+   },
+   
+   
+
+  /*
+   * - LIST ALL STARTED COURSES BY USER
+   * GET http://scorm.academy-smart.org.ua/player/coursesStarted/<company_id>/<user_id>
+   */
+   'scormListStudentStartedCourses': function() {
+     HTTP.get( `http://scorm.academy-smart.org.ua/player/courseStarted/${company_id}/${user_id}`,
+                {},
+                function( error, response ){
+                  if( error ){
+                    console.log( error );
+                  } else {
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE:');
+                   console.log( response );
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE.DATA:');
+                   console.log( response.data );
+                   console.log('-------------------------------------------------------------------');
+                  }
+    });
+   },
+   
+   
+  /*
+   * LIST ALL COMPLETED COURSES BY USER
+   * GET http://scorm.academy-smart.org.ua/player/coursesCompleted/<company_id>/<user_id>
+   */
+   'scormListStudentCompletedCourses': function() {
+     HTTP.get( `http://scorm.academy-smart.org.ua/player/coursesCompleted/${company_id}/${user_id}`,
+                {},
+                function( error, response ){
+                  if( error ) {
+                    console.log( error );
+                  } else {
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE:');
+                   console.log( response );
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE.DATA:');
+                   console.log( response.data );
+                   console.log('-------------------------------------------------------------------');
+                  }
+    });
+   },
+   
+   
+  /*
+   * LIST ALL COURSES BY COMPANY
+   * GET http://scorm.academy-smart.org.ua/player/listCompanyCourses/<company_id>
+   */
+   'scormListCompanyCourses': function() {
+     HTTP.get( `http://scorm.academy-smart.org.ua/player/listCompanyCourses/${company_id}`,
+                {},
+                function( error, response ){
+                  if( error ) {
+                    console.log(error);
+                  } else {
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE:');
+                   console.log( response );
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE.DATA:');
+                   console.log( response.data );
+                   console.log('-------------------------------------------------------------------');
+                  }
+    });
+   },
+   
+   
+  /*
+   * LIST ALL COURSES BY USER (COMPLETED/CURRENT)
+   * GET http://scorm.academy-smart.org.ua/player/listStudentCourses/<company_id>/<user_id>
+   */
+   'scormListUserCourses': function() {
+     HTTP.get( `http://scorm.academy-smart.org.ua/player/listStudentCourses/${company_id}/${user_id}`,
+                {},
+                function( error, response ){
+                  if( error ){
+                    console.log( error );
+                  } else {
+                    console.log('-------------------------------------------------------------------');
+                    console.log( 'RESPONSE:');
+                    console.log( response );
+                    console.log('-------------------------------------------------------------------');
+                    console.log( 'RESPONSE.DATA:');
+                    console.log( response.data );
+                    console.log('-------------------------------------------------------------------');
+                  }
+      });
+   },
+   
+   
+  /*
+   * SCORM METRIC OF STUDENT OF SPECIFIED COURSE
+   * GET http://scorm.academy-smart.org.ua/player/courseMetric/<company_id>/<user_id>/<course_id>/<scorm metric>
+   */
+   'scormStudentMetric': function( company_id, user_id, course_id, scorm_metric ) {
+     HTTP.get( `http://scorm.academy-smart.org.ua/player/courseMetric/${company_id}/${user_id}/${course_id}/${scorm_metric}`,
+                {},
+                function( error, response ){
+                  if ( error ){
+                    console.log( error );
+                  } else {
+                    console.log('-------------------------------------------------------------------');
+                    console.log( 'RESPONSE:');
+                    console.log( response );
+                    console.log('-------------------------------------------------------------------');
+                    console.log( 'RESPONSE.DATA:');
+                    console.log( response.data );
+                    console.log('-------------------------------------------------------------------');
+                  }
+    });
+   },
+   
+   
+  /*
+   * CREATE USER
+   * POST http://scorm.academy-smart.org.ua/users/createUser
+   * {"user":"<username>","pass":"<password>","comapny_id"":"numeric comapny id"}
+   */
+  'scormCreateUser': function( user, pass, company_id ) {
+    HTTP.post( 'http://scorm.academy-smart.org.ua/users/createUser',
+                {
+                  data: {
+                    "user": `${user}`, "pass": `${pass}`, "company_id": `${company_id}`
+                  }
+                },
+                function( error, response ) {
+                  if( error ) {
+                   console.log( error );
+                  } else {
+                    console.log('-------------------------------------------------------------------');
+                    console.log( 'RESPONSE:');
+                    console.log( response );
+                    console.log('-------------------------------------------------------------------');
+                    console.log( 'RESPONSE.DATA:');
+                    console.log( response.data );
+                    console.log('-------------------------------------------------------------------');
+                  }
+    });
+  },
+  
+  
+  /*
+   * UPLOAD COURSE
+   * POST http://scorm.academy-smart.org.ua/player/uploadCourse
+   * {"comapny_id"":"numeric comapny id"}
+   * and set multipart/mixed content
+   * and attach files
+   */
+  'scormUploadCourse': function( company_id ) {
+    HTTP.post( 'http://scorm.academy-smart.org.ua/player/uploadCourse', 
+                { 
+                  headers:{ 
+                    "Content-Type": "multipart/mixed" 
+                  },
+                  data: { 
+                    "company_id": `${company_id}` 
+                  }
+                }, 
+                function( error, response ){
+                  if ( error ) {
+                    console.log( error );
+                  } else {
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE:');
+                   console.log( response );
+                   console.log('-------------------------------------------------------------------');
+                   console.log( 'RESPONSE.DATA:');
+                   console.log( response.data );
+                   console.log('-------------------------------------------------------------------');
+                  }
+    });
+  },
+  
+  
   
   'upsertCompany': function( company_id, freq, req_cred ) {
 
@@ -233,7 +517,7 @@ Meteor.methods({
       title:  String,
       start:  String,
       end:    String,
-      type:   [String],
+      students:   [String],
       courses: [String]
     });
 //-----------------------------------------------------------------------------
@@ -259,10 +543,10 @@ Meteor.methods({
       title:  Match.Optional( String ),
       start:  String,
       end:    String,
-      type:   Match.Optional( [String] ),
+      students:   Match.Optional( [String] ),
       courses: Match.Optional( [String] )
     });
-
+    
     try {
       return Events.update( event._id, {
         $set: event

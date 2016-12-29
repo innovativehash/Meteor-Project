@@ -1,6 +1,6 @@
-
-
 <template name="courses">
+<!-- courses Template -->
+<!-- Nicholas Sardo <nsardo@aol.com> -->
 <!--
 <style>
   #courses-cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
@@ -148,7 +148,7 @@
                     {{#with courses}}
                     {{#each this}}
                     <tr id="{{_id}}">
-                      <th class="name"><img src="{{icon}}" alt=""><a id="{{course_id}}" href="/admin/dashboard/course-viewer/{{course_id}}">{{name}}</a></th>
+                      <th class="name"><img src="{{icon}}" alt=""><a id="{{course_id}}" href="/admin/dashboard/course-viewer/{{uid}}?course={{built_id}}">{{name}}</a></th>
                       <td>1 course</td>
                       <td>{{credits}}</td>
                       <td>{{times_completed}}</td>

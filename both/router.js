@@ -115,10 +115,10 @@ studentRoutes.route( '/dashboard/request-credit/:_id', {
  */
 studentRoutes.route( '/dashboard/course-view/:_id', {
   name: 'student-course-view',
-  action: () => {
-        //console.log("Params:", params);
-        //console.log("Query Params:", queryParams);
-    BlazeLayout.render( 'courseBuilderLayout', {main:"courseView"});
+  action: (params, queryParams) => {
+        console.log("Params:", params);
+        console.log("Query Params:", queryParams);
+    BlazeLayout.render( 'courseViewerLayout', {main:"courseView"});
   }
 });
 
@@ -205,7 +205,7 @@ teacherRoutes.route( '/dashboard/course-view/:_id', {
   action: (params, queryParams) => {
         console.log("Params:", params);
         console.log("Query Params:", queryParams);
-    BlazeLayout.render( 'courseBuilderLayout', {main:"courseView"});
+    BlazeLayout.render( 'courseViewerLayout', {main:"courseView"});
   }
 });
 
@@ -301,10 +301,13 @@ adminRoutes.route('/dashboard/course-builder/:_id', {
 /*
  * ADMIN COURSE-VIEWER
  */
-adminRoutes.route('/dashboard/course-viewer/:id', {
+adminRoutes.route('/dashboard/course-viewer/:_id', {
   name: 'admin-course-viewer',
-  action: () =>
-    BlazeLayout.render( 'courseViewerLayout', {main:"courseViewer"})
+  action: (params, queryParams) => {
+        console.log("Params:", params);
+        console.log("Query Params:", queryParams);
+    BlazeLayout.render( 'courseViewerLayout', {main:"courseView"});
+  }
 });
 
 /* TEST-CREATOR */

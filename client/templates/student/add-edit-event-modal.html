@@ -1,5 +1,6 @@
-<template name="addEditEventModal">
-    
+<template name = "addEditEventModal">
+<!-- addEditEventModel Template -->
+<!-- Nicholas Sardo <nsardo@aol.com> -->  
   <div  class           = "modal fade" 
         id              = "add-edit-event-modal" 
         tabindex        = "-1" 
@@ -73,6 +74,7 @@
                   <!--Event Type-->
                   Search
                 </label>
+                
                 <select name  = "type" 
                         class = "form-control" multiple>
               
@@ -113,7 +115,7 @@
                 <label for = "start">
                   Event Starts
                 </label>
-                <!--disabled-->
+                
                 <input  type  = "date" 
                         name  = "start" 
                         class = "form-control" 
@@ -125,7 +127,7 @@
                 <label for = "end">
                   Event End
                 </label>
-                <!--disabled-->
+                
                 <input  type    = "date" 
                         name    = "end" 
                         class   = "form-control" 
@@ -153,6 +155,7 @@
               <label for = "guests">
                 Course
               </label>
+              
               <select id    = "t-courses" 
                       class = "form-control" multiple>
                 {{#each courses}}
@@ -162,6 +165,7 @@
                   </option>
                 {{/each}}
               </select>
+              
             </div>
             
           </div><!-- row -->

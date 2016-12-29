@@ -49,34 +49,35 @@
       }
     }
 
-    //t.$('.draggable').draggable();
-
+    // CONTENT FLAG
     contentTracker.titles++;
-
+    
+    //UNIQUE ID 
     ++tit_id;
 
-    t.$( '#fb-template' ).append( `<div id="div_title-${tit_id}" style = "z-index:2;border-radius:5px;background-color:white;font-size:18px;position:absolute;cursor:move;border:none !important;">
-    <span id="tit-${tit_id}" style="font-size:18px;font-weight:800;">&nbsp;&nbsp;&nbsp;&nbsp;${tit}&nbsp;&nbsp;&nbsp;&nbsp;</span><sup id="tmp-title-${tit_id}"></sup></span></div>`);
+    
+    t.$( '#fb-template' ).append( `<span id="tit-${tit_id}" style="font-size:18px;font-weight:bold;z-index:2;border-radius:5px;background-color:white;position:absolute;cursor:move;border:none !important;">${tit}</span>`);
 
-      t.$( `#tmp-title-${tit_id}` ).hide();
-
-      t.$( `#div_title-${tit_id}` ).offset({ left: pos.left, top: pos.top });
-      t.$( `#div_title-${tit_id}` ).draggable();
-
-      t.$( `#tit-${tit_id}` ).resizable();
+      t.$( `#tit-${tit_id}` ).offset({ left: pos.left, top: pos.top });
+      t.$( `#tit-${tit_id}` ).draggable();
+      
+      //t.$( `#tit-${tit_id}` ).resizable();
 
 
-      //-------------------------------
-      // TITLE OBJECT CLICK EVENT
-      //-------------------------------
-      //`#tit${titles[tit_id].id}`
+    //-------------------------------
+    // TITLE OBJECT CLICK EVENT
+    //-------------------------------
     (function(tit_id){
 
-      //document.getElementById( `div_title-${tit_id}` ).onmouseup = (e) => {
-      $( `#div_title-${tit_id}` ).on( "mouseup", function(){
+      $( `#tit-${tit_id}` ).on( "mouseup", function(){
         e.preventDefault();
-
-        titlesTracker.push( tit_id );
+        
+        $( '#cb-toolbar-text' ).show();
+        
+        // MAKE THIS THE CURRENTLY SELECTED ITEM
+        t.$( '#cb-current' ).val( `#tit-${tit_id}` );
+        
+        //titlesTracker.push( tit_id );
 /*
         let p = $( `#tit-${tit_id}` ).position();
 
@@ -96,74 +97,11 @@
                           opacity: $( `#tit-${tit_id}` ).css('opacity')
                         };
 */
-      //------------------------------
-      // TITLE  COBJECT WIDGET BUTTONS
-      //------------------------------
-      if ( ! t.$( `#close-title-${tit_id}` ).length ) {
-        $( `#div_title-${tit_id}` ).append( `<button type="button"
-                                                     id="close-title-${tit_id}"
-                                                     class="btn btn-danger btn-xs">
-                                              <span class="glyphicon glyphicon-trash"></span>
-                                            </button>` );
 
-        //CLOSE BUTTON EVENT
-        t.$( `#close-title-${tit_id}` ).on( "click", (e) => {
-          e.preventDefault();
 
-          //delete tbo.titles[tit_id];
-          titlesTracker.splice( tit_id, 1 );
-
-          contentTracker.titles--;
-          
-          $( `#${ e.currentTarget.parentNode.id}` ).remove();
-        });
-      }
-
-      if ( ! t.$( `#gear-title-${tit_id}` ).length ) {
-        $( `#div_title-${tit_id}` ).prepend( `<button type="button"
-                                                      id="gear-title-${tit_id}"
-                                                      class="btn btn-primary btn-xs">
-                                                <span class="glyphicon glyphicon-cog"></span>
-                                              </button>` );
-
-        //GEAR BUTTON EVENT
-        t.$( `#gear-title-${tit_id}` ).on( "click", (e) => {
-            e.preventDefault();
-            $( '#js-cb-text-dialog' ).val( `#tit-${tit_id}` );
-            $( '#dialog' ).dialog( "open" );
-          });
-        }
-
-        // BUTTONS TIMER
-        Meteor.setTimeout(function(){
-          if ( t.$( `#tmp-title-${tit_id}` ).css( 'display' ) == 'inline' ) {
-            t.$( `#tmp-title-${tit_id}` ).hide();
-          }
-          t.$( `#close-title-${tit_id}` ).off( "click" );
-          t.$( `#close-title-${tit_id}` ).remove();
-
-          t.$( `#gear-title-${tit_id}` ).off( "click" );
-          t.$( `#gear-title-${tit_id}` ).remove();
-
-        }, 2000);
-
-        // TITLE OBJECT RESIZE EVENT
-        t.$( `#tit-${tit_id}` ).on( "resize", function( event, ui ) {
-          let factor = 2 +  Math.round( ui.size.height / 2 ) * 2;
-          t.$( `#tmp-title-${tit_id}` ).show();
-
-          t.$( `#tmp-title-${tit_id}` ).text( " " + factor + "px" )
-                                       .css( 'background-color', 'red' )
-                                       .css( 'color', 'white' )
-                                       .css('border-radius', '10px');
-
-          $( this ).css( 'font-size', factor );
-        });
-//console.log( tbo.titles[tit_id] );
       });//onmouseup
 
     })( tit_id );//anon function
   //---------------------------------------------------------------------------
-  }
-
+  };
 

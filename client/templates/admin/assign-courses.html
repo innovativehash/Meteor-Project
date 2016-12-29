@@ -1,6 +1,6 @@
-
-
 <template name="assignCourses">
+<!-- adminCourses Template -->
+<!-- Nicholas Sardo <nsardo@aol.com> -->
 <!--
 <style>
   #assign-courses-cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
@@ -81,102 +81,99 @@
           </div>
         </div>
 
-        <div  id="assign-modal"
-              class="modal fade left"
-              tabindex="-1"
-              role="dialog"
-              aria-labelledby="myModalLabel">
-          <div class="modal-dialog">
-            <div class="pop-up-area">
-              <div class="modal-header">
-                <h3 class="modal-title">
-                  Assign Course:
-                  <span id="course-name" style="color:white;"></span>
-                </h3>
-              </div>
-              <button type="button"
-                      id="popup-close"
-                      data-dismiss="modal"
-                      aria-label="Close">
-                <strong>x</strong>
-              </button>
-              <div class="popup-body">
-                <div id="notify"></div>
-                <form id="assignCourses" class="form-horizontal">
-                  <div class="row">
-                    <div class="form-group">
-                      <div class="col-xs-5">
-                        <label class="checkbox-inline">
-                          <input  id="all-students"
-                                  type="checkbox"
-                                  data-toggle="toggle"
-                                  data-offstyle="danger"
-                                  data-onstyle="success"
-                                  data-size="normal">
-                                  
-                          <span style="color:white;font-size:18px;">&nbsp;&nbsp;<strong>All students</strong></span>
-                        </label>
-                      </div>
-                      <div class="col-xs-5 inputGroupContainer">
-                        <span style="color:white;font-size:18px;"><strong>Completion Date?</strong></span>
-                        <div class="input-group">
-                          <input id="assign-due-date" type="date" class="form-control" />
-                        </div>
-                      </div>
+<!-- abn removed -->                        
+<!-- <input id="assign-due-date" type="date" class="form-control" /> -->
+
+
+
+<!-- START MODAL -->
+
+<div  class = "search-list assign">
+<div  id              = "assign-modal" 
+      class           = "modal fade left" 
+      tabindex        = "-1" 
+      role            = "dialog" 
+      aria-labelledby = "myModalLabel">
+    <div class = "modal-dialog">
+      <div class = "pop-up-area students">
+        <button type          = "button" 
+                id            = "popup-close" 
+                data-dismiss  = "modal" 
+                aria-label    = "Close">x</button>
+        <div class = "popup-body">
+          <h2>Assign:</h2>
+          <form action = "">
+            <div class = "row">
+              <div class = "col-sm-6">
+                <div class = "single-assign">
+                  <div class = "assign-title">
+                    
+                    <input  type  = "radio" 
+                            name  = "checkbox" 
+                            class = "css-checkbox">
+                    <label id     = "all-students" 
+                            class ="css-label radGroup1">
+                      Assign all students
+                    </label>
+                    <span>OR</span>
                   </div>
-                  </div>
-                  <div class="row">
-                    <div class="form-group">
-                    <div class="col-xs-5 selectContainer">
-                      <label class="checkbox-inline">
-                        <input  id="abn"
-                                style=""
-                                type="checkbox"
-                                data-toggle="toggle"
-                                data-offstyle="danger"
-                                data-onstyle="success">
-                        <span style="color:white;font-size:18px;">&nbsp;&nbsp;<strong>Names:</strong></span>
-                      </label>
-                      <select data-placeholder="type name(s)..." id="by-name" style="" multiple>
+                    <div class="assign-body">
+                      <!--<select class="js-multiple-select-1 js-states form-control" multiple="multiple">-->
+                      <select data-placeholder  = "student name" 
+                              id                = "by-name" 
+                              style             = "" 
+                              multiple>
                         {{#with names}}
                           {{#each this}}
-                        <option>{{fullName}}</option>
+                            <option>{{fullName}}</option>
                           {{/each}}
                         {{/with}}
                       </select>
                     </div>
-                    <div class="col-xs-5 selectContainer">
-                      <label class="checkbox-inline">
-                        <input  id="abd"
-                                style="margin-bottom:5px;"
-                                type="checkbox"
-                                data-offstyle="danger"
-                                data-onstyle="success"
-                                data-toggle="toggle">
-                        <span style="color:white;font-size:18px;">&nbsp;&nbsp;<strong>Departments:</strong></span>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="single-assign">
+                  <div class="assign-title">
+                      <input  type  = "radio" 
+                              name  = "checkbox" 
+                              class = "css-checkbox">
+                      <label  id    = "assign-by-dept" 
+                              class = "css-label radGroup1">
+                        Assign by department
                       </label>
-                      <select id="by-dept" data-placeholder="type dept(s)..." multiple>
-                        {{#with dept}}
-                          {{#each this}}
-                        <option>{{name}}</option>
-                          {{/each}}
-                        {{/with}}
-                      </select>
-                    </div></div>
                   </div>
-                  <div class="row">
-                      <div class="col-sm-12 text-right">
-                        <input type="submit" class="add-course" value="SAVE">
-                        <!-- <input type="submit" class="dismiss-modal" value="CANCEL"> -->
-                      </div>
+                  <div class="assign-body">
+                    <!--<select class="js-multiple-select-2 js-states form-control" multiple="multiple">-->
+                    <select id="by-dept" data-placeholder="dept name" multiple>
+                      {{#with dept}}
+                        {{#each this}}
+                      <option>{{name}}</option>
+                        {{/each}}
+                      {{/with}}
+                    </select>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
-          </div>
+            <div class="row">
+              <div class="col-sm-12 text-right">
+                <!-- <input type="submit" value="SAVE"> -->
+                <input  type  = "submit" 
+                        class = "add-course" 
+                        value = "SAVE">
+              </div>
+            </div>
+          </form>
         </div>
-
-      </div>
+      </div>                                         
+    </div>
+  </div>
+</div>
+<!-- END MODAL --> 
+ 
+ 
+     </div>
     </div>
   </div>
 </div>

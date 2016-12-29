@@ -32,7 +32,7 @@ let EventsSchema = new SimpleSchema({
     type: String,
     label: 'When this event will end.'
   },
-  'type': {
+  'students': {
     type: [String],
     label: 'participants',
     //allowedValues: [ 'Birthday', 'Corporate', 'Wedding', 'Miscellaneous' ]

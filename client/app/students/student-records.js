@@ -42,7 +42,7 @@ Template.studentRecords.onRendered(function(){
  * HELPERS
  */
 Template.studentRecords.helpers({
-
+/*
   approved() {
     let a;
     try {
@@ -59,7 +59,8 @@ Template.studentRecords.helpers({
     }
     return a;
   },
-  
+*/
+/*  
   current_courses() {
     let c;
     try {
@@ -76,7 +77,7 @@ Template.studentRecords.helpers({
     }
     return c;
   },
-  
+*/ 
   courses_completed() {
     try{
       var c = ( Students.find( {_id: Meteor.userId()}, {}).fetch()[0].courses_completed );
@@ -114,5 +115,24 @@ Template.studentRecords.helpers({
     } catch(e) {
       return;
     }
-  }
+  },
+  
+  required_credits() {
+    try {
+      let req     = Students.find({ _id: Meteor.userId() }).fetch()[0];
+      let current = Students.findOne({ _id: Meteor.userId() }, { current_credits:1 } );
+      return req.required_credits - current.current_credits;
+    } catch (e) {
+      return;
+      //console.log( 'err ' + e );
+    }
+  },
+  
+  current_credits() {
+    try {
+      return Students.find({_id: Meteor.userId() } ).fetch()[0].current_credits;
+    } catch (e) {
+      return;
+    }
+  },
 });

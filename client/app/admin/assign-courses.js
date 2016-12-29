@@ -4,8 +4,6 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
-
 import { Students }     from '../../../both/collections/api/students.js';
 import { Courses }      from '../../../both/collections/api/courses.js';
 import { Departments }  from '../../../both/collections/api/departments';
@@ -38,19 +36,6 @@ Template.assignCourses.onCreated(function() {
     //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'Assign Courses:: load select2.js fail' );
-  });
-
-
-  /*
-   * BOOTSTRAP TOGGLE
-   */
-  $.getScript( '/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js', function() {
-    $( '#abd' ).bootstrapToggle();
-    $( '#abn' ).bootstrapToggle();
-    $( '#all-students' ).bootstrapToggle();
-    //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'Assign Courses:: bootstrap-toggle.min.js fail' );
   });
 
 });
@@ -124,23 +109,14 @@ Template.assignCourses.events({
     $( '.add-course' ).attr( 'data-name', $( e.currentTarget ).data( 'name' ));
 
     //selects
-    $( '#by-name' ).val( null ).trigger( 'change' );
-    $( '#by-name' ).attr( 'disabled', true );
     $( '#by-dept' ).val( null ).trigger( 'change' );
     $( '#by-dept' ).attr( 'disabled', true );
+    
     //input
     $( '#assign-due-date' ).val('');
 
-   //switch assign-by-department
-    //$( '#abd' ).bootstrapToggle( 'off' );
-    $( '#abd' ).prop( 'checked', false ).change();
+    //$( '#abd' ).prop( 'checked', false ).change();
 
-    //switch assign-by-name
-    //$( '#abn' ).bootstrapToggle( 'off' );
-    $( '#abn' ).prop( 'checked', false ).change();
-
-    //$( '#all-students' ).bootstrapToggle( 'off' );
-    $( '#all-students' ).prop( 'checked', false ).change();
 
     $( '#assign-modal' ).modal( 'show' );
 //-------------------------------------------------------------------
@@ -157,14 +133,19 @@ Template.assignCourses.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    let idx   = $( '.add-course' ).data( 'id' );          // course id
-    let nm    = $( '.add-course' ).data( 'name' );        // course name
-    let cr    = $( '.add-course' ).data( 'credits' );     // course credits
-
+    let idx   = $( e.currentTarget)[0].dataset.id;          // course id
+    let nm    = $( e.currentTarget)[0].dataset.name;        // course name
+    let cr    = $( e.currentTarget)[0].dataset.credits;     // course credits
+    //console.log( $( e.currentTarget)[0].dataset );
+console.log( 'DEBUG: idx = ' + idx );
+console.log( 'DEBUG: nm = ' + nm );
+console.log( 'DEBUG: cr = ' + cr );
+console.log( 'DEBUG::RETURN' );
+return;
 
     let assignByDept  = $( '#by-dept' ).val();           // department name(s)
     let assignByName  = $( '#by-name' ).val();           // student name(s)
-    let assignDueDate = $( '#assign-due-date' ).val();  // due date
+    //let assignDueDate = $( '#assign-due-date' ).val();  // due date
 
     let as  = $( '#all-students' ).is( ':checked' );      // all-students radio
     let abn = $( '#abn' ).is( ':checked' );               // by name radio
@@ -288,91 +269,61 @@ Template.assignCourses.events({
 // DIALOG RADIO BUTTON ROUTINES
 //-------------------------------------------------------------------
 
+
   /*
-   * #ALL-STUDENTS  ::(CHANGE)::
+   * #ALL-STUDENTS  ::(CLICK)::
    */
-  'change #all-students'( e, t ) {
+  'click #all-students'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
-
-    let tog = $( e.currentTarget ).prop( 'checked' );
-
-    if ( tog ){
-      $( "#by-dept" ).val( null ).trigger( "change" );
-      $( '#by-dept' ).attr( 'disabled', true );
-
-      $( "#by-name" ).val( null ).trigger( "change" );
-      $( '#by-name' ).attr( 'disabled', true );
-
-      $( '#abn' ).prop( 'checked', false ).change();
-      //$( '#abn' ).bootstrapToggle( 'off' );
-
-      $( '#abd' ).prop( 'checked', false ).change();
-      //$( '#abd' ).bootstrapToggle( 'off' );
-    }
+    console.log('click all');
+    
+    t.$( '#all-students' ).css("background-position", "0% 100%");
+    t.$( '#assign-by-dept' ).css("background-position", "0% 0%");
+    
+    $( '#by-dept' ).val( null ).trigger( 'change' );
+    $( '#by-dept' ).attr( 'disabled', true );
+    
+    $( '#by-name' ).val(null).trigger("change");
 //-----------------------------------------------------------------
   },
 
-
   /*
-   * #ABN ( ASSIGN-BY-NAME )  ::(CHANGE)::
+   * #ASSIGN-BY-DEPT ::(CLICK)::
    */
-  'change #abn'( e, t ) {
+  'click #assign-by-dept'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
+    if ( $( '#by-dept' ).val() != null ) 
+      console.log( 'DEBUG: ' + $( '#by-dept' ).val() );
+    
+    t.$( '#assign-by-dept' ).css("background-position", "0% 100%");
+    t.$( '#all-students' ).css("background-position", "0% 0%");
 
-    let tog = $( e.currentTarget ).prop( 'checked' );
-
-    if ( tog ){
-      //selects
-      $( '#by-name' ).val( null ).trigger( 'change' );
-      $( '#by-name' ).attr( 'disabled', false );
-
-      $( '#by-dept' ).val( null ).trigger( 'change' );
-      $( '#by-dept' ).attr( 'disabled', true );
-
-      //switches
-      $( '#abd' ).prop( 'checked', false ).change();
-      //$( '#abd' ).bootstrapToggle( 'off' );
-
-      $( '#all-students' ).prop( 'checked', false ).change();
-      //$( '#all-students' ).bootstrapToggle( 'off' );
-    } else {
-      $( '#by-name' ).val( null ).trigger( 'change' );
-      $( '#by-name' ).attr( 'disabled', true );
-    }
+    $( '#by-dept' ).val( null ).trigger( 'change' );
+    $( '#by-dept' ).attr( 'disabled', false );
+    
+    $( '#by-name' ).val(null).trigger("change");
 //-----------------------------------------------------------------
   },
-
-
-
+  
+  
   /*
-   * #ABD ( ASSIGN-BY-DEPARTMENT )  ::(CHANGE)::
+   * #BY-NAME ( ASSIGN-BY-NAME )  ::(click)::
    */
-  'change #abd'( e, t ) {
+  'change #by-name'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
-
-    let tog = $( e.currentTarget ).prop( 'checked' );
-
-    if ( tog ){
-      //selects
-      $( '#by-dept' ).val( null ).trigger( 'change' );
-      $( '#by-dept' ).attr( 'disabled', false );
-
-      $( '#by-name' ).val( null ).trigger( 'change' );
-      $( '#by-name' ).attr( 'disabled', true );
-
-      //switches
-      $( '#abn' ).prop( 'checked', false ).change();
-      //$( '#abn' ).bootstrapToggle( 'off' );
-
-      $( '#all-students' ).prop( 'checked', false ).change();
-      //$( '#all-students' ).bootstrapToggle( 'off' );
-    } else {
-      $( '#by-dept' ).val( null ).trigger( 'change' );
-      $( '#by-dept' ).attr( 'disabled', true );
-    }
+    if ( $( '#by-name' ).val() != null ) 
+      console.log( 'DEBUG: ' + $( '#by-name' ).val() );
+      
+      
+    //since there is feedback on this elements event from the radio buttons,
+    //must bail if empty so that the radio's event handler will complete
+    if ( $( '#by-name' ).val() == null ) return;
+    
+    t.$( '#all-students' ).css("background-position", "0% 0%");
+    t.$( '#assign-by-dept' ).css("background-position", "0% 0%");
+    
+    $( '#by-dept' ).val( null ).trigger( 'change' );
+    $( '#by-dept' ).attr( 'disabled', true );  
 //-----------------------------------------------------------------
   },
 

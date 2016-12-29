@@ -7,15 +7,16 @@ img {
     max-width: 100%;
     height: auto;
 }
-
-input[typw=file] {
+/*
+input[type="file"] {
     position: relative;
     text-align: right;
     -moz-opacity: 0;
-    filter: alpha(opacity: 0);
     opacity: 0;
     z-index: 2;
+    filter: alpha(opacity: 0);
 }
+*/
 
 button:focus {
     outline: 0;
@@ -2496,6 +2497,8 @@ body.login {
     height: 34px; */
 }
 
+
+
 .popup-body span#filename {
     background: #fff none repeat scroll 0 0;
     border: 1px solid #777;
@@ -2805,7 +2808,7 @@ body.login {
     text-align: center;
     margin: 0 0 35px;
 }
-
+/*
 .pop-up-area.students .popup-body input {
     font-size: 15px;
     font-style: italic;
@@ -2816,7 +2819,7 @@ body.login {
     margin-bottom: 35px;
     font-weight: 400;
 }
-
+*/
 .pop-up-area.students .popup-body input[type="submit"] {
     background: url(/img/button-bg.png) repeat-x scroll 0 0 / auto 100%;
     width: 160px;
@@ -2945,7 +2948,7 @@ body.login {
     padding: 30px;
     /* margin-top: 60px; */
     margin: 0 auto;
-    min-height: 600px;
+    min-height: 625px; 
     /*max-height: 425px; */
     position: relative;
 }
@@ -3133,6 +3136,7 @@ body.login {
     border: 0;
 }
 
+/* */
 .search-list.assign input.css-checkbox[type="radio"] + label.css-label {
     padding-left: 35px;
     height: 21px;
@@ -3196,6 +3200,11 @@ body.login {
 /*
 * Certificate & Degree
 */
+
+/* nfs */
+.d-cur {
+    cursor: move;    
+}
 
 body.certificate {
     background: #fff;
@@ -3288,6 +3297,18 @@ span.select2-selection ul > li {
     list-style: none;
 }
 
+/* nfs */
+.certificate-course div {
+    margin: 0;
+    padding: -0 20px;
+    list-style: none;
+}
+
+/* nfs */
+.ui-widget-content span img {
+    cursor: move;
+}
+
 .certificate-course ul li {
     display: block;
     color: #767676;
@@ -3301,10 +3322,30 @@ span.select2-selection ul > li {
     transition: .4s;
 }
 
+/* nfs */
+.certificate-course div div {
+    display: block;
+    color: #767676;
+    font-size: 20px;
+    text-align: center;
+    border: 1px dotted #767676;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 4px;  
+}
+
+
 .certificate-course ul li span {
     display: inline-block;
     width: 30px;
     margin-left: 10px;
+}
+
+/* nfs */
+.certificate-course div div span {
+    display: inline-block;
+    width: 30px;
+    margin-left: 10px;   
 }
 
 .certificate-course ul li button {
@@ -3328,11 +3369,13 @@ span.select2-selection ul > li {
     padding-right: 0;
 }
 
+/*
 .certificate-body-
     background: #f3f3f3;
     padding: 40px 40px 25px;
     border-bottom: 1px solid #6f6e70;
 }
+*/
 
 .certificate-input {
     overflow: hidden;

@@ -6,18 +6,21 @@
  */
 
 
-  let img_id  = -1
-    , ig      = ''
-    , ext     = '';
+
+  let img_id    = -1
+    , a_img_id  = ''
+    , ig        = ''
+    , ext       = '';
 
 
   /**
    * RESET
    */
   export function cbImageReset() {
-    img_id  = -1;
-    ig      = '';
-    ext     = '';
+    img_id    = -1;
+    a_img_id  = ''
+    ig        = '';
+    ext       = '';
   }
 
 
@@ -27,7 +30,8 @@
    * #COURSE-BUILDER-IMAGE ::(CHANGE)::
    *
    */
-  export function cbImageChange( e, t ) {
+  export function cbImageChange( e, t, tbo, Images ) {
+    
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -35,7 +39,7 @@
       console.log('aborted');
       return;
     }
-
+/*
     let mark = ( e.currentTarget.files[0].name ).lastIndexOf('.') + 1;
 
     ext   = ( e.currentTarget.files[0].name ).slice( mark );
@@ -73,6 +77,41 @@
           img = null;
       }
     }, 200);
+*/
+  		//let files = t.$( "input.file_bag" )[0].files
+  		//let fil = t.$( '#course-builder-image' ).get(0).files[0]
+  		
+  		let fil = t.$( '#course-builder-image' )[0].files
+		  , sf    = t.$( '#course-builder-image' ).data('subfolder');
+  
+		S3.upload(
+		          {
+        				files:  fil, //files,
+        				path:   sf //"subfolder"
+			        },
+			        
+			        function( error, result ){
+				        ig = result.secure_url;
+				        
+				        let img = $( '#preview-image' );
+
+                img.attr( "src", ig ); // ig
+                img.appendTo( '.image-preview' );
+                
+				        a_img_id = Images.insert({
+                        				          loaded:           result.loaded,
+                        				          percent_uploaded: result.percent_uploaded,
+                        				          relative_url:     result.relative_url,
+                        				          secure_url:       result.secure_url,
+                        				          status:           result.status,
+                        				          total:            result.total,
+                        				          uploader:         result.uploader,
+                        				          url:              result.url,
+                        				          file:             result.file,
+                        				          created_at:       moment().format()
+				                                });
+		         }
+		);
 
     t.$( '#course-builder-image' ).val('');
 //-----------------------------------------------------------------------------
@@ -97,9 +136,13 @@
     $( `#ig-${img_id}` ).draggable();
     $( `#img-preview-${img_id}` ).resizable();
 /*
+  Don't need to sort image, as is captured as part of page with title, text, img
+  
     tbo.images[img_id] = {  page: Template.instance().page.get(),
                             id: img_id,
-                            image: $( `#img-preview-${img_id}` ).attr( 'src' ) };
+                            image: ig,
+                            a_img_id: a_img_id
+                         };
 */
     (function(img_id){
 
@@ -108,9 +151,13 @@
         e.preventDefault();
         e.stopImmediatePropagation();
 
+      $( '#cb-toolbar-media' ).show();
+      
+      t.$( '#cb-current' ).val( `#ig-${img_id}` );
+      
+/*
       imagesTracker.push( img_id );
 
-/*
         let p = $( `#ig-${img_id}` ).position();
 
         tbo.images[img_id].top  = p && p.top;
@@ -118,6 +165,7 @@
 */
 // };
 
+/*
       if ( ! t.$( `#close-img-${img_id}` ).length ) {
           $( `#ig-${img_id}` ).append( `<button type="button"
                                                 id="close-img-${img_id}"
@@ -139,7 +187,7 @@
         t.$( `#close-img-${img_id}` ).off( "click" );
         t.$( `#close-img-${img_id}` ).remove();
       }, 2000);
-
+*/
     }); //onmouseup
 
   })(img_id);
@@ -150,4 +198,4 @@
     t.$( '#add-image' ).modal( 'hide' );
 
 //-----------------------------------------------------------------------------
-  }
+  };

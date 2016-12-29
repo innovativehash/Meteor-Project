@@ -34,8 +34,10 @@ tmeasday:html5-history-api
 aldeed:collection2
 autopublish@1.0.7
 email@1.1.18
-check@1.2.4
 arch:ace-editor
 themeteorchef:bert
 fortawesome:fontawesome
 fullcalendar:fullcalendar
+lepozepo:s3
+http
+check

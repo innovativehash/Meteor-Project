@@ -1,0 +1,120 @@
+<template name = "cbToolbar">
+<!-- cbToolbar Template -->
+<!-- Nicholas Sardo <nsardo@aol.com> -->
+
+<!-- CB-TOOLBAR-TEXT -->
+  <div id = "cb-toolbar-text">
+    
+    <div  class = "btn-group" 
+          style = "margin-top: -40px;">
+      
+      <button type  = "button" 
+              class ="js-bold-button btn btn-primary">
+        Bold
+      </button>
+              
+      <button type  = "button" 
+              class = "js-italic-button btn btn-primary">
+        Italic
+      </button>
+              
+      <button type  = "button" 
+              class = "js-underline-button btn btn-primary">
+        Underline
+      </button>
+              
+      <button type  = "button" 
+              class = "js-delete-button btn btn-danger">
+        Delete
+      </button>
+    </div>
+    
+    <div  class = "pull-right" 
+          style = "display:inline-block;margin-bottom:1em;margin-top: -40px;">
+      <div style = "display:inline-block;">
+        
+        <p>
+          <label for = "fnt">
+            Font Size:
+          </label>
+          <input  id    = "fnt" 
+                  type  = "text" 
+                  style = "border:0; color:#f6931f; font-weight:bold;" 
+                  value = "18" 
+                  readonly>
+        </p>
+        
+        <div style = "width:50%;">
+          <input  class   = "js-font-size" 
+                  type    = "range" 
+                  min     = "10" 
+                  max     = "48" 
+                  value   = "16" 
+                  step    = "2" />
+        </div>
+      </div>
+      <div style = "display:inline-block;">
+        <p style = "display:inline-block">
+          
+          <label for = "op">
+            Opacity:
+          </label>
+          
+          <input  id    = "op" 
+                  type  = "text" 
+                  style = "border:0; color:#f6931f; font-weight:bold;" 
+                  value = "1" 
+                  readonly>
+        </p>
+        
+        <div style = "width:50%;">
+          <input  class = "js-opacity" 
+                  type  = "range" 
+                  min   = "0" 
+                  max   = "1" 
+                  value = "1" 
+                  step  = ".1"/>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+<!-- CB-TOOLBAR-TEXT -->
+
+
+<!-- CB-TOOLBAR-MEDIA -->
+  <div id="cb-toolbar-media">
+    
+    <div  class = "btn-group" 
+          style = "margin-top: -40px;">
+      <button type  = "button" 
+              class = "js-delete-button btn btn-danger">
+        Delete
+      </button>
+    </div>
+    
+    <div style = "display:inline-block;">
+      <p style = "display:inline-block">
+        
+        <label for = "op">
+          Opacity:
+        </label>
+        
+        <input  id    = "op" 
+                type  = "text" 
+                style = "border:0; color:#f6931f; font-weight:bold;" 
+                readonly>
+      </p>
+      
+      <div style = "width:50%;">
+        <input  class = "js-opacity" 
+                type  = "range" 
+                min   = "0" 
+                max   = "50" 
+                value = "25" 
+                step  = "5" />
+      </div>
+    </div>
+  </div>
+<!-- CB-TOOLBAR-MEDIA -->  
+</template>

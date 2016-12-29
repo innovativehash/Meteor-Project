@@ -75,7 +75,10 @@ Template.courses.onDestroyed(function(){
 Template.courses.helpers({
 
    courses: () =>
-    Courses.find({ company_id: Meteor.user().profile.company_id }).fetch()
+    Courses.find({ company_id: Meteor.user().profile.company_id }).fetch(),
+    
+   uid: () =>
+    Meteor.userId()
 
 });
 
