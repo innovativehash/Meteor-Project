@@ -14,10 +14,6 @@ import { Students }     from '../../../both/collections/api/students.js';
 import '../../templates/admin/admin-dashboard.html';
 
 
-Template.registerHelper('not', function(obj){
-  return !obj;
-});
-
 
 /*
  * CREATED
@@ -38,6 +34,8 @@ Template.adminDashboard.onRendered( function() {
     $( "#cover" ).hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
+  
+  console.log( moment().date() ) ;
 
 });
 
@@ -47,6 +45,17 @@ Template.adminDashboard.onRendered( function() {
  */
 Template.adminDashboard.helpers({
 
+ foo() {
+    let s   = Students.find({ _id: Meteor.userId(), }).fetch()
+      , d   = new Date();
+    
+    if ( moment(s.start_date).add(14, 'days') == moment(d) ) {
+      FlowRouter.go( '/trial-ended' );
+    }
+    
+     
+ },
+ 
  showAdminCreditRequests() {
    if ( Newsfeeds.find({ type: "CR" }).count() > 0 ) {
     return true;

@@ -1,52 +1,17 @@
-/*
-import '../../../public/css/bootstrap-select.min.css';
-import '../../../public/css/normalize.css';
-import '../../../public/css/common.css';
-import '../../../public/css/style.css';
-import '../../../public/css/responsive.css';
 
-import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.min.css';
-import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.structure.min.css';
-import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.theme.min.css';
-*/
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 
-import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Students  }    from '../../../both/collections/api/students.js';
 import { Companies }    from '../../../both/collections/api/companies.js';
 
-import './admin-dashboard-layout.html';
 
-
-/*
- * CREATED
- */
-Template.adminDashboardLayout.onCreated(function(){
-
-  $( "#cover" ).show();
-
-});
-
-
-/*
- * RENDERED
- */
-Template.adminDashboardLayout.onRendered(function(){
-
-  $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
-    $( "#cover" ).hide();
-    $( ".dashboard-header-area" ).fadeIn( 'slow' );
-  });
-
-});
-
-
+import  './internal-training-layout.html';
 
 /*
  * HELPERS
  */
-Template.adminDashboardLayout.helpers({
+Template.internalTrainingLayout.helpers({
 
   company() {
     try {
@@ -88,10 +53,11 @@ Template.adminDashboardLayout.helpers({
 });
 
 
+
 /*
  * EVENTS
  */
-Template.adminDashboardLayout.events({
+Template.internalTrainingLayout.events({
 
   /*
    * #ACCOUNT-SETTINGS  ::(CLICK)::
@@ -119,7 +85,7 @@ Template.adminDashboardLayout.events({
   'click #logout': function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    console.log( 'logout click');
     Meteor.logout();
     FlowRouter.go( '/login' );
 //-------------------------------------------------------------------

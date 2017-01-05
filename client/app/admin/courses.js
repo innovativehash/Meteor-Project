@@ -4,9 +4,12 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-import { Courses }    from '../../../both/collections/api/courses.js';
+import { Courses }      from '../../../both/collections/api/courses.js';
+import { BuiltCourses } from '../../../both/collections/api/built-courses.js';
+import { Tests }        from '../../../both/collections/api/tests.js';
 
 import '../../templates/admin/courses.html';
+
 //import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
 
 
@@ -206,6 +209,14 @@ Template.courses.events({
                           '<span style="color:white;">' + nm + '</span>' +
                         '</div></div></div></div></div>',
       buttons: [{
+/* 
+DELETE ASSOC:
+built-courses,
+tests,
+pdfs
+ppts
+scorms
+*/
               label: 'Delete Course',
               cssClass: 'btn-danger',
               action: function( dialog ) {

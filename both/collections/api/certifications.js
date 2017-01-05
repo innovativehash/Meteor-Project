@@ -11,17 +11,43 @@ import { Mongo } from 'meteor/mongo';
 
 export const Certifications = new Mongo.Collection("certifications");
 
-
 /*
 Certifications.allow({
-  insert: function(){
-    return true;
-  },
-  update: function(){
-    return true;
-  },
-  remove: function(){
-    return true;
-  }
+  insert: () => false,
+  update: () => false,
+  remove: () => false
+});
+
+Certifications.deny({
+  insert: () => true,
+  update: () => true,
+  remove: () => true
 });
 */
+
+let CertificationsSchema = new SimpleSchema({
+  'name': {
+    type: String
+  },
+  'credits': {
+    type: Number
+  },
+  'times_completed': {
+    type: Number
+  },
+  'icon': {
+    type: String
+  },
+  'company_id': {
+    type: String
+  },
+  'type': {
+    type: String
+  },
+  'courses': {
+    type: [String]
+  }
+  
+});
+
+Certifications.attachSchema( CertificationsSchema );

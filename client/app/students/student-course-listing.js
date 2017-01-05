@@ -47,7 +47,7 @@ Template.studentCourseListing.onRendered(function(){
 Template.studentCourseListing.helpers({
 
   courses() {
-
+    try {
     //GET LIST OF THIS STUDENTS COMPLETED COURSES
     let st_courses_completed = Students.find( { _id: FlowRouter.current().params._id },
                                               { courses_completed:1 }).fetch()[0];
@@ -86,6 +86,7 @@ Template.studentCourseListing.helpers({
 
     /* moment(c[i].due_date).format('MM/DD/YYYY'); */
 
+    
       //GET LIST OF ALL AVAILABLE COURSES FOR THIS COMPANY THAT CAN BE TAKEN
       let o   = Courses.find({ company_id:Meteor.user().profile.company_id }).fetch();
       //COUNT HOW MANY PRE-LOOP
@@ -100,7 +101,7 @@ Template.studentCourseListing.helpers({
           Session.set('show_tr', true);
         }
       }
-
+    
       //FULL LIST OF AVAILABLE COURSES
       if ( o ) {
         //PRE-CALC COUNT
@@ -143,6 +144,9 @@ Template.studentCourseListing.helpers({
         }
       }
       return o;
+    } catch(e) {
+      return;
+    }
   },
 
 });
@@ -160,13 +164,22 @@ Template.studentCourseListing.events = {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-      let course = $( e.currentTarget ).data( 'id' );
+      let builder  = $( e.currentTarget ).data( 'bid' )
+        , cid     = $( e.currentTarget ).data( 'id' );
+      
+      /*
+      Students.update({ _id: Meteor.userId() }, 
+                          {$addToSet:{current_courses: {course_id: cid}} });
+      */
+      Meteor.setTimeout(function(){
+        Meteor.call( 'updateCurrentCourses', cid );
+      },300);
       
       //FlowRouter.go( '/teacher/dashboard/course-view/' + Meteor.userId() + `?course=${course}`);
-      let queryParams = { course: `${course}` };
+      let queryParams = { builder: `${builder}`, course: `${cid}` };
       let params      = { _id: Meteor.userId() };
       let routeName   = "student-course-view";
-      let path = FlowRouter.path( routeName, params, queryParams );
+      let path        = FlowRouter.path( routeName, params, queryParams );
       FlowRouter.go( path );
 
     //text value of button: begin, continue, completed/retake

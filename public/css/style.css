@@ -3967,3 +3967,60 @@ html .ui-button.ui-state-disabled:active {
 .dash-post-head .dropdown-menu {
 	left: -138px;
 }
+
+
+/*Course page - Course Builder*/
+.course-build .pop-up-area {
+	background-image: url(../img/bg-9.jpg);
+	background-size: cover;
+}
+
+.course-build .popup-body {
+	position: absolute;
+	top: 50%;
+	margin-top: -185px;
+	width: 600px;
+	left: 50%;
+	margin-left: -300px;
+}
+
+.course-build .select2-container {
+	margin-bottom: 5px;
+}
+
+.course-build-popup h2 {
+	font-weight: 400;
+	color: #505050;
+	font-size: 30px;
+	margin: 0 0 50px;
+	text-align: center;
+}
+
+.course-build-popup label {
+	color: #000000;
+	font-size: 14px;
+	font-weight: 400;
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	margin: 0 0 5px;
+	box-shadow: 0 0 0;
+	padding: 0;
+	height: auto;
+}
+
+.course-build-popup input {
+	width: 100%;
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	font-style: italic;
+	margin-bottom: 30px;
+	padding: 5px 10px;
+	font-size: 18px;
+}
+
+.course-build-popup input.margin-zero {
+	margin-bottom: 5px;
+	width: 85%;
+	position: relative;
+}

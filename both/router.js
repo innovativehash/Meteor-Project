@@ -229,23 +229,25 @@ teacherRoutes.route( '/dashboard/student-records/:_id', {
     BlazeLayout.render( 'studentDashboardLayout', {main: "studentRecords" })
 });
 
+ 
 /*
  * TEACHER TRAINING CALENDAR
  */
 teacherRoutes.route( '/dashboard/student-training-calendar/:_id', {
   name: 'teacher-training-calendar',
   action: () =>
-    BlazeLayout.render( 'studentDashboardLayout', {main: "studentTrainingCalendar" })
+    BlazeLayout.render( 'studentDashboardLayout', {main: "internalTrainingCalendar" })
 });
 
 
 /* TEST-CREATOR */
+/*
 teacherRoutes.route('/dashboard/test-maker/:_id', {
   name: 'teacher-test-creator',
   action: () =>
     BlazeLayout.render( 'courseBuilderLayout', {main:"adminTestCreator"})
 });
-
+*/
 
 
 
@@ -311,12 +313,13 @@ adminRoutes.route('/dashboard/course-viewer/:_id', {
 });
 
 /* TEST-CREATOR */
+/*
 adminRoutes.route('/dashboard/test-maker/:_id', {
   name: 'admin-test-creator',
   action: () =>
     BlazeLayout.render( 'courseBuilderLayout', {main:"adminTestCreator"})
 });
-
+*/
 
 
 /**
@@ -383,6 +386,17 @@ adminRoutes.route('/dashboard/assign-courses/:_id', {
    action: () =>
     BlazeLayout.render( 'adminDashboardLayout', {main: 'adminAdvanced'})
  });
+
+/*
+ * INTERNAL TRAINING CALENDAR
+ */
+  adminRoutes.route( '/dashboard/internal-training-calendar/:_id', {
+    name: 'internal-training-calendar',
+    action: () => {
+      BlazeLayout.render( 'internalTrainingLayout', {main: "internalTrainingCalendar" })
+    }
+  });
+
 
   FlowRouter.route( '/verify-email/:token', {
     name: 'verify-email',

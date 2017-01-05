@@ -53,31 +53,110 @@
                   <button id="close-search">X</button>
                   -->
                 </div>
-                <div class="modal fade left" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              
+              <!-- modal -->
+              <div class="search-list assign">
+                <div  class           = "modal fade left" 
+                      id              = "myModal" 
+                      tabindex        = "-1" 
+                      role            = "dialog" 
+                      aria-labelledby = "myModalLabel">
+                  
                   <div class="modal-dialog">
-                    <div class="pop-up-area">
-                      <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button>
+                    <div class="pop-up-area students">
+                      <button type          = "button" 
+                              id            = "popup-close" 
+                              data-dismiss  = "modal" 
+                              aria-label    = "Close">x</button>
                       <div class="popup-body">
+                        <br>
+                        <h2>Import Scorm Course</h2>
+                        <br><br><br>
                         <form action="">
                           <div class="row">
-                            <div class="col-sm-4">
-                              <label for="fileup">Import Scorm Course</label>
+                            <div class="col-sm-8 col-sm-offset-2">
+                            
+                              <input  id    = ""
+                                      type  = "file">
+                        
                             </div>
-                            <div class="col-sm-7">
-                              <input class="hidden" id="fileup" type="file">
-                              <span id="filename">No File Chosen</span>
-                            </div>
-                          </div>
+                          </div><!-- row -->
+                          <br><br><br>
                           <div class="row">
                             <div class="col-sm-12 text-right">
-                              <input type="submit" value="SUBMIT">
+                              
+                              <input  type="submit" 
+                                      value="SUBMIT">
                             </div>
                           </div>
                         </form>
                       </div>
                     </div>
                   </div>
-                </div><!-- modal -->
+                </div>
+                </div>
+                <!-- modal -->
+
+
+<!-- Modal ADD COURSE -->
+
+<div class="search-list assign">
+<div  class = "modal fade left"
+      id = "lib-add-course-modal"
+      tabindex = "-1"
+      role = "dialog"
+      aria-labelledby = "myModalLabel">
+
+  <div class="modal-dialog">
+    <div class="pop-up-area students">
+      <button type="button"
+              id="popup-close"
+              data-dismiss="modal"
+              aria-label="Close">x</button>
+      <div class = "popup-body">
+      <br>
+      <h2>ADD COURSE:</h2>
+      <br><br><br>
+        <form action="">
+          <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+
+              <p>
+                <span style="color:white;">
+                  "' + nm + '"
+                </span>
+              </p>
+
+            </div>
+          </div><!-- row -->
+          <br><br><br>
+          <div class="row">
+            <div class="col-sm-12 text-right">
+
+              <input  class = "js-lib-cancel"
+                      type  = "submit"
+                      value = "CANCEL">
+                      
+              <input  class = "js-lib-add"
+                      type  = "submit"
+                      value = "SUBMIT">
+                      
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- /ADD COURSE modal -->
+
+
+
+
+
+
 
               </div><!-- filter buttons -->
 
@@ -100,10 +179,24 @@
                     {{#with courses}}
                     {{#each this}}
                     <tr id="{{_id}}">
-                      <th class="name"><img src="{{icon}}" alt="">{{name}}</th>
-                      <td>1</td>
-                      <td>{{credits}}</td>
-                      <td><button id="add" data-id="{{_id}}" data-name="{{name}}"><img src="/img/add.png" alt=""></button></td>
+                      <th class="name">
+                        <img src="{{icon}}" alt="">
+                        {{name}}
+                      </th>
+                      <td>
+                        1
+                      </td>
+                      <td>
+                        {{credits}}
+                      </td>
+                      <td>
+                        <button id        = "add" 
+                                data-id   = "{{_id}}" 
+                                data-name = "{{name}}">
+                          
+                          <img src="/img/add.png" alt="">
+                        </button>
+                      </td>
                     </tr>
                     {{/each}}
                     {{/with}}

@@ -146,17 +146,6 @@ Template.studentDashboardLayout.events({
 
 
   /*
-   * #TEACHER-CALENDAR  ::(CLICK)::
-   */
-   'click #teacher-calendar'( e, t ) {
-    e.preventDefault()
-
-    //dialog.dialog( "open" );
-    FlowRouter.go( 'teacher-calendar', { _id: Meteor.userId() });
-   },
-
-
-  /*
    * #LOGOUT  ::(CLICK)::
    */
   'click #logout': function( e, t ) {

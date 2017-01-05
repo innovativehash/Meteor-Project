@@ -18,3 +18,38 @@ Comments.allow({
     return true;
   }
 });
+
+/*
+Comments.allow({
+  insert: () => false,
+  update: () => false,
+  remove: () => false
+});
+
+Comments.deny({
+  insert: () => true,
+  update: () => true,
+  remove: () => true
+});
+*/
+
+let CommentsSchema = new SimpleSchema({
+  'owner_id': {
+    type: String
+  },
+  'poster_id': {
+    type: String
+  },
+  'poster_name': {
+    type: String
+  },
+  'poster_avatar': {
+    type: String
+  },
+  'date': {
+    type: Date
+  }
+  
+});
+
+Comments.attachSchema( CommentsSchema );

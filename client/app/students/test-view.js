@@ -8,6 +8,7 @@
 import { Template }       from 'meteor/templating';
 
 import { Students }       from '../../../both/collections/api/students.js';
+import { Courses  }       from '../../../both/collections/api/courses.js';
 import { Tests    }       from '../../../both/collections/api/tests.js'
 import { Scratch }        from '../../../both/collections/api/scratch.js';
 
@@ -23,7 +24,7 @@ Template.testView.onCreated(function(){
 
 
 Template.testView.onRendered(function(){
-  
+
 });
 
 
@@ -48,6 +49,13 @@ Template.testView.events({
    * #SUBMIT-ANSWERS  ::(CLICK)::
    */
   'click #submit-answers'( e, t ){
+    
+    let cid             = FlowRouter.getQueryParam( "course" )
+      , c               = Courses.find({ _id: cid}).fetch()[0]
+      , credits         = c.credits
+      , passing_percent = c.passing_percent
+      , name            = c.name;
+    
     /*
       LEGEND:
       |----------------------------------------------------------------------|
@@ -72,16 +80,33 @@ Template.testView.events({
     
 //TODO:  GET CORRECT ANS PERCENTAGE FOR THIS TEST AND USE IT
 
-    if ( percent >= 75 ) {
+    if ( percent >= passing_percent ) {
       $( '#score' ).addClass( 'label-success' );
+      $( '#score' ).text( percent + '%' );
+      Meteor.setTimeout(function(){
+        Meteor.call( 'courseCompletionUpdate', name, cid, percent, credits );
+      }, 300);
+      
+      Bert.alert( 'Congradulations!! You passed the test.', 'success', 'fixed-top' );
     } else {
       $( '#score' ).addClass( 'label-danger' );
+      $( '#score' ).text( percent + '%' );
+      Bert.alert( 'Sorry, you failed to earn the minimum score to pass', 'danger', 'fixed-top' );
     }
-    $( '#score' ).text( percent + '%' );
-    
+
     $( '#submit-answers' ).prop( 'disabled', true );
     
-    Scratch.remove({ _id: id._id });
+    Scratch.remove();
+    
+    Meteor.setTimeout(function(){
+      if ( Meteor.user().roles.admin ) {
+          FlowRouter.go('admin-dashboard',{ _id: Meteor.userId()});
+      } else if( Meteor.user().roles.teacher ) {
+          FlowRouter.go('teacher-dashboard',{ _id: Meteor.userId()});
+      } else if( Meteor.user().roles.student ) {
+          FlowRouter.go('student-dashboard',{ _id: Meteor.userId()});
+      }
+    }, 1500);
   }
 });
 

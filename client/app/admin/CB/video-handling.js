@@ -31,8 +31,8 @@
 //    VIDEO MUST BE ON IT'S OWN page
 ////////////////////////////
 
-    let vid = t.$( '#added-video' ).val()
-      , m   = /(v=)(.*)(#)/g
+    let vid   = t.$( '#added-video' ).val()
+      , m     = /(v=)(.*)(#)?/g
       , match = m.exec(vid)
       , url
       , patt

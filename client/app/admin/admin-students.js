@@ -51,6 +51,7 @@ Template.adminStudents.onCreated( function() {
         multiple: false,
         tags:false
       });
+      
       $( '.js-dept' ).select2({
         placeholder: "Department",
         allowClear: true,
@@ -192,16 +193,14 @@ Template.adminStudents.events({
     Meteor.setTimeout(function(){
 
       $( '.js-dept' ).append( '<option></option>' );
+      
       for( let i = 0, l = dpt.length; i < l; i++ ){
+        
         $( '.js-dept' ).append( '<option value="' + dpt[i]._id + '">' +
-                                  dpt[i].name + '</option>' );
+                                  dpt[i].name + '</option>' 
+                              );
       }
     }, 500);
-    /*
-    t.$( '.js-fn' ).attr( 'placeholder', "" );
-    t.$( '.js-ln' ).attr( 'placeholder', "" );
-    t.$( '.js-email' ).attr( 'placeholder', "" );
-    */
 //-------------------------------------------------------------------
   },
 
@@ -209,7 +208,7 @@ Template.adminStudents.events({
   /*
    * .JS-STUDENT-ADD-SUBMIT  ::(CLICK)::
    */
-  'click .js-student-add-submit'( e, t ) {
+  'click .js-add-student-submit'( e, t ) {
       e.preventDefault();
       e.stopImmediatePropagation();
 
@@ -296,21 +295,27 @@ Template.adminStudents.events({
       $( '.js-dept option' ).each(function(){
         $(this).remove();
       });
+      
       $( '.js-role option' ).each(function(){
         $(this).remove();
       });
 
       Meteor.setTimeout(function(){
+        
         for( let i = 0, l = dpt.length; i < l; i++ ){
+          
           $( '.js-dept' ).append( '<option value="' + dpt[i]._id + '">' +
-                                    dpt[i].name + '</option>' );
+                                    dpt[i].name + '</option>' 
+                                );
         }
         for( let i = 0, l = sTypes.length; i < l; i++ ){
+          
           $( '.js-role' ).append( '<option value="' + sTypes[i] +  '">'  +
-                                  capitalizeFirstLetter( sTypes[i] ) + '</option>' );
+                                  capitalizeFirstLetter( sTypes[i] ) + '</option>' 
+                                );
         }
-        $( 'select[name="js-dept"]').find('option:contains("' + s.department                     + '")').attr("selected",true);
-        $('select[name="js-role"]').find('option:contains("'  + capitalizeFirstLetter(s.role)   + '")').attr("selected",true);
+        $( 'select[name="js-dept"]').find('option:contains("'  + s.department                     + '")' ).attr( "selected",true );
+        $( 'select[name="js-role"]').find('option:contains("'  + capitalizeFirstLetter(s.role)    + '")' ).attr( "selected",true );
       }, 500);
 //-------------------------------------------------------------------
   },
@@ -320,7 +325,7 @@ Template.adminStudents.events({
   /*
    * .JS-EDIT-STUDENT-SUBMIT  ::(CLICK)::
    */
-  'click .js-student-edit-submit'( e, t ) {
+  'click .js-edit-student-submit'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -330,44 +335,28 @@ Template.adminStudents.events({
 
 
     //DEPT MUST HAVE A VALUE
-    let r   = $( '.js-role' ).select2( 'data' )[0].text.toLowerCase(),  // || s.role,
+    let r   = $( '.js-role' ).select2( 'data' )[0].text.toLowerCase(),
         em  = $( '.js-email' ).val()            || s.email,
-        d   = $( '.js-dept' ).select2( 'data' )[0].text; //  || s.department,
+        d   = $( '.js-dept' ).select2( 'data' )[0].text;
         url = 'https://collective-university-nsardo.c9users.io/login';
 
 
     // ALL FIELDS MUST BE FILLED OUT OR ERROR
     Students.update({ _id: id },
                     {$set:{ role: r,
-                            //fname:fn,
-                            //lname:ln,
                             email:em,
                             department:d,
-                            //fullName:f,
                             updated_at: new Date() } });
 
 
     // ALL FIELDS MUST BE FILLED OUT OR ERROR
     Meteor.users.update({ _id: id }, {$set:{ roles: { [r] : true } }  });
 
-/*
-
     if ( r == 'teacher' ) {
       let text = `Hello ${fn},\n\nThe administrator of Collective University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${e}\nPass: ${s.password}`;
-      Meteor.call('sendEmail', em, 'admin@collectiveuniversity.com', 'Upgraded Account', text);
+      Meteor.call('sendEmail', em, 'admin@collectiveuniversity.com', 'Upgraded Account', text );
     }
-*/
-/*
-    unused
-    let nlim = n.length;
-    for ( let i = 0; i < nlim; i++ ) {
-      Meteor.call('changeNewsfeedAuthorName', n[i]._id, f );
-    }
-    let clim = c.length;
-    for ( let i = 0; i < clim; i++ ) {
-      Meteor.call('changeCommentsAuthorName', c[i]._id, f );
-    }
-*/
+
 
     t.$( '.js-fn' ).attr( 'placeholder',     "" );
     t.$( '.js-ln' ).attr( 'placeholder',     "" );
@@ -415,7 +404,6 @@ Template.adminStudents.events({
    */
   'click .js-delete-student'( e, t ) {
     e.preventDefault();
-    //e.stopImmediatePropagation();
 
     /* ARE YOU SURE YOU WANT TO DELETE... */
     let id = t.$(  e.currentTarget ).data( 'id' );
@@ -433,7 +421,7 @@ Template.adminStudents.events({
   /*
    * .JS-STUDENT-DELETE-SUBMIT  ::(CLICK)::
    */
-  'click .js-student-delete-submit'( e, t ) {
+  'click .js-delete-student-submit'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -448,7 +436,7 @@ Template.adminStudents.events({
     t.$( '.name' ).data( 'id', "" );
     t.$( '#stdimg' ).attr( 'src', "" );
 
-    $( 'deleteStudentModal' ).modal( 'hide' );
+    $( '#deleteStudentModal' ).modal( 'hide' );
 
 //-------------------------------------------------------------------
   },

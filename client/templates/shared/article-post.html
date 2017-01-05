@@ -1,5 +1,4 @@
-
-<template name="postbox">
+<template name="articlePost">
   
   <div class="post-box">
     <form action="">
@@ -7,10 +6,11 @@
         <ul>
           <li>
             <label for="textarea">
-              <img id="post" src="/img/icon-11.png" alt="">
-              Post
+              <!-- <img id="post" src="/img/icon-11.png" alt=""> -->
+              Curated Article
             </label>
           </li>
+          <!--
           <li>
             <label id = "photo" for="ul">
               <input type="file" id="ul" style="display:none;" />
@@ -21,23 +21,33 @@
           <li>
             <label id="thumbnail" for="textarea"></label>
           </li>
+          -->
         </ul>
         
-        <textarea name        = ""
+        <center>
+          <a  href    = "{{news}}" 
+              target  = "_blank" 
+              style   = "font-size: 24px;"
+              data-id = "{{_id}}">
+            {{news}}
+          </a>
+        </center>
+        
+        <!--
+        <textarea name        = "curated-article-link"
                   class       = "postText"
-                  id          = "textarea"
                   style       = "color: blue;"
                   cols        = "30" 
-                  rows        = "4" 
-                  placeholder = "Write something on this Page..." autofocus></textarea>                                    
+                  rows        = "4">{{news}}</textarea>
+        -->
       </div>
       <div class="post-box-footer">
         <div class="row">
           <div class="col-sm-6">
-            <input id="fileupload" type="file">
+            <!-- <input id="fileupload" type="file"> -->
           </div>
           <div class="col-sm-6">
-            <input type="submit" value="Post" id="postSubmit">
+            <!-- <input type="submit" value="Post" id="postSubmit"> -->
           </div>
         </div>
       </div>

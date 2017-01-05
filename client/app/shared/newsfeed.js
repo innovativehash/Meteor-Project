@@ -35,8 +35,8 @@ Template.newsfeed.onCreated(function(){
  */
 Template.newsfeed.onDestroyed( function() {
   //re-set comment display limit(s)
-  var nf = Newsfeeds.find({}, { comment_limit: {$ne: 3} }).fetch();
-  for ( let n = 0; n < nf.length; n++ ) {
+  let nf = Newsfeeds.find( {}, { comment_limit: {$ne: 3} }).fetch();
+  for ( let n = 0, len = nf.length; n < len; n++ ) {
     Newsfeeds.update({ _id: nf[n]._id }, {$set:{ comment_limit: 3 }});
   };
 });
@@ -50,35 +50,40 @@ Template.newsfeed.helpers({
   newsfeeds() {
     let owner = Meteor.userId(); //reactivevariable
 
-    //console.log( Meteor.user().profile.company_id );
     //var feed  = Newsfeeds.find({ owner_id: owner}, { sort: { date: -1 } }).fetch();
-    let feed = Newsfeeds.find(  { private: false, company_id: Meteor.user().profile.company_id }, 
-                                { sort: { date: -1 } }).fetch();           //most recent at top
-
-    for( let i = 0; i < feed.length; i++ ) {
-      var com = Comments.find(  { owner_id: feed[i]._id }, 
-                                { sort: { date: -1 } }).fetch(); //most recent at top
-      if( com.length > 0 ) {
-        feed[i].comments = [];
-
-          if ( feed[i]._id == Session.get( 'active_click_id' ) ) {  //selected js-more button
-            var lim = feed[i].comment_limit;                      //get number of comments to display
-            for( let l = 0; l < lim; l++ ) {
-              if ( l < com.length  ) {                            //if there is a comment
-                feed[i].comments[l] = com[l];                     //add it
+    
+    try {
+      let feed = Newsfeeds.find(  { private: false, company_id: Meteor.user().profile.company_id }, 
+                                  { sort: { date: -1 } }).fetch();           //most recent at top
+  
+      for( let i = 0; i < feed.length; i++ ) {
+        var com = Comments.find(  { owner_id: feed[i]._id }, 
+                                  { sort: { date: -1 } }).fetch(); //most recent at top
+        if( com.length > 0 ) {
+          feed[i].comments = [];
+  
+            if ( feed[i]._id == Session.get( 'active_click_id' ) ) {  //selected js-more button
+              var lim = feed[i].comment_limit;                      //get number of comments to display
+              for( let l = 0; l < lim; l++ ) {
+                if ( l < com.length  ) {                            //if there is a comment
+                  feed[i].comments[l] = com[l];                     //add it
+                }
               }
+              if ( com.length > feed[i].comment_limit ) feed[i].com_length = true;  //more comments left?
+            } else if ( feed[i]._id != Session.get( 'active_click_id' ) ) {
+              for ( let k = 0; k < feed[i].comment_limit; k++ ) {
+                if ( k < com.length )
+                  feed[i].comments[k] = com[k];
+              }
+              if ( com.length > feed[i].comment_limit ) feed[i].com_length = true;
             }
-            if ( com.length > feed[i].comment_limit ) feed[i].com_length = true;  //more comments left?
-          } else if ( feed[i]._id != Session.get( 'active_click_id' ) ) {
-            for ( let k = 0; k < feed[i].comment_limit; k++ ) {
-              if ( k < com.length )
-                feed[i].comments[k] = com[k];
-            }
-            if ( com.length > feed[i].comment_limit ) feed[i].com_length = true;
           }
         }
-      }
-    return feed;
+      return feed;
+    } catch (e) {
+      //console.log(e);
+      return;
+    }
   },
 
   cur_user_avatar() {
@@ -138,6 +143,7 @@ Template.newsfeed.events({
 
 
     Session.set( 'active_click_id', '' );                 //clear actively clicked js-more
+    
     // data-id is id of POST
     var master_id = $( e.currentTarget ).data( 'id' );    //get currently selected js-more
     Session.set( 'active_click_id', master_id );         //set selected js-more
@@ -159,7 +165,8 @@ Template.newsfeed.events({
   'click #news-item-delete':  _.debounce( function( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-        // NOTIFICATION
+    
+    // NOTIFICATION
     Bert.alert( 'Your post has been deleted', 'danger' );
     var i_d = $( e.currentTarget ).data( 'id' );
 
@@ -167,7 +174,7 @@ Template.newsfeed.events({
 
     var owner = $( '#news-item-' + i_d ).data( 'id' );
 
-    if (Meteor.userId() !== owner ) return;
+    if ( Meteor.userId() !== owner ) return;
 
     Tracker.autorun( () => {
       Meteor.subscribe( 'deleteComments', i_d );
@@ -180,8 +187,9 @@ Template.newsfeed.events({
         Comments.remove({ _id: d[i]._id });
       }
     }
+    
     Meteor.setTimeout(function() {
-      Newsfeeds.remove({ _id: i_d  });
+      Newsfeeds.remove( { _id: i_d  } );
     }, 250);
   }, 500),
 //-------------------------------------------------------------------
@@ -201,19 +209,25 @@ Template.newsfeed.events({
 
       var commentary = $( `#ta-${id}` ).val().trim();
 
-      if ( commentary === null || commentary === 'undefined' || commentary === "" ) {
+      if (  commentary === null         || 
+            commentary === 'undefined'  || 
+            commentary === "" ) 
+      {
         return;
       }
 
       //var rec = Newsfeeds.findOne({ _id: id }); //.fetch()[0];
       //console.log( Meteor.user().profile.avatar );
       Meteor.setTimeout(function() {
-        Comments.insert({ owner_id: id,
-                          poster_id: Meteor.userId(),
-                          poster_name: Meteor.user().username,
-                          poster_avatar: Meteor.user().profile.avatar,
-                          comment: commentary,
-                          date: new Date() });
+        Comments.insert({ 
+                          owner_id:       id,
+                          poster_id:      Meteor.userId(),
+                          poster_name:    Meteor.user().username,
+                          poster_avatar:  Meteor.user().profile.avatar,
+                          comment:        commentary,
+                          date:           new Date() 
+                        });
+                        
         $( `#ta-${id}` ).val('');
       }, 100);
 
@@ -223,7 +237,7 @@ Template.newsfeed.events({
       }).fadeIn( 'slow' );
       Bert.alert( 'Your comment has been posted', 'success', 'growl-top-right' );
     }
-      //t.$('.js-comment-button').click();
+
   }, 1000),
 //-------------------------------------------------------------------
 
@@ -243,15 +257,16 @@ Template.newsfeed.events({
       return;
     }
 
-    //var rec = Newsfeeds.findOne({ _id: id }); //.fetch()[0];
-
     Meteor.setTimeout(function() {
-      Comments.insert({ owner_id: id,
-                        poster_id: Meteor.userId(),
-                        poster_name: Meteor.user().username,
-                        poster_avatar: Meteor.user().profile.avatar,
-                        comment: commentary,
-                        date: new Date() });
+      Comments.insert({ 
+                        owner_id:       id,
+                        poster_id:      Meteor.userId(),
+                        poster_name:    Meteor.user().username,
+                        poster_avatar:  Meteor.user().profile.avatar,
+                        comment:        commentary,
+                        date:           new Date() 
+                      });
+                      
       $( `#ta-${id}` ).val('');
     }, 250);
     Bert.alert( 'Your Comment has been submitted', 'success', 'gowl-top-right' );

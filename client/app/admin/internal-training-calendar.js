@@ -1,5 +1,5 @@
 /*
- * @module studentTrainingCalendar
+ * @module internalTrainingCalendar
  *
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
@@ -9,12 +9,10 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 
 import { Events } from '../../../both/collections/api/events.js';
 
-import '../../templates/student/student-training-calendar.html';
-import '../../templates/student/view-training-event.html';
+import '../../templates/admin/internal-training-calendar.html';
 
 
-
-let isPast = ( date ) => {
+let isPast  = ( date ) => {
   let today = moment().format();
   return moment( today ).isAfter( date );
 };
@@ -24,7 +22,7 @@ let isPast = ( date ) => {
 /*
  * CREATED
  */
-Template.studentTrainingCalendar.onCreated( () => {
+Template.internalTrainingCalendar.onCreated( () => {
   //$('#cover').show();
   
   let template = Template.instance();
@@ -39,7 +37,7 @@ Template.studentTrainingCalendar.onCreated( () => {
 /*
  * RENDERED
  */
-Template.studentTrainingCalendar.onRendered(function(){
+Template.internalTrainingCalendar.onRendered(function(){
   /*
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $("#cover").hide();
@@ -55,9 +53,9 @@ Template.studentTrainingCalendar.onRendered(function(){
     // options and callbacks here
     events( start, end, timezone, callback ) {
       
-      let data = Events.find({ students: Meteor.userId() }).fetch().map( ( event ) => {
+      let data = Events.find().fetch().map( ( event ) => {
         
-        event.editable = false; //!isPast( event.start );
+        event.editable = !isPast( event.start );
         return event;
       });
 
@@ -81,11 +79,9 @@ Template.studentTrainingCalendar.onRendered(function(){
       );
     },
     
-    
     eventDragStart( event ) {
       console.log( 'event drag start' ); 
     },
-    
     
     eventDrop( event, delta, revert ) {
       
@@ -97,8 +93,8 @@ Template.studentTrainingCalendar.onRendered(function(){
           end:    date
         };
         
-        //STUDENT CAN'T CHANGE CALENDAR ITEM
-        if ( ! Meteor.user().roles.teacher ) {
+        //NON-ADMIN CAN'T CHANGE CALENDAR ITEM
+        if ( ! Meteor.user().roles.admin ) {
           revert();
           return;
         };
@@ -122,6 +118,9 @@ Template.studentTrainingCalendar.onRendered(function(){
      */
     dayClick( date ) {
       
+      Session.set( 'eventModal', { type: 'add', date: date.format() } );
+      
+      $( '#add-edit-event-modal' ).modal( 'show' );
       
     },
     
@@ -132,17 +131,9 @@ Template.studentTrainingCalendar.onRendered(function(){
     eventClick( event /* literally the rendered event’s data,
                          returned from the event()            */ ) {
                            
-      console.log( event._id  );
-      console.log( event );
+      Session.set( 'eventModal', { type: 'edit', event: event._id } );
       
-      //event-title, event-description, event-location, event-start-time
-      $( '[name="event-title"]' ).val( event.title );
-      $( '[name="event-description"]' ).val( event.description );
-      $( '[name="event-location"]' ).val( event.location );
-      $( '[name="event-start-time"]' ).val( event.startTime );
-      $( '[name="event-start"]' ).val( moment(event.start).format('M-D-Y'));
-      
-      $( '#student-training-modal' ).modal( 'show' );
+      $( '#add-edit-event-modal' ).modal( 'show' );
     }
 
   }); //fullcalendar
@@ -154,19 +145,4 @@ Template.studentTrainingCalendar.onRendered(function(){
     
   });
 
-});
-
-
-
-/*
- * OK BUTTON ON VIEW-TRAINING-EVENT DIALOG
- */
-Template.viewTrainingEvent.events({
-  
-  'click #student-event-ok'( e, t ) {
-    e.preventDefault();
-
-    $( '#student-training-modal' ).modal( 'hide' );
-  },
-  
 });

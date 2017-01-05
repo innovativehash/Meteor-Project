@@ -140,7 +140,7 @@
           <img  src       = "/img/images.png" 
                 class     = "cb-img-image draggable ui-widget-content"
                 style     = "cursor:move;"
-                data-type = "image">
+                data-type = "g-image">
         </li>
         
         <li tabindex = "-1">
@@ -199,7 +199,7 @@
 <div class="dashboard-body-area footer-page">
   <div class="container">
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-sm-3">
         <div class="footer-filter">
           <h2>Page {{page}}/{{total}}
 <!--
@@ -213,16 +213,24 @@
           </h2>
 
         </div><!-- footer-filter -->
-      </div><!-- col-sm-4 -->
+      </div><!-- col-sm-3 -->
 
-      <div class= "col-sm-4">
+      <div class="col-sm-3">
         <div class="save-button">
-          <button id="cb-next-btn">
-            Next Page
+          <button id="cb-prev-btn">
+           <i class="fa fa-backward" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Prev
           </button>
         </div>
       </div>
-      <div class = "col-sm-4">
+      
+      <div class= "col-sm-3">
+        <div class="save-button">
+          <button id="cb-next-btn">
+            Next&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-forward" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class = "col-sm-3">
         <div class = "save-button">
           <button id = "cb-save">
             Save Course
@@ -489,108 +497,78 @@
 
 
 <!--                                     INTRO MODAL         -->
-<div class="search-list assign">
-<div  class           = "modal fade left"
-      id              = "intro-modal"
-      tabindex        = "-1"
-      role            = "dialog"
-      aria-labelledby = "myModalLabel"><!-- data-backdrop = "static" data-keyboard = "false" -->
-  <div class = "modal-dialog">
-    <div class = "pop-up-area">
-      
-<!-- FOR DEBUG -->
-
-     <button type="button"
-              id="popup-close"
-              data-dismiss="modal"
-              aria-label="Close">x</button>
-
-      <div class = "popup-body" style="top: 30%;">
-      <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-          <h2>
-            Course Information
-          </h2>
-        </div>
-        <div class="col-md-2"></div>
-      </div><!-- row -->
-      <br />
-        <form action = "">
-          <div class = "row">
-            <div class = "col-md-6">
-                <br />
-                <input  style       = "width:100%;"
-                        class       = "form-control"
-                        type        = "text"
-                        id          = "course-builder-name" 
+<div class="filter-buttons">
+  <!-- <button type="button" id="import-button" data-toggle="modal" data-target="#intro-modal">Build Course</button> -->
+    <div  class="modal fade left course-build" 
+          id="intro-modal" 
+          tabindex="-1" 
+          role="dialog" 
+          aria-labelledby="myModalLabel">
+      <div class="modal-dialog">
+        <div class="pop-up-area">
+          <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button>
+          <div class="popup-body">
+            <form action="">
+              <div class="course-build-popup">
+                <div class="row">
+              	  <div class="col-sm-12">
+              		  <h2>Course Information</h2>
+              	  </div>
+                </div>
+                <div class="row">
+              	  <div class="col-sm-6">
+              		  <div class="course-single-input">
+              			  <label for="course-builder-name">Please choose course name:</label>
+              			  <input  id      = "course-builder-name"
+                              class   = "form-control"
+                              type    = "text"
+                         
                         placeholder = "name" >
-            </div>
-            <div class="col-md-6">
-                <br>
-                <select id="tags" style="width:100%;" multiple></select>
-                <strong>
-                  <small>
-                    Press [ENTER] after each
-                  </small>
-                </strong>
-            </div>
-            <br /><br />
-          </div><!-- row -->
-          <div class="row">
-            <div class="col-md-6">
-              <br />
-              <br />
-              <input  style       = "width:100%;margin-top:2%;"
-                      class       = "form-control"
-                      type        = "number"
-                      id          = "course-builder-credits"
-                      min         = "0"
-                      max         = "120"
-                      step        = "1"
-                      placeholder = "Credits"/>
-            </div>
-            <br />
-            <div class = "col-md-6" style = "display:inline-block;">
-                <br />
-                <input  style   = "width:100%;margin-top:2%;"
-                        type    = "number"
-                        id      = "course-builder-percent"
-                        min     = "0"
-                        max     = "100"
-                        step    = "1"
-                        class   = "form-control"
-                        placeholder = "Percentage">
-                <strong>
-                  <small>
-                    Leave blank for completion to indicate passing
-                  </small>
-                </strong>
-            </div>
-          </div><!-- row -->
-          <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-              <input  id    = "exit-cb"
-                      type  = "submit"
-                      value = "EXIT"
-                      class = "push-right"
-                      style = "background: url(/img/button-bg.png) repeat-x scroll 0 0 / auto 100%;">
+              		  </div>
+              		  <div class="course-single-input">
+              			  <label for="course-builder-credits">How many credits is this course worth?</label>
+              			  <input  id          = "course-builder-credits"
+              			          class       = "form-control"
+                              type        = "number"
+                              min         = "0"
+                              max         = "120"
+                              step        = "1"
+                              placeholder = "Credits"/>
+              		  </div>
+              	  </div>
+              	  <div class="col-sm-6">
+              		  <div class="course-single-input">
+              			  <label for="tags">Keywords:</label><p style="display:inline;">&nbsp;&nbsp;&nbsp;Press [ENTER] after each</p>
+              			  <select id    = "tags" 
+              			          class = "js-states form-control" 
+              			          multiple></select>
+              			 
+              		  </div>
+              		  <div class="course-single-input percentage">
+              			  <label for="course-builder-percent">Passing percentage for test:</label>
+              			  <input  id      = "course-builder-percent"
+                              type    = "number"
+                              min     = "0"
+                              max     = "100"
+                              step    = "1"
+                              class   = "margin-zero"
+                              placeholder = "Percentage">
+              			  <p>Leave blank if you want completion to indicate passing.</p>
                       
-            </div>
-            <div class="col-md-4">
-              <input  id    = "new-course-save"
-                      type  = "submit"
-                      value = "SAVE"
-                      style = "background: url(/img/button-bg.png) repeat-x scroll 0 0 / auto 100%;">
-            </div>
-          </div><!-- row -->
-        </form>
+                      <input  id    = "new-course-save"
+                              type  = "submit"
+                              value = "SAVE">
+              		  </div>
+              	  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>                                         
       </div>
-    </div>
+    </div> 
   </div>
-</div>
-</div>
+
 <!-- /INTRO modal -->
 
 {{/if}}

@@ -14,9 +14,15 @@ Template.registerHelper( 'or', ( a, b  ) => {
   return a || b;
 });
 
+
 Template.registerHelper('eq', ( a, b ) => {
   return a === b;
 });
+
+Template.registerHelper('not', (obj) => {
+  return !obj;
+});
+
 
 Template.registerHelper( 'isStudent', () => {
   try {
@@ -25,6 +31,7 @@ Template.registerHelper( 'isStudent', () => {
     return new Error(e);
   }
 });
+
 
 Template.registerHelper( 'isTeacher', () => {
   try {

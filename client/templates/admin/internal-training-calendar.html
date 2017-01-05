@@ -1,5 +1,5 @@
-<template name="studentTrainingCalendar">
-<!-- studentTrainingCalendar Template -->
+<template name="internalTrainingCalendar">
+<!-- internalTrainingCalendar Template -->
 <!-- Nicholas Sardo <nsardo@aol.com> -->
 <!--
 <style>
@@ -60,11 +60,13 @@ p[class="type-Birthday"] {
   color: blue;
 }
 
-</style>
-
-{{#if or isStudent isTeacher}}
-    {{> viewTrainingEvent }}
-    <div id="calendar"></div>
-    
-{{/if}}
+</style> 
+  
+  
+  {{#if isAdmin }}
+    {{> addEditEventModal }}
+  {{/if}}
+  
+  <div id="calendar"></div>
+  
 </template>

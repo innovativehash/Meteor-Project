@@ -12,15 +12,27 @@ import { Mongo } from 'meteor/mongo';
 export const Companies = new Mongo.Collection('companies');
 
 /*
-Calendars.allow({
-  insert: function(){
-    return true;
-  },
-  update: function(){
-    return true;
-  },
-  remove: function(){
-    return true;
-  }
+Companies.allow({
+  insert: () => false,
+  update: () => false,
+  remove: () => false
+});
+
+Companies.deny({
+  insert: () => true,
+  update: () => true,
+  remove: () => true
 });
 */
+
+let CompaniesSchema = new SimpleSchema({
+  'name': {
+    type: String
+  },
+  'logo': {
+    type: String
+  }
+  
+});
+
+Companies.attachSchema( CompaniesSchema );

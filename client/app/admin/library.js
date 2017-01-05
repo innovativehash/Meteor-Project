@@ -157,45 +157,44 @@ Template.library.events({
      e.preventDefault();
      e.stopImmediatePropagation();
 
+    /* prolly use reactive var to pass along to dialog */
+    
      let idx = $( e.currentTarget ).data( 'id' );
      let nm  = $( e.currentTarget ).data( 'name' );
 
      idx = String( idx );
      let c = Courses.findOne({ _id: idx });
 
-      BootstrapDialog.show({
-        title: "Add Course",
-        message:  '<div class="pop-up-area students">' +
-                    '<div class="popup-body">' +
-                      '<div class="row">' +
-                        '<div class="col-sm-6">' +
-                            '<p>Add the following course?<br /><span style="color:white;">"' + nm + '"</span></p>' +
-                        '</div>' +
-                      '</div>' +
-                    '</div>' +
-                  '</div>',
-        buttons: [
-          {
-            label: 'Commit Edit',
-            cssClass: 'btn-success',
-            action: function( dialog ) {
-              /* ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY */
-                            Courses.insert({ company_id:Meteor.user().profile.company_id,
-                              cid: c.cid, name: c.name, "icon": "/img/icon-4.png",
-                              credits: c.credits, public: false, times_completed:0 });
-              Bert.alert( 'Class added to your courses', 'success', 'growl-top-right' );
-              dialog.close();
-            }
-          },
-          {
-            label: 'Cancel Edit',
-            cssClass: 'btn-danger',
-            action: function( dialog ) {
-              dialog.close();
-            }
-          }]
-        });
+      $( '#lib-add-course-modal' ).modal();
+      
+    
+      
+    // modal("show") modal("hide") modal("toggle")
 //-------------------------------------------------------------------
   },
 
+
+  /*
+   * MODAL ADD COURSE CONFRIM ADD BUTTON
+   */
+  'click .js-lib-add'( e, t ) {
+    e.preventDefault();
+    
+      //ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY
+      Courses.insert({ company_id:Meteor.user().profile.company_id,
+        cid: c.cid, name: c.name, "icon": "/img/icon-4.png",
+        credits: c.credits, public: false, times_completed:0 });
+      Bert.alert( 'Class added to your courses', 'success', 'growl-top-right' );
+     
+    $( '#lib-add-course-modal' ).modal("hide");
+  },
+  
+  
+  /*
+   * MODAL ADD COURSE CANCEL BUTTON
+   */
+  'click .js-lib-cancel'( e, t ) {
+    e.preventDefault();
+    $( '#lib-add-course-modal' ).modal("hide");
+  },
 });

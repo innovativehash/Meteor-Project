@@ -6,10 +6,9 @@
  */
 import { Events }      from '../../../both/collections/api/events.js';
 import { Students }    from '../../../both/collections/api/students.js';
-import { Departments } from '../../../both/collections/api/departments.js'
-import { Courses }     from '../../../both/collections/api/courses.js';
+import { TimeZones }   from '../../../both/collections/api/timezones.js';
 
-import '../../templates/student/add-edit-event-modal.html';
+import '../../templates/admin/add-edit-event-modal.html';
 
 
 
@@ -32,18 +31,26 @@ Template.addEditEventModal.onCreated( () => {
       $( '[name="type"]' ).select2({
         allowClear:               true,
         tags:                     true,
-        placeholder:              'choose...',
+        placeholder:              'Add Attendees...',
         minimumResultsForSearch:  Infinity
       });
       
-      $( '[name="type"]').prop( 'disabled', true );
+      $( '[name="timezone"]' ).select2({
+        allowClear:             true,
+        tags:                   false,
+        placeholder:            'TimeZone',
+        minimumResultsForSearch: Infinity
+      });
       
+      //$( '[name="type"]').prop( 'disabled', true );
+/*      
       $( '#t-courses' ).select2({
         allowClear:               true,
         tags:                     true,
         placeholder:              'choose...',
         minimumResultsForSearch:  Infinity
       });
+*/
     });
     //console.log('addEditEventModal:: select2.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
@@ -54,26 +61,49 @@ Template.addEditEventModal.onCreated( () => {
 });
 
 
+Template.addEditEventModal.onRendered(function(){
+  
+});
+
+
 
 Template.addEditEventModal.helpers({
-    
+  
+  timezones() {
+    try {
+      let tz = TimeZones.find().fetch()[0].timezones
+        , dt;
+
+      dt = _(tz).chain()
+        .sortBy('group')
+        .reverse()
+        .sortBy('value')
+        .reverse()
+        .value();
+
+      return dt;
+    } catch (e) {
+      //console.log( e );
+    } 
+  },
+  
   cntx() {
     try {
-      if ( Session.get( 'dc' ) == 'students' ) {
+      //if ( Session.get( 'dc' ) == 'students' ) {
         
         return Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
         
-      } else if ( Session.get( 'dc' ) == 'departments' ) {
+      //} else if ( Session.get( 'dc' ) == 'departments' ) {
         
-        return Departments.find({ company_id: Meteor.user().profile.company_id }).fetch();
+        //return Departments.find({ company_id: Meteor.user().profile.company_id }).fetch();
         
-      }
+      //}
     } catch (e) {
       //console.log( e );
       return;
     }
   },
-  
+/*  
   courses() {
     try {
       return Courses.find({ 
@@ -85,7 +115,7 @@ Template.addEditEventModal.helpers({
       return;
     }
   },
-  
+*/
   
   modalType( type ) {
     let eventModal = Session.get( 'eventModal' );
@@ -154,6 +184,7 @@ Template.addEditEventModal.events({
   /*
    * SET UP SEARCH DIALOG, IF NEEDED
    */
+/*
   'click input[name="s_type_radio"]'( event, template ) {
     //$( 'input[name="s_type_radio"]:checked').val();
     
@@ -176,20 +207,22 @@ Template.addEditEventModal.events({
       Session.set( 'dc', 'departments' );
     }
   },
-  
+*/ 
   
   'submit form' ( event, template ) {
     event.preventDefault();
 
     let eventModal = Session.get( 'eventModal' ),
-        submitType = eventModal.type === 'edit' ? 'editEvent' : 'addEvent',
-        radio      = $( 'input[name="s_type_radio"]:checked' ).val();
+        submitType = eventModal.type === 'edit' ? 'editEvent' : 'addEvent';
+        //radio      = $( 'input[name="s_type_radio"]:checked' ).val();
 
       /*event record moved from here*/
 
     /*
      * ADD TO STUDENT'S ASSIGNED COURSES
      */
+     
+    /*
     switch ( radio ) {
       
       case 'all_students':
@@ -227,39 +260,56 @@ Template.addEditEventModal.events({
           start:    template.find( '[name="start"]' ).value,
           end:      template.find( '[name="end"]'   ).value,
           students: stu_arr,
-          courses:  template.$(    '#t-courses'     ).val()
+          //courses:  template.$(    '#t-courses'     ).val()
+          location:  template.find( '[name="location"]' ).value,
+          description: template.find( '[name="description"]' ).value
         };
 
         break;
         
       case 'stu_names':
-        
-        let names = template.$( '[name="type"]'   ).val(),
-            nlen    = names.length;
+ */       
+        let names   = template.$( '[name="type"]'   ).val()
+          , nlen    = 0
+          , s       = []
+          , iid;
 
-        c     = [];
-        s     = [];
-        courses = template.$( '#t-courses' ).val();
-        clen    = courses.length;
+        if ( (names && names.length) && names != null ) {
+          nlen = names.length;
+        } else {
+          Bert.alert( 'You must select a Student!', 'danger' );
+          return;
+        }
+        
+        /* 
+         *    -------------------------------
+         *    ADD OTHER SANITY CHECKS HERE 
+         *    -------------------------------
+         */
+        
+        
+        //c     = [];
+        //courses = template.$( '#t-courses' ).val();
+        //clen    = courses.length;
       
         
         eventItem  = {
-          title:    template.find( '[name="title"]' ).value,
-          start:    template.find( '[name="start"]' ).value,
-          end:      template.find( '[name="end"]'   ).value,
-          students: template.$(    '[name="type"]'  ).val(),
-          courses:  template.$(    '#t-courses'     ).val()
+          title:        template.find( '[name="title"]' ).value,
+          start:        template.find( '[name="start"]' ).value,
+          end:          template.find( '[name="end"]'   ).value,
+          students:     template.$(    '[name="type"]'  ).val(),
+          location:     template.find( '[name="location"]' ).value,
+          description:  template.find( '[name="description"]' ).value,
+          startTime:    template.find( '[name="start-time"]' ).value,
+          endTime:      template.find( '[name="end-time"]' ).value,
+          timezone:     template.find( '[name="timezone"]' ).value
+          //courses:    template.$(    '#t-courses'     ).val()
         };
         
-        
+/*        
         // GET THE COURSES ASSIGNED:
         for( let i = 0; i < clen; i++ ) {
           c[i] = Courses.find({ _id: courses[i] }).fetch()[0];
-        }
-
-        // GET THE STUDENTS ASSIGNED
-        for( let i = 0; i < nlen; i++ ) {
-          s[i] = Students.find({ _id: names[i] }).fetch()[0];
         }
 
         for ( let i = 0; i < nlen; i++ ) { //number of students
@@ -268,7 +318,8 @@ Template.addEditEventModal.events({
             Students.update({ _id: s[i]._id },{ $push:{ current_courses: o } });
           }
         }
-        
+*/
+ /*       
         break;
         
       case 'departments':
@@ -311,31 +362,63 @@ Template.addEditEventModal.events({
           start:    template.find( '[name="start"]' ).value,
           end:      template.find( '[name="end"]'   ).value,
           students: stu_arr,
-          courses:  template.$(    '#t-courses'     ).val()
+          //courses:  template.$(    '#t-courses'     ).val()
+          location:  template.find( '[name="location"]' ).value,
+          description: template.find( '[name="description"]' ).value
         };    
         break;
     }
-    
+ */   
     // CLEAR OUT THE FIELDS
     template.$( '[name="type"]' ).val(null).trigger("change");
-    template.$( '#t-courses' ).val(null).trigger("change"); 
     template.$( '[name="title"]').val('');
+    template.$( '[name="timezone"]' ).val( null ).trigger( 'change' );
+    template.$( '[name="startTime"]' ).val('');
+    template.$( '[name="endTime"]' ).val('');
+    template.$( '[name="location"]' ).val('');
+    template.$( '[name="description"]' ).val('');
+    template.$( '[name="start"]' ).val('');
+    template.$( '[name="end"]' ).val('');
+    template.$( '[name="start-time"]' ).val('');
+    template.$( '[name="end-time"]' ).val('');
+    //template.$( '#t-courses' ).val(null).trigger("change");
     
     /* ADD DATE/EVENT TO STUDENT CALENDAR */
     if ( submitType === 'editEvent' ) {
       eventItem._id   = eventModal.event;
     }
 
-    Meteor.call( submitType, eventItem, ( error ) => {
+    let o = { 
+              name:         eventItem.title, 
+              start_date:   eventItem.start, 
+              start_time:   eventItem.startTime, 
+              end_date:     eventItem.end, 
+              end_time:     eventItem.endTime, 
+              timezone:     eventItem.timezone,
+              location:     eventItem.location,
+              description:  eventItem.description,
+              posted_date:  moment().format() 
+            };
+            
+    Meteor.call( submitType, eventItem, ( error, rslt ) => {
       
       if ( error ) {
         Bert.alert( error.reason, 'danger' );
       } else {
+        iid = rslt;
         Bert.alert( `Event ${ eventModal.type }ed!`, 'success' );
+        
+        // GET THE STUDENTS ASSIGNED
+        //o.record_id = iid;
+        for( let i = 0; i < nlen; i++ ) {
+          s[i] = Students.find({ _id: names[i] }).fetch()[0];
+      
+          Students.update({ _id: s[i]._id },{ $push:{ current_trainings:{ link_id: iid } } });
+        } 
         closeModal();
       }
     });
-    
+   
   },
   
   

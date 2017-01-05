@@ -126,7 +126,7 @@ Template.courseBuilderPage.onCreated( function() {
             */
             break;
             
-          case 'image':
+          case 'g-image':
             $( '#cb-toolbar-text' ).hide();
             
             if( S3.collection.findOne() ) {
@@ -316,7 +316,6 @@ Template.courseBuilderPage.onRendered( function() {
     tbo = Session.get( 'obj' );
     Session.set( 'obj', null );
     Session.set( 'test_id', FlowRouter.getQueryParam("id") );
-console.log( Session.get('test_id'));
 
     //Save the test
     $( '#cb-next-btn' ).click();
@@ -332,6 +331,7 @@ console.log( Session.get('test_id'));
     socket.close();
   });
 */
+
 //-------------------------------------------------------------------
 }); //END ONRENDERED
 
@@ -343,6 +343,7 @@ console.log( Session.get('test_id'));
  ******************************************************************************/
 Template.courseBuilderPage.helpers({
 
+  
   fname: () => {
     try {
       return Students.findOne({ _id: Meteor.userId() }).fname;
@@ -869,19 +870,19 @@ Template.courseBuilderPage.events({
                                       });
 
     Courses.insert({
-                    built_id: built_id,
-                    credits: tbo.credits,
-                    num: 1,
-                    name: tbo.name,
-                    passing_percent: tbo.passing_percent,
-                    company_id: cid,
-                    times_completed: 0,
-                    icon: tbo.icon,
-                    public: false,
-                    creator_type: role,
-                    creator_id: uid,
-                    created_at: cd,
-                    approved: apv
+                    built_id:         built_id,
+                    credits:          Number( tbo.credits ),
+                    name:             tbo.name,
+                    passing_percent:  tbo.passing_percent,
+                    company_id:       cid,
+                    times_completed:  0,
+                    icon:             tbo.icon,
+                    public:           false,
+                    creator_type:     role,
+                    creator_id:       uid,
+                    created_at:       cd,
+                    approved:         apv,
+                    created_at:       cd
                   });
 
     Meteor.setTimeout(function(){
@@ -943,6 +944,20 @@ Template.courseBuilderPage.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
+    //Meteor.call( 'scormStudentCourseStatus', 1, '68ac728a3a9686020674a6e614e2d7e3', 1 );
+    //Meteor.call( 'scormListAllCourses' );
+    //Meteor.call( 'scormListStudentCompletedCourses', 1, '68ac728a3a9686020674a6e614e2d7e3' );
+    //Meteor.call( 'scormListCompanyCourses', 1 );
+    //Meteor.call( 'scormListUserCourses', 1, '68ac728a3a9686020674a6e614e2d7e3' );
+    //Meteor.call( 'scormListStudentStartedCourses', 1, '68ac728a3a9686020674a6e614e2d7e3' );
+    //Meteor.call( 'scormCreateUser', '123', 'pass', 1 );
+    
+    let r = Meteor.call( 'scormGetCoursePlayURL', 'demo_user', 1, 1, function (error, result) {
+            if (!error) {
+              Session.set("resp", result);
+            }
+          });
+    console.log( Session.get('resp') );
     Template.instance().page.set(   Template.instance().page.get()  + 1 );
     Template.instance().total.set(  Template.instance().total.get() + 1 );
     t.$( '#add-scorm' ).modal( 'hide' );
@@ -1023,7 +1038,7 @@ Template.courseBuilderPage.events({
    */
   'change #course-builder-image'( e, t ) {
 
-    CBImage.cbImageChange( e, t, tbo, Images );
+    CBImage.cbImageChange( e, t, tbo /*, Images */ );
   },
 
 

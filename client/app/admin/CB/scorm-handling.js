@@ -43,6 +43,8 @@ http://scorm.academy-smart.org.ua/player/listStudentCourses/company_id/user_id
     e.preventDefault();
     e.stopImmediatePropagation();
 
+    
+    
     Template.instance().page.set( Template.instance().page.get()    + 1 );
     Template.instance().total.set( Template.instance().total.get()  + 1 );
 //-----------------------------------------------------------------------------

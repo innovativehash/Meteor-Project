@@ -49,9 +49,10 @@ Template.courseView.onRendered( function() {
 
     this.autorun(function() { //self
       try {
-        let no  = Template.instance().page.get();
-        let c   = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" ) }).fetch()[0];
-
+        let no  = Template.instance().page.get()
+          , c   = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "builder" ) }).fetch()[0]
+          , cid = FlowRouter.getQueryParam( "course" );
+        
         Template.instance().total.set( c.pages.length -1 );
 
         if ( c && c.pages ) {
@@ -59,8 +60,9 @@ Template.courseView.onRendered( function() {
           // REGULAR PAGES
           if ( c && c.pages && c.pages[no].type == 'page' ) {
             $( '#test_v' ).hide();
-            //pre-cache test id if it's the next question
-            if ( c && c.pages && c.pages[no + 1].type == "test" ) {
+            //pre-cache test id if it's the next page
+            if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == "test" ) 
+            {
               Scratch.insert({ id:  c.pages[no + 1].page });
             }
             
@@ -71,7 +73,7 @@ Template.courseView.onRendered( function() {
             //im.src  = c.pages[no].page;
             //doc.appendChild(im);
           
-            $( '#fb-template' ).html( '<img id="pg" data="{{course}}">' );
+            $( '#fb-template' ).html( `<img id="pg" data="${c.pages[no].page}">` );
             $( '#pg' ).attr( 'src', c.pages[no].page );
             $( '#fb-template' ).show();  
             
@@ -79,20 +81,21 @@ Template.courseView.onRendered( function() {
           } else if ( c && c.pages && c.pages[no].type == 'video' ) {
             $( '#test_v' ).hide();
             
-            //pre-cache test id if it's the next question
-            if ( c && c.pages && c.pages[no + 1].type == "test" ) {
+            //pre-cache test id if it's the next page
+            if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == "test" ) 
+            {
               Scratch.insert({ id:  c.pages[no + 1].page });
             }
             
             Bert.alert({
-                        title: 'Loading Video',
-                        message: 'Give it a few seconds to load...',
-                        type: 'success',
-                        style: 'growl-top-right',
-                        icon: 'fa-youtube'
+                        title:    'Loading Video',
+                        message:  'Give it a few seconds to load...',
+                        type:     'success',
+                        style:    'growl-top-right',
+                        icon:     'fa-youtube'
                       });
                       
-            console.log( c.pages[no].url );
+           
             $( '#fb-template' ).empty();
             $( '#fb-template' ).html( c.pages[no].url );
             $( '#fb-template' ).show();
@@ -100,27 +103,49 @@ Template.courseView.onRendered( function() {
           // PDF PAGE
           } else if ( c && c.pages && c.pages[no].type == 'pdf' ) {
             $( '#test_v' ).hide();
-            //pre-cache test id if it's the next question
-            if ( c && c.pages && c.pages[no + 1].type == 'test' ) {
+            //pre-cache test id if it's the next page
+            if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == 'test' ) 
+            {
               Scratch.insert({ id: c.pages[no + 1].page });
             }
 
             Bert.alert({
-                        title: 'Loading PDF',
-                        message: 'Give it a few seconds to load...',
-                        type: 'success',
-                        style: 'growl-top-right',
-                        icon: 'fa-youtube'
+                        title:    'Loading PDF',
+                        message:  'Give it a few seconds to load...',
+                        type:     'success',
+                        style:    'growl-top-right',
+                        icon:     'fa-youtube'
                       });    
                       
             
             $( '#fb-template' ).empty();
             $( '#fb-template' ).html( c.pages[no].url );
             $( '#fb-template' ).show();
+           
+          // SCORM PAGE
+          } else if ( c && c.pages && c.pages[no].type == 'scorm' ) {
+            $( '#test_v' ).hide();
+            
+            //pre-cache test id if it's the next page
+            if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == 'test' ) 
+            {
+              Scratch.insert({ id: c.pages[no + 1].page });
+            }
+            
+            Bert.alert({
+                        title:    'Loading SCORM',
+                        message:  'Give it a few seconds of load...',
+                        type:     'success',
+                        style:    'growl-top-right',
+                      });
+                      
+            $( '#fb-template' ).empty();
+            $( '#fb-template' ).html( c.pages[no].url );
+            $( '#fb-template' ).show();
             
           // TEST PAGES
           } else if ( c && c.pages && c.pages[no].type == 'test') {
-            console.log( 'in test' );
+            
             ////////////////////////////////////////////////////////////////////
             //  NOTES:                                                        //
             //  Need to pre-seed scratch db so that it is ready BEFORE this   //

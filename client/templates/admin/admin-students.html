@@ -28,15 +28,20 @@
   <div class="row">
     <div class="col-sm-8">
       <div class="filter-buttons studentpage">
-        <button class="js-add-student"
-          type="button"
-          id="add_students"
-          data-toggle="modal"
-          data-target="#addStudentModal">
+        
+        <button class       = "js-add-student"
+                type        = "button"
+                id          = "add_students"
+                data-toggle = "modal"
+                data-target = "#addStudentModal">
           <span>+</span>
           Add Student
         </button>
-        <button id="import_student" class="js-import-students-csv">Import Students CSV</button>
+        
+        <button id    = "import_student" 
+                class = "js-import-students-csv">
+          Import Students CSV
+        </button>
 <!-- ADD STUDENT MODAL -->    
 
 <div class="modal fade left" id = "addStudentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -105,7 +110,9 @@
           <div class="row">
             <br><br><br><br>
             <div class="col-sm-12 text-right">
-              <input class="js-student-add-submit" type="submit" value="SAVE">
+              <input  class   = "js-add-student-submit" 
+                      type    = "submit" 
+                      value   = "SAVE">
             </div>
           </div>
         </form>
@@ -161,8 +168,17 @@
                   </thead>
                   <tbody>
                     {{#each students }}
-                    <tr id="{{_id}}">
-                      <th class="name"><span><img src="{{avatar}}" alt=""></span><a class="js-student" data-id="{{_id}}" href="#">{{fname}} {{lname}}</a></th>
+                    <tr id      = "{{_id}}">
+                      <th class = "name">
+                        <span>
+                          <img src = "{{avatar}}" alt="">
+                        </span>
+                        <a  class   = "js-student" 
+                            data-id = "{{_id}}" 
+                            href    = "#">
+                          {{fname}} {{lname}}
+                        </a>
+                      </th>
                       {{#if compl_courses_cnt }}
                         <td>{{ compl_courses_cnt }}</td>
                       {{else}}
@@ -251,21 +267,25 @@
             </div>
             
             <div class="col-sm-6">
-              <select name="js-dept" class="js-dept form-control input-lg"></select>
+              <select name  = "js-dept" 
+                      class = "js-dept form-control input-lg"></select>
             </div>
           </div>
           <br>
           <div class="row">
             <br>
             <div class="col-sm-6">
-              <select class="js-role form-control" name="js-role"></select>
+              <select class = "js-role form-control" 
+                      name  = "js-role"></select>
 
             </div>
           </div>
           <div class="row">
             <br><br><br><br>
             <div class="col-sm-12 text-right">
-              <input class="js-student-edit-submit" type="submit" value="SUBMIT">
+              <input  class = "js-edit-student-submit" 
+                      type  = "submit" 
+                      value="SUBMIT">
             </div>
           </div>
         </form>
@@ -291,9 +311,9 @@
           <div class="row">
             <div class="col-sm-12">
               <br>
-                          <strong style = "font-size:1.5em;">
-                            Are you sure you want to delete this student?
-                          </strong>
+                <strong style = "font-size:1.5em;">
+                  Are you sure you want to delete this student?
+                </strong>
             </div>
           </div>
           <br>
@@ -302,15 +322,15 @@
             <div class="col-sm-2"></div>
             <div class="col-sm-8">
               <center>
-                                <div class = "name">
-                                  <span>
-                                    <img id = "stdimg" src="">
-                                  </span>
-                                </div>
-                                
-                                <span id    = "fnln" 
-                                      style = "color:white;font-size:2em;">
-                                </span>
+                <div class = "name">
+                  <span>
+                    <img id = "stdimg" src="">
+                  </span>
+                </div>
+                
+                <span id    = "fnln" 
+                      style = "color:white;font-size:2em;">
+                </span>
               </center>
             </div>
             <div class="col-sm-2"></div>
@@ -320,9 +340,9 @@
           <div class="row">
             <br><br><br>
             <div class="col-sm-12 text-right">
-                              <input  class = "js-student-delete-submit" 
-                                      type  = "submit" 
-                                      value = "SUBMIT">
+              <input  class = "js-delete-student-submit" 
+                      type  = "submit" 
+                      value = "SUBMIT">
             </div>
           </div>
         </form>

@@ -6,7 +6,7 @@
  */
 
 
-let ig      = ''
+let pdf     = ''
   , pdf_id  = '';
 
 /**
@@ -33,10 +33,10 @@ export function cbPDFChange( e, t, tbo, Pdfs ) {
 		        
 		        function( error, result ){
 			        //delete result._id;
-			        ig = result.secure_url;
+			        pdf = result.secure_url;
 			        //let img = $( '#preview-image' );
 
-              //img.attr( "src", ig ); // ig
+              //img.attr( "src", pdf ); // pdf
               //img.appendTo( '.image-preview' );
                 
             	pdf_id =	Pdfs.insert({
@@ -59,7 +59,7 @@ export function cbPDFChange( e, t, tbo, Pdfs ) {
     , fr    = new FileReader();
 
   fr.onload = function() {
-    ig      = this.result;
+    pdf     = this.result;
   };
 
   // reads in image, calls back fr.onload
@@ -83,7 +83,7 @@ export function cbPDFSave( e, t, tbo, contentTracker, pdfsTracker ) {
 /*
     Meteor.call( 'saveBuiltCoursePdf',
                   built_id,
-                  ig,
+                  pdf,
                   Template.instance().page.get() );
 
     Template.instance().page.set( Template.instance().page.get() + 1 );
@@ -91,14 +91,14 @@ export function cbPDFSave( e, t, tbo, contentTracker, pdfsTracker ) {
 */
 
     let obj =
-    `<embed width="100%" height="600" src="${ig}" type="application/pdf"></embed>`;
+    `<embed width="100%" height="600" src="${pdf}" type="application/pdf"></embed>`;
     t.$( '#fb-template' ).empty();
     t.$( '#fb-template' ).append( obj );
 
 /*
-    '<object data="' + ig + '" type="application/pdf" width="100%" height="auto">' +
-    '<iframe src="' + ig + '" width="100%" height="auto" style="border: none;">' +
-    'This browser does not support PDFs. Please download the PDF to view it: <a href="' + ig + '">Download PDF</a>' +
+    '<object data="' + pdf + '" type="application/pdf" width="100%" height="auto">' +
+    '<iframe src="' + pdf + '" width="100%" height="auto" style="border: none;">' +
+    'This browser does not support PDFs. Please download the PDF to view it: <a href="' + pdf + '">Download PDF</a>' +
     '</iframe>' +
     '</object>';
 */
@@ -110,7 +110,7 @@ export function cbPDFSave( e, t, tbo, contentTracker, pdfsTracker ) {
                   };
 
     
-    ig = null;
+    pdf = null;
     t.$( '#add-pdf' ).modal( 'hide' );
 //-----------------------------------------------------------------------------
 };

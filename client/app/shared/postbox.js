@@ -4,7 +4,6 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 
@@ -61,11 +60,12 @@ Template.postbox.events({
 
     let mark = ( e.currentTarget.files[0].name ).lastIndexOf( '.' ) + 1;
 
-    ext  = ( e.currentTarget.files[0].name ).slice( mark );
+    ext = ( e.currentTarget.files[0].name ).slice( mark );
+    
     ext = ( ext == ('jpg' || 'jpeg' ) ) ? 'jpeg' : 'png';
 
     let fil = t.$( '#ul' ).get(0).files[0];
-    let fr = new FileReader();
+    let fr  = new FileReader();
 
     fr.onload = function() {
       ig  = this.result;
@@ -111,29 +111,35 @@ Template.postbox.events({
       //let co_id = Students.findOne({_id: Meteor.userId()}).company_id;
 
       if ( ig ) {
-        Newsfeeds.insert({  owner_id: Meteor.userId(),
-                            poster: name,
-                            poster_avatar: Meteor.user().profile.avatar,
-                            type: "P",
-                            private: false,
-                            ext: ext,
-                            bin: ig,
-                            news: content,
-                            comment_limit: 3,
-                            likes: 0,
-                            company_id: co_id,
-                            date: new Date() });
+        //INSERT POST WITH IMAGE
+        Newsfeeds.insert({  
+                            owner_id:       Meteor.userId(),
+                            poster:         name,
+                            poster_avatar:  Meteor.user().profile.avatar,
+                            type:           "post",
+                            private:        false,
+                            ext:            ext,
+                            bin:            ig,
+                            news:           content,
+                            comment_limit:  3,
+                            likes:          0,
+                            company_id:     co_id,
+                            date:           new Date() 
+                          });
       } else {
-        Newsfeeds.insert({  owner_id: Meteor.userId(),
-                            poster: name,
-                            poster_avatar: Meteor.user().profile.avatar,
-                            type: "P",
-                            private: false,
-                            news: content,
-                            comment_limit: 3,
-                            company_id: co_id,
-                            likes: 0,
-                            date: new Date() });
+        //INSERT POST W/O IMAGE
+        Newsfeeds.insert({  
+                            owner_id:       Meteor.userId(),
+                            poster:         name,
+                            poster_avatar:  Meteor.user().profile.avatar,
+                            type:           "post",
+                            private:        false,
+                            news:           content,
+                            comment_limit:  3,
+                            company_id:     co_id,
+                            likes:          0,
+                            date:           new Date() 
+                          });
       }
 
       Meteor.setTimeout(function() {

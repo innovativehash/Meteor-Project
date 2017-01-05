@@ -8,7 +8,7 @@
     Accounts.onCreateUser( ( options, user ) => {
       user.roles    = options.roles;
       user.profile  = options.profile;
-      console.log( 'user.roles.student is ' + user.roles.student );
+      //console.log( 'user.roles.student is ' + user.roles.student );
     
       //user.roles = options.roles;
       //user.profile= {

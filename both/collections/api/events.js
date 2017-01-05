@@ -34,13 +34,32 @@ let EventsSchema = new SimpleSchema({
   },
   'students': {
     type: [String],
-    label: 'participants',
+    label: 'Participants',
     //allowedValues: [ 'Birthday', 'Corporate', 'Wedding', 'Miscellaneous' ]
   },
+  'description': {
+    type: String,
+    label: 'What this training is about'
+  },
+  'location': {
+    type: String,
+    label: 'Where the training will occur'
+  },
+  'timezone': {
+    type: String
+  },
+  'startTime': {
+    type: String
+  },
+  'endTime': {
+    type: String
+  }
+/*
   'courses': {
     type: [String],
     label: 'The courses of this event.'
   }
+*/
 });
 
 Events.attachSchema( EventsSchema );

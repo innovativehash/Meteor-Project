@@ -30,7 +30,7 @@
    * #COURSE-BUILDER-IMAGE ::(CHANGE)::
    *
    */
-  export function cbImageChange( e, t, tbo, Images ) {
+  export function cbImageChange( e, t, tbo /*,Images*/ ) {
     
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -39,7 +39,7 @@
       console.log('aborted');
       return;
     }
-/*
+
     let mark = ( e.currentTarget.files[0].name ).lastIndexOf('.') + 1;
 
     ext   = ( e.currentTarget.files[0].name ).slice( mark );
@@ -77,13 +77,13 @@
           img = null;
       }
     }, 200);
-*/
+//
   		//let files = t.$( "input.file_bag" )[0].files
   		//let fil = t.$( '#course-builder-image' ).get(0).files[0]
-  		
+/*  		
   		let fil = t.$( '#course-builder-image' )[0].files
 		  , sf    = t.$( '#course-builder-image' ).data('subfolder');
-  
+ 
 		S3.upload(
 		          {
         				files:  fil, //files,
@@ -112,7 +112,7 @@
 				                                });
 		         }
 		);
-
+*/
     t.$( '#course-builder-image' ).val('');
 //-----------------------------------------------------------------------------
   }
@@ -131,10 +131,10 @@
     contentTracker.images++;
     ++img_id;
 
-    t.$( '#fb-template' ).append( `<span id="ig-${img_id}" style="top:100px;left:200px;display:inline-block;position:absolute;"><img id="img-preview-${img_id}" src="${ig}" style="cursor:move;"></span>` );
+    t.$( '#fb-template' ).append( `<div id="ig-${img_id}" style="top:100px;left:200px;display:inline-block;position:absolute;cursor:move;"><img id="im-${img_id}" src="${ig}"></div>` );
 
     $( `#ig-${img_id}` ).draggable();
-    $( `#img-preview-${img_id}` ).resizable();
+    $( `#im-${img_id}` ).resizable();
 /*
   Don't need to sort image, as is captured as part of page with title, text, img
   

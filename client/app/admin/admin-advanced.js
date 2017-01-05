@@ -4,11 +4,10 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-import '../../../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css';
+import { Students }   from '../../../both/collections/api/students.js';
+import { Template }   from 'meteor/templating';
 
-import { Students }    from '../../../both/collections/api/students.js';
-import { Template }     from 'meteor/templating';
-
+import { Newsfeeds }     from '../../../both/collections/api/newsfeeds.js';
 
 import '../../templates/admin/admin-advanced.html';
 
@@ -16,16 +15,8 @@ import '../../templates/admin/admin-advanced.html';
 Template.adminAdvanced.onCreated(function(){
   //$("#cover").show();
 
-  /*
-   * BOOTSTRAP TOGGLE
-   */
-  $.getScript( '/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js', function() {
+  this.isInternalTraining = new ReactiveVar(false);
 
-    $( '#cr-on' ).bootstrapToggle();
-    //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'ADVANCED:: bootstrap-toggle.min.js fail' );
-  });
 });
 
 
@@ -40,25 +31,76 @@ Template.adminAdvanced.onRendered(function(){
 
 
 /*
+ * HELPERS
+ */
+Template.adminAdvanced.helpers({
+  isInternalTraining: () =>
+    Template.instance().isInternalTraining
+});
+
+
+
+/*
  * EVENTS
  */
 Template.adminAdvanced.events({
 
   /*
-   * #CREDIT-ON/OFF  ::(CHANGE)::
+   * INTERNAL TRAINING BUTTON
    */
-  'change #cr-on'( e, t ){
+  'click #internal-training'( e, t ) {
+    e.preventDefault();
+    t.isInternalTraining.set(true);
+    FlowRouter.go( 'internal-training-calendar', { _id: Meteor.userId() });
+  },
+  
+  
+  /*
+   * CURATE ARTICLE
+   */
+  'click #curate-article'( e, t ) {
+    e.preventDefault();
+    
+    let link    = t.find( '[name="curated-link"]' ).value;
+    t.find( '[name="curated-link"]' ).value  = '';
+    
+    Newsfeeds.insert({  
+                        owner_id:       Meteor.userId(),
+                        poster:         "Admin",
+                        poster_avatar:  "",
+                        type:           "article",
+                        private:        false,
+                        news:           link,
+                        comment_limit:  3,
+                        company_id:     Meteor.user().profile.company_id,
+                        likes:          0,
+                        likers:         [],
+                        date:           moment().format('M-D-Y') 
+                      });
+    
+    Bert.alert( 'The article has been added to the system', 'success' );
+  },
+  
+  
+  /*
+   * #CREDIT-ON  ::(CLICK)::
+   */
+  'click #credit-on'( e, t ){
     e.preventDefault();
     e.stopImmediatePropagation();
+    
+    console.log('yes clicked');
 
-    //let tog = $(e.currentTarget).prop('checked');
-		//if ( tog ) {
-		  // switched on
-		  //let req_creds = t.$('.js-credits-required').val();
-		  //Students.upsert({ company_id: Meteor.user().profile.company_id},{$set:{required_credits: req_creds}});
-		  //Meteor.call('upsertCredits', Meteor.user().profile.company_id, req_creds);
-		//}
 //-------------------------------------------------------------------
+  },
+  
+  /*
+   * CREDIT OFF  ::(CLICK)::
+   */
+  'click #credit-off'( e, t ) {
+    e.preventDefault();
+    
+    console.log('clicked off');
   },
 
 
@@ -99,7 +141,7 @@ Template.adminAdvanced.events({
     let tog = $( '#cr-on' ).prop( 'checked' );
 
 		if ( tog ) {
-		  // switched on
+
 		  let req_creds = t.$( '.js-credits-required' ).val()
 		    , freq;
 
@@ -116,6 +158,6 @@ Template.adminAdvanced.events({
 		  Meteor.call( 'upsertCredits', Meteor.user().profile.company_id, req_creds );
 		}
     Bert.alert( 'Your information has been saved', 'success' );
-  }
+  },
 
 });

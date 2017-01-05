@@ -8,14 +8,41 @@ export const Diplomas = new Mongo.Collection("diplomas");
 
 /*
 Diplomas.allow({
-  insert: function(){
-    return true;
-  },
-  update: function(){
-    return true;
-  },
-  remove: function(){
-    return true;
-  }
+  insert: () => false,
+  update: () => false,
+  remove: () => false
+});
+
+Diplomas.deny({
+  insert: () => true,
+  update: () => true,
+  remove: () => true
 });
 */
+
+let DiplomasSchema = new SimpleSchema({
+  'name': {
+    type: String
+  },
+  'credits': {
+    type: Number
+  },
+  'times_completed': {
+    type: Number
+  },
+  'icon': {
+    type: String
+  },
+  'company_id': {
+    type: String
+  },
+  'type': {
+    type: String
+  },
+  'courses': {
+    type: [String]
+  }
+  
+});
+
+Diplomas.attachSchema( DiplomasSchema );

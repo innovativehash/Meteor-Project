@@ -86,52 +86,24 @@
 
         <div class="sidebar-menu collapse navbar-collapse" >
           <ul >
-            {{#if company.menu}}
             <li class="menu-icon-1">
               <a id="admin-courses" href="#">
                 Courses
               </a>
             </li>
-            {{else}}
-            <li class="menu-icon-1">
-              <a id="admin-courses" href="#">
-                Courses
-              </a>
-            </li>
-            {{/if}}
-
-            {{#if company.menu}}
             <li class="menu-icon-2">
               <a id="admin-students" href="#">
                 Students
               </a>
             </li>
-            {{else}}
-            <li class="menu-icon-2">
-              <a id="admin-students" href="#">
-                Students
-              </a>
-            </li>
-            {{/if}}
-
-            {{#if company.menu}}
             <li class="menu-icon-3">
               <a id="admin-degrees" href="#">
                 Degrees & Certifications
               </a>
             </li>
-            {{else}}
-            <li class="menu-icon-3">
-              <a id="admin-degrees" href="#">
-                Degrees & Certifications
-              </a>
-            </li>
-            {{/if}}
-
-
             <li class="menu-icon-4">
               <a id="admin-assignCourses" href="#">
-                Assign Courses <!-- assign-courses.html -->
+                Assign Courses
               </a>
             </li>
             <li class="menu-icon-5">
@@ -141,11 +113,11 @@
             </li>
             <li class="menu-icon-6">
               <a id="admin-design" href="#" >
-                Design <!-- design.html -->
+                Design
               </a>
             </li>
             <li class="menu-icon-7">
-              <a id="admin-advanced">
+              <a id="admin-advanced" href="#">
                 Advanced
               </a>
             </li>
@@ -207,8 +179,7 @@
         </div>
     </div>
 
-    {{> Template.dynamic template=main  }}
-
+      {{> Template.dynamic template=main  }}  
   {{/if}}
   </body>
 </template>
