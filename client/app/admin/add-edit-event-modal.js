@@ -66,7 +66,6 @@ Template.addEditEventModal.onRendered(function(){
 });
 
 
-
 Template.addEditEventModal.helpers({
   
   timezones() {
@@ -89,33 +88,33 @@ Template.addEditEventModal.helpers({
   
   cntx() {
     try {
-      //if ( Session.get( 'dc' ) == 'students' ) {
+      let s         = Students.find({ company_id: Meteor.user().profile.company_id }).fetch()
+        , e = Events.findOne( Session.get( 'eventModal' ).event ).students;
         
-        return Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
-        
-      //} else if ( Session.get( 'dc' ) == 'departments' ) {
-        
-        //return Departments.find({ company_id: Meteor.user().profile.company_id }).fetch();
-        
-      //}
+        console.log( Session.get( 'eventModal' ).type );
+        if ( Session.get('eventModal').type !== 'edit' ) {
+          return s;
+        } else {
+
+          for( let i=0, slen=s.length; i < slen; i++ ) {
+            for( let j=0,len= e.length; j < len; j++ ) {
+              if ( e[j] == s[i]._id ) {
+                console.log(e[j]);
+                console.log(s[i]._id);
+                s[i].match = true;
+              } else {
+                console.log('false');
+                s[i].match = false;
+              }
+          }
+        }
+        return s;
+      } 
     } catch (e) {
       //console.log( e );
       return;
     }
   },
-/*  
-  courses() {
-    try {
-      return Courses.find({ 
-                            company_id: Meteor.user().profile.company_id, 
-                            approved:true, creator_id: Meteor.userId() 
-                         }).fetch();
-    } catch (e) {
-      //console.log( e );
-      return;
-    }
-  },
-*/
   
   modalType( type ) {
     let eventModal = Session.get( 'eventModal' );
@@ -162,7 +161,6 @@ Template.addEditEventModal.helpers({
    */
   event() {
     let eventModal = Session.get( 'eventModal' );
-
     if ( eventModal ) {
       return eventModal.type === 'edit'       ? 
           Events.findOne( eventModal.event )  : 
@@ -291,12 +289,55 @@ Template.addEditEventModal.events({
         //c     = [];
         //courses = template.$( '#t-courses' ).val();
         //clen    = courses.length;
-      
+      let start_string  = template.find( '[name="start"]' ).value
+        , end_string    = template.find( '[name="end"]'   ).value
+        , start_time_string   = template.find( '[name="start-time"]' ).value
+        , end_time_string = template.find( '[name="end-time"]' ).value
         
+        , start_time_hours
+        , end_time_hours
+        , start_time_minutes
+        , end_time_minutes
+        
+        , start_month
+        , start_day
+        , start_year
+        , end_month
+        , end_day
+        , end_year
+        
+        , start_time_array
+        , end_time_array
+        , start_array
+        , end_array;
+      
+      start_array = start_string.split('-');
+      end_array   = end_string.split('-');
+      start_time_array  = start_time_string.split(':');
+      end_time_array = end_time_string.split(':');
+      
+      start_month = Number( start_array[1] ) - 1;
+      start_day   = Number( start_array[2] );
+      start_year  = Number( start_array[0] );
+      
+      end_month = Number ( end_array[1] ) - 1;
+      end_day   = Number ( end_array[2] );
+      end_year  = Number ( end_array[0] );
+      
+      start_time_hours    = Number( start_time_array[0] );
+      start_time_minutes  = Number( start_time_array[1] );
+      
+      end_time_hours = Number( end_time_array[0] );
+      end_time_minutes = Number( end_time_array[1] );
+
+      start_array = end_array = start_time_array = end_time_array = null;
+    
+      //time_hours = time_hours > 12 ? time_hours - 12 : time_hours;
+      
         eventItem  = {
           title:        template.find( '[name="title"]' ).value,
-          start:        template.find( '[name="start"]' ).value,
-          end:          template.find( '[name="end"]'   ).value,
+          start:        moment(new Date(start_year, start_month, start_day, start_time_hours, start_time_minutes))._d,
+          end:          moment(new Date(end_year, end_month, end_day, end_time_hours, end_time_minutes))._d,
           students:     template.$(    '[name="type"]'  ).val(),
           location:     template.find( '[name="location"]' ).value,
           description:  template.find( '[name="description"]' ).value,
@@ -305,6 +346,10 @@ Template.addEditEventModal.events({
           timezone:     template.find( '[name="timezone"]' ).value
           //courses:    template.$(    '#t-courses'     ).val()
         };
+        
+        start_time_hours = start_time_minutes = end_time_hours = end_time_minutes = null;
+        start_day = start_month = start_year = null;
+        end_day = end_month = end_year = null;
         
 /*        
         // GET THE COURSES ASSIGNED:
@@ -387,7 +432,7 @@ Template.addEditEventModal.events({
     if ( submitType === 'editEvent' ) {
       eventItem._id   = eventModal.event;
     }
-
+/*
     let o = { 
               name:         eventItem.title, 
               start_date:   eventItem.start, 
@@ -399,18 +444,21 @@ Template.addEditEventModal.events({
               description:  eventItem.description,
               posted_date:  moment().format() 
             };
-            
+*/          
     Meteor.call( submitType, eventItem, ( error, rslt ) => {
       
       if ( error ) {
         Bert.alert( error.reason, 'danger' );
+        
       } else {
+        
         iid = rslt;
         Bert.alert( `Event ${ eventModal.type }ed!`, 'success' );
         
         // GET THE STUDENTS ASSIGNED
         //o.record_id = iid;
         for( let i = 0; i < nlen; i++ ) {
+          
           s[i] = Students.find({ _id: names[i] }).fetch()[0];
       
           Students.update({ _id: s[i]._id },{ $push:{ current_trainings:{ link_id: iid } } });

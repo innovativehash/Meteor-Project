@@ -48,9 +48,13 @@ Template.adminCreditRequests.onRendered(function(){
  */
 Template.adminCreditRequests.helpers({
 
-  requests: () =>
-    Newsfeeds.find({ type: "CR", company_id: Meteor.user().profile.company_id }).fetch()
-
+  requests: () => {
+    try{
+      return Newsfeeds.find({ type: "CR", company_id: Meteor.user().profile.company_id }).fetch();
+    } catch(e){
+      return;
+    }
+  }
 });
 
 

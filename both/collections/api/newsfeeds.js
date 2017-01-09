@@ -20,7 +20,7 @@ Newsfeeds.deny({
 });
 */
 
-
+/*
 let NewsfeedsSchema = new SimpleSchema({
   'owner_id': {
     type: String
@@ -39,7 +39,8 @@ let NewsfeedsSchema = new SimpleSchema({
     type: Boolean
   },
   'news': {
-    type: String
+    type: String,
+    optional: true
   },
   'comment_limit': {
     type: Number
@@ -56,8 +57,21 @@ let NewsfeedsSchema = new SimpleSchema({
   'likers': {
     type: [String],
     optional: true
+  },
+  'file': {
+    type: String,
+    optional: true
+  },
+  'filename': {
+    type: String,
+    optional: true
+  },
+  'content': {
+    type: String,
+    optional: true
   }
   
 });
 
 Newsfeeds.attachSchema( NewsfeedsSchema );
+*/

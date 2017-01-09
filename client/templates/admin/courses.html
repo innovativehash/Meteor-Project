@@ -16,8 +16,12 @@
             <div class="col-sm-12"><!-- 8 -->
               <div class="import-navigation">
                   <ul>
-                      <li><a href="#" id="dashboard-page"><i class="fa fa-home"></i>Dashboard</a></li>
-                      <li style="color:blue;text-decoration:undeline;">Courses</li>
+                      <li>
+                        <a href="#" id="dashboard-page"><i class="fa fa-home"></i>Dashboard</a>
+                      </li>
+                      <li style="color:blue;text-decoration:undeline;">
+                        Courses
+                      </li>
                   </ul>
               </div>
               <br />
@@ -25,36 +29,53 @@
 
                 <button class="js-course-builder">Build Course</button>
                 <!--<button class="js-create-test">Create a Test</button>-->
+                
                 <button class="js-add-course-from-library">Add From Library</button>
-                <button class="js-load-scorm"
-                        type="button"
-                        id="import-button"
-                        data-toggle="modal"
-                        data-target="#myModal">
-                        Import Course
+                
+                <button class       = "js-load-scorm"
+                        type        = "button"
+                        id          = "import-button"
+                        data-toggle = "modal"
+                        data-target = "#myModal">
+                  Import Course
                 </button>
               </div><!-- filter buttons -->
 
 
 
-                <div class="modal fade left" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                  <div class="modal-dialog">
-                    <div class="pop-up-area">
-                      <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button>
-                      <div class="popup-body">
-                        <form action="">
-                          <div class="row">
-                            <div class="col-sm-4">
-                              <label for="fileup">Import Scorm Course</label>
+                <div  class           = "modal fade left" 
+                      id              = "myModal" 
+                      tabindex        = "-1" 
+                      role            = "dialog" 
+                      aria-labelledby = "myModalLabel">
+                  
+                  <div class = "modal-dialog">
+                    <div class = "pop-up-area">
+                      
+                      <button type          = "button" 
+                              id            = "popup-close" 
+                              data-dismiss  = "modal" 
+                              aria-label    = "Close">x</button>
+                      
+                      <div class = "popup-body">
+                        <form action = "">
+                          <div class = "row">
+                            <div class = "col-sm-4">
+                              
+                              <label for = "fileup">Import Scorm Course</label>
                             </div>
-                            <div class="col-sm-7">
-                              <input class="hidden" id="fileup" type="file">
-                              <span id="filename">No File Chosen</span>
+                            <div class = "col-sm-7">
+                              
+                              <input class = "hidden" id = "fileup" type = "file">
+                              <span id = "filename">No File Chosen</span>
+                              
                             </div>
                           </div>
-                          <div class="row">
-                            <div class="col-sm-12 text-right">
-                              <input type="submit" value="SUBMIT">
+                          <div class = "row">
+                            <div class = "col-sm-12 text-right">
+                              
+                              <input type = "submit" value = "SUBMIT">
+                              
                             </div>
                           </div>
                         </form>
@@ -64,26 +85,30 @@
                 </div><!-- modal -->
 
 
-
-                <div  class="modal fade left"
-                      id="myCourseModal"
-                      tabindex="-1"
-                      role="dialog"
-                      aria-labelledby="myModalLabel">
-                  <div class="modal-dialog">
-                    <div class="pop-up-area">
-                      <button type="button"
-                              id="popup-close"
-                              data-dismiss="modal"
-                              aria-label="Close">x</button>
-                      <div class="popup-body">
-                        <form action="">
-                          <div class="row">
-                            <div class="col-sm-4">
-                              <span style="margin-left: 50px;"><em><strong>Course Name</strong></em></span>
+                <div  class           = "modal fade left"
+                      id              = "myCourseModal"
+                      tabindex        = "-1"
+                      role            = "dialog"
+                      aria-labelledby = "myModalLabel">
+                  
+                  <div class = "modal-dialog">
+                    <div class = "pop-up-area">
+                      <button type          = "button"
+                              id            = "popup-close"
+                              data-dismiss  = "modal"
+                              aria-label    = "Close">x</button>
+                      <div class = "popup-body">
+                        <form action = "">
+                          <div class = "row">
+                            <div class = "col-sm-4">
+                              <span style = "margin-left: 50px;"><em><strong>Course Name</strong></em></span>
                             </div>
-                            <div class="col-sm-7">
-                              <input type="text" id="course-name" placeholder="Course Name" value="{{name}}" />
+                            <div class = "col-sm-7">
+                              
+                              <input  type        = "text" 
+                                      id          = "course-name" 
+                                      placeholder = "Course Name" 
+                                      value       = "{{name}}" />
                             </div>
                           </div>
 
@@ -92,13 +117,19 @@
                               <span style="margin-left:50px;"><em><strong>Credits</strong></em></span>
                             </div>
                             <div class="col-sm-7">
-                              <input type="text" id="course-credits" placeholder="Number of Credits" value="{{credits}}" />
+                              
+                              <input  type        = "text" 
+                                      id          = "course-credits" 
+                                      placeholder = "Number of Credits" 
+                                      value       = "{{credits}}" />
                             </div>
                           </div>
 
                           <div class="row">
                             <div class="col-sm-12 text-right">
+                              
                               <input type="submit" value="SUBMIT">
+                              
                             </div>
                           </div>
                         </form>
@@ -116,16 +147,20 @@
                               <!-- <div class="search-box"> -->
                 <div class="col-sm-4 col-sm-offset-8">
                   <form action="">
-                    <select id="search-courses" data-placeholder="Search Courses">
-                      <option>Search Courses...</option>
-                      {{#with courses}}
-                      {{#each this}}
-                      {{#if public}}
-                      <option value="{{_id}}">{{name}}</option>
-                      {{/if}}
-                      {{/each}}
-                      {{/with}}
+                    
+                    <select id                = "search-courses" 
+                            data-placeholder  = "Search Courses">
+                      
+                        <option>Search Courses...</option>
+                        {{#with courses}}
+                          {{#each this}}
+                            {{#if public}}
+                              <option value="{{_id}}">{{name}}</option>
+                            {{/if}}
+                          {{/each}}
+                        {{/with}}
                     </select>
+                    
                     <!--
                     <button id="search" type="search"><img src="/img/search-1.png" alt=""></button>
                     <input id="search-courses" type="text" style="color:blue;" placeholder="Search Material">
@@ -145,28 +180,52 @@
                     </tr>
                   </thead>
                   <tbody>
+                    
                     {{#with courses}}
                     {{#each this}}
-                    <tr id="{{_id}}">
-                      <th class="name"><img src="{{icon}}" alt=""><a id="{{course_id}}" href="/admin/dashboard/course-viewer/{{uid}}?course={{built_id}}">{{name}}</a></th>
-                      <td>1 course</td>
-                      <td>{{credits}}</td>
-                      <td>{{times_completed}}</td>
-                      <td>
-                        <button id="edit" class="js-edit-course" data-id="{{_id}}" data-name="{{name}}">
-                          <img src="/img/edit.png" alt="">
-                        </button>
-                        <button id="delete" class="js-delete-course" data-id="{{_id}}" data-name="{{name}}">
-                          <img src="/img/delete.png" alt="">
-                        </button>
-                      </td>
-                    </tr>
+                    
+                      <tr id = "{{_id}}">
+                        
+                        <th class = "name">
+                          <img src = "{{icon}}" alt="">
+                          <a  id = "{{course_id}}" 
+                              href = "/admin/dashboard/course-viewer/{{uid}}?course={{built_id}}">
+                            {{name}}
+                          </a>
+                        </th>
+                        
+                        <td>1 course</td>
+                        <td>{{credits}}</td>
+                        <td>{{times_completed}}</td>
+                        <td>
+                          
+                          <button id        = "edit" 
+                                  class     = "js-edit-course" 
+                                  data-id   = "{{_id}}" 
+                                  data-name = "{{name}}">
+                            <img src="/img/edit.png" alt="">
+                          </button>
+                          
+                          <button id        = "delete" 
+                                  class     = "js-delete-course" 
+                                  data-id   = "{{_id}}" 
+                                  data-name = "{{name}}">
+                            <img src = "/img/delete.png" alt="">
+                          </button>
+                          
+                        </td>
+                      </tr>
                     {{/each}}
                  {{/with}}
                   </tbody>
                 </table>
+                
                 <div class="more">
-                  <button><img src="/img/more.png" alt=""></button>
+                  
+                  <button>
+                    <img src="/img/more.png" alt="">
+                  </button>
+                  
                 </div>
               </div>
             </div>

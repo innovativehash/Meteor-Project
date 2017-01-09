@@ -241,13 +241,13 @@ teacherRoutes.route( '/dashboard/student-training-calendar/:_id', {
 
 
 /* TEST-CREATOR */
-/*
+
 teacherRoutes.route('/dashboard/test-maker/:_id', {
   name: 'teacher-test-creator',
   action: () =>
     BlazeLayout.render( 'courseBuilderLayout', {main:"adminTestCreator"})
 });
-*/
+
 
 
 
@@ -313,13 +313,13 @@ adminRoutes.route('/dashboard/course-viewer/:_id', {
 });
 
 /* TEST-CREATOR */
-/*
+
 adminRoutes.route('/dashboard/test-maker/:_id', {
   name: 'admin-test-creator',
   action: () =>
     BlazeLayout.render( 'courseBuilderLayout', {main:"adminTestCreator"})
 });
-*/
+
 
 
 /**

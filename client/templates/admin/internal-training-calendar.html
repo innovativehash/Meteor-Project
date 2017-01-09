@@ -63,7 +63,7 @@ p[class="type-Birthday"] {
 </style> 
   
   
-  {{#if isAdmin }}
+  {{#if or isAdmin isTeacher }}
     {{> addEditEventModal }}
   {{/if}}
   

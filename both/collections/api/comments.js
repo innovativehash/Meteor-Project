@@ -46,6 +46,9 @@ let CommentsSchema = new SimpleSchema({
   'poster_avatar': {
     type: String
   },
+  'comment': {
+    type: String
+  },
   'date': {
     type: Date
   }

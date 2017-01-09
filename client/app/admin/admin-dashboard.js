@@ -35,7 +35,7 @@ Template.adminDashboard.onRendered( function() {
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
   
-  console.log( moment().date() ) ;
+  //console.log( moment().date() ) ; //day number
 
 });
 
@@ -56,14 +56,20 @@ Template.adminDashboard.helpers({
      
  },
  
+ /*
  showAdminCreditRequests() {
-   if ( Newsfeeds.find({ type: "CR" }).count() > 0 ) {
-    return true;
+
+   let cr = Newsfeeds.find({ type: "CR" }).count();
+  
+   if ( cr > 0 ) {
+     return true;
    } else {
      return false;
    }
+   
 //-------------------------------------------------------------------
   },
+*/
 
 });
 

@@ -4,8 +4,9 @@
  * @programmer Nick Sardo <nsardo@oal.com>
  * @copyright  2016-2017 Collective Innovation
  */
-
 import { Courses }    from '../../../both/collections/api/courses.js';
+import { Newsfeeds }  from '../../../both/collections/api/newsfeeds.js';
+
 
 import '../../templates/admin/library.html';
 
@@ -74,33 +75,36 @@ Template.library.onDestroyed(function(){
  */
 Template.library.helpers({
    courses: () => {
-      let discard = []
-        , c = []
-        , cids = [];
-
-      let own = Courses.find({ company_id: Meteor.user().profile.company_id }).fetch();
-      own.forEach(function(el){
-        cids.push( el.cid );
-      });
-
-      let pub = Courses.find( {$and: [ { public:true },{ company_id:{ $ne: Meteor.user().profile.company_id }}]}, { _id:1, name:1, credits:1, icon:1, cid:1 }).fetch();
-
-      /* Cycle through pub, and cherry pick out where pub[i].cid == own.cid */
-      for( let ii = 0, ilen = pub.length; ii < ilen; ii++ ) {
-        for( let i = 0, len = cids.length; i < len; i++ ) {
-          if( pub[ii].cid == cids[i] ) discard.push( ii ); //place matches in discard pile
+     try {
+        let discard = []
+          , c       = []
+          , cids    = [];
+  
+        let own = Courses.find({ company_id: Meteor.user().profile.company_id }).fetch();
+        own.forEach(function(el){
+          cids.push( el.cid );
+        });
+  
+        let pub = Courses.find( {$and: [ { public:true },{ company_id:{ $ne: Meteor.user().profile.company_id }}]}, { _id:1, name:1, credits:1, icon:1, cid:1 }).fetch();
+  
+        /* Cycle through pub, and cherry pick out where pub[i].cid == own.cid */
+        for( let ii = 0, ilen = pub.length; ii < ilen; ii++ ) {
+          for( let i = 0, len = cids.length; i < len; i++ ) {
+            if( pub[ii].cid == cids[i] ) discard.push( ii ); //place matches in discard pile
+          }
         }
-      }
-
-    let ought = 0; // need ought to keep delivery array 0 indexed
-    for( let i = 0, len = pub.length; i < len; i++ ) {
-      if ( discard.includes(i) ) continue; //if in discard pile, move on to next
-      c[ ought++ ] = pub[i];  //not in discard pile, add it to delivery array
-    }
-
-    //c = pub.slice(2);
-    return c;
-   }
+  
+        let ought = 0; // need ought to keep delivery array 0 indexed
+        for( let i = 0, len = pub.length; i < len; i++ ) {
+          if ( discard.includes(i) ) continue; //if in discard pile, move on to next
+          c[ ought++ ] = pub[i];  //not in discard pile, add it to delivery array
+        }
+        return c;
+     } catch(e) {
+       return;
+     }
+   },
+   
 });
 
 
@@ -141,8 +145,10 @@ Template.library.events({
     e.stopImmediatePropagation();
 
     let idx = $( e.currentTarget ).val();
+    
     $( 'tr' ).css( 'border', '' );
     $( 'tr#' + idx ).css( 'border', '1px solid' );
+    
     $( 'html, body' ).animate({
       scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
@@ -159,15 +165,15 @@ Template.library.events({
 
     /* prolly use reactive var to pass along to dialog */
     
-     let idx = $( e.currentTarget ).data( 'id' );
-     let nm  = $( e.currentTarget ).data( 'name' );
-
-     idx = String( idx );
+     let idx = String( t.$( e.currentTarget ).data( 'id' ) );
+     let nm  = t.$( e.currentTarget ).data( 'name' );
+     
      let c = Courses.findOne({ _id: idx });
-
-      $( '#lib-add-course-modal' ).modal();
+     
+     Session.set( 'add-course-data', { id: idx, name: c.name, credits: c.credits } );
       
-    
+      t.$( '.js-add-course-text' ).text( `${nm}` );
+      t.$( '#lib-add-course-modal' ).modal();
       
     // modal("show") modal("hide") modal("toggle")
 //-------------------------------------------------------------------
@@ -180,13 +186,33 @@ Template.library.events({
   'click .js-lib-add'( e, t ) {
     e.preventDefault();
     
-      //ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY
-      Courses.insert({ company_id:Meteor.user().profile.company_id,
-        cid: c.cid, name: c.name, "icon": "/img/icon-4.png",
-        credits: c.credits, public: false, times_completed:0 });
-      Bert.alert( 'Class added to your courses', 'success', 'growl-top-right' );
-     
-    $( '#lib-add-course-modal' ).modal("hide");
+    //ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY
+    Courses.insert({ 
+                    company_id:       Meteor.user().profile.company_id,
+                    cid:              Session.get( 'add-course-data').id, 
+                    name:             Session.get( 'add-course-data').name, 
+                    "icon":           "/img/icon-4.png",
+                    credits:          Session.get( 'add-course-data').credits, 
+                    public:           false, 
+                    times_completed:  0 
+    });
+    
+    Newsfeeds.insert({
+                        owner_id:       Meteor.userId(),
+                        poster:         Meteor.user().username,
+                        poster_avatar:  Meteor.user().profile.avatar,
+                        type:           "new-course",
+                        private:        false,
+                        news:           `A New Course was just added: ${Session.get( 'add-course-data' ).name}!`,
+                        comment_limit:  3,
+                        company_id:     Meteor.user().profile.company_id,
+                        likes:          0,
+                        date:           new Date()   
+    });
+    
+    Bert.alert( 'Class added to your courses', 'success', 'growl-top-right' );
+    Session.set( 'add-course-data', {} );
+    $( '#lib-add-course-modal' ).modal( "hide" );
   },
   
   

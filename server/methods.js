@@ -576,8 +576,8 @@ Meteor.methods({
   addEvent( event ) {
     check( event, {
       title:        String,
-      start:        String,
-      end:          String,
+      start:        Date,
+      end:          Date,
       students:     [String],
       location:     String,
       description:  String,
@@ -609,8 +609,8 @@ Meteor.methods({
     check( event, {
       _id:          String,
       title:        Match.Optional( String ),
-      start:        String,
-      end:          String,
+      start:        Date,
+      end:          Date,
       students:     Match.Optional( [String] ),
       location:     String,
       description:  String,
@@ -662,8 +662,12 @@ Meteor.methods({
     }
   },
   
-
+  
+  /*
+   * CURATED ARTICLE STUDENT UPDATE
+   */
   curatedArticleStudentUpdate( linkText, linkId ) {
+    
     Students.update({ _id: Meteor.userId() }, 
                     { 
                       $inc:{ current_credits: 1 }, 
@@ -671,6 +675,10 @@ Meteor.methods({
                     });
   },
   
+  
+  /*
+   * UPDATE (STUDENT) CURRENT COURSES
+   */
   updateCurrentCourses( cid ) {
 
     Students.update({ _id: Meteor.userId() },
@@ -679,13 +687,17 @@ Meteor.methods({
                     });
   },
   
+  
+  /*
+   * COURSE COMPLETION (STUDENT) UPDATE
+   */
   courseCompletionUpdate( name, cid, percent, credits ) {
-    
+    console.log( credits );
     Students.update({ _id: Meteor.userId() },
                     { 
                       $pull:{ current_courses:{ link_id: cid }},
                       $push:{ courses_completed: { name: name, link_id: cid, passing_percent: percent, credits: credits, date_completed: new Date() }},
-                      $inc:{ current_credits: credits }
+                      $inc:{ current_credits: Number(credits), compl_courses_cnt: 1 }
                     });
   },
 });

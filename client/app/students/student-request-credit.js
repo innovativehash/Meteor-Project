@@ -151,6 +151,7 @@ Template.studentRequestCredit.events({
       option:   option,
       content:  details,
       private:  true,
+      company_id: Meteor.user().profile.company_id,
       date:     new Date() });
 
     Meteor.setTimeout(function() {

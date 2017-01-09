@@ -9,8 +9,10 @@ import { Template }       from 'meteor/templating';
 
 import { Students }       from '../../../both/collections/api/students.js';
 import { Courses  }       from '../../../both/collections/api/courses.js';
-import { Tests    }       from '../../../both/collections/api/tests.js'
+import { Tests    }       from '../../../both/collections/api/tests.js';
+import { Newsfeeds }      from '../../../both/collections/api/newsfeeds.js';
 import { Scratch }        from '../../../both/collections/api/scratch.js';
+
 
 import '../../templates/student/test-view.html';
 
@@ -52,6 +54,7 @@ Template.testView.events({
     
     let cid             = FlowRouter.getQueryParam( "course" )
       , c               = Courses.find({ _id: cid}).fetch()[0]
+      , s               = Students.find({ _id: Meteor.userId() }).fetch()[0]
       , credits         = c.credits
       , passing_percent = c.passing_percent
       , name            = c.name;
@@ -83,14 +86,30 @@ Template.testView.events({
     if ( percent >= passing_percent ) {
       $( '#score' ).addClass( 'label-success' );
       $( '#score' ).text( percent + '%' );
+      
       Meteor.setTimeout(function(){
+        console.log(credits);
         Meteor.call( 'courseCompletionUpdate', name, cid, percent, credits );
+        
+        Newsfeeds.insert({ 
+                            owner_id:       Meteor.userId(),
+                            poster:         Meteor.user().username,
+                            poster_avatar:  Meteor.user().profile.avatar,
+                            type:           "passed-course",
+                            private:        false,
+                            news:           `${Meteor.user().username} has just passed the course: ${name}!`,
+                            comment_limit:  3,
+                            company_id:     Meteor.user().profile.company_id,
+                            likes:          0,
+                            date:           new Date()  
+        });
       }, 300);
       
       Bert.alert( 'Congradulations!! You passed the test.', 'success', 'fixed-top' );
     } else {
       $( '#score' ).addClass( 'label-danger' );
       $( '#score' ).text( percent + '%' );
+      
       Bert.alert( 'Sorry, you failed to earn the minimum score to pass', 'danger', 'fixed-top' );
     }
 

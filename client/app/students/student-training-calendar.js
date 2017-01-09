@@ -54,13 +54,16 @@ Template.studentTrainingCalendar.onRendered(function(){
 
     // options and callbacks here
     events( start, end, timezone, callback ) {
-      
-      let data = Events.find({ students: Meteor.userId() }).fetch().map( ( event ) => {
-        
-        event.editable = false; //!isPast( event.start );
+
+      // GET THIS INDIVIDUAL STUDENT'S CALENDAR
+      // EXPIRED EVENTS NOT SHOWN
+      let data  = Events.find({ students: Meteor.userId(), end: {$gte: new Date() } }).fetch().map( ( event ) => {
+ 
+        //student can't edit
+        event.editable = false; // !isPast( event.start );
         return event;
       });
-
+      
       if ( data ) {
         callback( data );
       }
@@ -73,7 +76,8 @@ Template.studentTrainingCalendar.onRendered(function(){
      */
     eventRender(  event   /* actual event item on the calendar, NOT JS Event */, 
                   element /* the element where the item is being rendered as
-                             a JQuery elem*/                                ) {
+                             a JQuery elem*/                                ) 
+    {
       element.find( '.fc-content' ).html(
         `<h4>${ event.title }</h4>
         <p>${event.startTime}<br>${event.location}</p>
@@ -89,18 +93,18 @@ Template.studentTrainingCalendar.onRendered(function(){
     
     eventDrop( event, delta, revert ) {
       
+      //STUDENT CAN'T CHANGE CALENDAR ITEM
+      if ( ! Meteor.user().roles.teacher ) {
+        revert();
+        return;
+      };
+      
       let date = event.start.format();
       if ( !isPast( date ) ) {
         let update = {
           _id:    event._id,
           start:  date,
           end:    date
-        };
-        
-        //STUDENT CAN'T CHANGE CALENDAR ITEM
-        if ( ! Meteor.user().roles.teacher ) {
-          revert();
-          return;
         };
         
         Meteor.call( 'editEvent', update, ( error ) => {
@@ -120,20 +124,15 @@ Template.studentTrainingCalendar.onRendered(function(){
     /*
      * fired whenever we click on the actual day square in the calendar
      */
-    dayClick( date ) {
-      
-      
-    },
+    dayClick( date ) {},
     
     
     /*
      * fired whenever we click directly on an event
      */
     eventClick( event /* literally the rendered event’s data,
-                         returned from the event()            */ ) {
-                           
-      console.log( event._id  );
-      console.log( event );
+                         returned from the event()            */ ) 
+    {
       
       //event-title, event-description, event-location, event-start-time
       $( '[name="event-title"]' ).val( event.title );
@@ -146,6 +145,7 @@ Template.studentTrainingCalendar.onRendered(function(){
     }
 
   }); //fullcalendar
+  
   
   Tracker.autorun( () => {
     

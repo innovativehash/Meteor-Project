@@ -4,7 +4,6 @@
  * @programmer <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-
 import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
 
@@ -14,6 +13,7 @@ import { Students }       from '../../../both/collections/api/students.js';
 import { Images }         from '../../../both/collections/api/images.js';
 import { Pdfs }           from '../../../both/collections/api/pdfs.js';
 import { PowerPoints }    from '../../../both/collections/api/powerpoints.js';
+import { Newsfeeds }      from '../../../both/collections/api/newsfeeds.js';
 
 import '../../templates/admin/course-builder-page.html';
 
@@ -224,7 +224,6 @@ Template.courseBuilderPage.onCreated( function() {
                   return;
                   
             } else {
-
               Session.set( 'obj', tbo );
 
               if ( Meteor.user().roles.teacher ) {
@@ -853,7 +852,7 @@ Template.courseBuilderPage.events({
       return;
     }
 
-    let role  = ( Meteor.user().roles.teacher ) ? "teacher" : "admin"
+    let role  = "admin"
       , cid   = Meteor.user().profile.company_id
       , uid   = Meteor.userId()
       //, apv   = ( Meteor.user().roles.teacher ) ? false : true
@@ -861,12 +860,12 @@ Template.courseBuilderPage.events({
       , cd    = new Date();
 
     let built_id = BuiltCourses.insert({
-                                          name: tbo.name,
-                                          pages: tbo.pages,
-                                          company_id: cid,
+                                          name:         tbo.name,
+                                          pages:        tbo.pages,
+                                          company_id:   cid,
                                           creator_type: role,
-                                          creator_id: uid,
-                                          created_at: cd,
+                                          creator_id:   uid,
+                                          created_at:   cd,
                                       });
 
     Courses.insert({
@@ -885,6 +884,19 @@ Template.courseBuilderPage.events({
                     created_at:       cd
                   });
 
+    Newsfeed.insert({
+                      owner_id:       Meteor.userId(),
+                      poster:         Meteor.user().username,
+                      poster_avatar:  Meteor.user().profile.avatar,
+                      type:           "new-course",
+                      private:        false,
+                      news:           `A New Course has just been added: ${tbo.name}!`,
+                      comment_limit:  3,
+                      company_id:     Meteor.user().profile.company_id,
+                      likes:          0,
+                      date:           new Date()       
+    });
+    
     Meteor.setTimeout(function(){
       Bert.alert( 
                   'Your test was saved!', 
@@ -893,18 +905,14 @@ Template.courseBuilderPage.events({
                 );
     }, 500);
     
-
-      if ( Meteor.user().roles.teacher ) {
-
+/*
       let params      = { _id: Meteor.userId() };
       let routeName   = "teacher-dashboard";
       let path        = FlowRouter.path( routeName, params );
       FlowRouter.go( path );
-      //FlowRouter.go( '/teacher/dashboard/' + Meteor.userId() );
-      } else if ( Meteor.user().roles.admin ) {
-        FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-      }
-
+*/
+    //Meteor.user().roles.admin
+    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 
     //Template.instance().page.set( 1 );
     //Template.instance().total.set( 1 );
@@ -951,13 +959,14 @@ Template.courseBuilderPage.events({
     //Meteor.call( 'scormListUserCourses', 1, '68ac728a3a9686020674a6e614e2d7e3' );
     //Meteor.call( 'scormListStudentStartedCourses', 1, '68ac728a3a9686020674a6e614e2d7e3' );
     //Meteor.call( 'scormCreateUser', '123', 'pass', 1 );
-    
+    /*
     let r = Meteor.call( 'scormGetCoursePlayURL', 'demo_user', 1, 1, function (error, result) {
             if (!error) {
               Session.set("resp", result);
             }
           });
     console.log( Session.get('resp') );
+    */
     Template.instance().page.set(   Template.instance().page.get()  + 1 );
     Template.instance().total.set(  Template.instance().total.get() + 1 );
     t.$( '#add-scorm' ).modal( 'hide' );

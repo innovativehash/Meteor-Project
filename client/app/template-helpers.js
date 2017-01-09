@@ -19,6 +19,12 @@ Template.registerHelper('eq', ( a, b ) => {
   return a === b;
 });
 
+
+Template.registerHelper('ne', ( a, b ) => {
+  return a !== b;
+});
+
+
 Template.registerHelper('not', (obj) => {
   return !obj;
 });

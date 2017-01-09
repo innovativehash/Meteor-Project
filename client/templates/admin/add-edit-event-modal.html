@@ -46,19 +46,19 @@
                 <label  id  = "lbl_type" 
                         for = "type">
                   <!--Event Type-->
-                  Search
+                  Add Attendees
                 </label>
                 
                 <select name  = "type" 
-                        class = "form-control" multiple>
+                        class = "form-control js-states" multiple="multiple">
               
                     {{#each cntx}}
-                        <option selected  = "{{selected event.type _id }}"
-                                value     = "{{_id}}">
-                          {{or name fullName}}
-                        </option>
+                      <option selected  = "{{#if match}} {{fullName}} {{/if}}" 
+                              value     = "{{_id}}">
+                        {{fullName}}
+                      </option>
                     {{/each}}
-              
+
                   <!--
                   <option selected = "{{selected event.type 'Birthday' }}" 
                           value="Birthday">
@@ -88,45 +88,21 @@
                 <label for="timezone">
                   Time Zone
                 </label>
+                <!-- selected event.timezone name-->
                   <select name  = "timezone" 
                           class = "form-control">
                     {{#each timezones}}
                       <optgroup label="{{group}}">
                         {{#each zones}}
-                          <option selected  = "{{value}}"
-                                  value     = "{{value}}"><!-- selected event.tz -->
-                            {{value}}
+                          <option selected  = "{{#if eq name event.timezone}}{{event.timezone}}{{else}}{{name}}{{/if}}"
+                                  value     = "{{name}}">
+                            {{name}}
                           </option>
                         {{/each}}
                       </optgroup>
                     {{/each}}
                   </select>
               </div>
-              
-              <!--
-              <div class="col-xs-9 col-sm-8">
-              
-                <label class = "radio-inline">
-                  <input  type  = "radio" 
-                          name  = "s_type_radio" 
-                          value = "all_students"
-                          checked>
-                  All Students
-                </label>
-                <label class = "radio-inline">
-                  <input  type  = "radio" 
-                          name  = "s_type_radio" 
-                          value = "stu_names">
-                  Student Names
-                </label>
-                <label class = "radio-inline">
-                  <input  type  = "radio" 
-                          name  = "s_type_radio" 
-                          value = "departments">
-                  Departments
-                </label> 
-              </div>
-              -->
             </div><!--row-->
           </div><!--form-group-->
           
@@ -164,11 +140,11 @@
                 <label for = "end">
                   Event End
                 </label>
-                
+                <!-- "{{#if event.end}}{{event.end}}{{else}}{{event.start}}{{/if}}" -->
                 <input  type    = "date" 
                         name    = "end" 
                         class   = "form-control" 
-                        value   = "{{#if event.end}}{{event.end}}{{else}}{{event.start}}{{/if}}">
+                        value   = "{{event.end}}">
               </div>
               
   <!-- END TIME -->
@@ -206,7 +182,7 @@
               <input  type = "text"
                       name = "description"
                       class = "form-control"
-                      value = "">
+                      value = "{{event.description}}">
           </div>
 
 <!-- EVENT LOCATION -->
@@ -217,7 +193,7 @@
             <input  type  = "text"
                     name  = "location"
                     class = "form-control"
-                    value = "">
+                    value = "{{event.location}}">
           </div>
           
 <!-- COURSES

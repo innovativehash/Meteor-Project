@@ -79,9 +79,8 @@ Template.internalTrainingCalendar.onRendered(function(){
       );
     },
     
-    eventDragStart( event ) {
-      console.log( 'event drag start' ); 
-    },
+    eventDragStart( event ) {},
+    
     
     eventDrop( event, delta, revert ) {
       
@@ -94,7 +93,7 @@ Template.internalTrainingCalendar.onRendered(function(){
         };
         
         //NON-ADMIN CAN'T CHANGE CALENDAR ITEM
-        if ( ! Meteor.user().roles.admin ) {
+        if ( ! Meteor.user().roles.admin || ! Meteor.user().roles.teacher ) {
           revert();
           return;
         };
@@ -137,6 +136,7 @@ Template.internalTrainingCalendar.onRendered(function(){
     }
 
   }); //fullcalendar
+  
   
   Tracker.autorun( () => {
     

@@ -17,41 +17,50 @@
 
               <div class="import-navigation">
                   <ul>
-                      <li><a href="#" id="dashboard-page"><i class="fa fa-home"></i>Dashboard</a></li>
-                      <li><a href="#" id="courses-page">Courses</a></li>
-                      <li style="color:blue;text-decoration:undeline;">Add From Library</li>
+                      <li>
+                        <a href="#" id = "dashboard-page"><i class="fa fa-home"></i>
+                          Dashboard
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" id = "courses-page">
+                          Courses
+                        </a>
+                      </li>
+                      <li style = "color:blue;text-decoration:undeline;">
+                        Add From Library
+                      </li>
                   </ul>
               </div>
               <br />
 
-              <div class="filter-buttons">
+              <div class = "filter-buttons">
 
-                <button class="js-course-builder">Build Course</button>
+                <button class = "js-course-builder">Build Course</button>
 
                 <!-- <button class="js-add-course-from-lib">Add From Library</button> -->
 
-                <button class="js-load-scorm"
-                        type="button"
-                        id="import-button"
-                        data-toggle="modal"
-                        data-target="#myModal">
+                <button class       = "js-load-scorm"
+                        type        = "button"
+                        id          = "import-button"
+                        data-toggle = "modal"
+                        data-target = "#myModal">
                         Import Course
                 </button>
 
-                <div class="col-sm-4 col-sm-offset-8">
-                  <select id="search-courses" style="width:auto;">
+                <div class = "col-sm-4 col-sm-offset-8">
+                  <select id = "search-courses" style = "width:auto;">
                     <option>Search Courses...</option>
+                    
                     {{#with courses}}
-                    {{#each this}}
-                    <option value="{{_id}}">{{name}}</option>
-                    {{/each}}
+                      {{#each this}}
+                      
+                        <option value="{{_id}}">{{name}}</option>
+                        
+                      {{/each}}
                     {{/with}}
+                    
                   </select>
-                  <!--
-                  <button id="search" type="search"><img src="/img/search-1.png" alt=""></button>
-                  <input id="search-courses" style="color:blue;" type="text" placeholder="Search Material">
-                  <button id="close-search">X</button>
-                  -->
                 </div>
               
               <!-- modal -->
@@ -72,9 +81,9 @@
                         <br>
                         <h2>Import Scorm Course</h2>
                         <br><br><br>
-                        <form action="">
-                          <div class="row">
-                            <div class="col-sm-8 col-sm-offset-2">
+                        <form action = "">
+                          <div class = "row">
+                            <div class = "col-sm-8 col-sm-offset-2">
                             
                               <input  id    = ""
                                       type  = "file">
@@ -82,11 +91,11 @@
                             </div>
                           </div><!-- row -->
                           <br><br><br>
-                          <div class="row">
-                            <div class="col-sm-12 text-right">
+                          <div class = "row">
+                            <div class = "col-sm-12 text-right">
                               
-                              <input  type="submit" 
-                                      value="SUBMIT">
+                              <input  type  = "submit" 
+                                      value = "SUBMIT">
                             </div>
                           </div>
                         </form>
@@ -100,31 +109,29 @@
 
 <!-- Modal ADD COURSE -->
 
-<div class="search-list assign">
-<div  class = "modal fade left"
-      id = "lib-add-course-modal"
-      tabindex = "-1"
-      role = "dialog"
+<div class = "search-list assign">
+<div  class           = "modal fade left"
+      id              = "lib-add-course-modal"
+      tabindex        = "-1"
+      role            = "dialog"
       aria-labelledby = "myModalLabel">
 
-  <div class="modal-dialog">
-    <div class="pop-up-area students">
-      <button type="button"
-              id="popup-close"
-              data-dismiss="modal"
-              aria-label="Close">x</button>
+  <div class = "modal-dialog">
+    <div class = "pop-up-area students">
+      <button type          = "button"
+              id            = "popup-close"
+              data-dismiss  = "modal"
+              aria-label    = "Close">x</button>
       <div class = "popup-body">
       <br>
       <h2>ADD COURSE:</h2>
       <br><br><br>
-        <form action="">
-          <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
+        <form action = "">
+          <div class = "row">
+            <div class = "col-sm-8 col-sm-offset-2">
 
               <p>
-                <span style="color:white;">
-                  "' + nm + '"
-                </span>
+                <span class = "js-add-course-text" style = "color:white;font-size:36px;"></span>
               </p>
 
             </div>
@@ -137,9 +144,9 @@
                       type  = "submit"
                       value = "CANCEL">
                       
-              <input  class = "js-lib-add"
-                      type  = "submit"
-                      value = "SUBMIT">
+              <input  class   = "js-lib-add"
+                      type    = "submit"
+                      value   = "SUBMIT">
                       
             </div>
           </div>
@@ -149,14 +156,7 @@
   </div>
 </div>
 </div>
-
 <!-- /ADD COURSE modal -->
-
-
-
-
-
-
 
               </div><!-- filter buttons -->
 
@@ -178,9 +178,9 @@
                   <tbody>
                     {{#with courses}}
                     {{#each this}}
-                    <tr id="{{_id}}">
-                      <th class="name">
-                        <img src="{{icon}}" alt="">
+                    <tr id = "{{_id}}">
+                      <th class = "name">
+                        <img src = "{{icon}}" alt="">
                         {{name}}
                       </th>
                       <td>
@@ -194,7 +194,7 @@
                                 data-id   = "{{_id}}" 
                                 data-name = "{{name}}">
                           
-                          <img src="/img/add.png" alt="">
+                          <img src = "/img/add.png" alt="">
                         </button>
                       </td>
                     </tr>
@@ -202,8 +202,10 @@
                     {{/with}}
                   </tbody>
                 </table>
-                <div class="more">
-                  <button><img src="/img/more.png" alt=""></button>
+                <div class = "more">
+                  <button>
+                    <img src = "/img/more.png" alt="">
+                  </button>
                 </div>
               </div>
             </div>
