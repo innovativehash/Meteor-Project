@@ -53,10 +53,14 @@
                         class = "form-control js-states" multiple="multiple">
               
                     {{#each cntx}}
-                      <option selected  = "{{#if match}} {{fullName}} {{/if}}" 
-                              value     = "{{_id}}">
-                        {{fullName}}
-                      </option>
+                      {{#if match}}
+                        <option selected  = "{{fullName}}" 
+                                value     = "{{_id}}">
+                          {{fullName}}
+                        </option>
+                      {{else}}
+                        <option value = "{{_id}}">{{fullName}}</option>
+                      {{/if}}
                     {{/each}}
 
                   <!--
@@ -92,12 +96,12 @@
                   <select name  = "timezone" 
                           class = "form-control">
                     {{#each timezones}}
-                      <optgroup label="{{group}}">
+                      <optgroup label = "{{group}}">
                         {{#each zones}}
-                          <option selected  = "{{#if eq name event.timezone}}{{event.timezone}}{{else}}{{name}}{{/if}}"
-                                  value     = "{{name}}">
-                            {{name}}
-                          </option>
+                            <option selected  = "{{match}}"
+                                    value     = "{{name}}">
+                              {{name}}
+                            </option>
                         {{/each}}
                       </optgroup>
                     {{/each}}
@@ -120,7 +124,7 @@
                 <input  type  = "date" 
                         name  = "start" 
                         class = "form-control" 
-                        value = "{{event.start}}">
+                        value = "{{start}}">
               </div>
               
  <!-- START TIME -->
@@ -144,7 +148,7 @@
                 <input  type    = "date" 
                         name    = "end" 
                         class   = "form-control" 
-                        value   = "{{event.end}}">
+                        value   = "{{end}}">
               </div>
               
   <!-- END TIME -->

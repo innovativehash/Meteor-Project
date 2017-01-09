@@ -10,13 +10,13 @@ export const Events = new Mongo.Collection( 'events' );
 Events.allow({
   insert: () => false,
   update: () => false,
-  remove: () => false
+  remove: () => true
 });
 
 Events.deny({
   insert: () => true,
   update: () => true,
-  remove: () => true
+  remove: () => false
 });
 
 let EventsSchema = new SimpleSchema({

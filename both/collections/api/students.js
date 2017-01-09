@@ -133,6 +133,18 @@ let StudentsSchema = new SimpleSchema({
     type: String,
     optional: true
   },
+  'completed_trainings.$.title': {
+    type: String,
+    optional: true
+  },
+  'completed_trainings.$.credits': {
+    type: Number,
+    optional: true
+  },
+  'completed_trainings.$.date_completed': {
+    type: Date,
+    optional: true
+  },
   'articles_read.$.name': {
     type: String,
     optional: true

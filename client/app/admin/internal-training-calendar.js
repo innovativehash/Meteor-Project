@@ -116,7 +116,7 @@ Template.internalTrainingCalendar.onRendered(function(){
      * fired whenever we click on the actual day square in the calendar
      */
     dayClick( date ) {
-      
+    
       Session.set( 'eventModal', { type: 'add', date: date.format() } );
       
       $( '#add-edit-event-modal' ).modal( 'show' );
@@ -129,10 +129,11 @@ Template.internalTrainingCalendar.onRendered(function(){
      */
     eventClick( event /* literally the rendered event’s data,
                          returned from the event()            */ ) {
-                           
+                       
       Session.set( 'eventModal', { type: 'edit', event: event._id } );
-      
+
       $( '#add-edit-event-modal' ).modal( 'show' );
+
     }
 
   }); //fullcalendar

@@ -25,6 +25,7 @@ Template.studentCourseListing.onCreated(function() {
   this.cur_cor = new ReactiveArray([]);
   this.cor_com = new ReactiveArray([]);
   this.ass_cor = new ReactiveArray([]);
+  this.o       = new ReactiveArray([]);
   
 });
 
@@ -90,62 +91,68 @@ Template.studentCourseListing.helpers({
 
     
       //GET LIST OF ALL AVAILABLE COURSES FOR THIS COMPANY THAT CAN BE TAKEN
-      let o   = Courses.find({ company_id:Meteor.user().profile.company_id }).fetch();
+      //let o   = Courses.find({ company_id:Meteor.user().profile.company_id }).fetch();
+      Template.instance().o = Courses.find({ company_id: Meteor.user().profile.company_id }).fetch();
+      
       //COUNT HOW MANY PRE-LOOP
-      let ocl = o.length;
+      //let ocl = o.length;
+      let ocl = Template.instance().o.length;
+      
       //LOOP OVER ALL COURSES
       for ( let i = 0; i < ocl; i++ ) {
         //IF THIS STUDENT HAS ALREADY COMPLETED THIS COURSE
-        var found = _.filter( Template.instance().cor_com.list(), ( m ) => { return m == o[i]._id })
+        var found = _.filter( Template.instance().cor_com.list(), ( m ) => { return m == Template.instance().o[i]._id })
         if ( found.length > 0 ) {
-          o[i].buttonText = 'retake'; //completed
-          o[i].completed = true;
+          Template.instance().o[i].buttonText = 'retake'; //completed
+          Template.instance().o[i].completed = true;
           Session.set('show_tr', true);
         }
       }
     
       //FULL LIST OF AVAILABLE COURSES
-      if ( o ) {
+      if ( Template.instance().o ) {
         //PRE-CALC COUNT
-        let ocl = o.length;
+        let ocl = Template.instance().o.length;
         for ( let i = 0; i < ocl; i++ ) {
           //IF THIS COURSE IS CURRENTLY BEING TAKEN BY THIS STUDENT
-          let found = _.filter( Template.instance().cur_cor.list(), ( m ) => { return m == o[i]._id })
+          let found = _.filter( Template.instance().cur_cor.list(), ( m ) => { return m == Template.instance().o[i]._id })
           if ( found.length > 0 ) {
 
-            o[i].buttonText = 'continue';
+            Template.instance().o[i].buttonText = 'continue';
           //OTHERWISE, WE HAVE A VIRGIN COURSE
-          } else if ( o[i].buttonText != 'retake' ) {
+          } else if ( Template.instance().o[i].buttonText != 'retake' ) {
             //IF THIS COURSE IS TEACHER CREATED, THE TEACHER IS THE CURRENT STUDENT, AND COURSE IS ADMIN APPROVED
-            if ( ( o[i].creator_type && o[i].creator_type == 'teacher' ) &&
-                   o[i].approved && Meteor.user().roles.teacher &&
-                   o[i].creator_id == Meteor.userId() ) {
+            if ( ( Template.instance().o[i].creator_type && Template.instance().o[i].creator_type == 'teacher' ) &&
+                   Template.instance().o[i].approved && Meteor.user().roles.teacher &&
+                   Template.instance().o[i].creator_id == Meteor.userId() ) {
 
-              o[i].buttonText = 'begin'; //ASSIGN
+              Template.instance().o[i].buttonText = 'begin'; //ASSIGN
             //TEACHER IS CURRENT STUDENT, COURSE IS TEACHER CREATED, BUT NOT APPROVED
-            } else if ( ( o[i].creator_type && o[i].creator_type == 'teacher' ) &&
-                          ! o[i].approved &&
+            } else if ( ( Template.instance().o[i].creator_type && Template.instance().o[i].creator_type == 'teacher' ) &&
+                          ! Template.instance().o[i].approved &&
                           Meteor.user().roles.teacher &&
-                          o[i].creator_id == Meteor.userId() ) {
+                          Template.instance().o[i].creator_id == Meteor.userId() ) {
               //MAKE IT UNSELECTABLE
-              o[i].buttonText = "";
+              Template.instance().o[i].buttonText = "";
 
             //CURRENT STUDENT IS NOT A TEACHER, TEACHER CREATED COURSE, NOT APPROVED
-            } else if ( ( o[i].creator_type && o[i].creator_type == 'teacher' ) &&
+            } else if ( ( Template.instance().o[i].creator_type && Template.instance().o[i].creator_type == 'teacher' ) &&
                           Meteor.user().roles.student &&
-                          ! o[i].approved) {
+                          ! Template.instance().o[i].approved) {
               //DON'T SHOW IT
-              o[i].dontShow = true;
+              Template.instance().o[i].dontShow = true;
 
             //OTHERWISE, THIS COURSE IS AVAILABLE TO BE TAKEN
             } else {
               //SHOW IT
-              o[i].buttonText = 'begin';
+              Template.instance().o[i].buttonText = 'begin';
             }
           }
         }
       }
-      return o;
+      
+      return Template.instance().o;
+      
     } catch(e) {
       return;
     }
@@ -169,10 +176,6 @@ Template.studentCourseListing.events = {
       let builder   = $( e.currentTarget ).data( 'bid' )
         , cid       = $( e.currentTarget ).data( 'id' );
       
-      /*
-      Students.update({ _id: Meteor.userId() }, 
-                          {$addToSet:{current_courses: {course_id: cid}} });
-      */
       Meteor.setTimeout(function(){
         Meteor.call( 'updateCurrentCourses', cid );
       }, 300);
@@ -189,16 +192,4 @@ Template.studentCourseListing.events = {
 //-------------------------------------------------------------------
   },
 
-
-  /*
-   * .JS-TEACHER-CB  ::(CLICK)::
-   */
-  'click .js-teacher-cb'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    if ( Meteor.user().roles.teacher ) {
-      FlowRouter.go( '/teacher/dashboard/course-builder/' + Meteor.userId() );
-    }
-  }
 }

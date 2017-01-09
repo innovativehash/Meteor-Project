@@ -645,12 +645,12 @@ Meteor.methods({
 
     try {
       // GET ALL STUDENTS ADDED TO THIS EVENT
-      let s  = Students.find({ current_trainings:{ $elemMatch: {record_id: event }}}, { _id:1 }).fetch();
+      let s  = Students.find( { current_trainings:{ $elemMatch: {link_id: event }}} ).fetch();
 
       // DELETE EACH
       for( let i=0, len = s.length; i < len; i++ ) {
 
-        Students.update({ _id: s[i]._id }, { $pull: {current_trainings:{ record_id: event }} });
+        Students.update({ _id: s[i]._id }, { $pull: {current_trainings:{link_id: event }} });
       }
       
       // DELETE THE EVENT

@@ -137,11 +137,6 @@ Template.assignCourses.events({
     let nm    = $( e.currentTarget)[0].dataset.name;        // course name
     let cr    = $( e.currentTarget)[0].dataset.credits;     // course credits
     //console.log( $( e.currentTarget)[0].dataset );
-console.log( 'DEBUG: idx = ' + idx );
-console.log( 'DEBUG: nm = ' + nm );
-console.log( 'DEBUG: cr = ' + cr );
-console.log( 'DEBUG::RETURN' );
-return;
 
     let assignByDept  = $( '#by-dept' ).val();           // department name(s)
     let assignByName  = $( '#by-name' ).val();           // student name(s)

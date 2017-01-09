@@ -100,7 +100,7 @@
                     {{#each completed_courses}}
                     <tr>
                       <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{name}}</th>
-                      <td>{{num}}</td>
+                      <td>{{or num 1}}</td>
                       <td>{{credits}}</td>
                       <td>{{date_completed}}</td>
                       <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td>
@@ -152,7 +152,7 @@
                     {{#each current_courses}}
                     <tr>
                       <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{name}}</th>
-                      <td>{{num}}</td>
+                      <td>{{or num 1}}</td>
                       <td>{{credits}}</td>
                       <td>{{date_started}}</td>
                       <td>{{date_due}}</td>

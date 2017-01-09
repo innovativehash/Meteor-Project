@@ -8,7 +8,59 @@
 
 {{#if or isTeacher isStudent}}
     {{> userProfile }}
-
+      
+    {{#if teacherSticky}}
+        <style>
+          #teacherStickyPost {
+            background-color: orange;
+            position:fixed;
+            /* top:0; */
+            width:70%;
+            z-index:100;
+          }
+          #teacherStickySpacer {
+            margin-bottom: 350px;
+          }
+        </style>
+        <div id="teacherStickyPost">
+          <div class="post-box">
+            {{#each tsData}}
+            <form action="">
+              <div class="post-box-header">
+                <p style="color:orange;">
+                  ASSIGN CREDIT FOR TRAINING:<br>
+                  CLASS:&nbsp;&nbsp; <h2 style="display:inline-block;">{{title}}</h2> <h3 style="display:inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"{{description}}"</h3>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DATE ENDED:<h3 style="display:inline-block;"> {{dateEnding}}</h3>&nbsp;&nbsp;&nbsp;&nbsp;<input id="teacher-assigned-credits" type="number" placeholder="assign credits...">
+                  <br>
+                  <h4>In Attendance:</h4>
+                </p>
+                <ul>
+                  {{#each ary}}
+                  <li>
+                    <label>
+                      {{studentName}}
+                      <input id="tcb-{{num}}" data-id="{{id}}" type="checkbox">
+                    </label>
+                  </li>
+                  {{/each}}
+                </ul>
+                
+              </div>
+              <div class="post-box-footer">
+                <div class="row">
+                  <div class="col-sm-6"></div>
+                  <div class="col-sm-6">
+                    <input type="submit" value="Submit" id="teacher-credit-submit">
+                  </div>
+                </div>
+              </div>
+            </form>
+            {{/each}}
+          </div>
+        </div>
+        <div id="teacherStickySpacer"></div>
+    {{/if}}
+      
     {{> postbox }}
 
     {{> newsfeed }}
