@@ -187,14 +187,8 @@ Template.library.events({
     e.preventDefault();
     
     //ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY
-    Courses.insert({ 
-                    company_id:       Meteor.user().profile.company_id,
-                    cid:              Session.get( 'add-course-data').id, 
-                    name:             Session.get( 'add-course-data').name, 
-                    "icon":           "/img/icon-4.png",
-                    credits:          Session.get( 'add-course-data').credits, 
-                    public:           false, 
-                    times_completed:  0 
+    Courses.update( { _id: Session.get( 'add-course-data').id },
+                    { $push: {company_id: Meteor.user().profile.company_id }
     });
     
     Newsfeeds.insert({

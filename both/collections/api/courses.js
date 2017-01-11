@@ -29,7 +29,7 @@ let CoursesSchema = new SimpleSchema({
     type: String
   },
   'company_id': {
-    type: String
+    type: [String]
   },
   'public': {
     type: Boolean

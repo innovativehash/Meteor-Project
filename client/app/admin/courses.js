@@ -105,7 +105,7 @@ Template.courses.events({
 
   /*
    * .JS-CREATE-TEST  ::(CLICK)::
-   */
+   
   'click .js-create-test'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -113,7 +113,7 @@ Template.courses.events({
     FlowRouter.go( 'admin-test-creator', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
   },
-
+*/
 
   /*
    * #SEARCH-COURSES  ::(CHANGE)::
@@ -209,18 +209,19 @@ Template.courses.events({
                           '<span style="color:white;">' + nm + '</span>' +
                         '</div></div></div></div></div>',
       buttons: [{
-/* 
-DELETE ASSOC:
-built-courses,
-tests,
-pdfs
-ppts
-scorms
-*/
+              /* 
+              DELETE ASSOC:
+              built-courses,
+              tests,
+              pdfs
+              ppts
+              scorms
+              */
               label: 'Delete Course',
               cssClass: 'btn-danger',
               action: function( dialog ) {
-                Courses.remove({ _id: idx });
+                Courses.update( { _id: idx },
+                                { $pull: { company_id: Meteor.user().profile.company_id }});
                 //maybe some logic to remove this course from students currently taking it?
                 dialog.close();
               }

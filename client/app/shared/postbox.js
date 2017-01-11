@@ -73,7 +73,7 @@ Template.postbox.events({
 
     fr.readAsDataURL( fil );
 
-    var img = $( '<img height="32" width="32" />' );
+    var img = $( '<img height="64" width="64" />' );
     Meteor.setTimeout( function() {
       if ( ig ) {
         img.attr( "src", ig );
