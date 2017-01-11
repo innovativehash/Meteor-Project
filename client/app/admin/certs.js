@@ -4,7 +4,6 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
- 
 import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
 
@@ -33,11 +32,14 @@ Template.certs.onCreated(function(){
 
     $( '#drop1,#drop2, #drop3, #drop4, #drop5, #drop6, #drop7' ).droppable({
       over: function( event, ui ) {
-        $(this).effect( "highlight", {}, 1000 );
+        $(this).effect( "highlight", {}, 500 );
       },
       drop: function( evt, ui ) {
         //console.log( $(this).attr('id') );
-        $(this).html( ui.draggable );
+        
+        //$(this).html( ui.draggable );
+        $(this).empty().html( ui.draggable );
+        
         //$(this).css( 'border', '1px dashed blue' ).css( 'color', 'blue' );
 
         if ( certificate && certificate.courses ) 
@@ -172,6 +174,7 @@ Template.certs.events({
     	$( `#cert-holder-${i}` ).draggable({   /*handle: "img", */
                                      helper: "clone", 
                                      snap: true,
+                                     revert: 'invalid'
                                      /*snapMode: "inner",*/
                                      /*cursorAt:{left:-5}*/ 
     	                          });
@@ -204,7 +207,7 @@ Template.certs.events({
       return;
     }
 
-    for ( let i = 0; i<certificate.courses.length; i++ ){
+    for ( let i = 0, len = certificate.courses.length; i < len; i++ ){
       credits_total += Number( certificate.courses[i].dc );
       ids[i]        = certificate.courses[i].di;
     }
@@ -217,7 +220,8 @@ Template.certs.events({
       company_id:       c_id,
       type:             "certificate",
       times_completed:  0,
-      expiry_date:      exp_date || ""
+      expiry_date:      exp_date || "",
+      created_at:       new Date()
     });
 
     Bert.alert( 'Certificate Created!', 'success', 'growl-top-right' );
@@ -295,9 +299,10 @@ function initC( d, c ) {
       child.appendChild( sp );
       d.appendChild( child );
      	
-     	$( `#cert-holder-${i}` ).draggable({  /*handle: "img",*/
-     	                                      helper: "clone", 
+     	$( `#cert-holder-${i}` ).draggable({  /*handle: "img", "clone" */
+     	                                      //helper: , 
      	                                      snap: true, 
+     	                                      revert: 'invalid',
      	                                      /*snapMode: "inner",*/
      	                                      /*cursorAt:{left:-5}*/ });
      	                                      

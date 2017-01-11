@@ -192,4 +192,16 @@ Template.studentCourseListing.events = {
 //-------------------------------------------------------------------
   },
 
+  /*
+   * .JS-TEACHER-CB  ::(CLICK)::
+   */
+  'click .js-teacher-cb'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    if ( Meteor.user().roles.teacher ) {
+      FlowRouter.go( '/teacher/dashboard/course-builder/' + Meteor.userId() );
+    }
+  },
+  
 }

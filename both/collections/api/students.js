@@ -19,7 +19,7 @@ Students.deny({
 });
 */
 
-
+/*
 let StudentsSchema = new SimpleSchema({
   'avatar': {
     type: String,
@@ -53,10 +53,6 @@ let StudentsSchema = new SimpleSchema({
     type: String,
     optional: true
   },
-  'user_class': {
-    type: String,
-    optional: true
-  },
   'current_credits': {
     type: Number,
     optional: true
@@ -67,6 +63,10 @@ let StudentsSchema = new SimpleSchema({
   },
   'compl_courses_cnt': {
     type: Number,
+    optional: true
+  },
+  'company': {
+    type: String,
     optional: true
   },
   'company_id': {
@@ -158,3 +158,4 @@ let StudentsSchema = new SimpleSchema({
 });
 
 Students.attachSchema( StudentsSchema );
+*/

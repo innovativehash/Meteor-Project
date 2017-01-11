@@ -167,7 +167,7 @@ Template.newsfeed.events({
     e.stopImmediatePropagation();
     
     // NOTIFICATION
-    Bert.alert( 'Your post has been deleted', 'danger' );
+    Bert.alert( 'Your post has been deleted', 'success' );
     var i_d = $( e.currentTarget ).data( 'id' );
 
     $( '#news-item-' + i_d ).hide();

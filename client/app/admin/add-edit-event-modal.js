@@ -48,7 +48,15 @@ Template.addEditEventModal.onCreated( () => {
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'addEditEventModal:: load select2.js fail' );
   });
+  
   $( '[name="timezone"]' ).trigger("change");
+
+  $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function(){  
+    $( '[name="start"]' ).datepicker();
+    $( '[name="end"]' ).datepicker();
+  }).fail( function( jqxhr, settings, exception ) {
+    console.log( 'addEditEventModal:: load jquery-ui.js fail' );
+  });
   
 });
 
@@ -200,7 +208,7 @@ Template.addEditEventModal.events({
   },
   
   
-  'submit form' ( event, template ) {
+  'click .js-event-modal-button' ( event, template ) {
     event.preventDefault();
 
     let eventModal = Session.get( 'eventModal' ),

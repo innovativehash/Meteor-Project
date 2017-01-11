@@ -69,8 +69,8 @@ Template.degrees.onRendered(function(){
     $( ".certificate-area" ).fadeIn( 'slow' );
   });
 
-  $( '#degree-search' ).prop('selectionStart', 0)
-                       .prop('selectionEnd', 0);
+  $( '#degree-search' ).prop( 'selectionStart', 0 )
+                       .prop( 'selectionEnd', 0 );
                        
     Tracker.autorun(function(){
       let d		= document.getElementById( 'dojo' );
@@ -184,9 +184,9 @@ Template.degrees.events({
       d.appendChild( child );
 
      	$( `#deg-holder-${i}` ).draggable({    
-     	                                      helper: "clone", 
-     	                                      snap: true, 
-     	                                       });
+     	                                    helper: "clone", 
+     	                                    snap: true, 
+     	                                  });
      }
      
   },
@@ -213,7 +213,7 @@ Template.degrees.events({
       return;
     }
 
-    for ( let i = 0; i<degree.courses.length; i++ ){
+    for ( let i = 0, len = degree.courses.length; i < len; i++ ){
       credits_total += Number( degree.courses[i].dc );
       ids[i]        = degree.courses[i].di;
     }
@@ -225,7 +225,8 @@ Template.degrees.events({
       icon:             "/img/icon-5.png",
       company_id:       Meteor.user().profile.company_id,
       type:             "degree",
-      times_completed:  0
+      times_completed:  0,
+      created_at:       new Date()
     });
 
     Bert.alert( 'Degree Created!', 'success', 'growl-top-right' );
@@ -306,8 +307,8 @@ function initC( d, c ) {
 */
      	$( `#deg-holder-${i}` ).draggable({ helper: "clone", snap: true});
      	                                      
-      $( '#degree-search' ).prop('selectionStart', 0)
-                           .prop('selectionEnd', 0);
+      $( '#degree-search' ).prop( 'selectionStart', 0 )
+                           .prop( 'selectionEnd', 0 );
     
   }
 }

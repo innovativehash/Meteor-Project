@@ -9,21 +9,38 @@ import { Mongo      }   from 'meteor/mongo';
 import { Email }        from 'meteor/email'
 import { Webapp     }   from 'meteor/webapp';
 
+// mail.collectiveuniversity.com:587
+// ded1341.inmotionhosting.com:465
+
+// 'postmaster@sandbox22227.mailgun.org',
+// '9ch9504qu240'
+// 'smtp.mailgun.org'
 
 Meteor.startup(() => {
   smtp = {
-    username: 'mac.rubyist@gmail.com',
-    password: 'K81sgr82me!',
-    server:   'smtp.gmail.com',
-    port: 587 //465
+    username: 'postmaster@mg.collectiveuniversity.com', 
+    password: '6f3408650d397dd3755999acb3f7c833',
+    server:   'smtp.mailgun.org',
+    port:     2525
   };
 
+/*
+Meteor.startup(() => {
+  
+  smtp = {
+    username: 'gcc.programmer@gmail.com',
+    password: 'K81sgr82me!',
+    server:   'smtp.gmail.com',
+    port:     587
+  };
+*/
   process.env.MAIL_URL = 'smtp://' +
     encodeURIComponent( smtp.username ) + ':' +
     encodeURIComponent( smtp.password ) + '@' +
     encodeURIComponent( smtp.server )   + ':' + smtp.port;
 
-  process.env.ROOT_URL = 'https://collective-university-nsardo.c9users.io:8080';
+  //process.env.MAIL_URL="smtp://gcc.programmer:K81sgr82me!@smtp.gmail.com:587/";
+  process.env.ROOT_URL = 'https://collective-university-nsardo.c9users.io';
   
   
   /*

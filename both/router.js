@@ -37,13 +37,13 @@ FlowRouter.route( '/login', {
 FlowRouter.route( '/signup', {
   name: 'signup',
   action: () =>
-    BlazeLayout.render( 'layout', { top: "header", main: "signup", bottom: "footer"})
+    BlazeLayout.render( 'layout', { top: "header", main: "signup", bottom: "footer" })
 });
 
 FlowRouter.route( '/post-signup', {
   name: 'post-signup',
   action: () =>
-    BlazeLayout.render( 'layout', {top: "header", main: "postSignup", bottom: "footer"})
+    BlazeLayout.render( 'layout', {top: "header", main: "postSignup", bottom: "footer" })
 });
 
 /*

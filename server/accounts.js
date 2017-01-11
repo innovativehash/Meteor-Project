@@ -4,24 +4,20 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-
     Accounts.onCreateUser( ( options, user ) => {
       user.roles    = options.roles;
       user.profile  = options.profile;
       //console.log( 'user.roles.student is ' + user.roles.student );
-    
-      //user.roles = options.roles;
-      //user.profile= {
-        //"avatar": ""
-      //}
       
       //hack to avoid necessity of user needing to verify their email
       if ( user.roles.student || user.roles.teacher ) {
         user.emails[0].verified = true;
       } else {
-
+        console.log( user._id );
+        console.log( user.emails[0].address );
+        
         Meteor.setTimeout(function(){
-          Accounts.sendVerificationEmail(user._id);
+          Accounts.sendVerificationEmail( user._id, user.emails[0].address );
         }, 2000);
       }
       

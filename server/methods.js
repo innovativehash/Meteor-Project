@@ -518,7 +518,7 @@ Meteor.methods({
 
 
   'addUser': function( email, password, fname, lname, opt, dept, company, company_id, trial=false ) {
-
+    
     let uid = Accounts.createUser({
       email:    email,
       password: password,
@@ -700,4 +700,6 @@ Meteor.methods({
                       $inc:{ current_credits: Number(credits), compl_courses_cnt: 1 }
                     });
   },
+
+
 });

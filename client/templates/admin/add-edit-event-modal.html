@@ -1,7 +1,7 @@
 <template name = "addEditEventModal">
 <!-- addEditEventModel Template -->
 <!-- Nicholas Sardo <nsardo@aol.com> -->  
-  <div  class           = "modal fade" 
+  <div  class           = "modal fade left" 
         id              = "add-edit-event-modal" 
         tabindex        = "-1" 
         role            = "dialog" 
@@ -9,43 +9,21 @@
       
   <div  class = "modal-dialog" 
         role  = "document">
-      
-    <div class = "modal-content">
-      
-      <div class = "modal-header">
-        <button type          = "button" 
-                class         = "close" 
-                data-dismiss  = "modal" 
-                aria-label    = "Close">
-          <span aria-hidden   = "true">
-            &times;
-          </span>
-        </button>
-        
-        <h4 class = "modal-title" 
-            id    = "add-edit-event">
-          {{modalLabel.label}} Training Event
-        </h4>
-        
-      </div>
-      
-      <form id = "add-edit-event-form">
-        <div class = "modal-body">
-          <div class="form-group">
-            
-          </div>
-          <div class = "form-group">
-            <div class= "row">
-             <!-- 
-              <div class="col-xs-3 col-sm-3">
-                <label>Search Students</label>
-              </div>
-            -->
-<!--PARTICIPANTS-->              
-              <div class = "col-xs-12 col-sm-6">
+  
+    <div class="pop-up-area eventpop">
+    <div class="event-popup-header">
+        <h2>{{modalLabel.label}} Training Event</h2>
+        <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button>
+    </div> 
+  
+    <div class="popup-body">
+      <form action="">
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="single-event-pop">
+<!--PARTICIPANTS-->  
                 <label  id  = "lbl_type" 
                         for = "type">
-                  <!--Event Type-->
                   Add Attendees
                 </label>
                 
@@ -62,40 +40,21 @@
                         <option value = "{{_id}}">{{fullName}}</option>
                       {{/if}}
                     {{/each}}
-
-                  <!--
-                  <option selected = "{{selected event.type 'Birthday' }}" 
-                          value="Birthday">
-                    Birthday
-                  </option>
-                  
-                  <option selected  = "{{selected event.type 'Corporate' }}" 
-                          value     = "Corporate">
-                    Corporate
-                  </option>
-                  
-                  <option selected  = "{{selected event.type 'Miscellaneous' }}" 
-                          value     = "Miscellaneous">
-                    Miscellaneous
-                  </option>
-                  
-                  <option selected  = "{{selected event.type 'Wedding' }}" 
-                          value     = "Wedding">
-                    Wedding
-                  </option>
-                  -->
                   
                 </select>
               </div>
-              <div class="col-xs-12 col-sm-6">
+            </div>
+            <div class="col-sm-4">
+              <div class="single-event-loop">
 <!-- TIMEZONES -->  
                 <label for="timezone">
                   Time Zone
                 </label>
                 <!-- selected event.timezone name-->
                   <select name  = "timezone" 
-                          class = "form-control">
+                          class = "form-control" data-width="100%" data-style="btn-eventpop" title="GMT">
                     {{#each timezones}}
+                      <option></option>
                       <optgroup label = "{{group}}">
                         {{#each zones}}
                             <option selected  = "{{match}}"
@@ -107,139 +66,127 @@
                     {{/each}}
                   </select>
               </div>
-            </div><!--row-->
-          </div><!--form-group-->
+            </div>
+          </div>
           
-          
-          <div class = "form-group">
-            <div class = "row">
-
+          <div class = "row">
+            <div class="col-sm-6">
+              <div class="single-event-pop">
               
 <!-- EVENT START -->
-              <div class="col-xs-12 col-sm-6">
+
                 <label for = "start">
                   Event Starts
                 </label>
                 
-                <input  type  = "date" 
+                <input  type  = "text" 
                         name  = "start" 
-                        class = "form-control" 
+                        class = "input-event" 
                         value = "{{start}}">
               </div>
               
- <!-- START TIME -->
-              <div class = "col-xs-12 col-sm-6">
-                <label for = "start-time">
-                  Start Time
-                </label>
-              
-                <input  type    = "time" 
-                        name    = "start-time" 
-                        class   = "form-control" 
-                        value   = "{{event.startTime}}">
-              </div> 
-              
+              <div class="single-event-pop">
 <!-- EVENT END -->
-              <div class = "col-xs-12 col-sm-6">
                 <label for = "end">
                   Event End
                 </label>
                 <!-- "{{#if event.end}}{{event.end}}{{else}}{{event.start}}{{/if}}" -->
-                <input  type    = "date" 
+                <input  id      = "datepicker"
+                        type    = "text" 
                         name    = "end" 
-                        class   = "form-control" 
+                        class   = "input-event" 
                         value   = "{{end}}">
               </div>
+
+<!-- EVENT TITLE --> 
+              <div class = "single-event-pop">
+                <label for = "title">
+                  Training Title
+                </label>
+                <input  type  = "text" 
+                        name  = "title" 
+                        class = "input-event" 
+                        value = "{{event.title}}">
+              </div> 
+            </div>
+            
+            <div class="col-sm-6">
+              <div class="single-event-pop">
+                
+ <!-- START TIME -->
+                <label for = "start-time">
+                  Start Time
+                </label>
               
+                <input  type    = "text" 
+                        name    = "start-time" 
+                        class   = "input-event" 
+                        value   = "{{event.startTime}}"
+                        placeholder = "---- : ---- / ----">
+              </div> 
+              
+              <div class="single-event-pop">
   <!-- END TIME -->
-              <div class = "col-xs-12 col-sm-6">
                 <label for = "end-time">
-                  End Time
+                  Time End
                 </label>
                 
-                <input  type    = "time" 
+                <input  type    = "text" 
                         name    = "end-time" 
-                        class   = "form-control" 
-                        value   = "{{event.endTime}}">
+                        class   = "input-event" 
+                        value   = "{{event.endTime}}"
+                        placeholder = "---- : ---- / ----">
               </div>             
                          
-            </div><!-- row -->
-          </div><!-- form-group -->
-
-          
-<!-- EVENT TITLE --> 
-          <div class = "form-group">
-            <label for = "title">
-              Training Title
-            </label>
-            <input  type  = "text" 
-                    name  = "title" 
-                    class = "form-control" 
-                    value = "{{event.title}}">
-          </div>
-        
+              <div class="single-event-pop">
 <!-- EVENT DESCRIPTION -->
-          <div class="form-group">
-            <label for = "description">
-                Training Description
-              </label>
-              <input  type = "text"
-                      name = "description"
-                      class = "form-control"
-                      value = "{{event.description}}">
+              <label for = "description">
+                  Training Description
+                </label>
+                <input  type = "text"
+                        name = "description"
+                        class = "input-event"
+                        value = "{{event.description}}">
+              </div>
+            </div>
           </div>
-
+          
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="single-event-pop">
 <!-- EVENT LOCATION -->
-          <div class="form-group">
             <label for="location">
               Training Location
             </label>
             <input  type  = "text"
                     name  = "location"
-                    class = "form-control"
+                    class = "input-event"
                     value = "{{event.location}}">
           </div>
-          
-<!-- COURSES
-          <div class="row">
-            <div class="col-xs-12 col-sm-4">
+        </div>
+      </div>
 
-              <select id    = "t-courses" 
-                      class = "form-control" multiple>
-                {{#each courses}}
-                  <option selected  = "{{selected event.courses _id }}"
-                          value="{{_id}}">
-                    {{name}}
-                  </option>
-                {{/each}}
-              </select>
-              
-            </div>
-            
-          </div>
--->
-        </div><!-- MODAL-BODY -->
-        
-        <div class = "modal-footer">
+      <div class="row">
+        <div class="col-sm-12 text-right">
           {{#if modalType 'edit'}}
-            <button class="btn btn-danger pull-left delete-event">Delete Event</button>
+            <button class="event-btn pull-left delete-event">Delete Event</button>
           {{/if}}
-          <button type          = "button" 
-                  class         = "btn btn-default" 
-                  data-dismiss  = "modal">
+          
+          <button class         = "event-btn"
+                  data-dismiss  = "modal"
+                  aria-label    = "close">
             Cancel
           </button>
           
-          <button type  = "submit" 
-                  class = "btn btn-success">
-            {{modalLabel.button}} Event
+          <button class = "event-btn add js-event-modal-button">
+            {{modalLabel.button}} Event <span>+</span>
           </button>
-        </div><!-- MODAL-FOOTER -->
-        
-      </form>
-      
-    </div><!-- MODAL-CONTENT -->
-  </div><!-- class MDOAL-DIALOG -->
-</div><!-- id ADD-EDIT-EVENT-MODAL -->
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 </template>
