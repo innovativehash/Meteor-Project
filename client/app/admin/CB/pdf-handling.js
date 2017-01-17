@@ -24,7 +24,8 @@ export function cbPDFChange( e, t, tbo, Pdfs ) {
   
   let fil = t.$( '#course-builder-pdf' )[0].files
 	  , sf  = t.$( '#course-builder-pdf' ).data('subfolder');
-  
+	  
+
 	S3.upload(
 	          {
       				files:  fil, //files,
@@ -90,6 +91,8 @@ export function cbPDFSave( e, t, tbo, contentTracker, pdfsTracker ) {
     Template.instance().total.set( Template.instance().total.get() + 1 );
 */
 
+  if ( pdf ) {
+    console.log( 'in pdf' );
     let obj =
     `<embed width="100%" height="600" src="${pdf}" type="application/pdf"></embed>`;
     t.$( '#fb-template' ).empty();
@@ -111,6 +114,7 @@ export function cbPDFSave( e, t, tbo, contentTracker, pdfsTracker ) {
 
     
     pdf = null;
+  }
     t.$( '#add-pdf' ).modal( 'hide' );
 //-----------------------------------------------------------------------------
 };

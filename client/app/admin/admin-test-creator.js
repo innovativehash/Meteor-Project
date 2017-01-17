@@ -10,7 +10,8 @@ import { Tests }     from '../../../both/collections/api/tests.js';
 import '../../templates/admin/admin-test-creator.html';
 
 
-let Test = new Mongo.Collection(null);
+let Test = new Mongo.Collection(null)
+  , testidnum;
 
 /*
  * CREATED
@@ -143,18 +144,21 @@ Template.adminTestCreator.events({
   'blur #test-name'( e, t ){
     //let course_name = FlowRouter.current().path.slice( FlowRouter.current().path.indexOf('?') + 1 );
 
-      testidnum = Test.insert({
-                                test_name: t.$( '#test-name' ).val(),
-                                company_id: Meteor.user().profile.company_id
-                              });
-      
-      
-      Meteor.setTimeout(function(){
-        let testName  = t.$( '#test-name' ).val();
-        //testidnum     = Tests.findOne({ test_name: testName })._id;
-      }, 200);
-
-      t.$( '#test-name' ).attr( 'readonly', true);
+      if ( testidnum && testidnum == Test.findOne({ _id: testidnum })._id ) {
+        console.log('already defined');
+        Test.update({ _id: testidnum }, {$set:{test_name: t.$( '#test-name' ).val()} });
+      } else {
+        console.log('not yet defined');
+        testidnum = Test.insert({
+                                  test_name: t.$( '#test-name' ).val(),
+                                  company_id: Meteor.user().profile.company_id
+                                });
+      }                          
+  console.log( Test.find().fetch() );
+  
+      //let testName  = t.$( '#test-name' ).val();
+      //testidnum     = Tests.findOne({ test_name: testName })._id;
+      //t.$( '#test-name' ).attr( 'readonly', true);
 //-------------------------------------------------------------------
   },
 

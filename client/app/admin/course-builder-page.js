@@ -470,7 +470,7 @@ Template.courseBuilderPage.events({
       tbo.ppts    = [];
       tbo.scorms  = [];
       tbo.tests   = [];
-      counter     = 0;
+      counter     = 1;
       
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
@@ -738,10 +738,22 @@ Template.courseBuilderPage.events({
       //CLEAR CONTENT TRACKER
       t.contentTracker.scorms = 0;
       
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+      
       //ADVANCE PAGE COUNTS
       t.page.set(   t.page.get()  + 1 );
       t.total.set(  t.total.get() + 1 );
       counter = t.page.get();
+      
+      tbo.page  = t.page.get();
+      tbo.total = t.total.get();
       
       Bert.alert( 
                   'Page.successfully added.', 
@@ -781,7 +793,6 @@ Template.courseBuilderPage.events({
           $( '#fb-template' ).empty();
         });
     	
-      // CLEAR THE CONTENT TRACKER
       t.contentTracker.titles = 0;
       t.contentTracker.texts  = 0;
       t.contentTracker.images = 0;
@@ -790,31 +801,25 @@ Template.courseBuilderPage.events({
       t.contentTracker.ppts   = 0;
       t.contentTracker.scorms = 0;
       t.contentTracker.tests  = 0;
-  
-      t.titlesTracker = [];
-      t.textsTracker  = [];
-      t.imagesTracker = [];
-  
-      // ADVANCE PAGE COUNTS
-      t.page.set(   p   + 1 );
-      t.total.set(  p   + 1 );
+      
+      tbo.titles = [];
+      tbo.texts = [];
+      tbo.images = [];
+      
+      //ADVANCE PAGE COUNTS
+      t.page.set(   t.page.get()  + 1 );
+      t.total.set(  t.total.get() + 1 );
       counter = t.page.get();
       
-      //shadow page counts
-      tbo.page = t.page.get();
+      tbo.page  = t.page.get();
       tbo.total = t.total.get();
+      
       $( '#cb-toolbar-text' ).hide();
       $( '#cb-toolbar-media' ).hide();
       return;
     }
 
 /*
-    // RE-INITIALIZE VARIABLES
-    tbo.titles  = [];
-    tbo.texts   = [];
-    tbo.images  = [];
-
-
     CBTexts.cbTextReset();
     CBTitle.cbTitleReset();
     CBImage.cbImageReset();
@@ -823,7 +828,6 @@ Template.courseBuilderPage.events({
   return;
  //-------------------------------------------------------------------
   },
-
 
 
 
@@ -907,6 +911,7 @@ Template.courseBuilderPage.events({
       tbo.passing_percent = percent;
       tbo.keywords        = keys;
       tbo.icon            = "/img/icon-4.png";
+      
 
     //built_id = BuiltCourses.findOne({ name: name })._id;
 

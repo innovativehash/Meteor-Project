@@ -14,13 +14,14 @@ let ig = '';
    * 
    */
    export function cbPowerPointChange( e, t, tbo, PowerPoints ) {
-  if ( e.currentTarget.files === 'undefined' ) {
-    console.log( 'aborted' );
+     
+    if ( e.currentTarget.files === 'undefined' ) {
+      console.log( 'aborted' );
+      return;
+    }
     return;
-  }
-  
-  let fil = t.$( '#course-builder-powerpoint' )[0].files
-	  , sf  = t.$( '#course-builder-powerpoint' ).data('subfolder');
+    let fil = t.$( '#course-builder-powerpoint' )[0].files
+  	  , sf  = t.$( '#course-builder-powerpoint' ).data('subfolder');
   
 		S3.upload(
 		          {
@@ -62,7 +63,7 @@ let ig = '';
    * id = add-powerpoint
    * powerpoint dialog
    */
-  export function cbPowerPointSave( e, t, cbo, contentTracker, PowerPoints ) {
+  export function cbPowerPointSave( e, t, tbo, contentTracker, PowerPoints ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
