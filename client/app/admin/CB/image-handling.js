@@ -10,7 +10,7 @@
   let img_id    = -1
     , a_img_id  = ''
     , ig        = ''
-    , ext       = '';
+    , itype     = '';
 
 
   /**
@@ -20,7 +20,7 @@
     img_id    = -1;
     a_img_id  = ''
     ig        = '';
-    ext       = '';
+    itype     = '';
   }
 
 
@@ -40,22 +40,15 @@
       return;
     }
 
-    let mark = ( e.currentTarget.files[0].name ).lastIndexOf('.') + 1;
-    console.log( e.currentTarget.files[0].name );
-    ext   = ( e.currentTarget.files[0].name ).slice( mark );
-    if ( ext == ( 'jpg' || 'jpeg' ) ) {
-      ext = 'jpeg';
-    }
+    itype = e.currentTarget.files[0].type;
     
-    if ( ext !== 'jpeg' && ext !== 'png' ) {
+    if ( itype != 'image/png' && itype != 'image/jpeg' ) {
       Bert.alert( 'Incompatible Image Format: must be either a jpg or png file', 'danger' );
-      //console.log( 'post ' + ext )
-      //console.log( e.currentTarget.files );
-      //console.log( e.currentTarget.files[0] );
+
       e.currentTarget.files = undefined;
       e.currentTarget.files[0] = undefined;
       e.currentTarget.files[0].name = undefined;
-      ext = '';
+      itype = '';
       t.$( '#course-builder-image' ).val('');
       return;
     }
@@ -99,7 +92,7 @@
     e.currentTarget.files[0] = undefined;
     e.currentTarget.files[0].name = undefined;
     
-    ext = '';
+    itype = '';
 //
   		//let files = t.$( "input.file_bag" )[0].files
   		//let fil = t.$( '#course-builder-image' ).get(0).files[0]

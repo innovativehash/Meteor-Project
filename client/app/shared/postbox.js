@@ -26,8 +26,8 @@ Template.postbox.onCreated(function() {
 
 
 
-let ig = ''
-  , ext;
+let ig    = ''
+  , itype = '';
 
 /*
  * EVENTS
@@ -61,26 +61,19 @@ Template.postbox.events({
     e.currentTarget.files = undefined;
     e.currentTarget.files[0] = undefined;
     e.currentTarget.files[0].name = undefined;
-    ext = '';
+    itype = '';
+    
     $( '#post-img' ).remove();
     
-    let mark = ( e.currentTarget.files[0].name ).lastIndexOf( '.' ) + 1;
-
-    ext = ( e.currentTarget.files[0].name ).slice( mark );
+    itype = e.currentTarget.files[0].type;
     
-    if ( ext == ('jpg' || 'jpeg' ) ) {
-      ext = 'jpeg';
-    }
-    
-    if ( ext !== 'jpeg' && ext !== 'png' ) {
+    if ( itype != 'image/png' && itype != 'image/jpeg' ) {
       Bert.alert( 'Incompatible Image Format: must be either a jpg or png file', 'danger' );
-      //console.log( 'post ' + ext )
-      //console.log( e.currentTarget.files );
-      //console.log( e.currentTarget.files[0] );
+
       e.currentTarget.files = undefined;
       e.currentTarget.files[0] = undefined;
       e.currentTarget.files[0].name = undefined;
-      ext = '';
+      itype = '';
       return;
     }
 
@@ -103,10 +96,6 @@ Template.postbox.events({
       }
     }, 200);
 
-    e.currentTarget.files = undefined;
-    e.currentTarget.files[0] = undefined;
-    e.currentTarget.files[0].name = undefined;
-    ext = '';
     return;
 //-------------------------------------------------------------------
   },
@@ -135,6 +124,7 @@ Template.postbox.events({
       //let co_id = Students.findOne({_id: Meteor.userId()}).company_id;
 
       if ( ig ) {
+        console.log( 'ig itype = ' + itype );
         //INSERT POST WITH IMAGE
         Newsfeeds.insert({  
                             owner_id:       Meteor.userId(),
@@ -142,7 +132,7 @@ Template.postbox.events({
                             poster_avatar:  Meteor.user().profile.avatar,
                             type:           "post",
                             private:        false,
-                            ext:            ext,
+                            image_type:     `${itype}`,
                             bin:            ig,
                             news:           content,
                             comment_limit:  3,
@@ -171,7 +161,7 @@ Template.postbox.events({
         t.$( '.postText' ).val('');
         t.$( '#thumbnail img:last-child' ).remove();
         ig  = '';
-        ext = '';
+        type = '';
       }, 100);
 
       //TRANSITION EXIT

@@ -189,7 +189,6 @@ Template.courseBuilderPage.onCreated( function() {
             } else {
               $( '#cb-toolbar-text' ).hide();
               $( '#cb-toolbar-media' ).hide();
-              $( '#cb-toolbar-video' ).hide();
               $( '#add-pdf' ).modal( 'show' );
             }
             break;

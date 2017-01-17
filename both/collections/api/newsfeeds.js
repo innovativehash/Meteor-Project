@@ -69,6 +69,10 @@ let NewsfeedsSchema = new SimpleSchema({
   'content': {
     type: String,
     optional: true
+  },
+  'image_type': {
+    type: String,
+    optional: true
   }
   
 });

@@ -22,10 +22,19 @@ export function cbPDFChange( e, t, tbo, Pdfs ) {
     return;
   }
   
-  let fil = t.$( '#course-builder-pdf' )[0].files
-	  , sf  = t.$( '#course-builder-pdf' ).data('subfolder');
-	  
+  if ( t.$( '#course-builder-pdf' )[0].files[0].type != 'application/pdf' ) {
+    Bert.alert( 'Only PDF files please', 'danger' );
+    $( '#course-builder-pdf' )[0].files          = undefined;
+    //$( '#course-builder-pdf' )[0].files[0]       = undefined;
+    //$( '#course-builder-pdf' )[0].files[0].name  = undefined;
+    $( '#course-builder-pdf' ).val('');
+    return;
+  }
 
+
+  let fil   = t.$( '#course-builder-pdf' )[0].files
+	  , sf    = t.$( '#course-builder-pdf' ).data('subfolder');
+    
 	S3.upload(
 	          {
       				files:  fil, //files,
@@ -92,7 +101,12 @@ export function cbPDFSave( e, t, tbo, contentTracker, pdfsTracker ) {
 */
 
   if ( pdf ) {
-    console.log( 'in pdf' );
+
+    Bert.alert( 'Loading PDF...', 'success' );
+    
+    $( '#cb-toolbar-video' ).show();
+    t.$( '#cb-current' ).val( '#pdd' );
+    
     let obj =
     `<embed width="100%" height="600" src="${pdf}" type="application/pdf"></embed>`;
     t.$( '#fb-template' ).empty();
@@ -105,8 +119,8 @@ export function cbPDFSave( e, t, tbo, contentTracker, pdfsTracker ) {
     '</iframe>' +
     '</object>';
 */
-    t.contentTracker.pdfs++;
-    
+    contentTracker.pdfs++;
+
     tbo.pdfs[0] = { 
                     url: `${obj}`,
                     pdf_id: pdf_id
