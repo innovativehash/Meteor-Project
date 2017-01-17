@@ -36,7 +36,7 @@
 
               <div class = "filter-buttons">
 
-                <button class = "js-course-builder">Build Course</button>
+                <button class = "js-library-course-builder">Build Course</button>
 
                 <!-- <button class="js-add-course-from-lib">Add From Library</button> -->
 
@@ -179,7 +179,10 @@
                     <tr id = "{{_id}}">
                       <th class = "name">
                         <img src = "{{icon}}" alt="">
-                        {{name}}
+                        <a  id = "{{course_id}}" 
+                              href = "/admin/dashboard/course-viewer/{{uid}}?builder={{built_id}}&course={{_id}}">
+                            {{name}}
+                          </a>
                       </th>
                       <td>
                         1

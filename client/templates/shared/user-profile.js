@@ -27,10 +27,31 @@ Template.userProfile.events({
       return;
     }
 
+    e.currentTarget.files = undefined;
+    e.currentTarget.files[0] = undefined;
+    e.currentTarget.files[0].name = undefined;
+    ext = '';
+    $( '#acc-image' ).remove();
+    
     let mark = ( e.currentTarget.files[0].name ).lastIndexOf( '.' ) + 1;
 
     ext  = ( e.currentTarget.files[0].name ).slice( mark );
-    ext = ( ext == ('jpg' || 'jpeg') ) ? 'image/jpeg' : 'image/png';
+    
+    if ( ext == ('jpg' || 'jpeg' ) ) {
+      ext = 'jpeg';
+    }
+    
+    if ( ext !== 'jpeg' && ext !== 'png' ) {
+      Bert.alert( 'Incompatible Image Format: must be either a jpg or png file', 'danger' );
+      //console.log( 'post ' + ext )
+      //console.log( e.currentTarget.files );
+      //console.log( e.currentTarget.files[0] );
+      e.currentTarget.files = undefined;
+      e.currentTarget.files[0] = undefined;
+      e.currentTarget.files[0].name = undefined;
+      ext = '';
+      return;
+    }
 
     let fil = t.$( '#user-avatar-upload' ).get(0).files[0];
     let fr  = new FileReader();
@@ -58,7 +79,7 @@ Template.userProfile.events({
     // reads in image, calls back fr.onload
     fr.readAsDataURL( fil );
 
-    let img = $( '<img height="150" width="150" />' );
+    let img = $( '<img id="acc-image" height="150" width="150" />' );
     Meteor.setTimeout( function() {
       if ( foo ) { //ig
         img.attr( "src", foo ); // ig
@@ -86,11 +107,12 @@ Template.userProfile.events({
     }
 
     Meteor.setTimeout(function() {
-      //t.$('.postText').val('');
+      t.$( '#user-avatar-upload' );
       t.$( '#userthumb img:last-child' ).remove();
       ig  = '';
       ext = '';
       }, 100);
+      
     t.$( '#profile-modal' ).modal( 'hide' );
 //-------------------------------------------------------------------
   },

@@ -21,6 +21,7 @@ Template.cbToolbar.onRendered(function(){
   
   $( '#cb-toolbar-text' ).hide();
   $( '#cb-toolbar-media' ).hide();
+  $( '#cb-toolbar-video' ).hide();
   
 });
 
@@ -105,7 +106,7 @@ Template.cbToolbar.events({
         Template.instance().view.parentView.parentView._templateInstance.contentTracker.videos = l - 1;
         
         $( '#fb-template iframe' ).remove();
-        $( '#cb-toolbar-media' ).hide();
+        $( '#cb-toolbar-video' ).hide();
         break;
       case 'pd':
         console.log( 'pdf' );

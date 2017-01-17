@@ -50,14 +50,14 @@ Template.addEditEventModal.onCreated( () => {
   });
   
   $( '[name="timezone"]' ).trigger("change");
-
+/*
   $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function(){  
     $( '[name="start"]' ).datepicker();
     $( '[name="end"]' ).datepicker();
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'addEditEventModal:: load jquery-ui.js fail' );
   });
-  
+*/
 });
 
 

@@ -56,14 +56,20 @@
     //tbo.videos.push( {page: Template.instance().page.get(), id: ++vid_id, url: vid} );
     tbo.videos[vid_id] = url;
 
+    Bert.alert('Loading video...', 'success' );
+    
     //add to the canvas
     t.$( '#fb-template' ).html( url );
     
-    
+/*    
     t.$( '#fb-template iframe' ).on( "click", (e) => {
-        $( '#cb-toolbar-media' ).show();
+        $( '#cb-toolbar-video' ).show();
         $( '#cb-current' ).val( '#vid' );
     });
+*/
+
+    $( '#cb-toolbar-video' ).show();
+    t.$( '#cb-current' ).val( `#vid` );
     
 /*
     if ( ! t.$( `#close-vid-${vid_id}` ).length ) {

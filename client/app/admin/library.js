@@ -217,4 +217,12 @@ Template.library.events({
     e.preventDefault();
     $( '#lib-add-course-modal' ).modal("hide");
   },
+  
+  'click .js-library-course-builder'( e, t ) {
+    e.preventDefault();
+    
+    FlowRouter.go( 'admin-course-builder', { _id: Meteor.userId() });
+  },
+  
+  
 });

@@ -79,7 +79,7 @@
                   Event Starts
                 </label>
                 
-                <input  type  = "text" 
+                <input  type  = "date" 
                         name  = "start" 
                         class = "input-event" 
                         value = "{{start}}">
@@ -92,7 +92,7 @@
                 </label>
                 <!-- "{{#if event.end}}{{event.end}}{{else}}{{event.start}}{{/if}}" -->
                 <input  id      = "datepicker"
-                        type    = "text" 
+                        type    = "date" 
                         name    = "end" 
                         class   = "input-event" 
                         value   = "{{end}}">
@@ -118,7 +118,7 @@
                   Start Time
                 </label>
               
-                <input  type    = "text" 
+                <input  type    = "time" 
                         name    = "start-time" 
                         class   = "input-event" 
                         value   = "{{event.startTime}}"
@@ -131,7 +131,7 @@
                   Time End
                 </label>
                 
-                <input  type    = "text" 
+                <input  type    = "time" 
                         name    = "end-time" 
                         class   = "input-event" 
                         value   = "{{event.endTime}}"

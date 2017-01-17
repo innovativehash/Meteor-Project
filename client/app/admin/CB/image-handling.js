@@ -34,18 +34,34 @@
     
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    
     if ( e.currentTarget.files === 'undefined' ) {
       console.log('aborted');
       return;
     }
 
     let mark = ( e.currentTarget.files[0].name ).lastIndexOf('.') + 1;
-
+    console.log( e.currentTarget.files[0].name );
     ext   = ( e.currentTarget.files[0].name ).slice( mark );
-    ext   = ( ext == ( 'jpg' || 'jpeg' ) ) ? 'image/jpeg' : 'image/png';
-
+    if ( ext == ( 'jpg' || 'jpeg' ) ) {
+      ext = 'jpeg';
+    }
+    
+    if ( ext !== 'jpeg' && ext !== 'png' ) {
+      Bert.alert( 'Incompatible Image Format: must be either a jpg or png file', 'danger' );
+      //console.log( 'post ' + ext )
+      //console.log( e.currentTarget.files );
+      //console.log( e.currentTarget.files[0] );
+      e.currentTarget.files = undefined;
+      e.currentTarget.files[0] = undefined;
+      e.currentTarget.files[0].name = undefined;
+      ext = '';
+      t.$( '#course-builder-image' ).val('');
+      return;
+    }
+    
     let fil = t.$( '#course-builder-image' ).get(0).files[0];
+    
     let fr  = new FileReader();
 
     let myimage = new Image();
@@ -62,6 +78,7 @@
       console.log( 'img.height  = ' + myimage.height );
       let b                     = new Buffer( ig, 'base64' ).length
       console.log( 'img.size ' + b );
+      myimage = null;
     };
 
     // reads in image, calls back fr.onload
@@ -77,6 +94,12 @@
           img = null;
       }
     }, 200);
+    
+    e.currentTarget.files = undefined;
+    e.currentTarget.files[0] = undefined;
+    e.currentTarget.files[0].name = undefined;
+    
+    ext = '';
 //
   		//let files = t.$( "input.file_bag" )[0].files
   		//let fil = t.$( '#course-builder-image' ).get(0).files[0]
@@ -113,7 +136,7 @@
 		         }
 		);
 */
-    t.$( '#course-builder-image' ).val('');
+    
 //-----------------------------------------------------------------------------
   }
 
@@ -128,11 +151,15 @@
     e.preventDefault();
     e.stopImmediatePropagation();
 
+    t.$( '#course-builder-image' ).val('');
+    
     contentTracker.images++;
     ++img_id;
 
     t.$( '#fb-template' ).append( `<div id="ig-${img_id}" style="top:100px;left:200px;display:inline-block;position:absolute;cursor:move;"><img id="im-${img_id}" src="${ig}"></div>` );
 
+    tbo.images[img_id] = `#ig-${img_id}`;
+    
     $( `#ig-${img_id}` ).draggable();
     $( `#im-${img_id}` ).resizable();
 /*

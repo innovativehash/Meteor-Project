@@ -57,12 +57,32 @@ Template.postbox.events({
       console.log('aborted');
       return;
     }
-
+    
+    e.currentTarget.files = undefined;
+    e.currentTarget.files[0] = undefined;
+    e.currentTarget.files[0].name = undefined;
+    ext = '';
+    $( '#post-img' ).remove();
+    
     let mark = ( e.currentTarget.files[0].name ).lastIndexOf( '.' ) + 1;
 
     ext = ( e.currentTarget.files[0].name ).slice( mark );
     
-    ext = ( ext == ('jpg' || 'jpeg' ) ) ? 'jpeg' : 'png';
+    if ( ext == ('jpg' || 'jpeg' ) ) {
+      ext = 'jpeg';
+    }
+    
+    if ( ext !== 'jpeg' && ext !== 'png' ) {
+      Bert.alert( 'Incompatible Image Format: must be either a jpg or png file', 'danger' );
+      //console.log( 'post ' + ext )
+      //console.log( e.currentTarget.files );
+      //console.log( e.currentTarget.files[0] );
+      e.currentTarget.files = undefined;
+      e.currentTarget.files[0] = undefined;
+      e.currentTarget.files[0].name = undefined;
+      ext = '';
+      return;
+    }
 
     let fil = t.$( '#ul' ).get(0).files[0];
     let fr  = new FileReader();
@@ -73,7 +93,7 @@ Template.postbox.events({
 
     fr.readAsDataURL( fil );
 
-    var img = $( '<img height="64" width="64" />' );
+    var img = $( '<img id="post-img" height="64" width="64" />' );
     Meteor.setTimeout( function() {
       if ( ig ) {
         img.attr( "src", ig );
@@ -83,6 +103,10 @@ Template.postbox.events({
       }
     }, 200);
 
+    e.currentTarget.files = undefined;
+    e.currentTarget.files[0] = undefined;
+    e.currentTarget.files[0].name = undefined;
+    ext = '';
     return;
 //-------------------------------------------------------------------
   },

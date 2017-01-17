@@ -31,6 +31,9 @@ let CoursesSchema = new SimpleSchema({
   'company_id': {
     type: [String]
   },
+  'built_id': {
+    type: String
+  },
   'public': {
     type: Boolean
   },
@@ -41,16 +44,18 @@ let CoursesSchema = new SimpleSchema({
     type: Number
   },
   'expiry': {
-    type: Date
+    type: Date,
+    optional: true
   },
   'credits': {
     type: Number
   },
-  'date_added': {
+  'created_at': {
     type: Date
   },
   'isArchived': {
-    type: Boolean
+    type: Boolean,
+    optional: true
   },
   'approved': {
     type: Boolean

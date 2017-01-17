@@ -40,23 +40,28 @@ let TestsSchema = new SimpleSchema({
     type: Number
   },
   'questions.$.question_num': {
-    type: Number
+    type: Number,
+    optional: true
   },
   'questions.$.question': {
-    type: String
+    type: String,
+    optional: true
   },
   'questions.$.answers': {
     type: [String],
     optional: true
   },
   'questions.$.num_answers': {
-    type: Number
+    type: Number,
+    optional: true
   },
   'questions.$.correct_answer': {
-    type: String
+    type: String,
+    optional: true
   },
   'questions.$.question_type': {
-    type: String
+    type: String,
+    optional: true
   }
   
 });

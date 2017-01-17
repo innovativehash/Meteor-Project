@@ -57,7 +57,7 @@ Template.studentTrainingCalendar.onRendered(function(){
 
       // GET THIS INDIVIDUAL STUDENT'S CALENDAR
       // EXPIRED EVENTS NOT SHOWN
-      let data  = Events.find({ students: Meteor.userId(), end: {$gte: new Date() } }).fetch().map( ( event ) => {
+      let data  = Events.find({ students: Meteor.userId(), end: {$gt: new Date() } }).fetch().map( ( event ) => {
  
         //student can't edit
         event.editable = false; // !isPast( event.start );

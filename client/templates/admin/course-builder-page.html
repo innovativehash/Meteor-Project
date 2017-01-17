@@ -7,96 +7,6 @@
 <div id="cover"></div>
 
 
-{{#if or isTeacher isAdmin}}
-<div class="dashboard-header-area">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-6">
-
-        <div>
-          <ul style="margin: 0;padding: 0;list-style: none;">
-            <li style="display: inline-block;color: white;font-size: 18px;position: relative;">
-              <a  style="color: white;" 
-                  href="javascript:void(0)" 
-                  id="cb-dashboard-page">
-                <i class="fa fa-home"></i>
-                &nbsp;&nbsp;Dashboard/
-              </a>
-            </li>
-            <li style="display: inline-block;color: white;font-size: 18px;position: relative;">
-              <a  style="color: white;" 
-                  href="javascript:void(0)" 
-                  id="cb-courses-page">
-                Courses/
-              </a>
-            </li>
-            <li style="display: inline-block;color: white;font-size: 18px;position: relative;color:blue;text-decoration:underline;">
-              Course Builder
-            </li>
-          </ul>
-        </div>
-        
-        <input id="cb-current"  type="hidden">
-      
-      </div><!-- col-sm-6 -->
-
-      <div class="col-sm-6">
-        <div class="profile-bar">
-          <ul>
-            <li>
-              <button>
-                <img src="/img/message.png" alt="">
-              </button>
-            </li>
-            <li>
-              <button>
-                <img src="/img/notification.png" alt="">
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-    </div><!-- row -->
-
-
-    <div class="row">
-      <div class="profile-link">
-        <a  class         = "dropdown-toggle"
-            data-toggle   = "dropdown"
-            href          = "#"
-            role          = "button"
-            aria-haspopup = "true"
-            aria-expanded = "false">
-              <span class="diamonds">
-                <img src="/img/profile-1.jpg" alt="">
-              </span>
-
-                {{fname}}
-        </a>
-        <ul class="dropdown-menu">
-            <li>
-              <a href="javascript: void(0)">
-                Account Settings
-              </a>
-            </li>
-            <li>
-              <a href="javascript: void(0)">
-                Upload Photo
-              </a>
-            </li>
-            <li>
-              <a href="javascript: void(0)">
-                Logout
-              </a>
-            </li>
-        </ul>
-      </div>
-    </div>
-
-  </div><!-- container -->
-</div><!-- dashboard-header-area -->
-
 
 <div class="dashboard-body-area">
 	<div class="sidebar-menu-area course-builder-sidebar">
@@ -112,7 +22,7 @@
 			</button>
 		</div>
 		<div class="page-back-home">
-			<a href="#"><i class="fa fa-long-arrow-left"></i>Back To Home</a>
+			<a id="course-builder-page-back" style="cursor:pointer;"><i class="fa fa-long-arrow-left"></i>Back To Home</a>
 			<h2>Drag &amp; Drop</h2>
 		</div>
 
@@ -186,66 +96,13 @@
 
 
   <div class="container">
+    {{> userProfile }}
     {{> cbToolbar }}        
     {{> cbCanvas }}
   </div><!-- container -->
 
 
-
-
 </div><!-- dashboard-body-area -->
-
-
-<div class="dashboard-body-area footer-page">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-3">
-        <div class="footer-filter">
-          <h2>Page {{page}}/{{total}}
-<!--
-            <button class = "up">
-              <i class = "fa fa-arrow-up"></i>
-            </button>
-            <button class = "down">
-              <i class = "fa fa-arrow-down"></i>
-            </button>
--->
-          </h2>
-
-        </div><!-- footer-filter -->
-      </div><!-- col-sm-3 -->
-
-      <div class="col-sm-3">
-        <div class="save-button">
-          <button id="cb-prev-btn">
-           <i class="fa fa-backward" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Prev
-          </button>
-        </div>
-      </div>
-      
-      <div class= "col-sm-3">
-        <div class="save-button">
-          <button id="cb-next-btn">
-            Next&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-forward" aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
-      <div class = "col-sm-3">
-        <div class = "save-button">
-          <button id = "cb-save">
-            Save Course
-          </button>
-        </div>
-      </div>
-
-    </div><!-- row -->
-  </div><!-- container -->
-</div><!-- dashboard-body-areaa footer-page -->
-
-
-
-
-
 
 <!-- IMAGE MODAL -->
 <div  class="modal fade left"
@@ -503,10 +360,13 @@
           id="intro-modal" 
           tabindex="-1" 
           role="dialog" 
+          data-keyboard = "false"
+          data-backdrop = "static"
           aria-labelledby="myModalLabel">
       <div class="modal-dialog">
         <div class="pop-up-area">
-          <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button>
+          <!-- <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button> -->
+          <button type="button" class="cb-popup-close" id="cb-intro-modal-cancel" aria-label="Cancel">x</button>
           <div class="popup-body">
             <form action="">
               <div class="course-build-popup">
@@ -570,7 +430,5 @@
   </div>
 
 <!-- /INTRO modal -->
-
-{{/if}}
 
 </template>

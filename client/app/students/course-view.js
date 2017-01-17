@@ -164,7 +164,7 @@ Template.courseView.onRendered( function() {
           }
         }
       } catch(e) {
-        console.log( e );
+        //console.log( e );
         return;
       }
     }); //autorun
@@ -209,10 +209,10 @@ Template.courseView.events({
   /*
    * .JS-BACK-TO-HOME  ::(CLICK)::
    */
-  'click .page-back-home'( e, t ) {
+  'click #course-view-page-back'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
     } else if ( Meteor.user().roles.admin ) {
@@ -225,6 +225,34 @@ Template.courseView.events({
   },
 
 
+  /*
+   * CV-DASHBOARD-LINK
+   */
+  'click #cv-dashboard-link'( e, t ) {
+      e.preventDefault();
+      
+      $( '#course-view-page-back' ).click();
+      return;
+  },
+   
+   
+   /*
+    * CV-COURSES-LINK
+    */
+  'click #cv-courses-link'( e, t ) {
+    e.preventDefault();
+    
+    if ( Meteor.user().roles.teacher ) {
+      FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+    } else if ( Meteor.user().roles.admin ) {
+      FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+    } else if ( Meteor.user().roles.student ) {
+      FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
+    }    
+  },
+  
+  
+  
   /*
    * CV_PREV_BUTTON ::(CLICK)::
    */

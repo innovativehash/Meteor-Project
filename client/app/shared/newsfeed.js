@@ -104,6 +104,14 @@ Template.newsfeed.helpers({
 Template.newsfeed.events({
 
   /*
+   * .JS-LIKE-BUTTON ::(MOUSEOVER)::
+   */
+   'mouseover .js-like-button'( e, t ) {
+   
+   },
+   
+   
+  /*
    * .JS-LIKE-BUTTON  ::(CLICK)::
    */
   'click .js-like-button': _.debounce( function( e, t ) {
@@ -116,11 +124,13 @@ Template.newsfeed.events({
     var res = Newsfeeds.find({ _id: id }, { likers: 1 }).fetch()[0].likers;
 
     //see if the current user is one of them
-    var boo = _.find( res, (x) => x == Meteor.userId() );
+    var cur_user = _.find( res, (x) => x == Meteor.userId() );
 
     //need to disallow same user that liked to like again
-    if ( boo == Meteor.userId() ) return;
-
+    if ( cur_user == Meteor.userId() ) {
+      return;
+    }
+    
     //otherwise, allow like and save it
     Newsfeeds.update({ _id: id },  { $inc: { likes: 1 } ,  $push: { likers:  Meteor.userId() }  });
 

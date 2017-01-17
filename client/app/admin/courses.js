@@ -125,7 +125,9 @@ Template.courses.events({
 
     let idx = $( e.currentTarget ).val();
     $( 'tr').css( 'border', '' );
-    $( 'tr#' + idx ).css( 'border', '1px solid' );
+    $( 'tr' ).css( 'background-color', '' );
+    
+    $( 'tr#' + idx ).css( 'border', '1px solid' ).css( 'background-color', 'PaleTurquoise' );
     $( 'html, body' ).animate({
       scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
@@ -173,6 +175,8 @@ Template.courses.events({
                               {
                                 $set: { "name": nm, "credits": cr }
                               });
+              Bert.alert( 'Course changes successfully saved.', 'success' );
+              
               dialog.close();
             }
           },
@@ -223,6 +227,7 @@ Template.courses.events({
                 Courses.update( { _id: idx },
                                 { $pull: { company_id: Meteor.user().profile.company_id }});
                 //maybe some logic to remove this course from students currently taking it?
+                Bert.alert('The course is successfully removed', 'success' );
                 dialog.close();
               }
         },

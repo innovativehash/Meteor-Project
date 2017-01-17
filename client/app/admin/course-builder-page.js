@@ -31,7 +31,7 @@ import * as CBSCORM from './CB/scorm-handling.js';
 
 //import {CreateDOM}  from './CB/createDOM.js';
 
-let contentTracker = {};
+let contentTracker = {}, counter = 1;
 
 /* *****************************************************************************
  * CREATED
@@ -107,13 +107,25 @@ Template.courseBuilderPage.onCreated( function() {
         switch ( draggedType ) {
           
           case 'title':
-            $( '#cb-toolbar-media' ).hide();
-            addTitle( evt.pageX, evt.pageY );
+            
+            if ( ! testForVideoOrPdfOnPage( that.contentTracker ) ) {
+              $( '#cb-toolbar-media' ).hide();
+              $( '#cb-toolbar-video' ).hide();
+              addTitle( evt.pageX, evt.pageY );
+            } else {
+              Bert.alert( 'Video, Pdf, PowerPoint, Scorm must be alone on page', 'danger' );
+            }
             break;
             
           case 'text':
-            $( '#cb-toolbar-media' ).hide();
-            addText( evt.pageX, evt.pageY );
+            
+            if ( ! testForVideoOrPdfOnPage( that.contentTracker ) ) {
+              $( '#cb-toolbar-media' ).hide();
+              $( '#cb-toolbar-video' ).hide();
+              addText( evt.pageX, evt.pageY );
+            } else {
+              Bert.alert( 'Video, Pdf, PowerPoint, Scorm must be alone on page', 'danger' );
+            }
 
           /*
             $( '#add-text' ).modal( 'show' );
@@ -127,18 +139,22 @@ Template.courseBuilderPage.onCreated( function() {
             break;
             
           case 'g-image':
-            $( '#cb-toolbar-text' ).hide();
             
             if( S3.collection.findOne() ) {
               let id = S3.collection.findOne()._id;
               S3.collection.remove({ _id: id });
             }
-            
-            $( '#add-image' ).modal( 'show' );
+
+            if ( ! testForVideoOrPdfOnPage( that.contentTracker ) ) {
+              $( '#cb-toolbar-text' ).hide();
+              $( '#cb-toolbar-video' ).hide();
+              $( '#add-image' ).modal( 'show' );
+            } else {
+              Bert.alert( 'Video, Pdf, PowerPoint, Scorm must be alone on page', 'danger' );
+            }
             break;
             
           case 'video':
-            $( '#cb-toolbar-text' ).hide();
             
             if ( testForItemsOnPage(that.contentTracker) )
             {
@@ -152,12 +168,13 @@ Template.courseBuilderPage.onCreated( function() {
              return;
              
             } else {
+              $( '#cb-toolbar-text' ).hide();
+              $( '#cb-toolbar-media' ).hide();
               addVideo();
             }
             break;
             
           case 'pdf':
-            $( '#cb-toolbar-text' ).hide();
             
             if ( testForItemsOnPage(that.contentTracker) )
             {
@@ -170,12 +187,14 @@ Template.courseBuilderPage.onCreated( function() {
                   return;
                   
             } else {
+              $( '#cb-toolbar-text' ).hide();
+              $( '#cb-toolbar-media' ).hide();
+              $( '#cb-toolbar-video' ).hide();
               $( '#add-pdf' ).modal( 'show' );
             }
             break;
             
           case 'powerpoint':
-            $( '#cb-toolbar-text' ).hide();
             
             if ( testForItemsOnPage(that.contentTracker) )
             {
@@ -188,12 +207,14 @@ Template.courseBuilderPage.onCreated( function() {
                   return;
                   
             } else {
+              $( '#cb-toolbar-text' ).hide();
+              $( '#cb-toolbar-media' ).hide();
+              $( '#cb-toolbar-video' ).hide();
               $( '#add-powerpoint' ).modal( 'show' );
             }
             break;
             
           case 'scorm':
-            $( '#cb-toolbar-text' ).hide();
             
             if ( testForItemsOnPage(that.contentTracker) )
             {
@@ -206,15 +227,16 @@ Template.courseBuilderPage.onCreated( function() {
                   return;
                   
             } else {
+              $( '#cb-toolbar-text' ).hide();
+              $( '#cb-toolbar-media' ).hide();
+              $( '#cb-toolbar-video' ).hide();
               $( '#add-scorm' ).modal( 'show' );
             }
             break;
             
           case 'test':
-            $( '#cb-toolbar-text' ).hide();
             
-            if ( testForItemsOnPage(that.contentTracker) )
-            {
+            if ( testForItemsOnPage(that.contentTracker) ) {
                   Bert.alert( 
                               'A Test must be the only item on the page!', 
                               'danger', 
@@ -222,16 +244,25 @@ Template.courseBuilderPage.onCreated( function() {
                               'fa-frown-o' 
                             );
                   return;
-                  
-            } else {
-              Session.set( 'obj', tbo );
-
-              if ( Meteor.user().roles.teacher ) {
-                FlowRouter.go( '/teacher/dashboard/test-maker/' + Meteor.userId() + `?${tbo.name}` );
-              } else if ( Meteor.user().roles.admin ) {
-                FlowRouter.go( '/admin/dashboard/test-maker/'   + Meteor.userId() + `?${tbo.name}` );
-              }
             }
+            
+            if ( counter == 1 ) {
+              Bert.alert( "A Course can't start with a test!", 'danger' );
+              return;
+            }
+            
+            $( '#cb-toolbar-text' ).hide();
+            $( '#cb-toolbar-media' ).hide();
+            $( '#cb-toolbar-video' ).hide();
+            
+            Session.set( 'obj', tbo );
+
+            if ( Meteor.user().roles.teacher ) {
+              FlowRouter.go( '/teacher/dashboard/test-maker/' + Meteor.userId() + `?${tbo.name}` );
+            } else if ( Meteor.user().roles.admin ) {
+              FlowRouter.go( '/admin/dashboard/test-maker/'   + Meteor.userId() + `?${tbo.name}` );
+            }
+  
             break;
             
           default:
@@ -407,10 +438,40 @@ Template.courseBuilderPage.events({
    *
    * .JS-BACK-TO-HOME  ::(CLICK)::
    */
-  'click .page-back-home'( e, t ) {
+  'click #course-builder-page-back'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
+      // CLEAR THE CONTENT TRACKER
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+  
+      t.titlesTracker = [];
+      t.textsTracker  = [];
+      t.imagesTracker = [];
+  
+      // ADVANCE PAGE COUNTS
+      t.page.set( 1 );
+      t.total.set( 1 );
+      
+      tbo = {};
+      tbo.titles  = [];
+      tbo.texts   = [];
+      tbo.images  = [];
+      tbo.videos  = [];
+      tbo.pages   = [];
+      tbo.pdfs    = [];
+      tbo.ppts    = [];
+      tbo.scorms  = [];
+      tbo.tests   = [];
+      counter     = 0;
+      
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
     } else if ( Meteor.user().roles.admin ) {
@@ -467,6 +528,7 @@ Template.courseBuilderPage.events({
 
       tbo.page  = t.page.get();
       tbo.total = t.total.get();
+      counter = t.page.get();
       
       Bert.alert( 
                   'Page successfully added.', 
@@ -554,13 +616,16 @@ Template.courseBuilderPage.events({
 
       tbo.page  = t.page.get();
       tbo.total = t.total.get();
+      counter = t.page.get();
       
       Bert.alert( 
                   'Page successfully added.', 
                   'success', 
                   'growl-top-right' 
                 );
-
+                
+      $( '#cb-toolbar-video' ).hide();
+      
       return;
     }
 
@@ -598,6 +663,7 @@ Template.courseBuilderPage.events({
       // ADVANCE PAGE COUNTS
       t.page.set(   p + 1 );
       t.total.set(  p + 1 );
+      counter = t.page.get();
       
       //shadow page counts
       tbo.page  = t.page.get();
@@ -609,6 +675,7 @@ Template.courseBuilderPage.events({
                   'growl-top-right' 
                 );
       
+      $( '#cb-toolbar-video' ).hide();
       return;
     }
 
@@ -641,6 +708,7 @@ Template.courseBuilderPage.events({
       //ADVANCE PAGE COUNTS
       t.page.set(   t.page.get()  + 1 );
       t.total.set(  t.total.get() + 1 );
+      counter = t.page.get();
       
       tbo.page  = t.page.get();
       tbo.total = t.total.get();
@@ -673,6 +741,7 @@ Template.courseBuilderPage.events({
       //ADVANCE PAGE COUNTS
       t.page.set(   t.page.get()  + 1 );
       t.total.set(  t.total.get() + 1 );
+      counter = t.page.get();
       
       Bert.alert( 
                   'Page.successfully added.', 
@@ -684,52 +753,60 @@ Template.courseBuilderPage.events({
       
     }
     
-    
-    //SAVE TITLES, TEXT, IMAGES
-    Bert.alert( 'Adding...', 'success', 'growl-top-right' );
-    let p   = t.page.get()
-      , url = ''
-      , img;
 
-      img = new Image();
+    /*
+     * 
+     * SAVE TITLES, TEXT, IMAGES
+     *
+     */
+    if ( t.contentTracker.titles > 0 || t.contentTracker.texts > 0 || t.contentTracker.images > 0 ) {
+      Bert.alert( 'Adding...', 'success', 'growl-top-right' );
+      let p   = t.page.get()
+        , url = ''
+        , img;
 
-      html2canvas( document.getElementById( 'fb-template' ) ).then( function( canvas ) {
-        //document.body.appendChild(canvas);
-        img = canvas.toDataURL()
-         // STORE THE PAGE
-        tbo.pages[p] = { 
-                        no: p, 
-                        page: img, 
-                        type: "page" 
-                       }; //cd.buildDOM();
-
-        // CLEAR THE DIV
-        $( '#fb-template' ).empty();
-      });
-  	
-
-    // CLEAR THE CONTENT TRACKER
-    t.contentTracker.titles = 0;
-    t.contentTracker.texts  = 0;
-    t.contentTracker.images = 0;
-    t.contentTracker.videos = 0;
-    t.contentTracker.pdfs   = 0;
-    t.contentTracker.ppts   = 0;
-    t.contentTracker.scorms = 0;
-    t.contentTracker.tests  = 0;
-
-    t.titlesTracker = [];
-    t.textsTracker  = [];
-    t.imagesTracker = [];
-
-    // ADVANCE PAGE COUNTS
-    t.page.set(   p   + 1 );
-    t.total.set(  p   + 1 );
-    
-    //shadow page counts
-    tbo.page = t.page.get();
-    tbo.total = t.total.get();
-
+        img = new Image();
+  
+        html2canvas( document.getElementById( 'fb-template' ) ).then( function( canvas ) {
+          //document.body.appendChild(canvas);
+          img = canvas.toDataURL()
+           // STORE THE PAGE
+          tbo.pages[p] = { 
+                          no: p, 
+                          page: img, 
+                          type: "page" 
+                         }; //cd.buildDOM();
+  
+          // CLEAR THE DIV
+          $( '#fb-template' ).empty();
+        });
+    	
+      // CLEAR THE CONTENT TRACKER
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+  
+      t.titlesTracker = [];
+      t.textsTracker  = [];
+      t.imagesTracker = [];
+  
+      // ADVANCE PAGE COUNTS
+      t.page.set(   p   + 1 );
+      t.total.set(  p   + 1 );
+      counter = t.page.get();
+      
+      //shadow page counts
+      tbo.page = t.page.get();
+      tbo.total = t.total.get();
+      $( '#cb-toolbar-text' ).hide();
+      $( '#cb-toolbar-media' ).hide();
+      return;
+    }
 
 /*
     // RE-INITIALIZE VARIABLES
@@ -743,7 +820,7 @@ Template.courseBuilderPage.events({
     CBImage.cbImageReset();
     CBVideo.cbVideoReset();
 */
-
+  return;
  //-------------------------------------------------------------------
   },
 
@@ -765,7 +842,36 @@ Template.courseBuilderPage.events({
     // HANDLE/HARDER ERROR CHECKING, NO ALLOW EMPTY FIELDS  //
     //////////////////////////////////////////////////////////
 
-
+      // CLEAR THE CONTENT TRACKER
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+  
+      t.titlesTracker = [];
+      t.textsTracker  = [];
+      t.imagesTracker = [];
+  
+      // ADVANCE PAGE COUNTS
+      t.page.set( 1 );
+      t.total.set( 1 );
+      
+      tbo = {};
+      tbo.titles  = [];
+      tbo.texts   = [];
+      tbo.images  = [];
+      tbo.videos  = [];
+      tbo.pages   = [];
+      tbo.pdfs    = [];
+      tbo.ppts    = [];
+      tbo.scorms  = [];
+      tbo.tests   = [];
+      counter     = 0; 
+      
     let credits = t.$( '#course-builder-credits' ).val()
 
       , name    = t.$( '#course-builder-name'    ).val()
@@ -781,6 +887,17 @@ Template.courseBuilderPage.events({
                     'danger', 
                     'fixed-top', 
                     'fa-frown-o' 
+                  );
+        return;
+      }
+      
+      if ( BuiltCourses.findOne({ name: name }) != undefined )
+      {
+        Bert.alert( 
+                    'There is already a course with that name in your database!', 
+                    'danger', 
+                    'fixed-top', 
+                    'fa-grown-o' 
                   );
         return;
       }
@@ -807,6 +924,36 @@ Template.courseBuilderPage.events({
   'click #exit-cb'( e, t ) {
     t.$( '#intro-modal' ).modal( 'hide' );
     
+      // CLEAR THE CONTENT TRACKER
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+  
+      t.titlesTracker = [];
+      t.textsTracker  = [];
+      t.imagesTracker = [];
+  
+      // ADVANCE PAGE COUNTS
+      t.page.set( 1 );
+      t.total.set( 1 );
+      
+      tbo = {};
+      tbo.titles  = [];
+      tbo.texts   = [];
+      tbo.images  = [];
+      tbo.videos  = [];
+      tbo.pages   = [];
+      tbo.pdfs    = [];
+      tbo.ppts    = [];
+      tbo.scorms  = [];
+      tbo.tests   = [];
+      counter     = 0;
+      
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
     } else if ( Meteor.user().roles.admin ) {
@@ -841,17 +988,6 @@ Template.courseBuilderPage.events({
           return;
     }
 
-    if ( BuiltCourses.findOne({ name: tbo.name }) != undefined )
-    {
-      Bert.alert( 
-                  'There is already a course with that name in your database!', 
-                  'danger', 
-                  'fixed-top', 
-                  'fa-grown-o' 
-                );
-      return;
-    }
-
     let role  = "admin"
       , cid   = Meteor.user().profile.company_id
       , uid   = Meteor.userId()
@@ -867,35 +1003,36 @@ Template.courseBuilderPage.events({
                                           creator_id:   uid,
                                           created_at:   cd,
                                       });
-
-    Courses.insert({
-                    built_id:         built_id,
-                    credits:          Number( tbo.credits ),
-                    name:             tbo.name,
-                    passing_percent:  tbo.passing_percent,
-                    company_id:       cid,
-                    times_completed:  0,
-                    icon:             tbo.icon,
-                    public:           false,
-                    creator_type:     role,
-                    creator_id:       uid,
-                    created_at:       cd,
-                    approved:         apv,
-                    created_at:       cd
-                  });
-
-    Newsfeed.insert({
-                      owner_id:       Meteor.userId(),
-                      poster:         Meteor.user().username,
-                      poster_avatar:  Meteor.user().profile.avatar,
-                      type:           "new-course",
-                      private:        false,
-                      news:           `A New Course has just been added: ${tbo.name}!`,
-                      comment_limit:  3,
-                      company_id:     Meteor.user().profile.company_id,
-                      likes:          0,
-                      date:           new Date()       
-    });
+    Meteor.setTimeout(function(){
+      Courses.insert({
+                      built_id:         built_id,
+                      credits:          Number( tbo.credits ),
+                      name:             tbo.name,
+                      passing_percent:  tbo.passing_percent,
+                      company_id:       [cid],
+                      times_completed:  0,
+                      icon:             tbo.icon,
+                      public:           false,
+                      creator_type:     role,
+                      creator_id:       uid,
+                      created_at:       cd,
+                      approved:         apv,
+                      created_at:       cd
+                    });
+  
+      Newsfeeds.insert({
+                        owner_id:       Meteor.userId(),
+                        poster:         Meteor.user().username,
+                        poster_avatar:  Meteor.user().profile.avatar,
+                        type:           "new-course",
+                        private:        false,
+                        news:           `A New Course has just been added: ${tbo.name}!`,
+                        comment_limit:  3,
+                        company_id:     Meteor.user().profile.company_id,
+                        likes:          0,
+                        date:           new Date()       
+      });
+    }, 300);
     
     Meteor.setTimeout(function(){
       Bert.alert( 
@@ -911,16 +1048,47 @@ Template.courseBuilderPage.events({
       let path        = FlowRouter.path( routeName, params );
       FlowRouter.go( path );
 */
-    //Meteor.user().roles.admin
-    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+      // CLEAR THE CONTENT TRACKER
+      t.contentTracker.titles = 0;
+      t.contentTracker.texts  = 0;
+      t.contentTracker.images = 0;
+      t.contentTracker.videos = 0;
+      t.contentTracker.pdfs   = 0;
+      t.contentTracker.ppts   = 0;
+      t.contentTracker.scorms = 0;
+      t.contentTracker.tests  = 0;
+  
+      t.titlesTracker = [];
+      t.textsTracker  = [];
+      t.imagesTracker = [];
+  
+      // ADVANCE PAGE COUNTS
+      t.page.set( 1 );
+      t.total.set( 1 );
+      
+      tbo = {};
+      tbo.titles  = [];
+      tbo.texts   = [];
+      tbo.images  = [];
+      tbo.videos  = [];
+      tbo.pages   = [];
+      tbo.pdfs    = [];
+      tbo.ppts    = [];
+      tbo.scorms  = [];
+      tbo.tests   = [];
+      counter     = 0;
 
+    if ( Meteor.user().roles.admin )
+      FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+    if ( Meteor.user().roles.teacher )
+      FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
     //Template.instance().page.set( 1 );
     //Template.instance().total.set( 1 );
 //-------------------------------------------------------------------
   },
-
-
-
+  
+  
+  
   /*
    *
    * #CB-TEST-SAVE  ::(CLICK)::
@@ -965,7 +1133,7 @@ Template.courseBuilderPage.events({
               Session.set("resp", result);
             }
           });
-    console.log( Session.get('resp') );
+
     */
     Template.instance().page.set(   Template.instance().page.get()  + 1 );
     Template.instance().total.set(  Template.instance().total.get() + 1 );
@@ -1101,6 +1269,27 @@ Template.courseBuilderPage.events({
   },
   
   
+  /*
+   * CB-INTRO-MODAL-CANCEL
+   *
+   */
+   'click #cb-intro-modal-cancel'( e, t ) {
+      e.preventDefault();
+      
+      t.$( '#intro-modal' ).modal( 'hide' );
+      Meteor.setTimeout(function(){
+        if ( Meteor.user().roles.admin ) {
+          FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+          return;
+        } else if ( Meteor.user().roles.teacher ) {
+          FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+          return;
+        }
+      }, 500);
+   },
+   
+   
+   
   /*
    * KEEP VALUES CONSTRAINED
    */
@@ -1391,6 +1580,14 @@ function testForItemsOnPage( ct ) {
         ct.scorms != 0
       )
   {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function testForVideoOrPdfOnPage( ct ) {
+  if ( ct.videos != 0 || ct.pdfs != 0 ) {
     return true;
   } else {
     return false;

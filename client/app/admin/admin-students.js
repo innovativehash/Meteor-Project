@@ -102,6 +102,7 @@ Template.adminStudents.helpers({
     for( let i=0; i<len; i++ ) {
       s[i].created_at = moment( s[i].created_at ).format( 'M-D-Y' ) //modify array in place
     }
+    console.log( s );
     return s;
   },
 

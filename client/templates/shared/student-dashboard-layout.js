@@ -181,9 +181,9 @@ Template.studentDashboardLayout.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if ( Meteor.user().roles.student ) {
+    if ( Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles.teacher ) {
+    } else if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
     }
 //-------------------------------------------------------------------

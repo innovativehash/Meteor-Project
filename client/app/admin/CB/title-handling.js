@@ -77,6 +77,8 @@
         // MAKE THIS THE CURRENTLY SELECTED ITEM
         t.$( '#cb-current' ).val( `#tit-${tit_id}` );
         
+        tbo.titles[tit_id] = `#tit-${tit_id}`;
+        
         //titlesTracker.push( tit_id );
 /*
         let p = $( `#tit-${tit_id}` ).position();
