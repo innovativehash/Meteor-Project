@@ -38,6 +38,10 @@ Template.adminTestCreator.onRendered(function(){
 $( '#tf-edit' ).hide();
 $( '#mc-edit' ).hide();
 $( '.test-help-contents' ).hide();
+
+$( '#t-btn-prev' ).prop('disabled', true);
+$( '#t-btn-next' ).prop('disabled', true);
+
 });
 
 
@@ -48,15 +52,14 @@ Template.adminTestCreator.events({
 
   /*
    * #TEST-GO-HOME  ::(CLICK)::
-   */
+   *
   'click #test-go-home'( e, t ){
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    //if ( FlowRouter.current().path.indexOf( 'teacher' ) != -1 ) {
+    //( FlowRouter.current().path.indexOf( 'teacher' ) != -1 )
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
-    //} else if ( FlowRouter.current().path.indexOf( 'admin' ) != -1 ) {
     } else if ( Meteor.user().roles.admin ) {
       FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
     } else {
@@ -64,11 +67,12 @@ Template.adminTestCreator.events({
     }
 //-------------------------------------------------------------------
   },
-
+  */
 
   /*
    *
    * .JS-SHOW-TEST-HELP  ::(CLICK)::
+   *
    */
    'click .js-show-test-help'( e, t ) {
      e.preventDefault();
@@ -78,9 +82,29 @@ Template.adminTestCreator.events({
    },
    
    
-   
+  
   /*
+   *
+   * .JS-TEST-CANCEL
+   *
+   */
+  'click .js-test-cancel'( e, t ) {
+    e.preventDefault();
+    
+    //RETURN TO COURSE BUILDER
+    if ( Meteor.user().roles.teacher ) {
+      FlowRouter.go( `/teacher/dashboard/course-builder/${Meteor.userId()}?rtn=test&cancel=true` );
+    } else if ( Meteor.user().roles.admin ) {
+      FlowRouter.go( `/admin/dashboard/course-builder/${Meteor.userId()}?rtn=test&cancel=true` );
+    }    
+  },
+  
+  
+  
+  /*
+   *
    * .JS-TEST-COMPLETE  ::(CLICK)::
+   *
    */
   'click .js-test-complete'( e, t ) {
     e.preventDefault();
@@ -139,7 +163,9 @@ Template.adminTestCreator.events({
 
 
   /*
+   *
    * #TEST-NAME  ::(BLUR)::
+   *
    */
   'blur #test-name'( e, t ){
     //let course_name = FlowRouter.current().path.slice( FlowRouter.current().path.indexOf('?') + 1 );
@@ -154,8 +180,13 @@ Template.adminTestCreator.events({
                                   company_id: Meteor.user().profile.company_id
                                 });
       }                          
-  console.log( Test.find().fetch() );
-  
+      
+      if ( ! t.$( '#test-name').val() ) {
+        t.$( '#test-name' ).css( 'border', '2px solid red' );
+      } else {
+        t.$( '#test-name' ).css( 'border', 'none' );
+      }
+      
       //let testName  = t.$( '#test-name' ).val();
       //testidnum     = Tests.findOne({ test_name: testName })._id;
       //t.$( '#test-name' ).attr( 'readonly', true);
@@ -165,9 +196,29 @@ Template.adminTestCreator.events({
 
 
   /*
+   *
+   * #QUESTION  ::(BLUR)::
+   *
+   */
+  'blur #question'( e, t ){
+    e.preventDefault();
+    
+    if ( ! t.$( '#question' ).val() ) {
+      t.$( '#question' ).css( 'border', '2px solid red' );
+    } else {
+      t.$( '#question' ).css( 'border', 'none' );
+    }
+    
+  },
+  
+  
+  
+  /*
+   *
    * #TF  ::(CLICK)::
    *
    * SELECT TRUE/FALSE ANSWER TYPE
+   *
    */
   'click #tf'( e, t ) {
 
@@ -178,9 +229,11 @@ Template.adminTestCreator.events({
 
 
   /*
+   *
    * #MC  ::(CLICK)::
    *
    * SELECt MULTIPLE CHOICE ANSWER TYPE
+   *
    */
   'click #mc'( e, t ){
 
@@ -192,9 +245,11 @@ Template.adminTestCreator.events({
 
 
   /*
+   *
    * #MC-SUBMIT  ::(CLICK)::
    *
    * SUBMIT MULTIPLE CHOICE ANSWERS FOR CURRENT QUESTION
+   *
    */
   'click #mc-submit'( e, t ){
     e.preventDefault();
@@ -215,12 +270,57 @@ Template.adminTestCreator.events({
     //correct answer
     let correct_a   = t.$( '#correct_ans' ).val(); //A, B, C
     let correct_ans;
-    
+
     //id of last multiple choice answer
     let lastId      = t.$( 'div#ans-mc input:last' ).attr( 'id' );
-
+    
+    if ( ! nm ) {
+      Bert.alert( 'Please give the test a name.', 'danger' );
+      t.$( '#test-name' ).css( 'border', '2px solid red' );
+      return;
+    }
+    
+    if ( ! q ) {
+      Bert.alert( 'Please enter a question before saving...', 'danger' );
+      t.$( '#question' ).css( 'border', '2px solid red' );
+      return;
+    }
+    
+    if ( correct_a == 'Correct Answer' ) {
+      Bert.alert('Please select a correct answer for this question before saving.', 'danger' );
+      return;      
+    }
+   /* 
+    //A IS EMPTY
+    if ( t.$( '#A' ).val() == '' || t.$( '#B' ).val() == '' ) {
+      Bert.alert( 'At a minimum, two answers are needed: BOTH A and B', 'danger' );
+      return;
+    }
+*/
     //converted to ascii code
-    let lastIdAscii = lastId.charCodeAt(0);
+    let lastIdAscii = lastId.charCodeAt( 0 );
+    let correctAscii = $( '#correct_ans' ).val().charCodeAt(0);
+    
+    
+    if ( correctAscii >= lastIdAscii ) {
+     console.log( 'correct > last' );
+      for ( let i = 65; i <= correctAscii; i++ ) {
+        
+        if ( t.$( `#${String.fromCharCode(i)}` ).val() == '' ) {
+          Bert.alert( `Answers must be supplied for all items, A through ${String.fromCharCode(correctAscii)}`, 'danger' );
+          return;
+        }
+      }
+    } else if ( correctAscii < lastIdAscii ) {
+      console.log( 'correct < last' );
+      for ( let j = 65; j <= correctAscii; j++ ) {
+        
+        if ( t.$( `#${String.fromCharCode(j)}` ).val() == '' ) {
+          Bert.alert( `Answers must be supplied for all items A thorugh ${String.fromCharCode(correctAscii)}`, 'danger' );
+          return;
+        }
+      }
+    }
 
     //compute end of answers
     let spread      = lastIdAscii - 65; // 0 = 65, 1 = 66, 2 = 67, etc.
@@ -252,7 +352,7 @@ Template.adminTestCreator.events({
     //bump question number to next
     Number( questionNum++ );
     t.$( '[ name="qnum" ]' ).val( questionNum );  //set hidden field
-    t.$( '#q_num' ).text( questionNum );  //set question number badge
+    t.$( '#q_num' ).text( questionNum );           //set question number badge
 
     let num_ans = answers.length;
 
@@ -271,6 +371,9 @@ Template.adminTestCreator.events({
                   }
     );
 
+    $( '#t-btn-prev' ).prop('disabled', false);
+    $( '#t-btn-next' ).prop('disabled', false);
+    
     //CLEAR INITIAL MULTIPLE CHOICE ANSWER BOXES
     t.$('#A').val('');
     t.$('#B').val('');
@@ -280,15 +383,19 @@ Template.adminTestCreator.events({
     t.$( '#question' ).val('');
 
     t.$( '#ans-mc' ).addClass( 'hide' );
+    
+    console.log( Test.find().fetch() );
 //-------------------------------------------------------------------
   },
 
 
 
   /*
+   *
    * #MC-EDIT  ::(CLICK)::
    *
    * SUBMIT EDIT'S MULTIPLE CHOICE ANSWERS FOR CURRENT QUESTION
+   *
    */
   'click #mc-edit'( e, t ){
     e.preventDefault();
@@ -327,7 +434,8 @@ Template.adminTestCreator.events({
                         "questions.$.question":       q,
                         "questions.$.correct_answer": correct_ans,
                         "questions.$.answers":        answers,
-                        "questions.$.num_answers":    num_ans
+                        "questions.$.num_answers":    num_ans,
+                        "questions.$.question_type":  'mc'
                       }
                   }
     );
@@ -342,6 +450,8 @@ Template.adminTestCreator.events({
       }
     }
     
+    console.log( Test.find().fetch() );
+    
     t.$( '#t-btn-next' ).click();
     return;
   },
@@ -349,9 +459,11 @@ Template.adminTestCreator.events({
   
   
   /*
+   *
    * #TF-SUBMIT  ::(CLICK)::
    *
    * SUBMIT TRUE/FALSE ANSWERS TO CURRENT QUESTION
+   *
    */
   'click #tf-submit'( e, t ){
     e.preventDefault();
@@ -363,17 +475,39 @@ Template.adminTestCreator.events({
     let currentQuestionNumber = questionNum;
     let correct_a             = t.$( 'input[ name="optradio" ]:checked' ).val();
 
+    $( '#t-btn-prev' ).prop('disabled', false);
+    $( '#t-btn-next' ).prop('disabled', false);
+    
+
+    if ( ! t.$( '#test-name' ).val() ) {
+      Bert.alert( 'Please ensure you\'ve named the test', 'danger' );
+      t.$( '#test-name' ).css( 'border', '4px solid red' );
+      return;
+    }
+    
+    if ( !q ) {
+      Bert.alert('Please enter a question before saving...', 'danger' );
+      t.$( '#question' ).css( 'border', '2px solid red' );
+      return;
+    }
+    
+    if ( ! correct_a ) {
+      Bert.alert('Please select a correct answer for this question before saving.', 'danger' );
+      return;
+    }
+    
     //advance question number
     Number( questionNum++ );
+    
     //and set it
     t.$( '[ name="qnum" ]' ).val( questionNum );  //set hidden field
-    t.$( '#q_num' ).text( questionNum );  //set question number badge
+    t.$( '#q_num' ).text( questionNum );          //set question number badge
 
     Test.update( { _id: testidnum},
                   { $addToSet:
                     { questions:
                       {
-                        question_num:   Number(currentQuestionNumber),
+                        question_num:   Number( currentQuestionNumber ),
                         question:       q,
                         correct_answer: correct_a, 
                         question_type:  'tf'
@@ -382,6 +516,7 @@ Template.adminTestCreator.events({
                   }
     );
 
+console.log( Test.find().fetch() );
     //clean up the ui
     t.$( '.js-tf' ).prop( 'checked', false );
     t.$( '#question' ).val('');
@@ -392,9 +527,11 @@ Template.adminTestCreator.events({
 
 
   /*
+   *
    * #TF-EDIT  ::(CLICK)::
    *
    * SUBMIT EDIT'S TRUE/FALSE ANSWERS TO CURRENT QUESTION
+   *
    */
   'click #tf-edit'( e, t ){
     e.preventDefault();
@@ -408,10 +545,17 @@ Template.adminTestCreator.events({
                  { $set:
                       {
                         "questions.$.question":       q,
-                        "questions.$.correct_answer": correct_a
+                        "questions.$.correct_answer": correct_a,
+                        "questions.$.question_type":  'tf'
+                      },
+                    $unset:
+                      {
+                        "questions.$.num_answers":  "",
+                        "questions.$.answers":      ""
                       }
                   }
     );
+console.log( Test.find().fetch() );
     t.$( '#t-btn-next' ).click();
     return;
 
@@ -421,9 +565,11 @@ Template.adminTestCreator.events({
   
   
   /*
+   *
    * #PLUS  ::(CLICK)::
    *
    * ADD ADDITIONAL MULTIPLE CHOICE ANSWERS
+   *
    */
   'click #plus'( e, t ){
 
@@ -452,9 +598,11 @@ Template.adminTestCreator.events({
 
  
   /*
+   *
    * #T-BTN-PREV  ::(CLICK)::
    *
    * NAVIGATE FORWARD THROUGH QUESTIONS
+   *
    */
   'click #t-btn-prev'( e, t ) {
     e.preventDefault();
@@ -462,7 +610,10 @@ Template.adminTestCreator.events({
     let curr_question = Number( t.$( '#q_num' ).text() );
     
     if ( curr_question <= 1 ) {
+      $( '#t-btn-prev' ).prop('disabled', true);
       return;
+    } else {
+      $( '#t-btn-prev' ).prop('disabled', false);
     }
     
     t.$( '#tf-edit' ).show();
@@ -523,21 +674,24 @@ Template.adminTestCreator.events({
         
         break;
     }
+console.log( Test.find().fetch() );
   },
   
   
   
   /*
+   *
    * #T-BTN-NEXT  ::(CLICK)::
    *
    * NAVIGATE FORWARD THROUGH QUESTIONS
+   *
    */
   'click #t-btn-next'( e, t ) {
     e.preventDefault();
     
     let curr_question = Number( t.$( '#q_num' ).text() )
       , ques_counter  = Number( t.$( '[ name="qnum" ]' ).val() );
-        
+    
     Number(curr_question++);
      if ( curr_question >= ques_counter ) {
         hideQTypes();
@@ -611,15 +765,17 @@ Template.adminTestCreator.events({
         
         break;
     }
+console.log( Test.find().fetch() );
   }
 
 
 });
 
 
+
 /* 
  * ----------------------------------------------------------------------------
- * HELPERS
+ * HELPER FUNCTIONS
  * ----------------------------------------------------------------------------
  */
  

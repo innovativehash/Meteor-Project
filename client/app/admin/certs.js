@@ -35,18 +35,34 @@ Template.certs.onCreated(function(){
         $(this).effect( "highlight", {}, 500 );
       },
       drop: function( evt, ui ) {
-        //console.log( $(this).attr('id') );
+        let iid = $(this).attr('id')
+        num     = iid.slice(4);
         
-        //$(this).html( ui.draggable );
-        $(this).empty().html( ui.draggable );
-        
-        //$(this).css( 'border', '1px dashed blue' ).css( 'color', 'blue' );
+        try {
+          if ( ui.draggable ) {
+            if ( certificate && certificate.courses ) 
+              certificate.courses[num] = 
+                { dc: `${ui.draggable[0].lastChild.firstChild.dataset.dc}`,
+                  di: `${ui.draggable[0].lastChild.firstChild.dataset.di}`
+                }
+            
+            $(this).removeClass('ui-droppable');
+            
+            //$(this).empty().html( ui.draggable );
+            
+            let id    = ui.draggable.context.id;
+            $(this).text( $( `#${id}` ).text() );
+            $( `#${id}` ).remove();
+            
+          }
+        } catch(e) {
+          return;
+        }
+       
+        Meteor.setTimeout(function(){
+          $( `#${iid}` ).css('border','2px solid #d3d3d3' );
+        }, 700);
 
-        if ( certificate && certificate.courses ) 
-          certificate.courses[count++] = 
-            { dc: `${ui.draggable[0].lastChild.firstChild.dataset.dc}`,
-              di: `${ui.draggable[0].lastChild.firstChild.dataset.di}`
-            }
       }
     });
 
@@ -171,12 +187,13 @@ Template.certs.events({
       child.appendChild( sp );
       d.appendChild( child );
      	
-    	$( `#cert-holder-${i}` ).draggable({   /*handle: "img", */
-                                     helper: "clone", 
-                                     snap: true,
-                                     revert: 'invalid'
-                                     /*snapMode: "inner",*/
-                                     /*cursorAt:{left:-5}*/ 
+    	$( `#cert-holder-${i}` ).draggable({ 
+                                     helper:  "clone", 
+                                     snap:    true,
+                                     revert:  'invalid',
+                                     drag:    function(event, ui) {
+                                         //if ( flags[i] ) return false;
+                                     }
     	                          });
      }
 //-------------------------------------------------------------------
@@ -208,8 +225,10 @@ Template.certs.events({
     }
 
     for ( let i = 0, len = certificate.courses.length; i < len; i++ ){
-      credits_total += Number( certificate.courses[i].dc );
-      ids[i]        = certificate.courses[i].di;
+      if ( certificate.courses[i] ) {
+        credits_total += Number( certificate.courses[i].dc );
+        ids.push(certificate.courses[i].di);
+      }
     }
 
     Certifications.insert({
@@ -218,7 +237,7 @@ Template.certs.events({
       credits:          credits_total,
       icon:             "/img/icon-6.png",
       company_id:       c_id,
-      type:             "certificate",
+      type:             "Certification",
       times_completed:  0,
       expiry_date:      exp_date || "",
       created_at:       new Date()
@@ -299,12 +318,13 @@ function initC( d, c ) {
       child.appendChild( sp );
       d.appendChild( child );
      	
-     	$( `#cert-holder-${i}` ).draggable({  /*handle: "img", "clone" */
-     	                                      //helper: , 
+     	$( `#cert-holder-${i}` ).draggable({   
      	                                      snap: true, 
      	                                      revert: 'invalid',
-     	                                      /*snapMode: "inner",*/
-     	                                      /*cursorAt:{left:-5}*/ });
+                                            drag:    function(event, ui) { 
+                                              //if ( flags[i] ) return false;
+                                            }
+     	});
      	                                      
       $( '#cert-search' ).prop('selectionStart', 0)
                          .prop('selectionEnd', 0);

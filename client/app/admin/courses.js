@@ -38,7 +38,8 @@ Template.courses.onCreated(function(){
   $.getScript( '/js/select2.min.js', function(){
     $( document ).ready(function(){
       $('#search-courses').select2({
-        allowClear: true
+        allowClear: true,
+        placeholder: 'Search Courses...'
       });
     });
     //console.log('Courses:: chosen,jquery.min.js loaded...');
@@ -77,10 +78,15 @@ Template.courses.onDestroyed(function(){
  */
 Template.courses.helpers({
 
-   courses: () =>
-    Courses.find({ company_id: Meteor.user().profile.company_id }).fetch(),
-    
-   uid: () =>
+  courses: () => {
+    try {
+      return Courses.find({ company_id: Meteor.user().profile.company_id }).fetch();
+    } catch(e) {
+      return;
+    }
+  },
+  
+  uid: () =>
     Meteor.userId()
 
 });

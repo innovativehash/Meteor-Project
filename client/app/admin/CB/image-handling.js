@@ -147,6 +147,8 @@
     t.$( '#course-builder-image' ).val('');
     
     contentTracker.images++;
+    Session.set('contentTracker', contentTracker);
+    
     ++img_id;
 
     t.$( '#fb-template' ).append( `<div id="ig-${img_id}" style="top:100px;left:200px;display:inline-block;position:absolute;cursor:move;"><img id="im-${img_id}" src="${ig}"></div>` );

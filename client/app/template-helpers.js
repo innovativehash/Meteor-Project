@@ -4,6 +4,7 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
+import { Students }   from '../../both/collections/api/students.js';
 
 Template.registerHelper( 'and', ( a, b ) => {
   return a && b;
@@ -50,6 +51,33 @@ Template.registerHelper( 'isTeacher', () => {
 Template.registerHelper( 'isAdmin', () => {
   try {
     return Meteor.user().roles.admin;
+  } catch(e) {
+    return new Error(e);
+  }
+});
+
+Template.registerHelper( 'isSuperAdmin', () => {
+  try {
+    return Meteor.user().roles.SuperAdmin;
+  } catch(e) {
+    return new Error(e);
+  }
+});
+
+Template.registerHelper( 'isFrozen', () => {
+  try {
+    let s = Students.find({ _id: Meteor.userId() }).fetch()[0];
+    return s.freeze
+  } catch( e ) {
+    return new Error(e);
+  }
+});
+
+Template.registerHelper( 'isExpired', () => {
+  try {
+    let s = Students.find({ _id: Meteor.userId() }).fetch()[0];
+    let d = s.expires;
+    // TAKE LOGIC FROM INTERNAL TRAINING
   } catch(e) {
     return new Error(e);
   }

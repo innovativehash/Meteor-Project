@@ -70,10 +70,14 @@ Template.degreeCertificate.onRendered( function() {
 Template.degreeCertificate.helpers({
 
   list: () => {
-    let c = Certifications.find({ company_id:1 }).fetch();
-    let d = Diplomas.find({ company_id:1 }).fetch();
-    c.push.apply( c, d );
-    return c;
+    try {
+      let c = Certifications.find({ company_id: Meteor.user().profile.company_id }).fetch();
+      let d = Diplomas.find({ company_id: Meteor.user().profile.company_id }).fetch();
+      c.push.apply( c, d );
+      return c;
+    } catch(e) {
+      return;
+    }
   }
 //-------------------------------------------------------------------
 });
@@ -134,13 +138,16 @@ Template.degreeCertificate.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    $( '#edit-degree-cert' ).modal();
-    return;
+    //$( '#edit-degree-cert' ).modal();
     
      /* OPEN EDIT DIALOG */
-      let idx   = $( e.currentTarget ).data( 'id' ),
-          type  = $( e.currentTarget ).data( 'type' );
-          db    = undefined;
+      let idx   = $( e.currentTarget ).data( 'id' )
+        , type  = $( e.currentTarget ).data( 'type' );
+          //db    = undefined;
+          
+      console.log( idx );
+      console.log( type );
+/*      
       switch( type ) {
         case "certificate":
           db = Certifications.findOne({ _id:idx },{ "name":1, "credits":1 } );
@@ -149,39 +156,12 @@ Template.degreeCertificate.events({
           db = Diplomas.findOne({ _id:idx }, { "name":1, "credits":1 });
           break;
       }
-
-      /* COMMIT EDIT BUTTON
-
-      title: this.type == "degree" ? "Edit Degree" : "Edit Certificate"
-      <!-- degree | certificate Name: -->
-      db.type + ' Name:'
-      
-      let nm = $( ".js-name" ).val().trim()    || c.name;
-      let cr = $( ".js-credits" ).val().trim() || c.credits;
-      switch( type ) {
-        case "certificate":
-          Certificates.update(  { _id: c._id  },
-                                {
-                                  $set: { "name": nm, "credits": cr }
-                                });
-        break;
-        case "degree":
-          Diplomas.update(  { _id: c._id  },
-                            {
-                              $set: { "name": nm, "credits": cr }
-                            });
-        break;
-              
-              dialog.close();
-            
-        */         
-            
-      /* CANCEL EDIT BUTTON
-            label: 'Cancel Edit',
-            cssClass: 'btn-danger',
+*/
   
-              dialog.close();
-      */
+  let params = {_id: Meteor.userId() };
+  let queryParams = {dorc: type, id: idx};
+  FlowRouter.go( 'degree-cert-edit', params,  queryParams );
+  //FlowRouter.go( `/dashboard/degree-cert-edit/${Meteor.userId()}?dorc=${type}&id=${idx}` );
 //-------------------------------------------------------------------
   },
 
@@ -194,18 +174,44 @@ Template.degreeCertificate.events({
     e.stopImmediatePropagation();
 
     /* ARE YOU SURE YOU WANT TO DELETE... */
-    let idx = $( e.currentTarget ).data( 'id' );
-    let nm  = $( e.currentTarget ).data( 'name' );
-    let type = this.type;
-
+    let idx = $( e.currentTarget ).data( 'id' )
+      , nm  = $( e.currentTarget ).data( 'name' )
+      , type = this.type;
+    
+    $( '#delete-dta' ).attr('data-id', idx );
+    $( '#delete-dta' ).attr('data-type', type );
+    $( '#degree-cert-delete-type' ).text( `${type}` );
+    
     $( '#delete-degree-cert' ).modal();
     
-
+    $( '#degree-cert-delete-text' ).text( `${nm}` );
     
-    /* YES
-    this.type == "degree" ? 'Delete Degree' : "Delete Certificate",
+    //maybe some logic to remove this course from students currently taking it?
 
-    switch ( type ) {
+//-------------------------------------------------------------------
+  },
+
+
+  /*
+   * #DEGREE-CERT-DELETE-CANCEL
+   */
+  'click #degree-cert-delete-cancel'( e, t ) {
+    e.preventDefault();
+    
+    $( '#delete-degree-cert' ).modal('hide');
+  },
+  
+  
+  /*
+   * #DEGREE-CERT-DELETE-SUBMIT
+   */
+  'click #degree-cert-delete-submit'( e, t ) {
+    e.preventDefault();
+    
+    let type  = $( '#delete-dta' ).data('type')
+      , idx   = $( '#delete-dta' ).data('id');
+
+     switch ( type ) {
       case "certificate":
         Certifications.remove({ _id: idx});
         break;
@@ -213,19 +219,12 @@ Template.degreeCertificate.events({
         Diplomas.remove({ _id: idx});
         break;
     }
-    dialog.close();
-
-    //maybe some logic to remove this course from students currently taking it?
-              }
-    */
-    /* NO, CANCEL
-
-              dialog.close();
-    */
-//-------------------------------------------------------------------
+    
+    $( '#delete-degree-cert' ).modal('hide');
   },
-
-
+  
+  
+  
   /*
    * #DASHBOARD-PAGE  ::(CLICK)::
    */

@@ -42,11 +42,10 @@
                 </div>
                 
                 <div class="col-sm-4">
-                    <select id                = "search-courses" 
-                            data-placeholder  = "Search Courses"
+                    <select id    = "search-courses" 
                             style = "width:25%;">
                       
-                        <option>Search Courses...</option>
+                        <option></option>
                         {{#with courses}}
                           {{#each this}}
                             {{!-- #if public --}}
@@ -102,6 +101,7 @@
                 </div><!-- modal -->
 
 
+
                 <div  class           = "modal fade left"
                       id              = "myCourseModal"
                       tabindex        = "-1"
@@ -114,11 +114,16 @@
                               id            = "popup-close"
                               data-dismiss  = "modal"
                               aria-label    = "Close">x</button>
+                              
                       <div class = "popup-body">
                         <form action = "">
                           <div class = "row">
                             <div class = "col-sm-4">
-                              <span style = "margin-left: 50px;"><em><strong>Course Name</strong></em></span>
+                              <span style = "margin-left: 50px;">
+                                <em>
+                                  <strong>Course Name</strong>
+                                </em>
+                              </span>
                             </div>
                             <div class = "col-sm-7">
                               
@@ -157,6 +162,7 @@
 
 
 
+
             </div><!-- col-sm-8 -->
           </div><!-- row -->
           <div class="row">
@@ -164,9 +170,6 @@
                               <!-- <div class="search-box"> -->
                 <div class="col-sm-4 col-sm-offset-8">
                   <form action="">
-                    
-
-                    
                     <!--
                     <button id="search" type="search"><img src="/img/search-1.png" alt=""></button>
                     <input id="search-courses" type="text" style="color:blue;" placeholder="Search Material">

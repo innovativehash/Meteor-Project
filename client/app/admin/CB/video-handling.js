@@ -51,6 +51,8 @@
     t.$( '#added-video' ).remove();
 
     contentTracker.videos++;
+    Session.set('contentTracker', contentTracker);
+    
     ++vid_id;
 
     //tbo.videos.push( {page: Template.instance().page.get(), id: ++vid_id, url: vid} );

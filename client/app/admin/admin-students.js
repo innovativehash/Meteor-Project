@@ -102,7 +102,7 @@ Template.adminStudents.helpers({
     for( let i=0; i<len; i++ ) {
       s[i].created_at = moment( s[i].created_at ).format( 'M-D-Y' ) //modify array in place
     }
-    console.log( s );
+
     return s;
   },
 
@@ -123,11 +123,13 @@ Template.adminStudents.events({
     e.stopImmediatePropagation();
 
     let idx = $( e.currentTarget ).val();
-    $( 'tr' ).css( 'border', '' );
-    $( 'tr#' + idx ).css( 'border', '1px solid' );
-    $( 'html, body' ).animate({
-      scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
+    if ( idx ) {
+      $( 'tr' ).css( 'border', '' );
+      $( 'tr#' + idx ).css( 'border', '1px solid' );
+      $( 'html, body' ).animate({
+        scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast' );
+    }
 //-------------------------------------------------------------------
   },
 

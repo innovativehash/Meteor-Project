@@ -39,6 +39,7 @@
     t.$( '#added-text' ).remove();
 
     contentTracker.texts++;
+    Session.set('contentTracker', contentTracker);
     ++txt_id;
 
 /*

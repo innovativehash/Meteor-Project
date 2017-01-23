@@ -16,8 +16,8 @@ import { Mongo } from 'meteor/mongo';
 
 export const Scratch = new Mongo.Collection("scratch");
 
-/*
-Tests.allow({
+
+Scratch.allow({
   insert: function(){
     return true;
   },
@@ -28,4 +28,4 @@ Tests.allow({
     return true;
   }
 });
-*/
+

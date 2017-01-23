@@ -17,7 +17,7 @@ import { Scratch }        from '../../../both/collections/api/scratch.js';
 import '../../templates/student/test-view.html';
 
 let id;
-
+//let Scratch = new Mongo.Collection(null)
 
 Template.testView.onCreated(function(){
     
@@ -115,7 +115,7 @@ Template.testView.events({
 
     $( '#submit-answers' ).prop( 'disabled', true );
     
-    Scratch.remove();
+    Scratch.remove({ _id: id._id });
     
     Meteor.setTimeout(function(){
       if ( Meteor.user().roles.admin ) {

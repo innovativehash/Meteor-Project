@@ -222,6 +222,17 @@ Template.adminDashboardLayout.events({
     FlowRouter.go( 'admin-advanced', { _id: Meteor.userId() } );
 //-------------------------------------------------------------------
   },
+  
+  
+  /*
+   * #SUPER-ADMIN
+   */
+  'click #super-admin'( e, t ) {
+    e.preventDefault();
+    console.log('clickaroo')
+    FlowRouter.go( 'super-admin', {_id: Meteor.userId()} );
+  },
+  
 });
 
 

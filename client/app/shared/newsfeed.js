@@ -53,7 +53,7 @@ Template.newsfeed.helpers({
     //var feed  = Newsfeeds.find({ owner_id: owner}, { sort: { date: -1 } }).fetch();
     
     try {
-      let feed = Newsfeeds.find(  { private: false, company_id: Meteor.user().profile.company_id }, 
+      let feed = Newsfeeds.find({ $or:[  { private: false, company_id: Meteor.user().profile.company_id}, {poster:"SuperAdmin"}] }, 
                                   { sort: { date: -1 } }).fetch();           //most recent at top
   
       for( let i = 0; i < feed.length; i++ ) {

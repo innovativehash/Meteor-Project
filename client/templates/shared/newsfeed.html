@@ -6,7 +6,7 @@
   
     {{#if eq type 'article' }}
       {{> articlePost }}
-    {{/if}}
+    {{else}}
     
       <div id="news-item-{{_id}}" class="single-dash-post" data-id="{{owner_id}}">
         <div class="single-dash-post-body">
@@ -93,6 +93,7 @@
           </div>
         </div>
       </div>
+    {{/if}}
   {{/each}}
   
 </template>

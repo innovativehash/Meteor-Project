@@ -120,7 +120,8 @@ export function cbPDFSave( e, t, tbo, contentTracker, pdfsTracker ) {
     '</object>';
 */
     contentTracker.pdfs++;
-
+    Session.set('contentTracker', contentTracker);
+    
     tbo.pdfs[0] = { 
                     url: `${obj}`,
                     pdf_id: pdf_id

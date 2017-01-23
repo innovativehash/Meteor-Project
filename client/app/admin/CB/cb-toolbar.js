@@ -68,6 +68,7 @@ Template.cbToolbar.events({
   'click .js-delete-button'( e, t ) {
     e.preventDefault();
     let cur = $( '#cb-current' ).val()
+      , c
       , l;
     
     switch ( cur.slice(1,3) ) {
@@ -77,23 +78,29 @@ Template.cbToolbar.events({
         
         $( `${cur}` ).remove();
         $( '#cb-current' ).val('');
-    
+        c = Session.get('contentTracker');
+        c.titles--;
+        Session.set('contentTracker', c);
         $( '#cb-toolbar-text' ).hide();
   
         break;
       case 'tx':
         console.log( 'text' );
-                $( '#cb-current' ).val( `${cur}` );
+        $( '#cb-current' ).val( `${cur}` );
 
         $( `${cur}` ).remove();
         $( '#cb-current' ).val('');
-    
+        c = Session.get('contentTracker');
+        c.texts--;
+        Session.set('contentTracker', c);
         $( '#cb-toolbar-text' ).hide();
         break;
       case 'ig':
         console.log( 'image' );
         $( '#cb-current' ).val( `${cur}` );
-
+        c = Session.get('images');
+        c.images--;
+        Session.set('contentTracker', c)
         $( `${cur}` ).remove();
         $( '#cb-current' ).val('');        
         
@@ -103,20 +110,32 @@ Template.cbToolbar.events({
         $( '#cb-current' ).val('vid');
         
         $( '#fb-template iframe' ).remove();
+        c = Session.get('contentTracker');
+        c.videos--;
+        Session.set('contentTracker', c);
         $( '#cb-toolbar-video' ).hide();
         break;
       case 'pd':
         $( '#cb-current' ).val('pdf');
         
         $( '#fb-template' ).empty();
+        c = Session.get('contentTracker');
+        c.pdfs--;
+        Session.set('contentTracker', c);
         $( '#cb-toolbar-video' ).hide();
         break;
       case 'pp':
         console.log( 'ppt' );
+        c = Session.get('contentTracker');
+        c.ppts--;
+        Session.set('contentTracker', c);
         $( '#cb-current' ).val('ppt');
         break;
       case 'sc':
         console.log( scorm );
+        c = Session.get('contentTracker');
+        c.scorms--;
+        Session.set('contentTracker', c);
         $( '#cb-current' ).val('scorm');
         break;
     }

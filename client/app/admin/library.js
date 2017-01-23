@@ -38,7 +38,8 @@ Template.library.onCreated(function() {
   $.getScript( '/js/select2.min.js', function() {
     $( document ).ready(function(){
       $( '#search-courses' ).select2({
-        allowClear: true
+        allowClear: true,
+        placeholder: 'Search Courses...'
       });
     });
     //console.log('library:: chosen,jquery.min.js loaded...');
@@ -82,15 +83,15 @@ Template.library.helpers({
   
         let own = Courses.find({ company_id: Meteor.user().profile.company_id }).fetch();
         own.forEach(function(el){
-          cids.push( el.cid );
+          cids.push(el._id); //( el.cid );
         });
   
-        let pub = Courses.find( {$and: [ { public:true },{ company_id:{ $ne: Meteor.user().profile.company_id }}]}, { _id:1, name:1, credits:1, icon:1, cid:1 }).fetch();
+        let pub = Courses.find( {$and: [ { public:true },{ company_id:{ $ne: Meteor.user().profile.company_id }}]}, { _id:1, name:1, credits:1, icon:1 }).fetch(); //cid:1 
   
         /* Cycle through pub, and cherry pick out where pub[i].cid == own.cid */
         for( let ii = 0, ilen = pub.length; ii < ilen; ii++ ) {
           for( let i = 0, len = cids.length; i < len; i++ ) {
-            if( pub[ii].cid == cids[i] ) discard.push( ii ); //place matches in discard pile
+            if( pub[ii]._id == cids[i] ) discard.push( ii ); //place matches in discard pile
           }
         }
   
@@ -104,6 +105,9 @@ Template.library.helpers({
        return;
      }
    },
+   
+   uid: () =>
+    Meteor.userId(),
    
 });
 
@@ -146,12 +150,13 @@ Template.library.events({
 
     let idx = $( e.currentTarget ).val();
     
-    $( 'tr' ).css( 'border', '' );
-    $( 'tr#' + idx ).css( 'border', '1px solid' );
-    
-    $( 'html, body' ).animate({
-      scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
+    if ( idx ) {
+      $( 'tr' ).css( 'border', '' );
+      $( 'tr#' + idx ).css( 'border', '1px solid' );
+      $( 'html, body' ).animate({
+        scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
+    }
 //-------------------------------------------------------------------
   },
 

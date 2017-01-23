@@ -38,15 +38,31 @@ Template.degrees.onCreated(function() {
         $(this).effect( "highlight", {}, 1000 );
       },  
       drop: function( evt, ui ) {
-        $(this).html( ui.draggable );
-
-        //$(this)[0].textContent = ui.draggable[0].textContent;
-
-        if ( degree && degree.courses ) 
-          degree.courses[count++] = 
-            { dc: `${ui.draggable[0].lastChild.firstChild.dataset.dc}`,
-              di: `${ui.draggable[0].lastChild.firstChild.dataset.di}`
-            }
+        let iid = $(this).attr('id');
+        num     = iid.slice(4);
+        
+        try {
+          if ( ui.draggable ) {
+            if ( degree && degree.courses ) 
+              degree.courses[num] = 
+              { dc: `${ui.draggable[0].lastChild.firstChild.dataset.dc}`,
+                di: `${ui.draggable[0].lastChild.firstChild.dataset.di}`
+              }
+              
+            $(this).removeClass('ui.droppable');
+            
+            let id = ui.draggable.context.id;
+            $(this).text( $( `#${id}` ).text() );
+            $( `#${id}` ).remove();
+          
+          }
+        } catch(e) {
+          return;
+        }
+        
+        Meteor.setTimeout(function(){
+          $( `#${iid}` ).css('border', '2px solid #d3d3d3' );
+        }, 700);
       }
     });
 
@@ -214,8 +230,10 @@ Template.degrees.events({
     }
 
     for ( let i = 0, len = degree.courses.length; i < len; i++ ){
-      credits_total += Number( degree.courses[i].dc );
-      ids[i]        = degree.courses[i].di;
+      if ( degree.courses[i] ) {
+        credits_total += Number( degree.courses[i].dc );
+        ids.push(degree.courses[i].di);
+      }
     }
 
     Diplomas.insert({
@@ -224,7 +242,7 @@ Template.degrees.events({
       credits:          credits_total,
       icon:             "/img/icon-5.png",
       company_id:       Meteor.user().profile.company_id,
-      type:             "degree",
+      type:             "Diplomas",
       times_completed:  0,
       created_at:       new Date()
     });
@@ -301,11 +319,14 @@ function initC( d, c ) {
       d.appendChild( child );
 /*     	
      	handle: "img", 
-     	helper: "", 
+     	helper: "clone", 
      	cursorAt:{left:-5}
      	snap: true,
 */
-     	$( `#deg-holder-${i}` ).draggable({ helper: "clone", snap: true});
+     	$( `#deg-holder-${i}` ).draggable({ 
+     	                                    snap: true, 
+     	                                    revert: 'invalid'
+     	});
      	                                      
       $( '#degree-search' ).prop( 'selectionStart', 0 )
                            .prop( 'selectionEnd', 0 );

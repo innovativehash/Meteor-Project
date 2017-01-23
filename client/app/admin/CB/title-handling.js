@@ -51,7 +51,7 @@
 
     // CONTENT FLAG
     contentTracker.titles++;
-    
+    Session.set('contentTracker', contentTracker);
     //UNIQUE ID 
     ++tit_id;
 

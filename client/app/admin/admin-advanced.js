@@ -15,7 +15,7 @@ import '../../templates/admin/admin-advanced.html';
 Template.adminAdvanced.onCreated(function(){
   //$("#cover").show();
 
-  this.isInternalTraining = new ReactiveVar(false);
+  //this.isInternalTraining = new ReactiveVar(false);
 
 });
 
@@ -34,8 +34,8 @@ Template.adminAdvanced.onRendered(function(){
  * HELPERS
  */
 Template.adminAdvanced.helpers({
-  isInternalTraining: () =>
-    Template.instance().isInternalTraining
+  //isInternalTraining: () =>
+    //Template.instance().isInternalTraining
 });
 
 
@@ -47,39 +47,15 @@ Template.adminAdvanced.events({
 
   /*
    * INTERNAL TRAINING BUTTON
-   */
+   
   'click #internal-training'( e, t ) {
     e.preventDefault();
     t.isInternalTraining.set(true);
     FlowRouter.go( 'internal-training-calendar', { _id: Meteor.userId() });
   },
+  */
   
-  
-  /*
-   * CURATE ARTICLE
-   */
-  'click #curate-article'( e, t ) {
-    e.preventDefault();
-    
-    let link    = t.find( '[name="curated-link"]' ).value;
-    t.find( '[name="curated-link"]' ).value  = '';
-    
-    Newsfeeds.insert({  
-                        owner_id:       Meteor.userId(),
-                        poster:         "Admin",
-                        poster_avatar:  "",
-                        type:           "article",
-                        private:        false,
-                        news:           link,
-                        comment_limit:  3,
-                        company_id:     Meteor.user().profile.company_id,
-                        likes:          0,
-                        likers:         [],
-                        date:           moment().format('M-D-Y') 
-                      });
-    
-    Bert.alert( 'The article has been added to the system', 'success' );
-  },
+
   
   
   /*

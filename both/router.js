@@ -46,7 +46,10 @@ FlowRouter.route( '/post-signup', {
     BlazeLayout.render( 'layout', {top: "header", main: "postSignup", bottom: "footer" })
 });
 
-/*
+
+/**
+ * VERIFY EMAIL
+ */
 FlowRouter.route( '/verify-email/:token', {
   name: 'verify-email',
   action( params ) {
@@ -60,13 +63,40 @@ FlowRouter.route( '/verify-email/:token', {
 
         console.log( params.token );
         console.log(Meteor.user().emails[0].verified)
-       // FlowRouter.go( '/' );
-        console.log( 'Email verified! Thanks!', 'success' );
+       
+        Bert.alert( 'Email verified! Thanks!', 'success' );
+        FlowRouter.go( '/login' );
       }
     });
   }
 });
-*/
+
+
+
+/**
+ * EXPIRED ACCOUNT
+ */
+FlowRouter.route( '/account-expired/', {
+  name: "account-expired",
+  action() {
+    BlazeLayout.render( 'plain', {main: "accountExpired"})  
+  }
+});
+
+
+
+/**
+ * FROZEN ACCOUNT
+ */
+FlowRouter.route( '/account-frozen/', {
+  name: "account-frozen",
+  action: () => {
+    console.log( 'in frozen' );
+    BlazeLayout.render( 'plain', {main: "accountFrozen"});
+  }
+});
+
+
 
 /**
  * STUDENT ROUTES
@@ -75,7 +105,12 @@ let studentRoutes = FlowRouter.group({
   prefix: '/student',
   name: 'student',
   triggersEnter: [function( context, redirect ) {
-    console.log( 'running student group triggers' );
+    /*
+    if ( Meteor.loggingIn() || Meteor.userId() ) {
+      let route = FlowRouter.current();
+      FlowRouter.go( route.path );
+    }
+    */
   }]
 });
 
@@ -87,8 +122,13 @@ studentRoutes.route( '/dashboard/:_id', {
   name: 'student-dashboard',
   action: () =>
     BlazeLayout.render( 'studentDashboardLayout', {main: "studentDashboard"}),
-  triggersEnter: [function( context, redirect ) {
-    console.log( 'running student dashboard trigger' );
+    triggersEnter: [function( context, redirect ) {
+      let route = FlowRouter.current();
+      if ( Meteor.userId() ) {
+        FlowRouter.go( route.path );
+      } else {
+        FlowRouter.go( '/login' );
+      }
   }]
 });
 
@@ -163,7 +203,15 @@ let teacherRoutes = FlowRouter.group({
 teacherRoutes.route('/dashboard/:_id', {
   name: 'teacher-dashboard',
   action: () =>
-    BlazeLayout.render( 'studentDashboardLayout', {main: "studentDashboard"})
+    BlazeLayout.render( 'studentDashboardLayout', {main: "studentDashboard"}),
+    triggersEnter: [function( context, redirect ) {
+      let route = FlowRouter.current();
+      if ( Meteor.userId() ) {
+        FlowRouter.go( route.path );
+      } else {
+        FlowRouter.go( '/login' );
+      }  
+  }]
 });
 
 
@@ -260,7 +308,7 @@ let adminRoutes = FlowRouter.group({
   prefix: '/admin',
   name: 'admin',
   triggersEnter: [function( context, redirect ) {
-    console.log( 'running admin group triggers' );
+
   }]
 });
 
@@ -270,7 +318,12 @@ adminRoutes.route( '/dashboard/:_id', {
   action: () =>
     BlazeLayout.render( 'adminDashboardLayout', {main: "adminDashboard"} ),
   triggersEnter: [function( context, redirect ) {
-    //console.log( 'running /admin/dashboard trigger' );
+      let route = FlowRouter.current();
+      if ( Meteor.userId() ) {
+        FlowRouter.go( route.path );
+      } else {
+        FlowRouter.go( '/login' );
+      }
   }]
 });
 
@@ -330,22 +383,33 @@ adminRoutes.route('/dashboard/test-maker/:_id', {
 adminRoutes.route('/dashboard/degrees-and-certifications/:_id', {
   name: 'admin-degrees-and-certifications',
   action: () =>
-    BlazeLayout.render('adminDashboardLayout', {main: "degreeCertificate"})
+    BlazeLayout.render( 'adminDashboardLayout', {main: "degreeCertificate"})
 });
 
 /* DEGREES */
 adminRoutes.route('/dashboard/degrees-and-certifications/degrees/:_id', {
   name: 'admin-degrees',
   action: () =>
-    BlazeLayout.render('adminDashboardLayout', {main: "degrees"})
+    BlazeLayout.render( 'adminDashboardLayout', {main: "degrees"})
 });
 
 /* CERTIFICATIONS */
 adminRoutes.route('/dashboard/degrees-and-certifications/certifications/:_id', {
   name: 'admin-certifications',
   action: () =>
-    BlazeLayout.render('adminDashboardLayout', {main: "certs"})
+    BlazeLayout.render( 'adminDashboardLayout', {main: "certs"})
 });
+
+/* DEEGREE CERT EDIT */
+adminRoutes.route('/dashboard/degree-cert-edit/:_id', {
+  name: 'degree-cert-edit',
+  action: (params, queryParams) => {
+    //console.log("Params:", params);
+    //console.log("Query Params:", queryParams);
+    BlazeLayout.render( 'adminDashboardLayout', {main: "degreeCertEdit"})
+  }
+});
+
 
 
 /**
@@ -387,7 +451,7 @@ adminRoutes.route('/dashboard/assign-courses/:_id', {
     BlazeLayout.render( 'adminDashboardLayout', {main: 'adminAdvanced'})
  });
 
-/*
+/**
  * INTERNAL TRAINING CALENDAR
  */
   adminRoutes.route( '/dashboard/internal-training-calendar/:_id', {
@@ -435,4 +499,14 @@ adminRoutes.route('/dashboard/students/import-csv/:_id', {
   name: 'admin-import-csv',
   action: () =>
     BlazeLayout.render('adminDashboardLayout', {main: "importCV"})
+});
+
+/**
+ * SUPER ADMIN
+ */
+adminRoutes.route( '/dashboard/super-admin/:_id', {
+  name: 'super-admin',
+  action: () => {
+    BlazeLayout.render( 'adminDashboardLayout', {main: "superAdmin"});
+  }
 });
