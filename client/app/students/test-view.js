@@ -55,8 +55,8 @@ Template.testView.events({
     let cid             = FlowRouter.getQueryParam( "course" )
       , c               = Courses.find({ _id: cid}).fetch()[0]
       , s               = Students.find({ _id: Meteor.userId() }).fetch()[0]
-      , credits         = c.credits
-      , passing_percent = c.passing_percent
+      , credits         = Number(c.credits)
+      , passing_percent = Number(c.passing_percent)
       , name            = c.name;
     
     /*
@@ -83,12 +83,12 @@ Template.testView.events({
     
 //TODO:  GET CORRECT ANS PERCENTAGE FOR THIS TEST AND USE IT
 
-    if ( percent >= passing_percent ) {
+    if ( percent >= passing_percent || passing_percent == 1001 ) {
       $( '#score' ).addClass( 'label-success' );
       $( '#score' ).text( percent + '%' );
       
       Meteor.setTimeout(function(){
-        console.log(credits);
+
         Meteor.call( 'courseCompletionUpdate', name, cid, percent, credits );
         
         Newsfeeds.insert({ 
@@ -106,6 +106,7 @@ Template.testView.events({
       }, 300);
       
       Bert.alert( 'Congradulations!! You passed the test.', 'success', 'fixed-top' );
+      
     } else {
       $( '#score' ).addClass( 'label-danger' );
       $( '#score' ).text( percent + '%' );
@@ -115,6 +116,7 @@ Template.testView.events({
 
     $( '#submit-answers' ).prop( 'disabled', true );
     
+    //TODO: Make Meteor Method to wipe Scratch, replace this
     Scratch.remove({ _id: id._id });
     
     Meteor.setTimeout(function(){

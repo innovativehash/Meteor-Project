@@ -210,12 +210,13 @@ Template.degreeCertificate.events({
     
     let type  = $( '#delete-dta' ).data('type')
       , idx   = $( '#delete-dta' ).data('id');
-
+console.log( type );
+console.log( idx );
      switch ( type ) {
-      case "certificate":
+      case "Certifications":
         Certifications.remove({ _id: idx});
         break;
-      case "degree":
+      case "Diplomas":
         Diplomas.remove({ _id: idx});
         break;
     }

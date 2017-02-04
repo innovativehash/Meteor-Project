@@ -4,35 +4,39 @@
 <style>
   #degree-cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
 </style>
+
 {{#if isAdmin}}
-<div id="degree-cover"></div>
-  <div class="certificate-area">
-    <div class="certificate-container">
-        <div class="row">
-          <div class="import-navigation">
+
+<div id = "degree-cover"></div>
+  <div class = "certificate-area">
+    <div class = "certificate-container">
+        <div class = "row">
+          
+          <div class = "import-navigation">
             <ul>
               <li>
-                <a href="#" id="dashboard-page">
-                  <i class="fa fa-home"></i>
+                <a href = "#" id="dashboard-page">
+                  <i class = "fa fa-home"></i>
                   Dashboard
                 </a>
               </li>
               <li>
-                <a href="#" id="degree-certificate-page">
+                <a href = "#" id = "degree-certificate-page">
                   Degrees &amp; Certifications
                 </a>
               </li>
-              <li style="color:blue;text-decoration:undeline;">
+              <li style = "color:blue;text-decoration:undeline;">
                 Degrees
               </li>
             </ul>
           </div>
           <br />
-          <div class="col-sm-4">
-            <div class="certificate-course">
+          
+          <div class = "col-sm-4">
+            <div class = "certificate-course">
               <h2>Course :</h2>
               <p>Choose the courses you want by dragging and dropping them to the right. If you want them completed in a specific order drop to the right of the class you want to go before it.</p>
-              <div class="certificate-search">
+              <div id = "certificate-search">
                 
                 <input  id          = "degree-search"
                         type        = "text"  
@@ -42,33 +46,20 @@
                         autofocus>
                 <br>    
                 <br>
-                <div id="dojo"></div>
-<!--
-                <select data-placeholder  = "search course(s)..."
-                        style             = "color:blue;"
-                        id                = "deg-find-course">
-                  <option></option>
-                  {{#with courses}}
-                    {{#each this}}
-                      <option>{{name}}</option>
-                    {{/each}}
-                  {{/with}}
-                </select>
--->
+                <div id = "dojo"></div>
+
               </div>
-              
-              <!--<ul></ul> drag sources -->
-              
             </div>
           </div>
-            <div class="col-sm-8">
-              <div class="certificate-body">
-                <div class="certificate-body-head">
-                  <div class="row">
-                    <div class="col-sm-8">
-                      <div class="certificate-input">
+          
+            <div class = "col-sm-8">
+              <div class = "certificate-body">
+                <div class = "certificate-body-head">
+                  <div class = "row">
+                    <div class = "col-lg-8">
+                      <div class = "certificate-input">
                         
-                        <label for="">Name Your Degree:</label>
+                        <label for = "">Name Your Degree:</label>
                         <input  id          = "enter-degree-name" 
                                 type        = "text" 
                                 style       = "text-align:left;" 
@@ -78,26 +69,26 @@
                     </div>
                   </div>
                 </div>
-                <div class="certificate-body-content">
+                <div class = "certificate-body-content">
                   
                   <h2>
-                    <img src="/img/icon-8.png" alt="">
+                    <img src = "/img/icon-8.png" alt = "">
                     Course Name :&nbsp;&nbsp;
-                    <span id="dName" style="color:blue;"></span>
+                    <span id = "dName" style="color:blue;"></span>
                   </h2>
                   
                   <ul>
-                    <li id="drop1" class="d-cur" tabindex="-1">Drop 1st in sequence</li>
-                    <li id="drop2" class="d-cur" tabindex="-1">Drop 2nd in sequence</li>
-                    <li id="drop3" class="d-cur" tabindex="-1">Drop 3rd in sequence</li>
-                    <li id="drop4" class="d-cur" tabindex="-1">Drop 4th in sequence</li>
-                    <li id="drop5" class="d-cur" tabindex="-1">Drop 5th in sequence</li>
-                    <li id="drop6" class="d-cur" tabindex="-1">Drop 6th in sequence</li>
-                    <li id="drop7" class="d-cur" tabindex="-1">Drop 7th in sequence</li>
+                    <li id = "drop1" class = "d-cur" tabindex = "-1">Drop 1st in sequence</li>
+                    <li id = "drop2" class = "d-cur" tabindex = "-1">Drop 2nd in sequence</li>
+                    <li id = "drop3" class = "d-cur" tabindex = "-1">Drop 3rd in sequence</li>
+                    <li id = "drop4" class = "d-cur" tabindex = "-1">Drop 4th in sequence</li>
+                    <li id = "drop5" class = "d-cur" tabindex = "-1">Drop 5th in sequence</li>
+                    <li id = "drop6" class = "d-cur" tabindex = "-1">Drop 6th in sequence</li>
+                    <li id = "drop7" class = "d-cur" tabindex = "-1">Drop 7th in sequence</li>
                   </ul>
                 </div>
-                <div class="certificate-save">
-                  
+                
+                <div class = "certificate-save">
                   <button class     = "js-degree-save button" 
                           type      = "button" 
                           tabindex  = "-1">

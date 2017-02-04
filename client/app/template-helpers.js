@@ -31,6 +31,15 @@ Template.registerHelper('not', (obj) => {
 });
 
 
+Template.registerHelper('isCurrentUser', (id) => {
+  try {
+    return Meteor.userId() == id;
+  } catch(e) {
+    return new Error(e);
+  } 
+});
+
+
 Template.registerHelper( 'isStudent', () => {
   try {
     return Meteor.user().roles.student;

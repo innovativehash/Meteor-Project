@@ -24,8 +24,9 @@ Certifications.deny({
   remove: () => true
 });
 */
-
+/*
 let CertificationsSchema = new SimpleSchema({
+
   'name': {
     type: String
   },
@@ -46,8 +47,16 @@ let CertificationsSchema = new SimpleSchema({
   },
   'courses': {
     type: [String]
+  },
+  'num': {
+    type: Number
+  },
+  'edited_at': {
+    type: Date,
+    optional: true
   }
   
 });
 
 Certifications.attachSchema( CertificationsSchema );
+*/

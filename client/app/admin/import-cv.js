@@ -52,6 +52,15 @@ Template.importCV.onCreated( function() {
    * JQUERY-UI
    */
   $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function() {
+
+    $( '#csv-dialog' ).dialog({
+        autoOpen: false,
+        position: {
+          my: "left top",
+          at: "left top",
+          of: "#csv-help-btn"
+        }
+    });    
       //console.log('insertCSV:: jquery-ui.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'importCSV:: load jquery-ui.min.js fail' );
@@ -69,6 +78,7 @@ Template.importCV.onRendered(function(){
     $( "#csv-cover" ).hide();
     $( ".import-body" ).fadeIn( 'slow' );
   });
+  
 });
 
 
@@ -159,31 +169,118 @@ Template.importCV.events({
 
 
   /*
+   * #CSV-HELP-BUTTON ::(CLICK)::
+   */
+  'click #csv-help-btn'( e, t ) {
+    e.preventDefault();
+    console.log('clickjab');
+    $( '#csv-dialog' ).dialog("open");
+    $( '#csv-dialog button.ui-state-disabled:active' ).css('background-color','none');
+  },
+  
+  
+  
+  /*
    * #CSV  ::(CHANGE)::
    */
   'change #csv'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    
+    let itype = ''
+      , fil
+      , raw_file;
+      
     if ( e.currentTarget.files === 'undefined' ) {
       console.log('aborted');
       return;
+    } else {
+      raw_file = e.currentTarget.files[0]
     }
 
-    let mark = ( e.currentTarget.files[0].name ).lastIndexOf( '.' ) + 1;
-    let ext  = ( e.currentTarget.files[0].name ).slice( mark );
+    //itype = raw_file.split(',');
+   //console.log( itype );
+
+    //itype = itype.name.slice( itype.name.length - 3);
+  /*  
+    if ( raw_file.type != 'text/csv' || !itype ) {
+      Bert.alert('Incompatible File Type: Must be CSV', 'danger');
+      e.currentTarget.files = undefined;
+      e.currentTarget.files[0] = undefined;
+      e.currentTarget.files[0].name = undefined;
+      itype = '';
+      return;
+    }
+  */
+  // text/plain, text/csv
     fil      = $( '#csv' ).get(0).files[0];
 
-    Meteor.setTimeout( function() {
+    var fr = new FileReader();
+    fr.onload = function(e) {
+      let s, slen = s1 = m = 0;
+      //console.log( e.target.result ); //typeof is String
+      raw_file = e.target.result;
+      
+      s     = raw_file.split('\n');
+      slen  = raw_file.split('\n').length -1;
+      
+      if ( slen == 0 ) {
+        console.log( 'not separate lines' );
+        t.$( '#csv-error1' ).text('NO SEPARATE LINES IN FILE').css({'margin':'5px 5px 5px 5px;','padding':'5px 5px 5px 5px;','border':'1px dashed red','border-radius':'5px','background-color':'Crimson','color':'white', 'font-weight':'900'});
+        return;
+      } else {
+        t.$( '#csv-error1' ).text('');
+        t.$( '#csv-error1' ).attr('style',''); //remove artifacts from screen
+      }
+      
+      for( let i = 0; i < slen; i++ ) {
+        
+        if ( i == 0 ) { //BASE CASE
+          m = s[i].split(',').length - 1;
+          s1 += m;
+        } else {
+          if ( s[i].split(',').length - 1 != m ) {
+            console.log( 'separator mismatch');
+            console.log( i );
+            t.$( '#csv-error2' ).text(`SEPARATOR MISMATCH IN FILE ON LINE ${i+1}`).css({'margin':'5px 5px 5px 5px;','padding':'5px 5px 5px 5px;','border':'1px dashed red','border-radius':'5px','background-color':'Crimson','color':'white', 'font-weight':'900'});
+            s1 = 0;
+            return;
+          } else {
+            s1 += s[i].split(',').length -1;
+            t.$( '#csv-error2' ).text('');
+            t.$( '#csv-error2' ).attr('style',''); //remove artifacts from screen
+          }
+        }
+        console.log( 'not in conditions i= ' + i );
+      }
+      
+    };
+    
+    fr.readAsText(fil);
+    
 
-        Papa.parse( fil, {
+    Meteor.setTimeout( function() {
+        if ( s1 == 0 ) {
+          Bert.alert('Not a valid input file', 'danger');
+          return;
+        }
+        
+        Papa.parse( raw_file, { //fil
           config: { header: true },
 	        complete: function( results ) {
 	          t.res.set( results.data );
+	        },
+	        error: function(err, file, inputElem, reason) {
+	          console.log( err );
+	          console.log( file );
+	          console.log( inputElem );
+	          console.log( reason );
 	        }
         });//papa
     }, 200);
-    $( '#csv' ).attr( 'disabled','disabled' );
+    raw_file = fil = fr = null;
+    $( '#csv' ).val('');
+    //$( '#csv' ).attr( 'disabled','disabled' );
     return;
 //-------------------------------------------------------------------
   },

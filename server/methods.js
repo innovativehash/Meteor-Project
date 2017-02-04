@@ -519,6 +519,7 @@ Meteor.methods({
 
 
   'addUser': function( email, password, fname, lname, opt, dept, company, company_id, trial=false ) {
+    let startTrial = '';
     
     let uid = Accounts.createUser({
       email:    email,
@@ -534,7 +535,7 @@ Meteor.methods({
     });
     
     if ( trial ) {
-      s.startTrial = new Date;
+      startTrial = new Date;
     }
     
     Students.insert({ 
@@ -560,6 +561,7 @@ Meteor.methods({
       current_trainings:  [],
       compl_trainings:    [],
       articles_read:      [],
+      trialStarted:       startTrial,
       created_at:         new Date() 
       
     });

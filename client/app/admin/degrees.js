@@ -27,7 +27,6 @@ Template.degrees.onCreated(function() {
 
   $( "#degree-cover" ).show();
 
-
   /*
    * JQUERY-UI DRAG & DROP
    */
@@ -35,7 +34,7 @@ Template.degrees.onCreated(function() {
 
     $( '#drop1,#drop2, #drop3, #drop4, #drop5, #drop6, #drop7' ).droppable({
       over: function( event, ui ) {
-        $(this).effect( "highlight", {}, 1000 );
+        $(this).effect( "highlight", {}, 500 );
       },  
       drop: function( evt, ui ) {
         let iid = $(this).attr('id');
@@ -45,7 +44,8 @@ Template.degrees.onCreated(function() {
           if ( ui.draggable ) {
             if ( degree && degree.courses ) 
               degree.courses[num] = 
-              { dc: `${ui.draggable[0].lastChild.firstChild.dataset.dc}`,
+              { 
+                dc: `${ui.draggable[0].lastChild.firstChild.dataset.dc}`,
                 di: `${ui.draggable[0].lastChild.firstChild.dataset.di}`
               }
               
@@ -63,6 +63,7 @@ Template.degrees.onCreated(function() {
         Meteor.setTimeout(function(){
           $( `#${iid}` ).css('border', '2px solid #d3d3d3' );
         }, 700);
+        
       }
     });
 
@@ -95,7 +96,8 @@ Template.degrees.onRendered(function(){
         while ( d.hasChildNodes() ) {
      	    d.removeChild( d.lastChild );
         }
-        let c   = Courses.find({ company_id: Meteor.user().profile.company_id }, {limit: 7}).fetch();
+        let c   = Courses.find( { company_id: Meteor.user().profile.company_id }, 
+                                {limit: 7}).fetch();
         return initC( d, c );
       } catch (e) {
         return;
@@ -155,8 +157,19 @@ Template.degrees.events({
   'blur #enter-degree-name'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
-    $( '#dName' ).text( $( '#enter-degree-name' ).val() );
+    
+    let dname = $( '#enter-degree-name' ).val()
+      , d_id;
+      
+    d_id = Diplomas.findOne({ name: dname });
+    if ( d_id && d_id._id ) {
+      $( '#enter-degree-name').val('');
+      $( '#dName' ).text('');
+      Bert.alert('Sorry, but there is already a Degree with that name', 'danger');
+      return;
+    }
+    
+    $( '#dName' ).text( dname );
 //-------------------------------------------------------------------
   },
 
@@ -175,7 +188,16 @@ Template.degrees.events({
     let patt1 = `/^${tf}/i`;
     let patt2 = `/^${tf}/`;
 
-    let items = Courses.find({ $and: [{ company_id: { $eq: Meteor.user().profile.company_id } },{ name: { $in: [ eval(patt1), eval(patt2) ] } } ] }).fetch();
+    let items = Courses.find({ $and: [
+                                      { company_id: { $eq: Meteor.user().profile.company_id } },
+                                      { name: { $in: [ 
+                                                      eval(patt1), eval(patt2) 
+                                                     ] 
+                                              } 
+                                      } 
+                                     ] 
+                            }).fetch();
+                            
     let len = items.length;
 
      for( let i = 0; i < len; i++ ) {
@@ -201,7 +223,11 @@ Template.degrees.events({
 
      	$( `#deg-holder-${i}` ).draggable({    
      	                                    helper: "clone", 
-     	                                    snap: true, 
+     	                                    snap: true,
+     	                                    revert: 'invalid',
+     	                                    drag: function( event, ui ) {
+     	                                      
+     	                                    }
      	                                  });
      }
      
@@ -217,9 +243,17 @@ Template.degrees.events({
 
     let credits_total = 0,
         ids           = [],
-        course_name   = $( '#enter-degree-name' ).val();
-
-    if ( degree && degree.courses && degree.courses.length <= 0) {
+        c_id          = undefined,
+        course_name   = $( '#enter-degree-name' ).val()
+        d_id          = undefined;
+        
+    try {
+      c_id = Meteor.user().profile.company_id;
+    } catch(e) {
+      return;
+    }
+    
+    if ( !degree.courses || degree.courses.length <= 0) {
       Bert.alert( 'No Courses Selected!', 'danger' );
       return;
     }
@@ -228,7 +262,15 @@ Template.degrees.events({
       Bert.alert( 'You Must Give the Degree a Name!', 'danger' );
       return;
     }
-
+    
+    d_id = Diplomas.findOne({ name: course_name });
+    if ( d_id && d_id._id ) {
+      $( '#enter-degree-name' ).val('');
+      $( '#dName' ).text('');
+      Bert.alert('Sorry, but a Dergree with that name already exists', 'danger');
+      return;
+    }
+    
     for ( let i = 0, len = degree.courses.length; i < len; i++ ){
       if ( degree.courses[i] ) {
         credits_total += Number( degree.courses[i].dc );
@@ -240,8 +282,9 @@ Template.degrees.events({
       name:             course_name,
       courses:          ids,
       credits:          credits_total,
+      num:              ids.length,
       icon:             "/img/icon-5.png",
-      company_id:       Meteor.user().profile.company_id,
+      company_id:       c_id,
       type:             "Diplomas",
       times_completed:  0,
       created_at:       new Date()
@@ -251,7 +294,8 @@ Template.degrees.events({
 
     Meteor.setTimeout(function(){
       FlowRouter.go(  'admin-degrees-and-certifications', 
-                      { _id: Meteor.userId() });
+                      { _id: Meteor.userId() }
+      );
     }, 1500);
 //-------------------------------------------------------------------
   },
@@ -317,15 +361,13 @@ function initC( d, c ) {
       
       child.appendChild( sp );
       d.appendChild( child );
-/*     	
-     	handle: "img", 
-     	helper: "clone", 
-     	cursorAt:{left:-5}
-     	snap: true,
-*/
+
      	$( `#deg-holder-${i}` ).draggable({ 
      	                                    snap: true, 
-     	                                    revert: 'invalid'
+     	                                    revert: 'invalid',
+     	                                    drag:    function(event, ui) { 
+                                              //if ( flags[i] ) return false;
+                                            }
      	});
      	                                      
       $( '#degree-search' ).prop( 'selectionStart', 0 )

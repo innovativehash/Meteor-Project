@@ -152,6 +152,10 @@ let StudentsSchema = new SimpleSchema({
   'articles_read.$.link_id': {
     type: String,
     optional: true
+  },
+  'trialStarted': {
+    type: String,
+    optional:ntrue
   }
   
  

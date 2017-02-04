@@ -23,6 +23,7 @@ Template.assignCourses.onCreated(function() {
    */
   $.getScript( '/js/select2.min.js', function() {
     $( document ).ready(function(){
+      
       $( '#search-courses' ).select2({
         allowClear: true
       });
@@ -60,15 +61,30 @@ Template.assignCourses.onRendered(function(){
  */
 Template.assignCourses.helpers({
 
-  courses: () =>
-    Courses.find({ company_id: Meteor.user().profile.company_id}).fetch(),
-
-  dept: () =>
-    Departments.find({}).fetch(),
-
-  names: () =>
-    Students.find({ company_id: Meteor.user().profile.company_id }).fetch()
-
+  courses: () => {
+    try {
+      return Courses.find({ company_id: Meteor.user().profile.company_id}).fetch();
+    } catch( e ) {
+      return;
+    }
+  },
+  
+  dept: () => {
+    try {
+      return Departments.find({}).fetch();
+    } catch( e ) {
+      return;
+    }
+  },
+  
+  names: () => {
+    try {
+      return Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
+    } catch( e ) {
+      return;
+    }
+  },
+  
 });
 
 
@@ -103,22 +119,31 @@ Template.assignCourses.events({
      e.preventDefault();
      e.stopImmediatePropagation();
 
-    $( '#course-name' ).html( $( e.currentTarget ).data( 'name' ) );
-    $( '.add-course' ).attr( 'data-id', $( e.currentTarget ).data( 'id' ));
-    $( '.add-course' ).attr( 'data-credits', $( e.currentTarget ).data( 'credits' ));
-    $( '.add-course' ).attr( 'data-name', $( e.currentTarget ).data( 'name' ));
+    t.$( '#course-name' ).html( $( e.currentTarget ).data( 'name' ) );
+    t.$( '.add-course' ).attr( 'data-id', $( e.currentTarget ).data( 'id' ));
+    t.$( '.add-course' ).attr( 'data-credits', $( e.currentTarget ).data( 'credits' ));
+    t.$( '.add-course' ).attr( 'data-name', $( e.currentTarget ).data( 'name' ));
 
     //selects
-    $( '#by-dept' ).val( null ).trigger( 'change' );
-    $( '#by-dept' ).attr( 'disabled', true );
+    t.$( '#assign-by-dept-radio' ).val( false ).trigger( 'change' );
+    t.$( '#assign-by-dept-radio' ).attr('disabled',false);
     
-    //input
-    $( '#assign-due-date' ).val('');
-
-    //$( '#abd' ).prop( 'checked', false ).change();
-
-
-    $( '#assign-modal' ).modal( 'show' );
+    t.$( '#all-students-radio' ).val(false).trigger( 'change' );
+    t.$( '#all-students-radio' ).attr('disabled',false);
+    
+    t.$( '#assign-by-dept' ).css("background-position", "0% 0%");
+    t.$( '#assign-by-dept' ).attr('disabled',false);
+    
+    t.$( '#all-students' ).css("background-position", "0% 0%");
+    t.$( '#all-students' ).attr('disabled',false);
+    
+    t.$( "#by-dept" ).val( null ).trigger( "change" );           // department name(s)
+    t.$( '#by-dept' ).attr('disabled',false);
+    
+    t.$( "#by-name" ).val( null ).trigger( "change" );           // student name(s)
+    t.$( '#by-name' ).attr('disabled',false);
+    
+    t.$( '#assign-modal' ).modal( 'show' );
 //-------------------------------------------------------------------
   },
 
@@ -136,21 +161,27 @@ Template.assignCourses.events({
     let idx   = $( e.currentTarget)[0].dataset.id;          // course id
     let nm    = $( e.currentTarget)[0].dataset.name;        // course name
     let cr    = $( e.currentTarget)[0].dataset.credits;     // course credits
+    let abn = as = abd   = false;
     //console.log( $( e.currentTarget)[0].dataset );
 
     let assignByDept  = $( '#by-dept' ).val();           // department name(s)
     let assignByName  = $( '#by-name' ).val();           // student name(s)
-    //let assignDueDate = $( '#assign-due-date' ).val();  // due date
+    
+    if ( assignByName != null ) {
+      abn = true;
+    }
 
-    let as  = $( '#all-students' ).is( ':checked' );      // all-students radio
-    let abn = $( '#abn' ).is( ':checked' );               // by name radio
-    let abd = $( '#abd' ).is( ':checked' );               // by department radio
-
-
+    if ( assignByDept != null ) {
+      abd = true;
+    }
+    
+    let as  = $( '#all-students-radio' ).val();      // all-students radio
+    //let abd = $( '#assign-by-dept-radio' ).val();    // by department radio
+    
     /*
      * ALL STUDENTS
      */
-    if ( as ) {
+    if ( as == true ) {
 
       //let url = 'https://collective-university-nsardo.c9users.io/login';
       //let text_wo_due_date  = `Hello ${s[i].fname},\n\nYou've been enrolled in ${nm}.\n\nYou can log in here: ${url}\nUser: s[i].email\nYour password remains the same.`;
@@ -159,9 +190,7 @@ Template.assignCourses.events({
       let s     = Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
       let slen  = s.length;
 
-      let o     = { id: idx, name: nm, credits: cr, num: 1 };
-
-      if ( assignDueDate ) o.assignByDate = assignDueDate;
+      let o     = { id: idx, name: nm, credits: cr, num: 1, date_assigned: new Date() };
 
       for ( let i = 0; i < slen; i++ ) {
         if ( s[i].role == 'admin' ) continue;
@@ -169,13 +198,13 @@ Template.assignCourses.events({
 
         //Meteor.call('sendEmail', s[i].email, 'admin@collectiveuniversity.com', 'Assigned Course', text_wo_due_date);
       }
+      
       Bert.alert( 'Course Assigned', 'success', 'growl-top-right' );
 
     /*
      * ASSIGN BY NAME
      */
-    } else if ( abn ) {
-
+    } else if ( abn == true ) {
 
       if ( ! Array.isArray( assignByName ) ) {
 
@@ -188,8 +217,7 @@ Template.assignCourses.events({
           slen  = s.length,
           alen;
 
-      let o     = { id: idx, name: nm, credits: cr, num: 1 };
-      if ( assignDueDate ) o.assignByDate = assignDueDate;
+      let o     = { id: idx, name: nm, credits: cr, num: 1, date_assigned: new Date() };
 
       // DOUBLE CHECK ASYNC TIMING, BEST PRACTICE FOR THIS
       alen = assignByName.length;
@@ -199,6 +227,7 @@ Template.assignCourses.events({
         for ( let j = 0; j < alen; j++ ) { //number of names assigned
           if ( s[i].role == 'admin' ) continue; //don't assign to admin
           if ( (s[i].fullName).indexOf( assignByName[j] ) != -1 ) {
+
             Students.update({ _id: s[i]._id },{ $push:{ current_courses: o } });
           }
         }
@@ -209,7 +238,7 @@ Template.assignCourses.events({
     /*
      * ASSIGN BY DEPARTMENT
      */
-    } else if ( abd ) {
+    } else if ( abd == true ) {
 
       if ( ! Array.isArray( assignByDept ) ) {
 
@@ -221,8 +250,7 @@ Template.assignCourses.events({
           slen  = s.length,
           dlen;
 
-      let o     = { id: idx, name: nm, credits: cr, num: 1 };
-      if ( assignDueDate ) o.assignByDate = assignDueDate;
+      let o     = { id: idx, name: nm, credits: cr, num: 1, date_assigned: new Date() };
 
       // DOUBLE CHECK ASYNC TIMING, BEST PRACTICE FOR THIS
       dlen = assignByDept.length;
@@ -249,11 +277,8 @@ Template.assignCourses.events({
     $( "#by-name" ).val( null ).trigger( "change" );
     $( '#by-name' ).attr( 'disabled', true );
 
-    $( '#assign-due-date' ).val('');
-
-    $( '#abn' ).prop( 'checked', false ).change();
-    $( '#all-students' ).prop( 'checked', false ).change();
-    $( '#abd' ).prop( 'checked', false ).change();
+    t.$( '#all-students-radio' ).val(false).trigger("change");
+    $( '#assign-by-dept-radio' ).val(true).trigger("change");
 
     $( '#assign-modal' ).modal( 'hide' );
 //-------------------------------------------------------------------
@@ -271,14 +296,19 @@ Template.assignCourses.events({
   'click #all-students'( e, t ) {
     e.preventDefault();
     console.log('click all');
+
+    t.$( '#all-students-radio' ).attr('disabled',false);
+    t.$( '#all-students-radio' ).val(true).trigger("change");
     
     t.$( '#all-students' ).css("background-position", "0% 100%");
     t.$( '#assign-by-dept' ).css("background-position", "0% 0%");
     
-    $( '#by-dept' ).val( null ).trigger( 'change' );
-    $( '#by-dept' ).attr( 'disabled', true );
+    t.$( '#assign-by-dept-radio' ).val(false).trigger('change');
+    t.$( '#by-dept' ).val(null).trigger("change"); //empty select2
+    t.$( '#by-dept' ).attr( 'disabled', true );
     
-    $( '#by-name' ).val(null).trigger("change");
+    t.$( '#by-name' ).val(null).trigger("change"); //empty select2
+    t.$( '#by-name' ).attr('disabled',true);
 //-----------------------------------------------------------------
   },
 
@@ -287,38 +317,57 @@ Template.assignCourses.events({
    */
   'click #assign-by-dept'( e, t ) {
     e.preventDefault();
+    
+    $( '#by-dept' ).attr('disabled',false);
+    
     if ( $( '#by-dept' ).val() != null ) 
       console.log( 'DEBUG: ' + $( '#by-dept' ).val() );
     
     t.$( '#assign-by-dept' ).css("background-position", "0% 100%");
     t.$( '#all-students' ).css("background-position", "0% 0%");
 
-    $( '#by-dept' ).val( null ).trigger( 'change' );
-    $( '#by-dept' ).attr( 'disabled', false );
+    $( '#assign-by-dept-radio' ).attr( 'disabled', false );
+    $( '#assign-by-dept-radio' ).val(true).trigger("change");
+    $( '#by-dept' ).attr('disabled',false);
+    
+    $( '#all-students-radio' ).val(false).trigger("change");
+    $( '#all-students-radio' ).attr('disabled',true);
     
     $( '#by-name' ).val(null).trigger("change");
+    $( '#by-name' ).attr('disabled',true);
 //-----------------------------------------------------------------
   },
   
+  'click #wrap-by-name'( e, t ){
+    e.preventDefault();
+    
+    $( '#by-name' ).attr('disabled',false);
+    
+    t.$( '#all-students' ).css("background-position", "0% 0%");
+    t.$( '#assign-by-dept' ).css("background-position", "0% 0%");
+    
+    $( '#assign-by-dept-radio' ).val( false ).trigger( 'change' );
+    $( '#assign-by-dept-radio' ).attr( 'disabled', true );
+    $( '#by-dept' ).val(null).trigger("change");
+    $( '#by-dept' ).attr('disabled',true);
+    
+    $( '#all-students-radio').val(false).trigger('change');
+    $( '#all-students-radio').attr('disabled', true);
+    $( '#all-students').attr('disabled',true);
+//-----------------------------------------------------------------
+  },
   
   /*
    * #BY-NAME ( ASSIGN-BY-NAME )  ::(click)::
    */
   'change #by-name'( e, t ) {
     e.preventDefault();
-    if ( $( '#by-name' ).val() != null ) 
-      console.log( 'DEBUG: ' + $( '#by-name' ).val() );
-      
-      
-    //since there is feedback on this elements event from the radio buttons,
-    //must bail if empty so that the radio's event handler will complete
+    
     if ( $( '#by-name' ).val() == null ) return;
     
-    t.$( '#all-students' ).css("background-position", "0% 0%");
-    t.$( '#assign-by-dept' ).css("background-position", "0% 0%");
-    
-    $( '#by-dept' ).val( null ).trigger( 'change' );
-    $( '#by-dept' ).attr( 'disabled', true );  
+    if ( $( '#by-name' ).val() != null ) {
+      console.log( 'DEBUG: ' + $( '#by-name' ).val() );
+    }
 //-----------------------------------------------------------------
   },
 

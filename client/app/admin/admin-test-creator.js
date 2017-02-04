@@ -10,8 +10,8 @@ import { Tests }     from '../../../both/collections/api/tests.js';
 import '../../templates/admin/admin-test-creator.html';
 
 
-let Test = new Mongo.Collection(null)
-  , testidnum;
+let Test      = new Mongo.Collection(null)
+  , testidnum = undefined;
 
 /*
  * CREATED
@@ -298,9 +298,15 @@ Template.adminTestCreator.events({
     }
 */
     //converted to ascii code
-    let lastIdAscii = lastId.charCodeAt( 0 );
-    let correctAscii = $( '#correct_ans' ).val().charCodeAt(0);
-    
+    let lastIdAscii   = lastId.charCodeAt( 0 )
+      , correctAscii  = $( '#correct_ans' ).val();
+      
+    if ( correctAscii == 'Please Select' ) {
+      Bert.alert('You must select a correct answer!', 'danger');
+      return
+    } else {
+      correctAscii = $( '#correct_ans' ).val().charCodeAt(0);
+    }
     
     if ( correctAscii >= lastIdAscii ) {
      console.log( 'correct > last' );
@@ -313,13 +319,25 @@ Template.adminTestCreator.events({
       }
     } else if ( correctAscii < lastIdAscii ) {
       console.log( 'correct < last' );
-      for ( let j = 65; j <= correctAscii; j++ ) {
+
+      for ( let j = 65; j <= lastIdAscii; j++ ) {//correctAscii
         
         if ( t.$( `#${String.fromCharCode(j)}` ).val() == '' ) {
-          Bert.alert( `Answers must be supplied for all items A thorugh ${String.fromCharCode(correctAscii)}`, 'danger' );
-          return;
+          if ( j == 65 || j == 66 ) { //always the case
+            Bert.alert('At a minimum, two answers are needed: BOTH A and B','danger');
+            return;
+          }
+          if ( j < correctAscii && t.$( `#${String.fromCharCode(j)}` ).val() == '' ) {
+            Bert.alert( `Contigious values from A TO ${String.fromCharCode(correctAscii)}`, 'danger');
+            return;
+          }
+         
         }
       }
+      //    65 66 67  | 65 66 67  | 65 66 67
+      // 65 X  0  0   | 0  X  0   | 0  0  X
+      // 65 X  X  0   | 0  X  X   | 0  X  X
+      // 65 X  0  X   | X  X  0   | X  0  X
     }
 
     //compute end of answers

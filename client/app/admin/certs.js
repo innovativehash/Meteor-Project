@@ -4,6 +4,7 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
+ 
 import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
 
@@ -17,6 +18,7 @@ let certificate       = {}
   , count             = 0;
 
 certificate.courses   = [];
+
 
 /*
  * CREATED
@@ -42,13 +44,12 @@ Template.certs.onCreated(function(){
           if ( ui.draggable ) {
             if ( certificate && certificate.courses ) 
               certificate.courses[num] = 
-                { dc: `${ui.draggable[0].lastChild.firstChild.dataset.dc}`,
+                { 
+                  dc: `${ui.draggable[0].lastChild.firstChild.dataset.dc}`,
                   di: `${ui.draggable[0].lastChild.firstChild.dataset.di}`
                 }
             
             $(this).removeClass('ui-droppable');
-            
-            //$(this).empty().html( ui.draggable );
             
             let id    = ui.draggable.context.id;
             $(this).text( $( `#${id}` ).text() );
@@ -74,7 +75,6 @@ Template.certs.onCreated(function(){
 
 
 });
-
 
 /*
  * RENDERED
@@ -138,8 +138,18 @@ Template.certs.events({
   'blur #enter-certificate-name'( e, t ) {
     e.preventDefault()
     e.stopImmediatePropagation();
-
-    $( '#cName' ).text( $( '#enter-certificate-name' ).val() );
+    
+    let cert_id = undefined
+      , cert_nm = $( '#enter-certificate-name' ).val();
+      
+    cert_id = Certifications.findOne({ name: cert_nm });
+    if ( cert_id && cert_id._id ) {
+      $( '#enter-certificate-name' ).val('');
+      $( '#cName' ).text('');
+      Bert.alert('Sorry, but there is already a Certification by that name', 'danger');
+      return;
+    }
+    $( '#cName' ).text( cert_nm );
 //-------------------------------------------------------------------
   },
 
@@ -163,17 +173,27 @@ Template.certs.events({
      let patt1 = `/^${tf}/i`;
      let patt2 = `/^${tf}/`;
 
-    let items = Courses.find({ $and: [ { company_id: { $eq: Meteor.user().profile.company_id } },{ name: { $in: [ eval(patt1), eval(patt2) ] } } ] }).fetch();
+    let items = Courses.find({ $and: [ 
+                                       { company_id: { $eq: Meteor.user().profile.company_id } },
+                                       { name: { $in: [ 
+                                                        eval(patt1), eval(patt2) 
+                                                      ] 
+                                         
+                                                } 
+                                       } 
+                                     ] 
+                              }).fetch();
+                              
     let len = items.length;
      
-     for( let i = 0; i < len; i++ ) { //res.length
+     for( let i = 0; i < len; i++ ) {
   
      	let child 			= document.createElement( 'div' );
      	let sp          = document.createElement( 'span' );
      	let im          = document.createElement( 'img' );
      	
      	im.src        = "/img/icon-7.png";
-     	im.className  = ''; //d-cur
+     	im.className  = '';
      	im.id         = `cert-img-${i}`;
      	im.dataset.dc = `${items[i].credits}`;
      	im.dataset.di = `${items[i]._id}`;
@@ -210,11 +230,18 @@ Template.certs.events({
 
     let credits_total = 0,
         ids           = [],
-        c_id          = Meteor.user().profile.company_id,
+        c_id          = undefined,
         course_name   = $( '#enter-certificate-name' ).val()
-        exp_date      = $( '#enter-expiration-date' ).val();
+        exp_date      = $( '#enter-expiration-date' ).val()
+        cert_id       = undefined;
 
-    if ( certificate.courses.length <= 0) {
+    try {
+      c_id = Meteor.user().profile.company_id;
+    } catch( e ) {
+      return;
+    }
+    
+    if ( ! certificate.courses || certificate.courses.length <= 0) {
       Bert.alert( 'No Courses Selected!', 'danger');
       return;
     }
@@ -224,6 +251,14 @@ Template.certs.events({
       return;
     }
 
+    cert_id = Certificates.findOne({ name: course_name });
+    if ( cert_id && cert_id._id ) {
+      $( '#enter-certificate-name' ).val('');
+      $( '#cName' ).text('');
+      Bert.alert('Sorry, but there is already a Certification by that name', 'delete');
+      return;
+    }
+    
     for ( let i = 0, len = certificate.courses.length; i < len; i++ ){
       if ( certificate.courses[i] ) {
         credits_total += Number( certificate.courses[i].dc );
@@ -235,9 +270,10 @@ Template.certs.events({
       name:             course_name,
       courses:          ids,
       credits:          credits_total,
+      num:              ids.length,
       icon:             "/img/icon-6.png",
       company_id:       c_id,
-      type:             "Certification",
+      type:             "Certifications",
       times_completed:  0,
       expiry_date:      exp_date || "",
       created_at:       new Date()
@@ -283,16 +319,7 @@ Template.certs.events({
 });
 //-----------------------------------------------------------------------------
 
-/*
- * REPLACE TEXT NODE()
- */
-function replaceTextNode( t, item ) {
 
-  let textNode    = t.contents().first();
-  let replaceWith = `${item.name}`;
-  textNode.replaceWith( replaceWith );
-
-}
 
 function initC( d, c ) {
   let len = c.length;
@@ -330,4 +357,15 @@ function initC( d, c ) {
                          .prop('selectionEnd', 0);
     
   }
+}
+
+/*
+ * REPLACE TEXT NODE()
+ */
+function replaceTextNode( t, item ) {
+
+  let textNode    = t.contents().first();
+  let replaceWith = `${item.name}`;
+  textNode.replaceWith( replaceWith );
+
 }

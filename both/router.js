@@ -53,19 +53,21 @@ FlowRouter.route( '/post-signup', {
 FlowRouter.route( '/verify-email/:token', {
   name: 'verify-email',
   action( params ) {
+    BlazeLayout.render( 'plain', {main: 'verifyEmail'} ),
     Accounts.verifyEmail( params.token, ( error ) =>{
       if ( error ) {
-        console.log( error.reason, 'danger' );
+        console.log( error.message );
+        console.log( error );
       } else {
+        
+        //console.log( params.token );
+        //console.log(Meteor.user().emails[0].verified)
+        //console.log( Meteor.userId() );
 
-        //TODO: Display success page with temporary password
-        //TODO: create user settings, incl passwoed change
-
-        console.log( params.token );
-        console.log(Meteor.user().emails[0].verified)
-       
         Bert.alert( 'Email verified! Thanks!', 'success' );
-        FlowRouter.go( '/login' );
+      
+        FlowRouter.go( 'admin-dashboard',   { _id: Meteor.userId() });
+      
       }
     });
   }

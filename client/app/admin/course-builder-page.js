@@ -235,7 +235,7 @@ Template.courseBuilderPage.onCreated( function() {
             break;
             
           case 'test':
-            
+
             if ( testForItemsOnPage( Session.get('contentTracker') ) ) {
                   Bert.alert( 
                               'A Test must be the only item on the page!', 
@@ -250,7 +250,7 @@ Template.courseBuilderPage.onCreated( function() {
               Bert.alert( "A Course can't start with a test!", 'danger' );
               return;
             }
-            
+          
             $( '#cb-toolbar-text' ).hide();
             $( '#cb-toolbar-media' ).hide();
             $( '#cb-toolbar-video' ).hide();
@@ -910,7 +910,7 @@ Template.courseBuilderPage.events({
       tbo.ppts    = [];
       tbo.scorms  = [];
       tbo.tests   = [];
-      counter     = 0; 
+      counter   = t.page.get(); 
       
     let credits = t.$( '#course-builder-credits' ).val()
 
@@ -920,8 +920,10 @@ Template.courseBuilderPage.events({
 
       , keys    = t.$( '#tags' ).val();
 
-      if ( name == '' || credits == '' || percent == '' || keys == '' ) {
-        
+      if ( percent == '' ) percent = 1001; //completion is passing
+      
+      if ( name == '' || credits == '' || keys == '' ) {
+      
         Bert.alert( 
                     'All fields must be filled out!', 
                     'danger', 
@@ -943,8 +945,8 @@ Template.courseBuilderPage.events({
       }
       
       tbo.name            = name;
-      tbo.credits         = credits;
-      tbo.passing_percent = percent;
+      tbo.credits         = Number(credits);
+      tbo.passing_percent = Number(percent);
       tbo.keywords        = keys;
       tbo.icon            = "/img/icon-4.png";
       
@@ -994,7 +996,7 @@ Template.courseBuilderPage.events({
       tbo.ppts    = [];
       tbo.scorms  = [];
       tbo.tests   = [];
-      counter     = 0;
+      counter   = t.page.get();
 
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
@@ -1040,7 +1042,7 @@ Template.courseBuilderPage.events({
       tbo.credits = Number(tbo.credits);
 
     let built_id = BuiltCourses.insert({
-                                          name:         name,
+                                          name:         tbo.name,
                                           pages:        tbo.pages,
                                           company_id:   cid,
                                           creator_type: role,
@@ -1107,7 +1109,7 @@ Template.courseBuilderPage.events({
       tbo.ppts    = [];
       tbo.scorms  = [];
       tbo.tests   = [];
-      counter     = 0;
+      counter     = 1;
     }, 300);
     
     Meteor.setTimeout(function(){

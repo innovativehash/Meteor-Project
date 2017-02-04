@@ -42,68 +42,84 @@
                 class = "js-import-students-csv">
           Import Students CSV
         </button>
+        
+        
 <!-- ADD STUDENT MODAL -->    
-
-<div class="modal fade left" id = "addStudentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div  class           = "modal fade left" 
+      id              = "addStudentModal" 
+      tabindex        = "-1" 
+      role            = "dialog" 
+      aria-labelledby = "myModalLabel">
+  
   <div class="modal-dialog">
     <div class="pop-up-area students">
-      <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button>
+      
+      <button type          = "button" 
+              id            = "popup-close" 
+              data-dismiss  = "modal" 
+              aria-label    = "Close">x</button>
       <br><br>
-      <center><h2 style="color:white;">ADD STUDENTS</h2></center>
+      <center><h2 style="color:white;">ADD STUDENT</h2></center>
       <div class="popup-body">
         <br><br>
         <form action="">
           <div class="row">
             <div class="col-sm-6">
               <br>
-              <input  class = "js-fn input-lg" 
+              <input  class       = "js-fn input-lg" 
                       type        = "text" 
                       placeholder = "First Name"
-                      style="width:100%;">
+                      style       = "width:100%;">
             </div>
             <br>
             <div class="col-sm-6">
-                <input  class = "js-ln input-lg" 
-                        type = "text" 
+                <input  class       = "js-ln input-lg" 
+                        type        = "text" 
                         placeholder = "Last Name"
-                        style="width: 100%;">
+                        style       = "width: 100%;">
             </div>
           </div>
           <br>
           <div class="row">
             <br>
             <div class="col-sm-6">
-                <input  class = "js-email input-lg" 
-                        type  = "text" 
+                <input  class       = "js-email input-lg" 
+                        type        = "text" 
                         placeholder = "Email"
-                        style="width: 100%;">
+                        style       = "width: 100%;">
             </div>
             
             <div class="col-sm-6">
-                <select class ="form-control input-lg">
-                  <option value = "admin">Admin</option>
-                  <option value = "sales">Sales</option>
-                  <option value = "polit bureau" >Polit Bureau</option>
-                  <option value = "squirrel fancying">Squirrel Fancying</option>
-                </select>
-                <!--<input type="text" class="js-dept input-lg">-->
+
+              <select class="js-dept form-control input-lg">
+                <option></option>
+                {{#with departments}}
+                {{#each this}}
+                <option value="{{_id}}">{{name}}</option>
+                {{/each}}
+                {{/with}}
+              </select>
+                
             </div>
           </div>
           <br>
           <div class="row">
             <br>
             <div class="col-sm-6">
-              <select id = "sel1"  class="form-control input-lg">
+              
+              <select id    = "sel1"  
+                      class = "form-control input-lg">
+                
                 <option value = "student">Student</option>
                 <option value = "teacher">Teacher</option>
                 <option value = "admin" >Admin</option>
+                
               </select>
+              
               <!--
-              <select id = "sel1"  class="js-role form-control" data-style="btn-sss">
-                <option value = "student">Student</option>
-                <option value = "teacher">Teacher</option>
-                <option value = "admin" >Admin</option>
-              </select>
+              <select id          = "sel1"  
+                      class       = "js-role form-control" 
+                      data-style  = "btn-sss"></select>
               -->
             </div>
           </div>
@@ -120,32 +136,33 @@
     </div>                                         
   </div>
 </div>
+<!-- /ADD STUDENT MODAL -->
 
-<!-- END ADD STUDENT MODAL -->
+
       </div><!-- filter buttons -->
     </div>
     
     <div class="col-sm-4">
         <div class="search-box">
             <form action="">
-              
+             
               <div class="col-sm-2">
               
-                <!--<button id="search" type="search">--><img src="/img/search-1.png" alt=""><!--</button>-->
+                <!-- <img src="/img/search-1.png" alt=""> -->
               
               </div>
               
-              <div class="col-sm-9">
+              <!-- <div class="col-sm-9"> -->
                 <!-- <input type="text" placeholder="Search Material"> -->
                 <select id="search-students" style="">
-                  
+                  <option></option>
                   {{#with students}}
                   {{#each this}}
                   <option value="{{_id}}">{{fullName}}</option>
                   {{/each}}
                   {{/with}}
                 </select>
-              </div>
+              <!-- </div> -->
                 <!--<button id="close-search">X</button>-->
             </form>
         </div>
@@ -199,6 +216,18 @@
                           
                           <img src = "/img/edit.png" alt="">
                         </button>
+                        {{#if isCurrentUser _id}}
+                        <button class       = "js-delete-student"
+                                data-id     = "{{_id}}"
+                                data-toggle = "modal"
+                                data-target = "#deleteStudentModal"
+                                id          = "delete"
+                                style       = "opacity:.5;filter:alpha(opacity=50);"
+                                disabled>
+                          
+                          <img src = "/img/delete.png" alt="">
+                        </button>
+                        {{else}}
                         <button class       = "js-delete-student"
                                 data-id     = "{{_id}}"
                                 data-toggle = "modal"
@@ -207,6 +236,7 @@
                           
                           <img src = "/img/delete.png" alt="">
                         </button>
+                        {{/if}}
                       </td>
                     </tr>
 
@@ -230,14 +260,28 @@
 
 
 
-
-<div class="modal fade left" id = "editStudentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!-- EDIT STUDENT MODAL -->
+<div  class           = "modal fade left" 
+      id              = "editStudentModal" 
+      tabindex        = "-1" 
+      role            = "dialog" 
+      aria-labelledby = "myModalLabel">
+  
   <div class="modal-dialog">
     <div class="pop-up-area students">
-      <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button>
+      
+      <button type          = "button" 
+              id            = "popup-close" 
+              data-dismiss  = "modal" 
+              aria-label    = "Close">x</button>
       <br><br>
+      
       <center><h2 style="color:white;">EDIT STUDENT</h2></center>
+      
       <div class="popup-body">
+        
+        <input type="hidden" id="edit-student-modal-id">
+        
         <br><br>
         <form action="">
           <div class="row">
@@ -267,14 +311,26 @@
             </div>
             
             <div class="col-sm-6">
+              
               <select name  = "js-dept" 
-                      class = "js-dept form-control input-lg"></select>
+                      class = "js-dept form-control input-lg">
+               <!-- <option></option> -->
+               <!--
+                  {{#with departments}}
+                  {{#each this}}
+                  <option value="{{_id}}">{{name}}</option>
+                  {{/each}}
+                  {{/with}}
+                -->
+              </select>
+                      
             </div>
           </div>
           <br>
           <div class="row">
             <br>
             <div class="col-sm-6">
+              
               <select class = "js-role form-control" 
                       name  = "js-role"></select>
 
@@ -282,7 +338,9 @@
           </div>
           <div class="row">
             <br><br><br><br>
+            
             <div class="col-sm-12 text-right">
+              
               <input  class = "js-edit-student-submit" 
                       type  = "submit" 
                       value="SUBMIT">
@@ -292,18 +350,29 @@
       </div>
     </div>                                         
   </div>
-</div><!-- modal -->
+</div><!-- /EDIT STUDENT MODAL -->
 
 
 
 
-
-<div class="modal fade left" id = "deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!-- DELETE STUDENT MODAL -->
+<div  class           = "modal fade left" 
+      id              = "deleteStudentModal" 
+      tabindex        = "-1" 
+      role            = "dialog" 
+      aria-labelledby = "myModalLabel">
+  
   <div class="modal-dialog">
     <div class="pop-up-area students">
-      <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button>
+      
+      <button type          = "button" 
+              id            = "popup-close" 
+              data-dismiss  = "modal" 
+              aria-label    = "Close">x</button>
       <br><br>
+      
       <center><h2 style="color:white;">DELETE STUDENT</h2></center>
+      
       <div class="popup-body">
         <br><br>
         <form action="">
@@ -331,6 +400,7 @@
                 <span id    = "fnln" 
                       style = "color:white;font-size:2em;">
                 </span>
+                
               </center>
             </div>
             <div class="col-sm-2"></div>
@@ -339,7 +409,9 @@
 
           <div class="row">
             <br><br><br>
+            
             <div class="col-sm-12 text-right">
+              
               <input  class = "js-delete-student-submit" 
                       type  = "submit" 
                       value = "SUBMIT">
@@ -349,6 +421,6 @@
       </div>
     </div>                                         
   </div>
-</div><!-- modal -->
+</div><!-- /DELETE STUDENT MODAL -->
 {{/if}}
 </template>

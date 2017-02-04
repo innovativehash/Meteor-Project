@@ -45,6 +45,7 @@ Template.adminStudents.onCreated( function() {
   */
   $.getScript( '/js/select2.min.js', function() {
     $( document ).ready(function(){
+      
       $( '#search-students' ).select2({
         placeholder: "Search students",
         allowClear: true,
@@ -55,8 +56,10 @@ Template.adminStudents.onCreated( function() {
       $( '.js-dept' ).select2({
         placeholder: "Department",
         allowClear: true,
-        multiple: true,
-        tags:true
+        multiple: false,
+        tags:false,
+        //maximumSelectionLength: 2,
+
       });
 
       $( '.js-role' ).select2({
@@ -65,6 +68,7 @@ Template.adminStudents.onCreated( function() {
         multiple: false,
         tags:false
       });
+
     });
     //console.log('students:: chosen,jquery.min.js loaded...');
   }).fail( function(jqxhr, settings, exception ) {
@@ -97,13 +101,25 @@ Template.adminStudents.onRendered( function() {
 Template.adminStudents.helpers({
 
   students() {
-    let s   = Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
-    let len = s.length;
-    for( let i=0; i<len; i++ ) {
-      s[i].created_at = moment( s[i].created_at ).format( 'M-D-Y' ) //modify array in place
+    try {
+      let s   = Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
+      let len = s.length;
+      for( let i=0; i<len; i++ ) {
+        s[i].created_at = moment( s[i].created_at ).format( 'M-D-Y' ) //modify array in place
+      }
+  
+      return s;
+    } catch(e) {
+      return;
     }
-
-    return s;
+  },
+  
+  departments() {
+    try {
+      return Departments.find({ company_id: Meteor.user().profile.company_id }).fetch();
+    } catch(e) {
+      return;
+    }
   },
 
 });
@@ -186,24 +202,24 @@ Template.adminStudents.events({
 
     //DEPT MUST HAVE A VALUE
 
-    let dpt = Departments.find({}).fetch();
+    //let dpt = Departments.find({}).fetch();
 
     //clear created by code options
-    $( '.js-dept option' ).each(function(){
-      $(this).remove();
-    });
+    //$( '.js-dept option' ).each(function(){
+    //  $(this).remove();
+    //});
 
-    Meteor.setTimeout(function(){
+    //Meteor.setTimeout(function(){
 
-      $( '.js-dept' ).append( '<option></option>' );
+      //$( '.js-dept' ).append( '<option></option>' );
       
-      for( let i = 0, l = dpt.length; i < l; i++ ){
-        
-        $( '.js-dept' ).append( '<option value="' + dpt[i]._id + '">' +
-                                  dpt[i].name + '</option>' 
-                              );
-      }
-    }, 500);
+      //for( let i = 0, l = dpt.length; i < l; i++ ){
+        //if ( dpt[i].name != '')
+          //$( '.js-dept' ).append( `<option value="${dpt[i]._id}">` +
+                                  //`${dpt[i].name}</option>` 
+                              //);
+      //}
+    //}, 500);
 //-------------------------------------------------------------------
   },
 
@@ -220,14 +236,17 @@ Template.adminStudents.events({
       //console.log( t.$('.js-dept').val() );
 
       //INSERT ADDED DEPT TO DEPT DB if it doesn't exist
-      let foo;
-      try {
-        foo = Departments.findOne({ _id: t.$('.js-dept option:selected').val() })._id;
-      } catch( e ) {
-        foo = Departments.insert({ company_id: Meteor.user().profile.company_id, name: t.$( '.js-dept option:selected' ).text() });
-      }
+      let foo
+        , opt_dpt_id = t.$('.js-dept option:selected').val()
+        , opt_dpt_nm = t.$('.js-dept option:selected').text().toLowerCase();
 
-      $( '#addStudentModal' ).modal( "hide" );
+      try {
+        if ( opt_dpt_id != null && opt_dpt_id != '' )
+          foo = Departments.findOne({ _id: opt_dpt_id })._id;
+      } catch( e ) {
+        if ( opt_dpt_id != null && opt_dpt_id != '' )
+          foo = Departments.insert({ company_id: Meteor.user().profile.company_id, name: opt_dpt_nm });
+      }
 
 
       let co = Companies.findOne({ _id: Meteor.user().profile.company_id });
@@ -237,19 +256,45 @@ Template.adminStudents.events({
       let email     = $( '.js-email' ).val().trim();
       let dept      = $( '.js-dept :selected' ).text();
       let opt       = $( '#sel1' ).val();
-
+      
+      if ( fname == '' ) {
+        Bert.alert('First Name is a required field', 'danger');
+        return;
+      }
+      if ( lname == '' ) {
+        Bert.alert('Last Name is a required field', 'danger');
+        return;
+      }
+      if ( email == '' ) {
+        Bert.alert('Email is a required field', 'danger');
+        return;
+      }
+      if ( dept == '' ) {
+        Bert.alert('Department is a required field', 'danger');
+        return;
+      }
+    
+      $( '#addStudentModal' ).modal( "hide" );
+      
       /* ASSIGN random password */
       //todo: assign random password;
-      let password = 'afdsjkl83212';
-
+      let password    = 'afdsjkl83212'
+        , adminEmail  = 'admin@collectiveuniversity.com'
+        , videoLink   = 'TO BE ADDED';  //BE SURE TO MAKE IT: http:// xxx
+      
+      opt           = opt.toLowerCase();
+      
       let url       = 'https://collective-university-nsardo.c9users.io/login';
-      let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video:\n\nIf you have any questions, please contact: `;
+      let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video: ${videoLink}\n\nIf you have any questions, please contact: ${adminEmail}`;
 
       //ALL FIELDS MUST BE FILLED OUT OR ERR
       Meteor.call( 'addUser', email, password, fname, lname, opt, dept, co.name, co._id );
 
-      Meteor.call( 'sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text );
-
+      if ( opt == 'student' || opt == 'teacher' ) {
+        //                        TO      FROM                              SUBJECT       BODY
+        Meteor.call( 'sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text );
+      }
+      
       /*
       Meteor.call('sendEmail',
                   'nsardo@msn.com',
@@ -259,9 +304,9 @@ Template.adminStudents.events({
       */
 
       //clear created by code options
-      $( '.js-dept option').each(function(){
-        $(this).remove();
-      });
+      //$( '.js-dept option').each(function(){
+        //$(this).remove();
+      //});
 
       $( '.js-fn' ).val('');
       $( '.js-ln' ).val('');
@@ -291,7 +336,10 @@ Template.adminStudents.events({
       t.$( '.js-fn' ).attr( 'placeholder', s.fname );
       t.$( '.js-ln' ).attr( 'placeholder', s.lname );
       t.$( '.js-email' ).attr( 'placeholder', s.email );
-
+      
+      //SET EDIT RECORDS ID
+      t.$( '#edit-student-modal-id' ).data('id',id);
+      
       let dpt = Departments.find( {} ).fetch();
 
       //clear created by code options
@@ -299,9 +347,11 @@ Template.adminStudents.events({
         $(this).remove();
       });
       
+      
       $( '.js-role option' ).each(function(){
         $(this).remove();
       });
+      
 
       Meteor.setTimeout(function(){
         
@@ -311,14 +361,19 @@ Template.adminStudents.events({
                                     dpt[i].name + '</option>' 
                                 );
         }
+        
+        
         for( let i = 0, l = sTypes.length; i < l; i++ ){
           
           $( '.js-role' ).append( '<option value="' + sTypes[i] +  '">'  +
                                   capitalizeFirstLetter( sTypes[i] ) + '</option>' 
                                 );
         }
-        $( 'select[name="js-dept"]').find('option:contains("'  + s.department                     + '")' ).attr( "selected",true );
-        $( 'select[name="js-role"]').find('option:contains("'  + capitalizeFirstLetter(s.role)    + '")' ).attr( "selected",true );
+        //$( `select[value*="${s.department}"]` ).attr('selected',true);
+        
+        $( 'select[name="js-dept"]').find('option:contains("' + s.department + '")').attr('selected',true);
+    
+        $( 'select[name="js-role"]').find('option:contains("' + capitalizeFirstLetter(s.role) + '")' ).attr( "selected",true );
       }, 500);
 //-------------------------------------------------------------------
   },
@@ -332,18 +387,28 @@ Template.adminStudents.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    let id = t.$( '.js-edit-student' ).data( 'id' );
+    let id = t.$( '#edit-student-modal-id' ).data( 'id' );
 
     let s  = Students.findOne({ _id: id });
 
 
     //DEPT MUST HAVE A VALUE
     let r   = $( '.js-role' ).select2( 'data' )[0].text.toLowerCase(),
-        em  = $( '.js-email' ).val()            || s.email,
+        fn  = $( '.js-fn' ).attr('placeholder'),
+        em  = $( '.js-email' ).attr('placeholder'),
         d   = $( '.js-dept' ).select2( 'data' )[0].text;
         url = 'https://collective-university-nsardo.c9users.io/login';
 
-
+    //if ( d == '' ) d = 'sales';
+    if ( d == '' ) {
+      Bert.alert('Department must not be blank', 'danger');
+      return;
+    } else if ( r == '' ) {
+      Bert.alert('User Role must not be blank', 'danger');
+      return;
+    }
+    
+    
     // ALL FIELDS MUST BE FILLED OUT OR ERROR
     Students.update({ _id: id },
                     {$set:{ role: r,
@@ -356,7 +421,7 @@ Template.adminStudents.events({
     Meteor.users.update({ _id: id }, {$set:{ roles: { [r] : true } }  });
 
     if ( r == 'teacher' ) {
-      let text = `Hello ${fn},\n\nThe administrator of Collective University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${e}\nPass: ${s.password}`;
+      let text = `Hello ${fn},\n\nThe administrator of Collective University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${em}\n`;
       Meteor.call('sendEmail', em, 'admin@collectiveuniversity.com', 'Upgraded Account', text );
     }
 
@@ -366,14 +431,14 @@ Template.adminStudents.events({
     t.$( '.js-email' ).attr( 'placeholder',  "" );
 
     //clear created by code options
-    $( '.js-dept option' ).each(function(){
-      $(this).remove();
-    });
+   // $( '.js-dept option' ).each(function(){
+     // $(this).remove();
+    //});
     $( '.js-role option' ).each(function(){
       $(this).remove();
     });
 
-    Bert.alert( 'Edits to student record recorded', 'success', 'growl-top-right' );
+    Bert.alert( 'Edits to student record are saved', 'success', 'growl-top-right' );
     $( '#editStudentModal' ).modal( "hide" );
 
 //-------------------------------------------------------------------
@@ -391,9 +456,9 @@ Template.adminStudents.events({
       t.$( '.js-email' ).attr( 'placeholder', "" );
 
       //clear created by code options
-      t.$( '.js-dept option' ).each(function(){
-        t.$(this).remove();
-      });
+      //t.$( '.js-dept option' ).each(function(){
+        //t.$(this).remove();
+      //});
 
       t.$( '.js-role option' ).each(function(){
         t.$(this).remove();
@@ -433,7 +498,7 @@ Template.adminStudents.events({
     Students.remove( id );
     Meteor.users.remove( id );
 
-    Bert.alert( 'Student record deleted','danger' );
+    Bert.alert( 'Student record deleted','success' );
 
     t.$( '#fnln' ).html( "" );
     t.$( '.name' ).data( 'id', "" );

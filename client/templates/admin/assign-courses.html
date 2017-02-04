@@ -108,7 +108,8 @@
                 <div class = "single-assign">
                   <div class = "assign-title">
                     
-                    <input  type  = "radio" 
+                    <input  id    = "all-students-radio"
+                            type  = "radio" 
                             name  = "checkbox" 
                             class = "css-checkbox">
                     <label id     = "all-students" 
@@ -117,8 +118,7 @@
                     </label>
                     <span>OR</span>
                   </div>
-                    <div class="assign-body">
-                      <!--<select class="js-multiple-select-1 js-states form-control" multiple="multiple">-->
+                    <div id="wrap-by-name" class="assign-body">
                       <select data-placeholder  = "student name" 
                               id                = "by-name" 
                               style             = "" 
@@ -135,7 +135,8 @@
               <div class="col-sm-6">
                 <div class="single-assign">
                   <div class="assign-title">
-                      <input  type  = "radio" 
+                      <input  id    = "assign-by-dept-radio"
+                              type  = "radio" 
                               name  = "checkbox" 
                               class = "css-checkbox">
                       <label  id    = "assign-by-dept" 
@@ -144,8 +145,10 @@
                       </label>
                   </div>
                   <div class="assign-body">
-                    <!--<select class="js-multiple-select-2 js-states form-control" multiple="multiple">-->
-                    <select id="by-dept" data-placeholder="dept name" multiple>
+                    <select id                = "by-dept" 
+                            style             = ""
+                            data-placeholder  = "dept name" 
+                            multiple>
                       {{#with dept}}
                         {{#each this}}
                       <option>{{name}}</option>

@@ -8,18 +8,18 @@ export const Diplomas = new Mongo.Collection("diplomas");
 
 /*
 Diplomas.allow({
-  insert: () => false,
-  update: () => false,
+  insert: () => true,
+  update: () => true,
   remove: () => false
 });
 
 Diplomas.deny({
-  insert: () => true,
-  update: () => true,
+  insert: () => false,
+  update: () => false,
   remove: () => true
 });
 */
-
+/*
 let DiplomasSchema = new SimpleSchema({
   'name': {
     type: String
@@ -41,8 +41,12 @@ let DiplomasSchema = new SimpleSchema({
   },
   'courses': {
     type: [String]
+  },
+  'num': {
+    type: Number
   }
   
 });
 
 Diplomas.attachSchema( DiplomasSchema );
+*/
