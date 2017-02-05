@@ -49,9 +49,14 @@ Template.studentRecord.onRendered( function() {
  */
 Template.studentRecord.helpers({
 
-  uname: () =>
-    Meteor.users.findOne({ _id: FlowRouter.getParam("_id") }, { username:1 }).username,
-
+  uname: () => {
+    try {
+      return Meteor.users.findOne({ _id: FlowRouter.getParam("_id") }, { username:1 }).username;
+    } catch(e) {
+      return;
+    }
+  },
+  
   email() {
     console.log( Meteor.users.findOne({_id: FlowRouter.getParam("_id") }).emails.address );
     return Meteor.users.findOne({_id: FlowRouter.getParam("_id") }).emails.address;

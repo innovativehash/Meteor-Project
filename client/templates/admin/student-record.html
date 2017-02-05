@@ -46,7 +46,7 @@
                   {{#with certificates}}
                   {{#each this}}
                   <tr>
-                    <th style="width:30%;"><img src="/img/icon-6.png" alt="">&nbsp;{{name}}</th>
+                    <th style="width:30%;"><img src={{icon}} alt="">&nbsp;{{name}}</th>
                     <td>Completed On {{date_completed}}</td>
                     <td>Expires {{expiry}}</td>
                     <!-- <td><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></td> -->
@@ -70,7 +70,7 @@
                   {{#with degrees}}
                   {{#each this}}
                     <tr>
-                      <th style="width:30%;"><img src="/img/icon-5.png" alt="">&nbsp;{{name}}</th>
+                      <th style="width:30%;"><img src="{{icon}}" alt="">&nbsp;{{name}}</th>
                       <td><input type="hidden" name="id" value="{{id}}"/></td>
                     </tr>
                   {{/each}}
@@ -99,7 +99,7 @@
 
                     {{#each completed_courses}}
                     <tr>
-                      <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{name}}</th>
+                      <th style="width:30%;"><img src="{{icon}}" alt="">{{name}}</th>
                       <td>{{or num 1}}</td>
                       <td>{{credits}}</td>
                       <td>{{date_completed}}</td>
@@ -125,7 +125,7 @@
 
                     {{#each approved_courses}}
                     <tr>
-                      <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{course}}</th>
+                      <th style="width:30%;"><img src="{{icon}}" alt="">{{course}}</th>
                       <td>- n/a -</td>
                       <td>{{credits}}</td>
                       <td>{{date}}</td>
@@ -151,7 +151,7 @@
 
                     {{#each current_courses}}
                     <tr>
-                      <th style="width:30%;"><img src="/img/icon-4.png" alt="">{{name}}</th>
+                      <th style="width:30%;"><img src="{{icon}}" alt="">{{name}}</th>
                       <td>{{or num 1}}</td>
                       <td>{{credits}}</td>
                       <td>{{date_started}}</td>

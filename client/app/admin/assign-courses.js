@@ -7,6 +7,8 @@
 import { Students }     from '../../../both/collections/api/students.js';
 import { Courses }      from '../../../both/collections/api/courses.js';
 import { Departments }  from '../../../both/collections/api/departments';
+import { Diplomas }     from '../../../both/collections/api/diplomas.js';
+import { Certifications } from '../../../both/collections/api/certifications.js';
 
 import '../../templates/admin/assign-courses.html';
 
@@ -62,8 +64,21 @@ Template.assignCourses.onRendered(function(){
 Template.assignCourses.helpers({
 
   courses: () => {
+    let cours, certs, dips, ary = [];
     try {
-      return Courses.find({ company_id: Meteor.user().profile.company_id}).fetch();
+      cours = Courses.find({ company_id: Meteor.user().profile.company_id}).fetch();
+      
+      certs = Certifications.find({ company_id: Meteor.user().profile.company_id}).fetch();
+    
+      dips  = Diplomas.find({ company_id: Meteor.user().profile.company_id}).fetch();
+      
+      if ( cours ) ary.push( cours );
+      if ( certs ) ary.push( certs );
+      if ( dips )  ary.push( dips );
+
+      ary = _.flatten(ary);
+
+      return ary;
     } catch( e ) {
       return;
     }
@@ -123,6 +138,7 @@ Template.assignCourses.events({
     t.$( '.add-course' ).attr( 'data-id', $( e.currentTarget ).data( 'id' ));
     t.$( '.add-course' ).attr( 'data-credits', $( e.currentTarget ).data( 'credits' ));
     t.$( '.add-course' ).attr( 'data-name', $( e.currentTarget ).data( 'name' ));
+    t.$( '.add-course' ).attr( 'data-icon', $( e.currentTarget ).data( 'icon' ));
 
     //selects
     t.$( '#assign-by-dept-radio' ).val( false ).trigger( 'change' );
@@ -158,11 +174,11 @@ Template.assignCourses.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    let idx   = $( e.currentTarget)[0].dataset.id;          // course id
-    let nm    = $( e.currentTarget)[0].dataset.name;        // course name
-    let cr    = $( e.currentTarget)[0].dataset.credits;     // course credits
-    let abn = as = abd   = false;
-    //console.log( $( e.currentTarget)[0].dataset );
+    let idx   = $( e.currentTarget)[0].dataset.id          // course id
+      , nm    = $( e.currentTarget)[0].dataset.name        // course name
+      , cr    = $( e.currentTarget)[0].dataset.credits     // course credits
+      , ic    = $( e.currentTarget)[0].dataset.icon        // course icon
+      , abn   = as = abd   = false;
 
     let assignByDept  = $( '#by-dept' ).val();           // department name(s)
     let assignByName  = $( '#by-name' ).val();           // student name(s)
@@ -190,7 +206,7 @@ Template.assignCourses.events({
       let s     = Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
       let slen  = s.length;
 
-      let o     = { id: idx, name: nm, credits: cr, num: 1, date_assigned: new Date() };
+      let o     = { id: idx, name: nm, credits: cr, num: 1, icon: ic, date_assigned: new Date() };
 
       for ( let i = 0; i < slen; i++ ) {
         if ( s[i].role == 'admin' ) continue;
@@ -217,7 +233,7 @@ Template.assignCourses.events({
           slen  = s.length,
           alen;
 
-      let o     = { id: idx, name: nm, credits: cr, num: 1, date_assigned: new Date() };
+      let o     = { id: idx, name: nm, credits: cr, num: 1, icon: ic, date_assigned: new Date() };
 
       // DOUBLE CHECK ASYNC TIMING, BEST PRACTICE FOR THIS
       alen = assignByName.length;
@@ -250,7 +266,7 @@ Template.assignCourses.events({
           slen  = s.length,
           dlen;
 
-      let o     = { id: idx, name: nm, credits: cr, num: 1, date_assigned: new Date() };
+      let o     = { id: idx, name: nm, credits: cr, num: 1, icon: ic, date_assigned: new Date() };
 
       // DOUBLE CHECK ASYNC TIMING, BEST PRACTICE FOR THIS
       dlen = assignByDept.length;

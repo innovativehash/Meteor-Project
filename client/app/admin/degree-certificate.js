@@ -178,10 +178,10 @@ Template.degreeCertificate.events({
       , nm  = $( e.currentTarget ).data( 'name' )
       , type = this.type;
     
-    $( '#delete-dta' ).attr('data-id', idx );
-    $( '#delete-dta' ).attr('data-type', type );
+    $( '#delete-dta' ).data('id', idx); //attr('data-id', idx );
+    $( '#delete-dta' ).data('type', type); //attr('data-type', type );
     $( '#degree-cert-delete-type' ).text( `${type}` );
-    
+console.log('in delete');
     $( '#delete-degree-cert' ).modal();
     
     $( '#degree-cert-delete-text' ).text( `${nm}` );
@@ -207,16 +207,17 @@ Template.degreeCertificate.events({
    */
   'click #degree-cert-delete-submit'( e, t ) {
     e.preventDefault();
-    
+
     let type  = $( '#delete-dta' ).data('type')
       , idx   = $( '#delete-dta' ).data('id');
-console.log( type );
-console.log( idx );
+
      switch ( type ) {
       case "Certifications":
         Certifications.remove({ _id: idx});
         break;
       case "Diplomas":
+console.log('in dip rem')
+console.log( idx );
         Diplomas.remove({ _id: idx});
         break;
     }

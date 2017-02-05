@@ -4,9 +4,7 @@
 <style>
   #degree-cover {position: fixed; height: 100%; width: 100%; top:0; left: 0; background: #000; z-index:9999;}
 </style>
-
 {{#if isAdmin}}
-
 <div id = "degree-cover"></div>
   <div class = "certificate-area">
     <div class = "certificate-container">
@@ -36,6 +34,7 @@
             <div class = "certificate-course">
               <h2>Course :</h2>
               <p>Choose the courses you want by dragging and dropping them to the right. If you want them completed in a specific order drop to the right of the class you want to go before it.</p>
+              
               <div id = "certificate-search">
                 
                 <input  id          = "degree-search"
@@ -46,7 +45,7 @@
                         autofocus>
                 <br>    
                 <br>
-                <div id = "dojo"></div>
+                <div id = "dojo" class="sortContainer" style="width:275px;"></div>
 
               </div>
             </div>
@@ -62,30 +61,35 @@
                         <label for = "">Name Your Degree:</label>
                         <input  id          = "enter-degree-name" 
                                 type        = "text" 
-                                style       = "text-align:left;" 
                                 placeholder = "Degree Name" 
-                                tabindex    = "2">
+                                tabindex    = "2"
+                                autofocus>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class = "certificate-body-content">
+                <div class = "certificate-body-content sortContainer">
                   
                   <h2>
                     <img src = "/img/icon-8.png" alt = "">
                     Course Name :&nbsp;&nbsp;
                     <span id = "dName" style="color:blue;"></span>
                   </h2>
-                  
-                  <ul>
-                    <li id = "drop1" class = "d-cur" tabindex = "-1">Drop 1st in sequence</li>
-                    <li id = "drop2" class = "d-cur" tabindex = "-1">Drop 2nd in sequence</li>
-                    <li id = "drop3" class = "d-cur" tabindex = "-1">Drop 3rd in sequence</li>
-                    <li id = "drop4" class = "d-cur" tabindex = "-1">Drop 4th in sequence</li>
-                    <li id = "drop5" class = "d-cur" tabindex = "-1">Drop 5th in sequence</li>
-                    <li id = "drop6" class = "d-cur" tabindex = "-1">Drop 6th in sequence</li>
-                    <li id = "drop7" class = "d-cur" tabindex = "-1">Drop 7th in sequence</li>
-                  </ul>
+                  <br><br>
+                  <div  id="degree-drop-zone" 
+                        class="d-cur" 
+                        style="padding:5px;width:275px !important;height:353px;border:1px dashed;border-radius:5px;"><!-- ul -->
+                    <!-- li class="d-cur" -->
+                    <!--
+                    <div id = "drop1" class = "sortable d-cur ui-widget-content degree-drop" style="width:260px;height:30px;border:1px dashed;" tabindex = "-1">Drop 1st in sequence</div>
+                    <div id = "drop2" class = "sortable d-cur ui-widget-content degree-drop" tabindex = "-1">Drop 2nd in sequence</div>
+                    <div id = "drop3" class = "sortable d-cur ui-widget-content degree-drop" tabindex = "-1">Drop 3rd in sequence</div>
+                    <div id = "drop4" class = "sortable d-cur ui-widget-content degree-drop" tabindex = "-1">Drop 4th in sequence</div>
+                    <div id = "drop5" class = "sortable d-cur ui-widget-content degree-drop" tabindex = "-1">Drop 5th in sequence</div>
+                    <div id = "drop6" class = "sortable d-cur ui-widget-content degree-drop" tabindex = "-1">Drop 6th in sequence</div>
+                    <div id = "drop7" class = "sortable d-cur ui-widget-content degree-drop" tabindex = "-1">Drop 7th in sequence</div>
+                    -->
+                  </div>
                 </div>
                 
                 <div class = "certificate-save">

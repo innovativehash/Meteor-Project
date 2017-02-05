@@ -15,7 +15,7 @@ import { Courses }        from '../../../both/collections/api/courses.js'
 import '../../templates/admin/degree-cert-edit.html';
 
 let //certificate       = {}
-  count             = 0
+  count               = 0
   , current_num       = 1
   , type
   , rec_id
@@ -39,14 +39,14 @@ Template.degreeCertEdit.onCreated(function(){
         current_courses = _.reject(current_courses, function(item) {
           return item === $(`#${ui.item[0].id}`).data('di')
         });
-      }
+      },
     });
     
     $( "#dc-current-courses" ).sortable({
       connectWith: "#dc-course-list",
       receive( event, ui ) {
         current_courses.push( $(`#${ui.item[0].id}`).data('di') );
-      }
+      },
     });
     
     //$( ".sortable" ).disableSelection();
@@ -194,16 +194,18 @@ Template.degreeCertEdit.events({
       counter       = 0
       //, cnt           = 0
       , credits_total = 0
-      , exp_date      = undefined
+      //, exp_date      = undefined
       , ary           = []
       , order;
     
     order = $( '#dc-current-courses' ).sortable('toArray');
     for( let i = 0, len = order.length; i < len; i++ ) {
-      counter++;
-      let cur = $( `#${order[i]}` );
-      credits_total += cur.data('dc')
-      ary.push( cur.data('di') );
+      if ( order[i] ) {
+        counter++;
+        let cur = $( `#${order[i]}` );
+        credits_total += cur.data('dc')
+        ary.push( cur.data('di') );
+      }
     }
     
     switch( type ) {
@@ -283,18 +285,14 @@ Template.degreeCertEdit.events({
      }
      
      let patt1 = `/^${tf}/i`;
-     let patt2 = `/^${tf}/`;
 
-console.log(current_courses);
      let items = Courses.find({ company_id: Meteor.user().profile.company_id, 
                                 name: { $regex: eval(patt1) },
                                 _id:  { $nin: current_courses }
                               }, 
                               { limit: 7 }).fetch();
-                            
-     let len = items.length;
   
-     for( let i = 0; i < len; i++ ) {
+     for( let i = 0, len = items.length; i < len; i++ ) {
 
      	let child 			  = document.createElement( 'div' );
 
@@ -306,16 +304,7 @@ console.log(current_courses);
       
       d.appendChild( child );
       $( `#cert-holder-${i}` ).css('width','260px');
-/*     	
-    	$( `#cert-holder-${i}` ).draggable({ 
-                                          //helper:  "clone",
-                                           snap:    true,
-                                           revert:  'invalid',
-                                           drag:    function(event, ui) {
-                                            //if ( flags[i] ) return false;
-                                           }
-    	                                  });
-*/  
+ 
      }
      
 //-------------------------------------------------------------------
@@ -347,15 +336,6 @@ function initC( d, c ) {
       d.appendChild( child );
       $( `#cert-holder-${i}` ).css('width','260px');
  
- /*  	
-     	$( `#cert-holder-${i}` ).draggable({   
-     	                                      snap: true, 
-     	                                      revert: 'invalid',
-                                            drag:    function(event, ui) { 
-                                              //if ( flags[i] ) return false;
-                                            }
-     	});
-*/     	
       $( '#cert-search' ).prop('selectionStart', 0)
                          .prop('selectionEnd', 0);
   }
