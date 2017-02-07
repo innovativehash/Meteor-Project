@@ -191,14 +191,20 @@ Template.degreeCertEdit.events({
   'click #degree-cert-save-edit'( e, t ) {
     e.preventDefault();
     let //count         = $( '#num' ).data('num')
-      counter       = 0
-      //, cnt           = 0
+      counter         = 0
+      , cname         = t.$('#edit-degree-cert-name').val()
       , credits_total = 0
-      //, exp_date      = undefined
       , ary           = []
       , order;
     
     order = $( '#dc-current-courses' ).sortable('toArray');
+
+    if ( order == '' ) {
+      console.log('DOH');
+      Bert.alert('You must have atleast ONE course added!', 'danger');
+      return;
+    }
+    
     for( let i = 0, len = order.length; i < len; i++ ) {
       if ( order[i] ) {
         counter++;
@@ -215,6 +221,7 @@ Template.degreeCertEdit.events({
                                 $set:
                                 { 
                                   courses:         ary,
+                                  name:            cname,
                                   credits:         Number(credits_total),
                                   num:             Number(counter),
                                   edited_at:       new Date()
@@ -228,6 +235,7 @@ Template.degreeCertEdit.events({
                                 $set:
                                 { 
                                   courses:         ary,
+                                  name:            cname,
                                   credits:         Number(credits_total),
                                   num:             Number(counter),
                                   edited_at:       new Date()

@@ -34,6 +34,10 @@ Template.certs.onCreated(function(){
     $( '#certificate-drop-zone' ).sortable({
       connectWith: '#cojo',
       receive( event, ui ) {
+        
+        let nm = $( '#enter-certificate-name' ).val();
+        if ( nm != '' ) $('#cName').text( nm );
+        
         course_list.push( $( `#${ui.item[0].id}` ).data('di') );
       },
     });
@@ -41,6 +45,10 @@ Template.certs.onCreated(function(){
     $( '#cojo' ).sortable({
       connectWith: '#certificate-drop-zone',
       receive( event, ui ) {
+        
+        let nm = $( '#enter-certificate-name' ).val();
+        if ( nm != '' ) $('#cName').text( nm );
+        
         course_list = _.reject(course_list, function(item){
           return item === $( `#${ui.item[0].id}` ).data('di');
         });
@@ -115,25 +123,66 @@ Template.certs.helpers({
  * EVENTS
  */
 Template.certs.events({
-
+  
+  /*
+   * #ENTER-CERTIFICATE-NAME ::(KEYDOWN)::
+   */
+  'keydown #enter-certificate-name'( e, t ) {
+    
+    // keyCode 65-90 lowercase, 
+    $('#cert-taken-name-error').text('');
+    let ec = $( '#enter-certificate-name' )
+      , cn = $( '#cName')
+      , str = ec.val();
+     
+    if ( e.originalEvent.altKey || e.originalEvent.ctrlKey || e.originalEvent.shiftKey ||e.originalEvent.metaKey ) {
+      return;
+    }
+    
+    //console.log( e.originalEvent.code );
+    
+    if ( e.key == 'Backspace' ) {
+      str = str.slice(0,str.length-1);
+    } else if ( e.keyCode >= 65 && e.keyCode <= 90 ) {
+      str += e.key;
+    } else {
+      ;
+    }
+    
+    ec.css({'color':'blue','text-decoration':''});
+    cn.css({'color':'blue','text-decoration':''});
+  
+    cn.text(str);
+//-------------------------------------------------------------------
+  },
+  
+  
+  
   /*
    * #ENTER-CERTIFICATE-NAME  ::(BLUR)::
    */
-  'blur #enter-certificate-name'( e, t ) {
+  'change #enter-certificate-name'( e, t ) {
     e.preventDefault()
     e.stopImmediatePropagation();
+    
+    $('#cert-taken-name-error').text('');
+    $( '#enter-certificate-name' ).css({'color':'blue','text-decoration':''});
+    $( '#cName' ).css({'color':'blue','text-decoration':''});
     
     let cert_id = undefined
       , cert_nm = $( '#enter-certificate-name' ).val();
       
+    $( '#cName' ).text( cert_nm ); 
+    
     cert_id = Certifications.findOne({ name: cert_nm });
     if ( cert_id && cert_id._id ) {
-      $( '#enter-certificate-name' ).val('');
-      $( '#cName' ).text('');
+      $('#cert-taken-name-error').text('That name is already being used');
+      
+      $( '#enter-certificate-name' ).css({'color':'red','text-decoration':'line-through'});
+      $( '#cName' ).css({'color':'red','text-decoration':'line-through'});
       Bert.alert('Sorry, but there is already a Certification by that name', 'danger');
       return;
     }
-    $( '#cName' ).text( cert_nm );
 //-------------------------------------------------------------------
   },
 
@@ -206,7 +255,17 @@ Template.certs.events({
       , exp_date      = $( '#enter-expiration-date' ).val()
       , cert_id       = undefined
       , order;
-
+    
+    //REDUNDANT CHECK
+    cert_id = Certifications.findOne({ name: course_name });
+    if ( cert_id && cert_id._id ) {
+      $('#cert-taken-name-error').text('That name is already being used');
+      $( '#enter-certificate-name' ).css({'color':'red','text-decoration':'line-through'});
+      $( '#cName' ).css({'color':'red','text-decoration':'line-through'});
+      Bert.alert('Sorry, but there is already a Certification by that name', 'danger');
+      return;
+    }
+  
     try {
       c_id = Meteor.user().profile.company_id;
     } catch( e ) {
@@ -214,20 +273,12 @@ Template.certs.events({
     }
     
     if ( ! course_list || course_list.length <= 0) {
-      Bert.alert( 'No Courses Selected!', 'danger');
+      Bert.alert( 'No Courses have been added!', 'danger');
       return;
     }
 
     if ( course_name == "" ) {
       Bert.alert( 'You Must Give the Certificate a Name!', 'danger' );
-      return;
-    }
-
-    cert_id = Certifications.findOne({ name: course_name });
-    if ( cert_id && cert_id._id ) {
-      $( '#enter-certificate-name' ).val('');
-      $( '#cName' ).text('');
-      Bert.alert('Sorry, but there is already a Certification by that name', 'delete');
       return;
     }
     

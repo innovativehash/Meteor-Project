@@ -1114,7 +1114,7 @@ Template.courseBuilderPage.events({
     
     Meteor.setTimeout(function(){
       Bert.alert( 
-                  'Your test was saved!', 
+                  'Your Course was saved!', 
                   'success', 
                   'growl-top-right' 
                 );

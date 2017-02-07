@@ -34,6 +34,10 @@ Template.degrees.onCreated(function() {
       $( '#degree-drop-zone' ).sortable({
         connectWith: "#dojo",
         receive( event, ui ) {
+          
+          let nm = $( '#enter-degree-name' ).val();
+          if ( nm != '' ) $('#dName').text( nm );
+          
           course_list.push( $( `#${ui.item[0].id}` ).data('di') );
         },
       });
@@ -41,6 +45,10 @@ Template.degrees.onCreated(function() {
       $( '#dojo' ).sortable({
         connectWith: "#degree-drop-zone",
         receive( event, ui ) {
+          
+          let nm = $( '#enter-degree-name' ).val();
+          if (nm!='') $('#dName').text( nm );
+          
           course_list = _.reject(course_list, function(item){
             return item === $( `#${ui.item[0].id}` ).data('di');
           });
@@ -116,6 +124,39 @@ Template.degrees.helpers({
  */
 Template.degrees.events({
 
+ /*
+   * #ENTER-CERTIFICATE-NAME ::(KEYDOWN)::
+   */
+  'keydown #enter-degree-name'( e, t ) {
+    
+    // keyCode 65-90 lowercase, 
+    $('#deg-taken-name-error').text('');
+    let ec = $( '#enter-degree-name' )
+      , cn = $( '#dName')
+      , str = ec.val();
+     
+    if ( e.originalEvent.altKey || e.originalEvent.ctrlKey || e.originalEvent.shiftKey ||e.originalEvent.metaKey ) {
+      return;
+    }
+    
+    //console.log( e.originalEvent.code );
+    
+    if ( e.key == 'Backspace' ) {
+      str = str.slice(0,str.length-1);
+    } else if ( e.keyCode >= 65 && e.keyCode <= 90 ) {
+      str += e.key;
+    } else {
+      ;
+    }
+    
+    ec.css({'color':'blue','text-decoration':''});
+    cn.css({'color':'blue','text-decoration':''});
+  
+    cn.text(str);
+  },
+//-------------------------------------------------------------------
+
+
   /*
    * #ENTER-DEGREE-NAME  ::(BLUR)::
    */
@@ -123,17 +164,26 @@ Template.degrees.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
+    $( '#deg-taken-name-error' ).text('');
+    $( '#enter-degree-name' ).css({'color':'blue','text-decoration':''});
+    $( '#dName' ).css({'color':'blue', 'text-decoration':''});
+    
     let dname = $( '#enter-degree-name' ).val()
       , d_id;
       
+    $( '#dName' ).text( dname ); 
+    
     d_id = Diplomas.findOne({ name: dname });
+
     if ( d_id && d_id._id ) {
-      $( '#enter-degree-name').val('');
-      $( '#dName' ).text('');
+      $('#deg-taken-name-error').text('That name is already being used');
+      
+      $( '#enter-degree-name' ).css({'color':'red','text-decoration':'line-through'});
+      $( '#dName' ).css({'color':'red','text-decoration':'line-through'});
       Bert.alert('Sorry, but there is already a Degree with that name', 'danger');
       return;
     }
-    $( '#dName' ).text( dname );
+    
 //-------------------------------------------------------------------
   },
   
@@ -146,6 +196,9 @@ Template.degrees.events({
   'keyup #degree-search'( e, t ) {
     
     // SEARCH TERM
+    let nm = $( '#enter-degree-name' ).val();
+    if (nm != '') $('#dName').text(nm);
+    
     let tf 	= document.getElementById( 'degree-search' ).value;
     //let d		= document.getElementById( 'dojo' );
      while ( d.hasChildNodes() ) {
@@ -205,7 +258,17 @@ Template.degrees.events({
       , course_name   = $( '#enter-degree-name' ).val()
       , d_id          = undefined
       , order;
-        
+
+    //REDUNDANT CHECK
+    d_id = Diplomas.findOne({ name: course_name });
+    if ( d_id && d_id._id ) {
+      $( '#deg-taken-name-error' ).text('That name is already being used');
+      $( '#enter-degree-name' ).css({'color':'red','text-decoration':'line-through'});
+      $( '#dName' ).css({'color':'red','text-decoration':'line-through'});
+      Bert.alert('Sorry, but a Dergree with that name already exists', 'danger');
+      return;
+    }
+    
     try {
       c_id = Meteor.user().profile.company_id;
     } catch(e) {
@@ -213,20 +276,12 @@ Template.degrees.events({
     }
     
     if ( !course_list || course_list.length <= 0) {
-      Bert.alert( 'No Courses Selected!', 'danger' );
+      Bert.alert( 'No Courses have been added!', 'danger' );
       return;
     }
 
     if ( course_name == "" ) {
       Bert.alert( 'You Must Give the Degree a Name!', 'danger' );
-      return;
-    }
-    
-    d_id = Diplomas.findOne({ name: course_name });
-    if ( d_id && d_id._id ) {
-      $( '#enter-degree-name' ).val('');
-      $( '#dName' ).text('');
-      Bert.alert('Sorry, but a Dergree with that name already exists', 'danger');
       return;
     }
     

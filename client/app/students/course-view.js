@@ -207,6 +207,19 @@ Template.courseView.helpers({
 Template.courseView.events({
 
   /*
+   * #LOGOUT  ::(CLICK)::
+   */
+  'click #cv-logout': function( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    Meteor.logout();
+    FlowRouter.go( '/login' );
+//-------------------------------------------------------------------
+  },
+
+
+  /*
    * .JS-BACK-TO-HOME  ::(CLICK)::
    */
   'click #course-view-page-back'( e, t ) {

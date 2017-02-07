@@ -139,6 +139,13 @@ Template.assignCourses.events({
     t.$( '.add-course' ).attr( 'data-credits', $( e.currentTarget ).data( 'credits' ));
     t.$( '.add-course' ).attr( 'data-name', $( e.currentTarget ).data( 'name' ));
     t.$( '.add-course' ).attr( 'data-icon', $( e.currentTarget ).data( 'icon' ));
+    
+    let typ = $( e.currentTarget ).data('type');
+    if ( typ == '' || typ == undefined || ! typ ) {
+      t.$( '.add-course' ).attr( 'data-type', 'Courses');
+    } else {
+      t.$( '.add-course' ).attr( 'data-type', typ );
+    }
 
     //selects
     t.$( '#assign-by-dept-radio' ).val( false ).trigger( 'change' );
@@ -178,11 +185,12 @@ Template.assignCourses.events({
       , nm    = $( e.currentTarget)[0].dataset.name        // course name
       , cr    = $( e.currentTarget)[0].dataset.credits     // course credits
       , ic    = $( e.currentTarget)[0].dataset.icon        // course icon
-      , abn   = as = abd   = false;
-
-    let assignByDept  = $( '#by-dept' ).val();           // department name(s)
-    let assignByName  = $( '#by-name' ).val();           // student name(s)
-    
+      , type  = $( e.currentTarget)[0].dataset.type        // course = '', Diplomas, Certifications
+      , abn   = as = abd   = false
+      , assignByDept  = $( '#by-dept' ).val()             // department name(s)
+      , assignByName  = $( '#by-name' ).val()             // student name(s)
+      , as            = $( '#all-students-radio' ).val(); // all-students radio
+      
     if ( assignByName != null ) {
       abn = true;
     }
@@ -191,22 +199,21 @@ Template.assignCourses.events({
       abd = true;
     }
     
-    let as  = $( '#all-students-radio' ).val();      // all-students radio
-    //let abd = $( '#assign-by-dept-radio' ).val();    // by department radio
+    type    = type.slice( 0, type.length - 1 );
+ 
+    let o   = { id: idx, name: nm, credits: cr, num: 1, icon: ic, type: type, date_assigned: new Date() };
     
     /*
      * ALL STUDENTS
      */
     if ( as == true ) {
 
-      //let url = 'https://collective-university-nsardo.c9users.io/login';
-      //let text_wo_due_date  = `Hello ${s[i].fname},\n\nYou've been enrolled in ${nm}.\n\nYou can log in here: ${url}\nUser: s[i].email\nYour password remains the same.`;
-      //let text_w_due_date   = `Hello ${s[i].fname},\n\nYou've been enrolled in ${nm}.  Please complete this by:  ${assignDueDate}.\n\nYou can log in here: ${url}\nUser: s[i].email\nYour password remains the same.`;
+    //let url = 'https://collective-university-nsardo.c9users.io/login';
+    //let text_wo_due_date  = `Hello ${s[i].fname},\n\nYou've been enrolled in ${nm}.\n\nYou can log in here: ${url}\nUser: s[i].email\nYour password remains the same.`;
+    //let text_w_due_date   = `Hello ${s[i].fname},\n\nYou've been enrolled in ${nm}.  Please complete this by:  ${assignDueDate}.\n\nYou can log in here: ${url}\nUser: s[i].email\nYour password remains the same.`;
 
       let s     = Students.find({ company_id: Meteor.user().profile.company_id }).fetch();
       let slen  = s.length;
-
-      let o     = { id: idx, name: nm, credits: cr, num: 1, icon: ic, date_assigned: new Date() };
 
       for ( let i = 0; i < slen; i++ ) {
         if ( s[i].role == 'admin' ) continue;
@@ -215,7 +222,7 @@ Template.assignCourses.events({
         //Meteor.call('sendEmail', s[i].email, 'admin@collectiveuniversity.com', 'Assigned Course', text_wo_due_date);
       }
       
-      Bert.alert( 'Course Assigned', 'success', 'growl-top-right' );
+      Bert.alert( `${type} has been assigned`, 'success', 'growl-top-right' );
 
     /*
      * ASSIGN BY NAME
@@ -233,8 +240,6 @@ Template.assignCourses.events({
           slen  = s.length,
           alen;
 
-      let o     = { id: idx, name: nm, credits: cr, num: 1, icon: ic, date_assigned: new Date() };
-
       // DOUBLE CHECK ASYNC TIMING, BEST PRACTICE FOR THIS
       alen = assignByName.length;
       if ( assignByName[alen-1] == '' ) alen = alen - 1; //artifact in input
@@ -248,7 +253,7 @@ Template.assignCourses.events({
           }
         }
       }
-      Bert.alert( 'Course assigned', 'success', 'growl-top-right' );
+      Bert.alert( `${type} has been assigned`, 'success', 'growl-top-right' );
 
 
     /*
@@ -266,8 +271,6 @@ Template.assignCourses.events({
           slen  = s.length,
           dlen;
 
-      let o     = { id: idx, name: nm, credits: cr, num: 1, icon: ic, date_assigned: new Date() };
-
       // DOUBLE CHECK ASYNC TIMING, BEST PRACTICE FOR THIS
       dlen = assignByDept.length;
       for( let i = 0; i < slen; i++ ) {
@@ -278,7 +281,7 @@ Template.assignCourses.events({
           }
         }
       }
-      Bert.alert( 'Course assigned', 'success', 'growl-top-right' );
+      Bert.alert( `${type} has been assigned`, 'success', 'growl-top-right' );
 
 
     } else {
