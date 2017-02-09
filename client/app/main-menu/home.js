@@ -19,30 +19,6 @@ Template.home.onCreated(function homeOnCreated() {
 
   $( "#cover" ).show();
 
-
-  /*
-   * JQUERY.PRETTYPHOTO
-   */
-    $.getScript( '/js/jquery.prettyPhoto.js', function() {
-      //console.log( 'home:: jquery.prettyPhoto.js loaded...' );
-      //Video
-      $( "a[rel^='prettyPhoto']").prettyPhoto({
-          deeplinking: false,
-          social_tools: false,
-          allow_resize: true,
-          default_width: 700,
-          default_height: 444,
-          horizontal_padding: 20
-      });
-    }).fail( function( jqxhr, settings, exception ) {
-      console.log( 'home:: load jquery.prettyPhoto.js failed' );
-      //console.log( 'jqxhr ' + jqxhr );
-      //console.log( 'settings ' + settings );
-      //console.log( 'exception: ' + exception );
-  });
-//-------------------------------------------------------------------
-
-
     /*
      * OWL.CAROUSEL
      */
@@ -124,8 +100,10 @@ Template.home.onCreated(function homeOnCreated() {
  * RENDERED
  */
 Template.home.onRendered(function() {
+  
       $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
         $( "#cover" ).hide();
         $( ".slider-area" ).fadeIn( 'slow' );
       });
+  
 });

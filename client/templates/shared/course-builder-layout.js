@@ -3,6 +3,12 @@ import { Students  }    from '../../../both/collections/api/students.js';
 
 import './course-builder-layout.html';
 
+import '../../../public/jquery-ui-1.12.0.custom/jqueryui-dark.css';
+
+Template.courseBuilderLayout.onCreated(function(){
+
+
+});
 
 
 Template.courseBuilderLayout.helpers({
@@ -61,11 +67,16 @@ Template.courseBuilderLayout.events({
    */
   'click #cb-dashboard-page'( e, t ) {
     e.preventDefault();
-      
-    if ( Meteor.user().roles.admin )
-      FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-    if ( Meteor.user().roles.teacher )
-      FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
+
+    Session.set( 'cb-leave', 'dashboard' );
+    if ( FlowRouter.getRouteName() == 'admin-test-creator' ) {
+      $( '#cb-leave-warning-text' ).html('By clicking <strong>"LEAVE"</strong> <strong><em>neither</em></strong> this test, <stong><em>nor</em></strong> your course will be saved');
+      $( '#cb-page-leave-warning' ).modal();
+    }
+    if ( FlowRouter.getRouteName() == 'admin-course-builder' ) {
+      $( '#cb-leave-warning-text' ).html('By clicking <strong>"LEAVE"</strong> <strong><em>neither</em></strong> this course, <stong><em>nor</em></strong> any associated test will be saved');
+      $( '#cb-page-leave-warning' ).modal();
+    }
   },
   
   
@@ -76,11 +87,82 @@ Template.courseBuilderLayout.events({
   'click #cb-courses-page'( e, t ) {
     e.preventDefault();
       
-    if ( Meteor.user().roles.admin )
-      FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
-    if ( Meteor.user().roles.teacher )
-      FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+    Session.set('cb-leave', 'courses');
+    if ( FlowRouter.getRouteName() == 'admin-test-creator' ) {
+      $( '#cb-leave-warning-text' ).html('By clicking <strong>"LEAVE"</strong> <strong><em>neither</em></strong> this test, <stong><em>nor</em></strong> your course will be saved');
+      $( '#cb-page-leave-warning' ).modal();
+    }
+    if ( FlowRouter.getRouteName() == 'admin-course-builder' ) {
+      $( '#cb-leave-warning-text' ).html('By clicking <strong>"LEAVE"</strong> <strong><em>neither</em></strong> this course, <stong><em>nor</em></strong> any associated test will be saved');
+      $( '#cb-page-leave-warning' ).modal();
+    }
   },
   
+  
+  'click #cb-stay-btn'( e, t ) {
+    e.preventDefault();
+    
+    t. $( '#cb-page-leave-warning' ).modal('hide');
+  },
+  
+  
+  
+  'click #cb-leave-btn'( e, t ) {
+    e.preventDefault()
+    
+    t. $( '#cb-page-leave-warning' ).modal('hide');
+
+    if ( FlowRouter.getRouteName() == 'admin-test-creator' &&  Session.get('cb-leave') == 'dashboard') {
+      Session.set('cb-leave', null );
+      if ( Meteor.user().roles.admin ) {
+        Meteor.setTimeout(function(){
+          FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+        }, 500);
+      }
+      if ( Meteor.user().roles.teacher ) {
+        Meteor.setTimeout(function(){
+          FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
+        }, 500);
+      }
+    } else if ( FlowRouter.getRouteName() == 'admin-test-creator' && Session.get('cb-leave') == 'courses' ) {
+       Session.set('cb-leave', null );
+      if ( Meteor.user().roles.admin ) {
+        Meteor.setTimeout(function(){
+          FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+        }, 500);
+      }
+      if ( Meteor.user().roles.teacher ) {
+        Meteor.setTimeout(function(){
+          FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+        }, 500);
+      }     
+    }
+
+    if ( FlowRouter.getRouteName() == 'admin-course-builder' && Session.get('cb-leave') == 'dashboard' ) {
+      Session.set('cb-leave', null );
+      if ( Meteor.user().roles.admin ) {
+        Meteor.setTimeout(function(){
+          FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+        }, 500);
+      }
+      if ( Meteor.user().roles.teacher ) {
+        Meteor.setTimeout(function(){
+          FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
+        }, 500);
+      }      
+    } else if ( FlowRouter.getRouteName() == 'admin-course-builder' && Session.get('cb-leave') == 'courses' ) {
+      Session.set('cb-leave', null );
+      if ( Meteor.user().roles.admin ) {
+        Meteor.setTimeout(function(){
+          FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+        }, 500);
+      }
+      if ( Meteor.user().roles.teacher ) {
+        Meteor.setTimeout(function(){
+          FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+        }, 500);
+      }
+    }
+  },
   
 });

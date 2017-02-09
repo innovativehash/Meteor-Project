@@ -109,9 +109,55 @@
 
 
 {{#if or isTeacher isAdmin}}
+
       {{> Template.dynamic template=main  }}
 {{/if}}
+<!-- CONFIRM MODAL -->
+<div class="search-list assign">
+<div  class="modal fade left"
+      id = "cb-page-leave-warning"
+      tabindex = "-1"
+      role = "dialog"
+      aria-labelledby = "myModalLabel">
 
+  <div class="modal-dialog">
+    <div class="pop-up-area students">
+      
+      <!-- <button type          = "button"
+              id            = "popup-close"
+              data-dismiss  = "modal"
+              aria-label    = "Close">x</button> -->
+
+      <div class = "popup-body">
+        <br>
+        <h2>CONFIRM ACTION:</h2>
+        
+        <form action="">
+          <div class="row">
+            <div class="col-sm-12" > <!-- col-sm-offset-1 -->
+              <p id="cb-leave-warning-text" style="color:white;font-size:2em;"></p>
+            </div>
+          </div><!-- row -->
+          <br><br><br>
+          <div class = "row">
+            <div class = "col-sm-12 text-right">
+
+              <input  id    = "cb-leave-btn"
+                      type  = "submit"
+                      value = "Leave" />
+              
+              <input  id    = "cb-stay-btn"
+                      type  = "submit"
+                      value = "Stay" />        
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- /CONFIRM modal -->
 
 </body>
 </template>
