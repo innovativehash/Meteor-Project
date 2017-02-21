@@ -32,7 +32,7 @@
   </head>
 
   <body>
-{{#if isAdmin }}
+{{#if or isAdmin isSuperAdmin }}
 
       {{#if showNewsfeed }}
       <div class="feedback-form">
