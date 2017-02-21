@@ -214,28 +214,25 @@ Template.addEditEventModal.events({
     let eventModal = Session.get( 'eventModal' ),
         submitType = eventModal.type === 'edit' ? 'editEvent' : 'addEvent';
       
-        let names   = template.$( '[name="type"]'   ).val()
-          , nlen    = 0
-          , s       = []
-          , iid;
+    let names   = template.$( '[name="type"]'   ).val()
+      , nlen    = 0
+      , s       = []
+      , iid;
 
+    let teacher_name = Students.findOne({ _id: Meteor.userId() }).fullName;
+    
         if ( (names && names.length) && names != null ) {
           nlen = names.length;
         } else {
           Bert.alert( 'You must select a Student!', 'danger' );
           return;
         }
-        
-        /* 
-         *    -------------------------------
-         *    ADD OTHER SANITY CHECKS HERE 
-         *    -------------------------------
-         */
-        
-      let start_string  = template.find( '[name="start"]' ).value
-        , end_string    = template.find( '[name="end"]'   ).value
-        , start_time_string   = template.find( '[name="start-time"]' ).value
-        , end_time_string = template.find( '[name="end-time"]' ).value
+
+
+      let start_string      = template.find( '[name="start"]' ).value
+        , end_string        = template.find( '[name="end"]'   ).value
+        , start_time_string = template.find( '[name="start-time"]' ).value
+        , end_time_string   = template.find( '[name="end-time"]' ).value
         
         , start_time_hours
         , end_time_hours
@@ -253,46 +250,67 @@ Template.addEditEventModal.events({
         , end_time_array
         , start_array
         , end_array;
+
+      if ( start_string == '' ) {
+        Bert.alert( "Please ensure you've selected a Start Date.", 'danger' );
+        return;
+      }
       
-      start_array = start_string.split('-');
-      end_array   = end_string.split('-');
+      if ( end_string == '' ) {
+        Bert.alert( "Please ensure you've selected an End Date", 'danger' );
+        return;
+      }
+      
+      if ( start_time_string == '' ) {
+        Bert.alert( "Please ensure you've filled in all three fields of Start Time: i.e 10:00AM", 'danger' );
+        return;
+      }
+      
+      if ( end_time_string == '' ) {
+        Bert.alert( "Please ensure you've filled in all three fields of End Time: i.e 10:00AM", 'danger' );
+        return;
+      }
+      
+      start_array       = start_string.split('-');
+      end_array         = end_string.split('-');
       start_time_array  = start_time_string.split(':');
-      end_time_array = end_time_string.split(':');
+      end_time_array    = end_time_string.split(':');
+
+      start_month = start_array[1];
+      start_day   = start_array[2];
+      start_year  = start_array[0];
       
-      start_month = Number( start_array[1] ) - 1;
-      start_day   = Number( start_array[2] );
-      start_year  = Number( start_array[0] );
+      end_month = end_array[1];
+      end_day   = end_array[2];
+      end_year  = end_array[0];
       
-      end_month = Number ( end_array[1] ) - 1;
-      end_day   = Number ( end_array[2] );
-      end_year  = Number ( end_array[0] );
+      start_time_hours    = start_time_array[0];
+      start_time_minutes  = start_time_array[1];
       
-      start_time_hours    = Number( start_time_array[0] );
-      start_time_minutes  = Number( start_time_array[1] );
-      
-      end_time_hours = Number( end_time_array[0] );
-      end_time_minutes = Number( end_time_array[1] );
+      end_time_hours    = end_time_array[0];
+      end_time_minutes  = end_time_array[1];
 
       start_array = end_array = start_time_array = end_time_array = null;
     
       //time_hours = time_hours > 12 ? time_hours - 12 : time_hours;
-      
+    
       eventItem  = {
         title:        template.find( '[name="title"]' ).value,
-        start:        moment(new Date(start_year, start_month, start_day, start_time_hours, start_time_minutes))._d,
-        end:          moment(new Date(end_year, end_month, end_day, end_time_hours, end_time_minutes))._d,
+        start:        moment( start_year  + "-" + start_month + "-" + start_day + " " + start_time_hours  + ":" + start_time_minutes  + ":00" ).format('YYYYMMDDTHHmm00'),
+        end:          moment( end_year    + "-" + end_month + "-"   + end_day   + " " + end_time_hours    + ":" + end_time_minutes    + ":00" ).format('YYYYMMDDTHHmm00'),
         students:     template.$(    '[name="type"]'  ).val(),
         location:     template.find( '[name="location"]' ).value,
         description:  template.find( '[name="description"]' ).value,
+        summary:      template.find( '[name="summary"]' ).value,
         startTime:    template.find( '[name="start-time"]' ).value,
         endTime:      template.find( '[name="end-time"]' ).value,
-        timezone:     template.find( '[name="timezone"]' ).value
-        //courses:    template.$(    '#t-courses'     ).val()
+        timezone:     template.find( '[name="timezone"]' ).value || "Los Angeles (Pacific)",
+        teacher:      Meteor.userId()
       };
-        
+      
       start_time_hours = start_time_minutes = end_time_hours = end_time_minutes = null;
-      start_day = start_month = start_year = null;
-      end_day = end_month = end_year = null;
+      start_day = start_month = start_year  = null;
+      end_day   = end_month   = end_year    = null;
         
       // CLEAR OUT THE FIELDS
       template.$( '[name="type"]' ).val(null).trigger("change");
@@ -302,21 +320,24 @@ Template.addEditEventModal.events({
       template.$( '[name="endTime"]' ).val('');
       template.$( '[name="location"]' ).val('');
       template.$( '[name="description"]' ).val('');
+      template.$( '[name="summary"]' ).val('');
       template.$( '[name="start"]' ).val('');
       template.$( '[name="end"]' ).val('');
       template.$( '[name="start-time"]' ).val('');
       template.$( '[name="end-time"]' ).val('');
+
       //template.$( '#t-courses' ).val(null).trigger("change");
-      
+
       /* ADD DATE/EVENT TO STUDENT CALENDAR */
       if ( submitType === 'editEvent' ) {
         eventItem._id   = eventModal.event;
       }
-          
+      
+      /* submitType is a variable, so no quote */
       Meteor.call( submitType, eventItem, ( error, rslt ) => {
         
         if ( error ) {
-          Bert.alert( error.reason, 'danger' );
+          Bert.alert( error.reason + ' line: 323', 'danger' );
           
         } else {
           
@@ -330,11 +351,29 @@ Template.addEditEventModal.events({
             s[i] = Students.find({ _id: names[i] }).fetch()[0];
         
             Students.update({ _id: s[i]._id },{ $push:{ current_trainings: {link_id: iid}  } });
-          } 
+            
+            let icsMSG = createICS( s[i].fullName, s[i].email, 
+                                    "Training Event: " + eventItem.description,
+                                    eventItem.start, eventItem.end, 
+                                    eventItem.location, eventItem.summary );
+                      
+            //window.open( "data:text/calendar;charset=utf8," + escape( icsMSG ) );
+            let calmsg = `"Hello ${s[i].fullName},
+            
+You've been invited to attend ${eventItem.title} by ${teacher_name}. 
+
+This training shall take place on ${moment(eventItem.start).format('M-D-Y')} at ${moment(eventItem.start).format('hh:mm a')} ${eventItem.timezone} and located at ${eventItem.location}.`;
+
+            Meteor.call(  'sendEmailWithAttachment', 
+                          s[i].email, 
+                          "admin@collectiveuniversity.com",
+                          "Training Event!", 
+                          calmsg,
+                          {fileName: 'training.ics', contents: icsMSG, contentType: 'text/calendar'} );
+          }//for
           closeModal();
-        }
+        }//else
       });
-   
   },
   
   
@@ -345,7 +384,7 @@ Template.addEditEventModal.events({
       
       Meteor.call( 'removeEvent', eventModal.event, ( error ) => {
         if ( error ) {
-          Bert.alert( error.reason, 'danger' );
+          Bert.alert( error.reason + ' line: 369', 'danger' );
         } else {
           Bert.alert( 'Event deleted!', 'success' );
           closeModal();
@@ -354,3 +393,33 @@ Template.addEditEventModal.events({
     }
   }
 });
+
+
+function createICS( invitee, email, description, startDate,
+                    endDate, location, summary, confirmNum = '' ) {
+  let today	= moment().format('YYYYMMDDT000000')
+  startDate = moment(startDate).format('YYYYMMDDTHHmm00');
+  endDate   = moment(endDate).format('YYYYMMDDTHHmm00');
+  
+  let icsMSG = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+PRODID:-//CollectiveUniversity//EN
+BEGIN:VEVENT
+DTSTAMP:${today}
+DTSTART:${startDate}
+DTEND:${endDate}
+SUMMARY:${summary}
+DESCRIPTION:${description}
+LOCATION:${location}
+URL:http://collectiveuniversity.com
+STATUS:CONFIRMED
+ORGANIZER;CN=admin@collectiveuniversity.com:mailto:unknownorganizer@calendar.google.com
+ATTENDEE;CN=${invitee}:mailto:${email}
+CLASS:PRIVATE
+LAST-MODIFIED:${today}
+END:VEVENT
+END:VCALENDAR`;
+  return icsMSG;
+}

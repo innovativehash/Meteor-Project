@@ -53,13 +53,18 @@ Template.internalTrainingCalendar.onRendered(function(){
 
     // options and callbacks here
     events( start, end, timezone, callback ) {
-      
-      let data = Events.find().fetch().map( ( event ) => {
-        
-        event.editable = !isPast( event.start );
+
+      // GET THIS INDIVIDUAL STUDENT'S CALENDAR
+      // EXPIRED EVENTS NOT SHOWN
+      let data = Events.find({ $and: [ {$where: function(){ return moment(this.end).isSameOrAfter(moment())}},
+                                        {students: Meteor.userId() } ] 
+                              }).fetch().map( ( event ) => {
+
+        //student can't edit
+        event.editable = false; // !isPast( event.start );
         return event;
       });
-
+      
       if ( data ) {
         callback( data );
       }
@@ -150,37 +155,4 @@ Template.internalTrainingCalendar.onRendered(function(){
 });
 
 
-Template.internalTrainingCalendar.events({
-  'click .test-ics'( e, t ) {
-    console.log( 'click ics');
-    let icsMSG = createICS();
-    console.log( icsMSG );
-    window.open( "data:text/calendar;charset=utf8," + escape(icsMSG));
-  },
-});
-
-  
-function createICS() {
-  let todayDate	= new Date()
-    , msgData	  = todayDate.toISOString()
-    , startDate	= todayDate.toISOString() //e.start.toISOString();
-    , endDate	  = todayDate.toISOString() //e.end.toISOString();
-    ,title     = 'testing, one, two, three..';
-
-  var icsMSG1 = "BEGIN:VCALENDARrnVERSION:2.0rnPRODID:https://www.google.com/rnBEGIN:VEVENTrnUID:https://www.google.com/rnDTSTAMP:" + msgData + "ZrnDTSTART:" + startDate + "rn";
-
-  var icsMSG2 = '';
-  if(endDate != '') {
-    icsMSG2 = "DTEND:" + endDate +"rn";
-  }
-
-  icsMSG3 = "SUMMARY:" + title + "rnEND:VEVENTrnEND:VCALENDAR";
-
-  icsMSG  = icsMSG1 + icsMSG2 + icsMSG3;
-  
-  return icsMSG;
-//  $( '.test-ics' ).click(function(){
-//    let icsMSG = createICS();
-//    window.open( "data:text/calendar;charset=utf8," + escape(icsMSG));
-//  });
-}
+Template.internalTrainingCalendar.events({});

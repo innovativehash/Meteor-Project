@@ -25,11 +25,11 @@ let EventsSchema = new SimpleSchema({
     label: 'The title of this event.'
   },
   'start': {
-    type: Date,
+    type: String,
     label: 'When this event will start.'
   },
   'end': {
-    type: Date,
+    type: String,
     label: 'When this event will end.'
   },
   'students': {
@@ -45,6 +45,10 @@ let EventsSchema = new SimpleSchema({
     type: String,
     label: 'Where the training will occur'
   },
+  'summary': {
+    type: String,
+    label: 'Summary of Event'
+  },
   'timezone': {
     type: String
   },
@@ -52,6 +56,9 @@ let EventsSchema = new SimpleSchema({
     type: String
   },
   'endTime': {
+    type: String
+  },
+  'teacher': {
     type: String
   }
 /*

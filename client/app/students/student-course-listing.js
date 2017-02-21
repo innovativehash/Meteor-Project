@@ -199,7 +199,7 @@ Template.studentCourseListing.events = {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if ( Meteor.user().roles.teacher ) {
+    if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( '/teacher/dashboard/course-builder/' + Meteor.userId() );
     }
   },

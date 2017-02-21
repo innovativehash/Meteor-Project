@@ -27,7 +27,9 @@ Template.courseView.onCreated( function() {
 
   this.page       = new ReactiveVar(1);
   this.total      = new ReactiveVar(1);
+//-------------------------------------------------------------------
 });
+
 
 
 
@@ -49,6 +51,7 @@ Template.courseView.onRendered( function() {
 
     this.autorun(function() { //self
       try {
+        
         let no  = Template.instance().page.get()
           , c   = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "builder" ) }).fetch()[0]
           , cid = FlowRouter.getQueryParam( "course" );
@@ -59,8 +62,10 @@ Template.courseView.onRendered( function() {
           
           // REGULAR PAGES
           if ( c && c.pages && c.pages[no].type == 'page' ) {
+            
             $( '#test_v' ).hide();
-            //pre-cache test id if it's the next page
+            
+            //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
             if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == "test" ) 
             {
               Scratch.insert({ id:  c.pages[no + 1].page });
@@ -81,7 +86,7 @@ Template.courseView.onRendered( function() {
           } else if ( c && c.pages && c.pages[no].type == 'video' ) {
             $( '#test_v' ).hide();
             
-            //pre-cache test id if it's the next page
+            //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
             if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == "test" ) 
             {
               Scratch.insert({ id:  c.pages[no + 1].page });
@@ -103,7 +108,8 @@ Template.courseView.onRendered( function() {
           // PDF PAGE
           } else if ( c && c.pages && c.pages[no].type == 'pdf' ) {
             $( '#test_v' ).hide();
-            //pre-cache test id if it's the next page
+            
+            //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
             if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == 'test' ) 
             {
               Scratch.insert({ id: c.pages[no + 1].page });
@@ -126,7 +132,7 @@ Template.courseView.onRendered( function() {
           } else if ( c && c.pages && c.pages[no].type == 'scorm' ) {
             $( '#test_v' ).hide();
             
-            //pre-cache test id if it's the next page
+            //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
             if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == 'test' ) 
             {
               Scratch.insert({ id: c.pages[no + 1].page });
@@ -168,8 +174,8 @@ Template.courseView.onRendered( function() {
         return;
       }
     }); //autorun
-  //});
-
+  
+//-------------------------------------------------------------------
 });
 
 
@@ -199,11 +205,15 @@ Template.courseView.helpers({
 
   total: () =>
     Template.instance().total.get()
-
-});
 //-------------------------------------------------------------------
+});
 
 
+
+
+/* *****************************************************************************
+ * EVENTS
+ *******************************************************************************/
 Template.courseView.events({
 
   /*
@@ -226,11 +236,11 @@ Template.courseView.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if ( Meteor.user().roles.teacher ) {
+    if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles.admin ) {
+    } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
       FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles.student ) {
+    } else if ( Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
     }
 
@@ -246,6 +256,7 @@ Template.courseView.events({
       
       $( '#course-view-page-back' ).click();
       return;
+//-------------------------------------------------------------------
   },
    
    
@@ -261,7 +272,8 @@ Template.courseView.events({
       FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
     } else if ( Meteor.user().roles.student ) {
       FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
-    }    
+    } 
+//-------------------------------------------------------------------
   },
   
   

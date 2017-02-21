@@ -41,11 +41,19 @@ http://scorm.academy-smart.org.ua/player/listStudentCourses/company_id/user_id
    */
   export function cbScormSave( e, t, tbo, contentTracker ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     return;
     
-    Template.instance().page.set( Template.instance().page.get()    + 1 );
-    Template.instance().total.set( Template.instance().total.get()  + 1 );
 //-----------------------------------------------------------------------------
+  }
+  
+  /*
+   *
+   * CB-SCORM-CHANGE
+   *
+   */
+  export function cbScormChange( e, t, tbo, contentTracker ) {
+    e.preventDefault();
+    
+    
   }

@@ -24,7 +24,7 @@
    * #ADDED-TITLE  ::(BLUR)::
    *
    */
-  export function cbAddedTitleBlur( e, t, tbo, contentTracker, titlesTracker ) {
+  export function cbAddedTitleBlur( e, t, contentTracker, titlesTracker ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -72,12 +72,16 @@
       $( `#tit-${tit_id}` ).on( "mouseup", function(){
         e.preventDefault();
         
+        let tb = Session.get( 'tbo' );
+        
         $( '#cb-toolbar-text' ).show();
         
         // MAKE THIS THE CURRENTLY SELECTED ITEM
         t.$( '#cb-current' ).val( `#tit-${tit_id}` );
         
-        tbo.titles[tit_id] = `#tit-${tit_id}`;
+        tb.titles[tit_id] = `#tit-${tit_id}`;
+        
+        Session.set( 'tbo', tb );
         
         //titlesTracker.push( tit_id );
 /*

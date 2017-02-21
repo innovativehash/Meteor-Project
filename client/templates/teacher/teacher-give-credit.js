@@ -26,24 +26,31 @@ Template.teacherGiveCredit.onCreated(function(){
   
 });
 
-
+let evt = [], cnt;
 
 Template.teacherGiveCredit.helpers({
 
   tsData() {
-      let evt     = Events.find( { end: { $lte: new Date()} }).fetch();
+      evt     = Events.find({ $and: [ {$where: function(){ return moment(this.end).isBefore(moment())} },
+                                      {teacher: Meteor.userId()} ] }).fetch();
+      
+      cnt = evt.length;
+      
+      for( let i = 0; i < cnt; i++ ) {   //each event
+        evt[i].ary = []; 
 
-      for( let i = 0, len = evt.length; i < len; i++ ) {                  //each event
-        evt[i].dateEnding = moment( evt[i].end ).format( 'M-D-Y' );       // add formatted ending date
         for( let j = 0, jlen = evt[i].students.length; j < jlen; j++ ) {  //students in this event
+          evt[i].ary[j] = {};
+
           let s = Students.findOne({ _id: evt[i].students[j] }).fullName  //get name from student id
-          evt[i].ary    = [];             // add an array to the array of objs
-          evt[i].ary[j] = {};             // add an object to that array
+
           evt[i].ary[j].studentName = s;  // assign values to that object
           evt[i].ary[j].num         = j;
           evt[i].ary[j].id          = evt[i].students[j];
-        }
-      }
+          
+        }//for
+      }//for
+  
     return evt;
   },
   
@@ -54,29 +61,23 @@ Template.teacherGiveCredit.events({
 
   'click #teacher-credit-submit'( e, t ) {
     e.preventDefault();
-    
-    //console.log( $('#tcb-0').is(':checked') );
-    
-    let cnt = Events.find( { end: { $lte: new Date()} }).count();
-    let evt = Events.find( { end: { $lte: new Date()} }).fetch();
     let credits = 2;
     
-    
-    for( let i = 0; i < cnt; i++ ) {
-      if( $( `#tcb-${i}` ).is( ':checked' ) ) {  //tcb-0, tcb-1, ...
-        let ii = $( `#tcb-${i}` ).data( 'id' );
+    for ( let i = 0; i < cnt; i++ ) {
+      let ii = $( `.js-teacher-add-students` ).val();
 
-        Students.update({ _id: ii }, 
+      for( let j = 0, jlen=ii.length; j < jlen; j++ ) {
+
+        Students.update({ _id: ii[j] }, 
                         { 
                           $pull: { current_trainings:{ link_id: evt[i]._id } },
                           $push: { completed_trainings:{ title: evt[i].title, credits: credits, date_completed: new Date() }}, 
                           $inc:  { current_credits: credits }
                         });
-                        
-        Events.remove({ _id: evt[i]._id });
-      }
-    }
-    
+      
+      }//for
+      Events.remove({ _id: evt[i]._id });
+    }//for
   },
   
   

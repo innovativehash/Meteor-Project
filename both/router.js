@@ -48,34 +48,6 @@ FlowRouter.route( '/post-signup', {
 
 
 /**
- * VERIFY EMAIL
- */
-FlowRouter.route( '/verify-email/:token', {
-  name: 'verify-email',
-  action( params ) {
-    BlazeLayout.render( 'plain', {main: 'verifyEmail'} ),
-    Accounts.verifyEmail( params.token, ( error ) =>{
-      if ( error ) {
-        console.log( error.message );
-        console.log( error );
-      } else {
-        
-        //console.log( params.token );
-        //console.log(Meteor.user().emails[0].verified)
-        //console.log( Meteor.userId() );
-
-        Bert.alert( 'Email verified! Thanks!', 'success' );
-      
-        FlowRouter.go( 'admin-dashboard',   { _id: Meteor.userId() });
-      
-      }
-    });
-  }
-});
-
-
-
-/**
  * EXPIRED ACCOUNT
  */
 FlowRouter.route( '/account-expired/', {
@@ -218,26 +190,6 @@ teacherRoutes.route('/dashboard/:_id', {
 
 
 /*
- * TEACHER CALENDAR
- */
-teacherRoutes.route( '/dashboard/teacher-calendar/:_id', {
-  name: 'teacher-calendar',
-  action: () =>
-    BlazeLayout.render( 'studentDashboardLayout', {main: "teacherCalendar"})
-});
-
-
-/*
- * TEACHER COURSE-BUILDER
- */
-teacherRoutes.route( '/dashboard/course-builder/:_id', {
-  name: 'teacher-course-builder',
-  action: (params, queryParams) =>
-    BlazeLayout.render( 'courseBuilderLayout', {main:"courseBuilderPage"})
-});
-
-
-/*
  * TEACHER COURSES
  */
 teacherRoutes.route( '/dashboard/courses/:_id', {
@@ -261,6 +213,25 @@ teacherRoutes.route( '/dashboard/course-view/:_id', {
 
 
 /*
+ * TEACHER COURSE-BUILDER
+ */
+teacherRoutes.route( '/dashboard/course-builder/:_id', {
+  name: 'teacher-course-builder',
+  action: (params, queryParams) =>
+    BlazeLayout.render( 'courseBuilderLayout', {main:"courseBuilderPage"})
+});
+
+
+/* TEST-CREATOR */
+
+teacherRoutes.route('/dashboard/test-maker/:_id', {
+  name: 'teacher-test-creator',
+  action: () =>
+    BlazeLayout.render( 'courseBuilderLayout', {main:"adminTestCreator"})
+});
+
+
+/*
  * TEACHER REQUEST CREDIT
  */
 teacherRoutes.route( '/dashboard/request-credit/:_id', {
@@ -279,23 +250,14 @@ teacherRoutes.route( '/dashboard/student-records/:_id', {
     BlazeLayout.render( 'studentDashboardLayout', {main: "studentRecords" })
 });
 
- 
+
 /*
  * TEACHER TRAINING CALENDAR
  */
-teacherRoutes.route( '/dashboard/student-training-calendar/:_id', {
+teacherRoutes.route( '/dashboard/internal-training-calendar/:_id', {
   name: 'teacher-training-calendar',
   action: () =>
     BlazeLayout.render( 'studentDashboardLayout', {main: "internalTrainingCalendar" })
-});
-
-
-/* TEST-CREATOR */
-
-teacherRoutes.route('/dashboard/test-maker/:_id', {
-  name: 'teacher-test-creator',
-  action: () =>
-    BlazeLayout.render( 'courseBuilderLayout', {main:"adminTestCreator"})
 });
 
 
@@ -464,20 +426,6 @@ adminRoutes.route('/dashboard/assign-courses/:_id', {
   });
 
 
-  FlowRouter.route( '/verify-email/:token', {
-    name: 'verify-email',
-    action( params ) {
-      Accounts.verifyEmail( params.token, ( error ) =>{
-        if ( error ) {
-          Bert.alert( error.reason, 'danger' );
-        } else {
-          FlowRouter.go( '/' );
-          Bert.alert( 'Email verified! Thanks!', 'success' );
-        }
-      });
-    }
-  });
-
 /**
  * ADMIN STUDENTS GROUP
  */
@@ -510,5 +458,32 @@ adminRoutes.route( '/dashboard/super-admin/:_id', {
   name: 'super-admin',
   action: () => {
     BlazeLayout.render( 'adminDashboardLayout', {main: "superAdmin"});
+  }
+});
+
+
+/**
+ * VERIFY EMAIL
+ */
+FlowRouter.route( '/verify-email/:token', {
+  name: 'verify-email',
+  action( params ) {
+    BlazeLayout.render( 'plain', {main: 'verifyEmail'} ),
+    Accounts.verifyEmail( params.token, ( error ) =>{
+      if ( error ) {
+        console.log( error.message );
+        console.log( error );
+      } else {
+        
+        //console.log( params.token );
+        //console.log(Meteor.user().emails[0].verified)
+        //console.log( Meteor.userId() );
+
+        Bert.alert( 'Email verified! Thanks!', 'success' );
+      
+        FlowRouter.go( 'admin-dashboard',   { _id: Meteor.userId() });
+      
+      }
+    });
   }
 });

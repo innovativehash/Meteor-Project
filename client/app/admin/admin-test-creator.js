@@ -171,10 +171,10 @@ Template.adminTestCreator.events({
     //let course_name = FlowRouter.current().path.slice( FlowRouter.current().path.indexOf('?') + 1 );
 
       if ( testidnum && testidnum == Test.findOne({ _id: testidnum })._id ) {
-        console.log('already defined');
+
         Test.update({ _id: testidnum }, {$set:{test_name: t.$( '#test-name' ).val()} });
       } else {
-        console.log('not yet defined');
+
         testidnum = Test.insert({
                                   test_name: t.$( '#test-name' ).val(),
                                   company_id: Meteor.user().profile.company_id
@@ -309,7 +309,7 @@ Template.adminTestCreator.events({
     }
     
     if ( correctAscii >= lastIdAscii ) {
-     console.log( 'correct > last' );
+
       for ( let i = 65; i <= correctAscii; i++ ) {
         
         if ( t.$( `#${String.fromCharCode(i)}` ).val() == '' ) {
@@ -318,7 +318,6 @@ Template.adminTestCreator.events({
         }
       }
     } else if ( correctAscii < lastIdAscii ) {
-      console.log( 'correct < last' );
 
       for ( let j = 65; j <= lastIdAscii; j++ ) {//correctAscii
         

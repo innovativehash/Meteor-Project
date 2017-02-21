@@ -22,7 +22,7 @@
    * #ADDED-VIDEO  ::(CHANGE)::
    *
    */
-  export function addedVideoURL( e, t, tbo, contentTracker ) {
+  export function addedVideoURL( e, t, contentTracker ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -36,7 +36,8 @@
       , match = m.exec(vid)
       , url
       , patt
-      , conv;
+      , conv
+      tb = Session.get( 'tbo' );
 
     conv = match[2];
     
@@ -56,8 +57,9 @@
     ++vid_id;
 
     //tbo.videos.push( {page: Template.instance().page.get(), id: ++vid_id, url: vid} );
-    tbo.videos[vid_id] = url;
-
+    tb.videos[vid_id] = url;
+    Session.set( 'tbo', tb );
+    
     Bert.alert('Loading video...', 'success' );
     
     //add to the canvas

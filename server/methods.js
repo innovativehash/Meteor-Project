@@ -4,6 +4,11 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
+import { Meteor } from 'meteor/meteor';
+
+const fs      = require('fs');
+const path    = require('path');
+
 import { Students }     from '../both/collections/api/students.js';
 import { Newsfeeds }    from '../both/collections/api/newsfeeds.js';
 import { Comments }     from '../both/collections/api/comments.js';
@@ -15,13 +20,121 @@ import { Scorms }       from '../both/collections/api/scorms.js';
 
 Meteor.methods({
   
+   /*
+   * CREATE USER
+   * POST http://scorm.academy-smart.org.ua/users/createUser
+   * {"user":"<username>","pass":"<password>","comapny_id"":"numeric comapny id"}
+   *                                                                      XXX
+   */
+  'scormCreateUser': function( user, pass, company_id ) {
+    HTTP.post( 'http://scorm.academy-smart.org.ua/users/createUser',
+                {
+                  data: {
+                    "user": `${user}`, "pass": `${pass}`, "company_id": `${company_id}`
+                  }
+                },
+                function( error, response ) {
+                  if( error ) {
+                   console.log( error );
+                  } else {
+                    console.log('-------------------------------------------------------------------');
+                    console.log( 'RESPONSE:');
+                    console.log( response );
+                    console.log('-------------------------------------------------------------------');
+                    console.log( 'RESPONSE.DATA:');
+                    console.log( response.data );
+                    console.log('-------------------------------------------------------------------');
+                  }
+    });
+  },
+  
+  
+  /*
+   * UPLOAD COURSE
+   *    POST http://scorm.academy-smart.org.ua/player/uploadCourse
+   *      {"comapny_id"":"numeric comapny id"}
+   * AND set multipart/mixed content
+   * AND attach files
+   */
+  'scormUploadCourse': function( company_id ) {
+    
+   //200413
+      let stats = fs.statSync("/home/ubuntu/workspace/NewQuizScorm.zip")
+        , fileSizeInBytes = stats["size"];
+        
+      console.log( fileSizeInBytes );
+      /*
+      rest.post('http://scorm.academy-smart.org.ua/player/uploadCourse', {
+        multipart: true,
+        data: {
+          'company_id': `${company_id}`,
+          'file': rest.file( '/home/ubuntu/workspace/NewQuizScorm.zip',
+                              null,
+                              fileSizeInBytes,
+                              null,
+                              'application/zip') 
+        }
+      }).on('complete', function(data){
+        console.log( data );
+      })
+      */
+          //fs.createReadStream( '/home/ubuntu/workspace/NewQuizScorm.zip' );
+      
+      //'http://scorm.academy-smart.org.ua/player/uploadCourse'
+      
+      /*
+      .end( ( response ) => {
+  
+          console.log( '-------------------------------------------');
+          //fs.writeFile('/home/ubuntu/workspace/log.txt', JSON.stringify(res), (err) => {
+            //if (err) throw err;
+            //console.log('saved.');
+          //})
+        
+          console.dir( response.headers );
+          console.dir( response.body    );
+          console.log( '--------------------------------------------');
+      });
+      */
+  },
+  
+ 
+   /*
+   * DELETE COURSE
+   * DELETE http://scorm.academy-smart.org.ua/player/deleteCourse
+   * body
+   * {"company_id":"<your_company>"  "course_id":"<existing course>"}
+   */
+   'scormDeleteCourse': function( company_id, course ) {
+     HTTP.delete( 'http://scorm.academy-smart.org.ua/player/deleteCourse',
+                  {
+                    data: {
+                      "company_id": `${company_id}`, "course_id": `${course}k`
+                    }
+                  },
+                  function( error, response ){
+                    if( error ){
+                      console.log( error );
+                    } else {
+                     console.log('-------------------------------------------------------------------');
+                     console.log( 'RESPONSE:');
+                     console.log( response );
+                     console.log('-------------------------------------------------------------------');
+                     console.log( 'RESPONSE.DATA:');
+                     console.log( response.data );
+                     console.log('-------------------------------------------------------------------');
+                    }
+    });
+   },
+ 
   
   /*
    * get URL of  course for student (requires username pass  and course_id)
-   * http://scorm.academy-smart.org.ua/player/get
-   * POST BODY
-   * { “user”: "demo_user", “pass”: "1", “course”: "1" } 
-   * returns full url to play a course
+   *    http://scorm.academy-smart.org.ua/player/get
+   *      POST BODY
+   *        { “user”: "demo_user", “pass”: "1", “course”: "1" } 
+   *      RETURNS full url to play a course
+   *
    * RESPONSE.DATA:
    *                { action: 'success',
    *                  url: 'http://scorm.academy-smart.org.ua/player/play/4f3b1479e562886f2cdc361faeebe399' }
@@ -39,13 +152,13 @@ Meteor.methods({
                       "user": `${user}`, "pass": `${pass}`, "course": `${course}`
                     }
                   });
-      return resp.data.url;
-      
+      return resp.data.url;      
      } catch(e) {
        
        return e.reason;
        
      }
+     
                 /* ASYNC
                 ,function( error, response ){
                   if( error ){
@@ -74,34 +187,6 @@ Meteor.methods({
     */
    },
    
-   
-  /*
-   * DELETE COURSE
-   * DELETE http://scorm.academy-smart.org.ua/player/deleteCourse
-   * body
-   * {"company_id":"<your_company>"  "course_id":"<existing course>"}
-   */
-   'scormDeleteCourse': function( company_id, course ) {
-     HTTP.delete( 'http://scorm.academy-smart.org.ua/player/deleteCourse',
-                  {
-                    data: {
-                      "company_id": `${company_id}`, "course_id": `${course}k`
-                    }
-                  },
-                  function( error, response ){
-                    if( error ){
-                      console.log( error );
-                    } else {
-                     console.log('-------------------------------------------------------------------');
-                     console.log( 'RESPONSE:');
-                     console.log( response );
-                     console.log('-------------------------------------------------------------------');
-                     console.log( 'RESPONSE.DATA:');
-                     console.log( response.data );
-                     console.log('-------------------------------------------------------------------');
-                    }
-    });
-   },
    
    
   /*
@@ -276,68 +361,6 @@ Meteor.methods({
     });
    },
    
-   
-  /*
-   * CREATE USER
-   * POST http://scorm.academy-smart.org.ua/users/createUser
-   * {"user":"<username>","pass":"<password>","comapny_id"":"numeric comapny id"}
-   *                                                                      XXX
-   */
-  'scormCreateUser': function( user, pass, company_id ) {
-    HTTP.post( 'http://scorm.academy-smart.org.ua/users/createUser',
-                {
-                  data: {
-                    "user": `${user}`, "pass": `${pass}`, "company_id": `${company_id}`
-                  }
-                },
-                function( error, response ) {
-                  if( error ) {
-                   console.log( error );
-                  } else {
-                    console.log('-------------------------------------------------------------------');
-                    console.log( 'RESPONSE:');
-                    console.log( response );
-                    console.log('-------------------------------------------------------------------');
-                    console.log( 'RESPONSE.DATA:');
-                    console.log( response.data );
-                    console.log('-------------------------------------------------------------------');
-                  }
-    });
-  },
-  
-  
-  /*
-   * UPLOAD COURSE
-   * POST http://scorm.academy-smart.org.ua/player/uploadCourse
-   * {"comapny_id"":"numeric comapny id"}
-   * and set multipart/mixed content
-   * and attach files
-   */
-  'scormUploadCourse': function( company_id ) {
-    HTTP.post( 'http://scorm.academy-smart.org.ua/player/uploadCourse', 
-                { 
-                  headers:{ 
-                    "Content-Type": "multipart/mixed" 
-                  },
-                  data: { 
-                    "company_id": `${company_id}` 
-                  }
-                }, 
-                function( error, response ){
-                  if ( error ) {
-                    console.log( error );
-                  } else {
-                   console.log('-------------------------------------------------------------------');
-                   console.log( 'RESPONSE:');
-                   console.log( response );
-                   console.log('-------------------------------------------------------------------');
-                   console.log( 'RESPONSE.DATA:');
-                   console.log( response.data );
-                   console.log('-------------------------------------------------------------------');
-                  }
-    });
-  },
-  
   
   
   'upsertCompany': function( company_id, freq, req_cred ) {
@@ -517,6 +540,24 @@ Meteor.methods({
   },
 //-----------------------------------------------------------------------------
 
+  'sendEmailWithAttachment': function ( to, from, subject, text, attachment ) {
+
+    this.unblock();
+    
+    try {
+      Email.send({
+        to: to,
+        from: from,
+        subject: subject,
+        text: text,
+        attachments: [attachment]
+      });
+    } catch(e) {
+      throw new Meteor.Error( '500', `${ e }` ); 
+    }
+  },
+//-----------------------------------------------------------------------------  
+  
 
   'addUser': function( email, password, fname, lname, opt, dept, company, company_id, trial=false ) {
     let startTrial = '';
@@ -579,15 +620,16 @@ Meteor.methods({
   addEvent( event ) {
     check( event, {
       title:        String,
-      start:        Date,
-      end:          Date,
+      start:        String,
+      end:          String,
       students:     [String],
       location:     String,
       description:  String,
+      summary:      String,
       startTime:    String,
       endTime:      String,
       timezone:     String,
-      //courses: [String]
+      teacher:      String
     });
 
     try {
@@ -612,14 +654,16 @@ Meteor.methods({
     check( event, {
       _id:          String,
       title:        Match.Optional( String ),
-      start:        Date,
-      end:          Date,
+      start:        String,
+      end:          String,
       students:     Match.Optional( [String] ),
       location:     String,
       description:  String,
+      summary:      String,
       startTime:    String,
       endTime:      String,
       timezone:     String,
+      teacher:      String
       //courses: Match.Optional( [String] )
     });
     
@@ -704,5 +748,36 @@ Meteor.methods({
                     });
   },
 
-
+  /*
+   * CONVERT PPT/PPTX TO PDF
+   */
+  convertPPToPdf( fil ) {
+    console.log( 'in mm' );
+    const fs        = require('fs');
+    const { spawn } = require('child_process');
+    
+    try {
+      fs.writeFile('/home/ubuntu/workspace/public/fil.pptx', fil, function(err) {
+        if ( err ) {
+          return console.log( err );
+        } else {
+          //console.time('unoconv');
+          const uno = spawn('./unoconv', [ '-f','pdf','/home/ubuntu/workspace/public/fil.pptx' ], {
+            cwd: process.env.HOME + '/workspace',
+            //env: Object.assign({}, process.env, { PATH: process.env.PATH + ':/usr/local/bin' })
+          });
+        
+          uno.on( 'close', (code) => {
+            console.log('----------------------------------------------------');
+            console.log( `child process exited with code ${code}` );
+            console.log('----------------------------------------------------');
+          });
+          //console.timeEnd('unoconv');
+        }//else
+      });
+    } catch( e ) {
+      throw new Meteor.Error( '500', `${ exception }` );
+    }
+  },
+  
 });

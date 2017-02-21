@@ -22,7 +22,7 @@
    * #ADDED-TEXT  ::(BLUR)::
    *
    */
-  export function cbAddedTextBlur( e, t, tbo, contentTracker, textsTracker ) {
+  export function cbAddedTextBlur( e, t, contentTracker, textsTracker ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -53,7 +53,7 @@
     t.$( `#txt-${txt_id}` ).offset({ left: pos.left, top: pos.top });
     t.$( `#txt-${txt_id}` ).draggable();
     
-    tbo.texts[txt_id] = `#txt-${txt_id}`;
+    //tbo.texts[txt_id] = `#txt-${txt_id}`;
     
     //t.$( `#txt-${txt_id}` ).resizable();
 

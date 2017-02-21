@@ -9,7 +9,17 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 
 //import { Blaze } from 'meteor/blaze'
 import { Students }     from '../../../both/collections/api/students.js';
-
+/*
+import "../../../public/js/source/jquery.fancybox.pack.js";
+import "../../../public/js/source/jquery.fancybox.css";
+import "../../../public/js/source/helpers/jquery.fancybox-buttons.css";
+import "../../../public/js/source/helpers/jquery.fancybox-buttons.js";
+import "../../../public/js/source/helpers/jquery.fancybox-thumbs.css";
+import "../../../public/js/source/helpers/jquery.fancybox-thumbs.js";
+import "../../../public/js/source/helpers/jquery.fancybox-media.js";
+*/
+import "../../../public/bower_components/ekko-lightbox/dist/ekko-lightbox.min.css";
+import "../../../public/bower_components/ekko-lightbox/dist/ekko-lightbox.min.js";
 import '../../templates/home/home.html';
 
 /*
@@ -18,7 +28,16 @@ import '../../templates/home/home.html';
 Template.home.onCreated(function homeOnCreated() {
 
   $( "#cover" ).show();
+  
+  $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+    event.preventDefault();
+    $(this).ekkoLightbox({
+      type: "vimeo",
+      width: "700"
+    });
+  });
 
+    
     /*
      * OWL.CAROUSEL
      */

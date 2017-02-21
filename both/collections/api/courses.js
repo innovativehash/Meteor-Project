@@ -65,6 +65,12 @@ let CoursesSchema = new SimpleSchema({
   },
   'creator_id': {
     type: String
+  },
+  'passing_percent': {
+    type: Number
+  },
+  'type': {
+    type: String
   }
   
 });

@@ -74,9 +74,9 @@ Template.assignCourses.helpers({
       
       if ( cours ) ary.push( cours );
       if ( certs ) ary.push( certs );
-      if ( dips )  ary.push( dips );
+      if ( dips )  ary.push( dips  );
 
-      ary = _.flatten(ary);
+      ary = _.flatten( ary );
 
       return ary;
     } catch( e ) {
@@ -109,6 +109,110 @@ Template.assignCourses.helpers({
  */
 Template.assignCourses.events({
 
+  /*
+   * #ASN-COURSE
+   *
+   */
+  'click .asn-course'( e, t ) {
+    e.preventDefault();
+    
+    try {
+      let id  = $( e.currentTarget ).data('id')
+        , bld = $( e.currentTarget ).data('builder');
+      console.log( bld );
+      let params = {
+        _id: Meteor.userId()
+      };
+      let queryParams = {builder: bld, course: id};
+      var routeName   = "admin-course-viewer";
+      var path        = FlowRouter.path(routeName, params, queryParams);
+      FlowRouter.go( path );
+    } catch (e) {
+      console.log(e);
+    }
+
+  },
+  
+  
+  
+  /*
+   * #ASSIGN-CERT  ::(CLICK)::
+   *
+   */
+  'click #assign-cert'( e, t ) {
+    e.preventDefault();
+    
+    try {
+      let cos = [], recs = [];
+      let certs = Certifications.find({ company_id: Meteor.user().profile.company_id}).fetch();
+      for ( let i = 0, ilen = certs.length; i < ilen; i++ ) {
+        cos = (certs[i].courses);
+      }
+      for ( let j = 0, jlen = cos.length; j < jlen; j++ ) {
+        recs[j] = Courses.find({ _id: cos[j] }).fetch()
+      }
+      
+      for ( let k = 0, klen = recs.length; k < klen; k++ ) {
+        let li = document.createElement( 'li' );
+        let a  = document.createElement( 'a'  );
+        
+        a.href =  `/admin/dashboard/course-viewer/${Meteor.userId()}?builder=${recs[k][0].built_id}&course=${recs[k][0]._id}`;
+        a.innerHTML = recs[k][0].name;
+        a.dataset.dc = recs[k][0].credits;
+        a.dataset.di = recs[k][0]._id
+        
+        li.appendChild( a );
+        document.getElementById('cert-courses').appendChild( li );
+        
+      }
+    } catch(e) {
+      console.log( e );
+    }
+    
+  },
+  
+  
+  
+  /*
+   * #ASSIGN-DIPLOMA  ::(CLICK)::
+   *
+   */
+  'click #assign-diploma'( e, t ) {
+    e.preventDefault();
+    try {
+      let cos = [], recs = [];
+      
+      let dips    = Diplomas.find({ company_id: Meteor.user().profile.company_id}).fetch();
+      for ( let i = 0, ilen = dips.length; i < ilen; i++ ) {
+        cos = (dips[i].courses);
+      }
+      for ( let j = 0, jlen = cos.length; j < jlen; j++ ) {
+        recs[j] = Courses.find({ _id: cos[j] }).fetch()
+      }
+      //console.log( recs[0][0] );
+      //console.log( recs[1][0] );
+      
+      for ( let k = 0, klen = recs.length; k < klen; k++ ) {
+        let li         = document.createElement( 'li' );
+        let a          = document.createElement( 'a'  );
+        //let br         = document.createElement( 'br' );
+        a.href         = `/admin/dashboard/course-viewer/${Meteor.userId()}?builder=${recs[k][0].built_id}&course=${recs[k][0]._id}`;
+        a.innerHTML    = recs[k][0].name;
+        a.dataset.dc   = recs[k][0].credits;
+        a.dataset.di   = recs[k][0]._id;
+        
+        li.appendChild(a);
+        
+        document.getElementById('dip-courses').appendChild( li );
+      }
+    } catch(e) {
+         console.log( e );
+    }
+   
+  },
+  
+  
+   
   /*
    * #SEARCH-COURSES  ::(CHANGE)::
    * scroll to selected search result

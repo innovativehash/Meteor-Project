@@ -30,7 +30,7 @@
    * #COURSE-BUILDER-IMAGE ::(CHANGE)::
    *
    */
-  export function cbImageChange( e, t, tbo /*,Images*/ ) {
+  export function cbImageChange( e, t /*,Images*/ ) {
     
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -45,8 +45,8 @@
     if ( itype != 'image/png' && itype != 'image/jpeg' ) {
       Bert.alert( 'Incompatible Image Format: must be either a jpg or png file', 'danger' );
 
-      e.currentTarget.files = undefined;
-      e.currentTarget.files[0] = undefined;
+      e.currentTarget.files         = undefined;
+      e.currentTarget.files[0]      = undefined;
       e.currentTarget.files[0].name = undefined;
       itype = '';
       t.$( '#course-builder-image' ).val('');
@@ -140,7 +140,7 @@
    * #CB-IMAGE-SAVE  ::(CLICK)::
    *
    */
-  export function cbImageSave( e, t, tbo, contentTracker, imagesTracker ) {
+  export function cbImageSave( e, t, contentTracker, imagesTracker ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -152,8 +152,10 @@
     ++img_id;
 
     t.$( '#fb-template' ).append( `<div id="ig-${img_id}" style="top:100px;left:200px;display:inline-block;position:absolute;cursor:move;"><img id="im-${img_id}" src="${ig}"></div>` );
-
-    tbo.images[img_id] = `#ig-${img_id}`;
+    
+    //let tb = Session.get( 'tbo' );
+    
+    //tb.images[img_id] = `#ig-${img_id}`;
     
     $( `#ig-${img_id}` ).draggable();
     $( `#im-${img_id}` ).resizable();

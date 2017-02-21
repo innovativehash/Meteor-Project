@@ -39,7 +39,11 @@ Template.studentDashboard.helpers({
   
   teacherSticky() {
     if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
-      let cnt = Events.find( { end: { $lte: new Date()} }).count();
+      
+      let cnt = Events.find({ $and: [{ $where: function(){ return moment( this.end ).isBefore( moment() ) } },
+                                    { teacher: Meteor.userId() }]
+                          }).count();
+      
       if ( cnt > 0 )
         return true;
     }

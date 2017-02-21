@@ -58,14 +58,38 @@
                   {{#with courses}}
                     {{#each this}}
                       <tr id="{{_id}}">
-                        <th class="name"><img src="{{icon}}" alt="">{{name}}</th>
+                        {{#if eq type "course"}}
+                        <th class="name">
+                          <a href="#" class="asn-course" data-id="{{_id}}" data-builder="{{built_id}}">
+                            <img src="{{icon}}" alt="">{{name}}
+                          </a>
+                        </th>
+                        {{/if}}
+                        {{#if eq type "Certifications"}}
+                        <th class="name">
+                          <a href="#" id = "assign-cert">
+                            <img src="{{icon}}" alt="">{{name}}
+                          </a>
+                            <div id="cert-courses"></div>
+                        </th>
+                        {{/if}}
+                        {{#if eq type "Diplomas"}}
+                        <th class="name">
+                          <a href="#" id = "assign-diploma">
+                            <img src="{{icon}}" alt="">{{name}}
+                          </a>
+                            <ul id="dip-courses"></ul>
+                        </th>
+                        {{/if}}
                         <td>
                           <button id="assign"
-                                  data-credits="{{credits}}"
-                                  data-name="{{name}}"
-                                  data-icon="{{icon}}"
-                                  data-type="{{type}}"
-                                  data-id="{{_id}}">Click To Assign</button>
+                                  data-credits  = "{{credits}}"
+                                  data-name     = "{{name}}"
+                                  data-icon     = "{{icon}}"
+                                  data-type     = "{{type}}"
+                                  data-id       = "{{_id}}">
+                            Click To Assign
+                          </button>
                                   <!--
                                   data-toggle="modal"
                                   data-target="#assignCourse"

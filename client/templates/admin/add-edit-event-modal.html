@@ -154,6 +154,21 @@
           <div class="row">
             <div class="col-sm-12">
               <div class="single-event-pop">
+<!-- EVENT SUMMARY -->
+                <label for="summary">
+                  Training Summary
+                </label>
+                <input  type="text"
+                        name="summary"
+                        class="input-event"
+                        value="{{event.summary}}">
+              </div>
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="single-event-pop">
 <!-- EVENT LOCATION -->
             <label for="location">
               Training Location
@@ -165,7 +180,8 @@
           </div>
         </div>
       </div>
-
+    
+      
       <div class="row">
         <div class="col-sm-12 text-right">
           {{#if modalType 'edit'}}

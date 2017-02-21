@@ -73,14 +73,18 @@ Template.testView.events({
     */
 
     let total_questions = Number( $( '#tot_q' ).val() );
+  console.log( 'total_questions = ' + total_questions );
+  
     let total_score     = 0;
     for ( let i = 1; i <= total_questions; i++ ) {
       total_score += Number( getAnswer( i ) );
     }
-    
+  console.log( 'total_score= ' + total_score );
+  
     let percent = Number( total_score / total_questions ) * 100;
     $( '#yosco' ).show();
-    
+  console.log( 'percent = ' + percent );
+  
 //TODO:  GET CORRECT ANS PERCENTAGE FOR THIS TEST AND USE IT
 
     if ( percent >= passing_percent || passing_percent == 1001 ) {
@@ -105,9 +109,18 @@ Template.testView.events({
         });
       }, 300);
       
+      
+      /*
+       *
+       * ADD COURSES CREDITS TO STUDENT!!!!!!
+       *
+       */
+       
+       
       Bert.alert( 'Congradulations!! You passed the test.', 'success', 'fixed-top' );
       
     } else {
+      
       $( '#score' ).addClass( 'label-danger' );
       $( '#score' ).text( percent + '%' );
       
@@ -116,7 +129,11 @@ Template.testView.events({
 
     $( '#submit-answers' ).prop( 'disabled', true );
     
+    //
     //TODO: Make Meteor Method to wipe Scratch, replace this
+    //
+    
+  console.log( 'scratch remove ' + id._id );
     Scratch.remove({ _id: id._id });
     
     Meteor.setTimeout(function(){

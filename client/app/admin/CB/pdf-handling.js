@@ -16,22 +16,37 @@ let pdf     = ''
  * PDF input element
  * type = files
  */
-export function cbPDFChange( e, t, tbo, Pdfs ) {
+export function cbPDFChange( e, t ) {
+  
   if ( e.currentTarget.files === 'undefined' ) {
     console.log( 'aborted' );
     return;
   }
   
+  /* in #add-pdf modal */
   if ( t.$( '#course-builder-pdf' )[0].files[0].type != 'application/pdf' ) {
     Bert.alert( 'Only PDF files please', 'danger' );
-    $( '#course-builder-pdf' )[0].files          = undefined;
-    //$( '#course-builder-pdf' )[0].files[0]       = undefined;
-    //$( '#course-builder-pdf' )[0].files[0].name  = undefined;
+    $( '#course-builder-pdf' )[0].files  = undefined;
     $( '#course-builder-pdf' ).val('');
     return;
   }
 
+}
 
+
+
+/**
+ *
+ * #CB-PDF-SAVE  ::(CLICK)::
+ *
+ * id = add-pdf
+ * pdf dialog
+ */
+export function cbPDFSave( e, t, contentTracker, Pdfs ) {
+  e.preventDefault();
+  
+  Bert.alert( 'Please standby...', 'success' );
+  
   let fil   = t.$( '#course-builder-pdf' )[0].files
 	  , sf    = t.$( '#course-builder-pdf' ).data('subfolder');
     
@@ -42,12 +57,11 @@ export function cbPDFChange( e, t, tbo, Pdfs ) {
 		        },
 		        
 		        function( error, result ){
+		          
+		          if ( error ) throw error;
+		          
 			        //delete result._id;
 			        pdf = result.secure_url;
-			        //let img = $( '#preview-image' );
-
-              //img.attr( "src", pdf ); // pdf
-              //img.appendTo( '.image-preview' );
                 
             	pdf_id =	Pdfs.insert({
               				          loaded:           result.loaded,
@@ -61,75 +75,43 @@ export function cbPDFChange( e, t, tbo, Pdfs ) {
               				          file:             result.file,
               				          created_at:       moment().format()
             			       });
-  	       }
+ 
+            //Bert.alert('Successfully processed PDF, loading...');
+            
+            $( '#cb-toolbar-video' ).show();
+            t.$( '#cb-current' ).val( '#pdd' );
+            
+            let obj =
+            `<embed width="100%" height="600" src="${pdf}" type="application/pdf"></embed>`;
+            t.$( '#fb-template' ).empty();
+            t.$( '#fb-template' ).append( obj );
+        
+        /*
+            '<object data="' + pdf + '" type="application/pdf" width="100%" height="auto">' +
+            '<iframe src="' + pdf + '" width="100%" height="auto" style="border: none;">' +
+            'This browser does not support PDFs. Please download the PDF to view it: <a href="' + pdf + '">Download PDF</a>' +
+            '</iframe>' +
+            '</object>';
+        */
+            contentTracker.pdfs++;
+            
+            Session.set( 'contentTracker', contentTracker );
+            
+            pdf = null;
+            
+            let tb = Session.get( 'tbo' );
+            
+            tb.pdfs[0] = { 
+                      url: `${obj}`,
+                      pdf_id: pdf_id
+                      };
+                      
+            Session.set( 'tbo', tb );
+                     			       
+  	       }//callback
 	);//S3.upload()
 	
-/*
-  let fil   = t.$( '#course-builder-pdf' ).get(0).files[0]
-    , fr    = new FileReader();
-
-  fr.onload = function() {
-    pdf     = this.result;
-  };
-
-  // reads in image, calls back fr.onload
-  fr.readAsDataURL( fil );
-*/
-}
-
-
-
-/**
- *
- * #CB-PDF-SAVE  ::(CLICK)::
- *
- * id = add-pdf
- * pdf dialog
- */
-export function cbPDFSave( e, t, tbo, contentTracker, pdfsTracker ) {
-  e.preventDefault();
   
-  
-/*
-    Meteor.call( 'saveBuiltCoursePdf',
-                  built_id,
-                  pdf,
-                  Template.instance().page.get() );
-
-    Template.instance().page.set( Template.instance().page.get() + 1 );
-    Template.instance().total.set( Template.instance().total.get() + 1 );
-*/
-
-  if ( pdf ) {
-
-    Bert.alert( 'Loading PDF...', 'success' );
-    
-    $( '#cb-toolbar-video' ).show();
-    t.$( '#cb-current' ).val( '#pdd' );
-    
-    let obj =
-    `<embed width="100%" height="600" src="${pdf}" type="application/pdf"></embed>`;
-    t.$( '#fb-template' ).empty();
-    t.$( '#fb-template' ).append( obj );
-
-/*
-    '<object data="' + pdf + '" type="application/pdf" width="100%" height="auto">' +
-    '<iframe src="' + pdf + '" width="100%" height="auto" style="border: none;">' +
-    'This browser does not support PDFs. Please download the PDF to view it: <a href="' + pdf + '">Download PDF</a>' +
-    '</iframe>' +
-    '</object>';
-*/
-    contentTracker.pdfs++;
-    Session.set('contentTracker', contentTracker);
-    
-    tbo.pdfs[0] = { 
-                    url: `${obj}`,
-                    pdf_id: pdf_id
-                  };
-
-    
-    pdf = null;
-  }
     t.$( '#add-pdf' ).modal( 'hide' );
 //-----------------------------------------------------------------------------
 };

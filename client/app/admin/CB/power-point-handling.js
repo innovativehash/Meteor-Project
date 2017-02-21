@@ -6,7 +6,8 @@
  */
 
 
-let ig = '';
+let pp    = ''
+  , pp_id = '';
 
   /**
    * 
@@ -15,30 +16,56 @@ let ig = '';
    */
    export function cbPowerPointChange( e, t, tbo, PowerPoints ) {
      
-    if ( e.currentTarget.files === 'undefined' ) {
+    if ( e.currentTarget.files === 'undefined' || e.currentTarget.files == '' ) {
       console.log( 'aborted' );
       return;
     }
-    return;
+    
+    /* in #add-powerpoint modal
+     *
+     * MIME TYPES
+     *
+     * .ppt	application/vnd.ms-powerpointtd
+     * .pptx	application/vnd.openxmlformats-officedocument.presentationml.presentation
+     *
+    */
+    
+    //console.log( t.$('#course-builder-powerpoint')[0].files[0] );
+    let nm = t.$('#course-builder-powerpoint')[0].files[0].name;
+    
+    if (  t.$('#course-builder-powerpoint')[0].files[0].type  != 'application/vnd.ms-powerpointtd' &&
+          t.$('#course-builder-powerpoint')[0].files[0].type  != 'application/vnd.openxmlformats-officedocument.presentationml.presentation' &&
+          nm.slice( nm.lastIndexOf('.'), nm.length )           != '.ppt' && nm.slice( nm.lastIndexOf('.'), nm.length ) != '.pptx'   )
+          
+    {
+      Bert.alert( 'Only PPT or PPTX files please', 'danger' );
+      t.$( '#course-builder-powerpoint' )[0].files = undefined;
+      t.$( '#course-builder-powerpoint' ).val('');
+      return;
+    }
+
+
+    // fil = e.currentTarget.files[0]
     let fil = t.$( '#course-builder-powerpoint' )[0].files
   	  , sf  = t.$( '#course-builder-powerpoint' ).data('subfolder');
-  
+/*    
+console.log( e.currentTarget.files );     //object with array
+console.log( e.currentTarget.files[0] );  //first array item in object
+console.log( e.currentTarget );           //element
+*/
+
 		S3.upload(
 		          {
-        				files:  fil, //files,
-        				path:   sf //"subfolder"
+        				files:  fil,  //files,
+        				path:   sf    //"subfolder"
 			        },
 			        
 			        function( e, r ){
 				        //console.log( r );
 				        //delete r._id;
-				        ig = r.secure_url;
-				        //let img = $( '#preview-image' );
-
-                //img.attr( "src", ig ); // ig
-                //img.appendTo( '.image-preview' );
+				        pp    = r.secure_url;
                 
-				        PowerPoints.insert({
+				        pp_id = PowerPoints.insert({
 				          loaded:           r.loaded,
 				          percent_uploaded: r.percent_uploaded,
 				          relative_url:     r.relative_url,
@@ -51,7 +78,7 @@ let ig = '';
 				          created_at:       moment().format()
 				        });
 		          }
-		); 
+		);//s3.upload()
    };
    
    
@@ -65,18 +92,41 @@ let ig = '';
    */
   export function cbPowerPointSave( e, t, tbo, contentTracker, PowerPoints ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
+    
+    //------------------------------------------------------------
+    // NEED TO SHOW LOADING DIALOG -- MODAL
+    // THEN NEED TO SET IFRAME INSIDE #fb-template WITH SOURCE LOADED
+    // FROM RETURN OF PLAYER URL FOR UPLOADED COURSE
+    // USE "MASTER" STUDENT FOR THIS
+    //------------------------------------------------------------
+    
+    
+    console.log('save');
+    console.log( pp_id );
+    
+    if ( pp ) {
+      Bert.alert('Please stand-by. Processing', 'success' );
+      console.log( pp_id );
 
-  console.log( tbo );
-    /*
-    Meteor.call( 'saveBuiltCoursePdf',
-                  built_id,
-                  ig,
-                  Template.instance().page.get() );
-
-
-    Template.instance().page.set( Template.instance().page.get()    + 1 );
-    Template.instance().total.set( Template.instance().total.get()  + 1 );
-*/
+      $( '#cb-toolbar-video' ).show();
+      t.$('#cb-current').val( '#ppp' );
+      
+      let obj =
+      `<embed width="100%" height="600" src="${ppt}" type="application/pdf"></embed>`;
+      t.$( '#fb-template' ).empty();
+      t.$( '#fb-template' ).append( obj );
+      
+      contentTracker.ppts++;
+      Session.set('contentTracker', contentTracker);
+      
+      tbo.ppts[0] = {
+        url: `${obj}`,
+        ppt_id: ppt_id
+      };
+      
+      ppt = null;
+    }
+    console.log( tbo );
+    t.$('#add-powerpoint').modal('hide');
 //-----------------------------------------------------------------------------
   }

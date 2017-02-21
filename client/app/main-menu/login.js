@@ -34,26 +34,41 @@ Template.login.events({
       
       //console.log( 'login with pw uid & roles ' + Meteor.userId() + ' ' + Meteor.user().roles[0]) /* DEBUG */
       if ( error ) {
+        
         console.log( 'log in error ' + error );
         Bert.alert( 'Please provide a valid Account Email and Password!', 'danger', 'fixed-top', 'fa-frown-o' );  
+        
       } else {
 
         if ( s.freeze == true ) {
+          
           Meteor.logout();
           Bert.alert('Your Account has been Frozen', 'danger' );
           return;
           //FlowRouter.go( '/account-frozen' );
+          
         } else if ( s.expires /*LOGIC FROM INTERNAL TRAINING */ ) {
+          
           Meteor.logout();
           Bert.alert('Your Account has Expired', 'danger' );
           return;
-        } else if ( Meteor.user().roles.admin || Meteor.user().roles.SuperAdmin ) {
+          
+        } else if ( Meteor.user() == null ) {
+          
+          Bert.alert('No user established', 'danger');
+          return;
+          
+        } else if ( Meteor.user().roles && Meteor.user().roles.admin || 
+                    Meteor.user().roles && Meteor.user().roles.SuperAdmin ) 
+        {
           FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
       
-        } else if ( Meteor.user().roles.student ) {
+        } else if ( Meteor.user().roles && Meteor.user().roles.student ) {
+          
             FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
             
-        } else if ( Meteor.user().roles.teacher ) {
+        } else if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+          
           FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
         }
       }
