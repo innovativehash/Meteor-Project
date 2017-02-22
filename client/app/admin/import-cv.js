@@ -11,9 +11,9 @@ import '../../templates/admin/import-cv.html';
 
 
 
-/*
+/*=======================================
  * CREATED
- */
+ *=======================================*/
 Template.importCV.onCreated( function() {
 
   this.res = new ReactiveVar();
@@ -66,9 +66,10 @@ Template.importCV.onCreated( function() {
 });
 
 
-/*
+
+/*======================================
  * RENDERED
- */
+ *=====================================*/
 Template.importCV.onRendered(function(){
   $( '#csv-cover' ).delay( 100 ).fadeOut( 'slow', function() {
     $( "#csv-cover" ).hide();
@@ -78,9 +79,10 @@ Template.importCV.onRendered(function(){
 });
 
 
-/*
+
+/*=======================================
  * DESTROYED
- */
+ *======================================*/
 Template.importCV.onDestroyed(function(){
   console.log( 'in csv destroyed');//DEBUG
 
@@ -88,9 +90,10 @@ Template.importCV.onDestroyed(function(){
 });
 
 
-/*
+
+/*=========================
  * HELPERS
- */
+ *========================*/
 Template.importCV.helpers({
 
   names: () => {
@@ -135,14 +138,18 @@ Template.importCV.helpers({
 });
 
 
-/*
+
+/*========================
  * EVENTS
- */
+ *=======================*/
 Template.importCV.events({
 
-  /*
+
+  /********************************
+   * 
    * #DASHBOARD-PAGE  ::(CLICK)::
-   */
+   * 
+   ********************************/
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -152,9 +159,12 @@ Template.importCV.events({
   },
 
 
-  /*
+
+  /*****************************
+   *
    * #STUDENTS-PAGE  ::(CLICK)::
-   */
+   * 
+   *****************************/
   'click #students-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -164,9 +174,12 @@ Template.importCV.events({
   },
 
 
-  /*
+
+  /******************************
+   * 
    * #CSV-HELP-BUTTON ::(CLICK)::
-   */
+   * 
+   ******************************/
   'click #csv-help-btn'( e, t ) {
     e.preventDefault();
     console.log('clickjab');
@@ -176,9 +189,11 @@ Template.importCV.events({
   
   
   
-  /*
+  /********************
+   * 
    * #CSV  ::(CHANGE)::
-   */
+   * 
+   ********************/
   'change #csv'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -209,9 +224,10 @@ Template.importCV.events({
     }
   */
   // text/plain, text/csv
-    fil      = $( '#csv' ).get(0).files[0];
+    fil = $( '#csv' ).get(0).files[0];
 
     var fr = new FileReader();
+    
     fr.onload = function(e) {
       let s, slen = s1 = m = 0;
       //console.log( e.target.result ); //typeof is String
@@ -282,9 +298,12 @@ Template.importCV.events({
   },
 
 
-  /*
+
+  /*******************************************
+   * 
    * .JS-IMPORT-STUDENTS-FROM-CSV  ::(CLICK)::
-   */
+   * 
+   *******************************************/
   'click .js-import-students-from-csv'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -342,24 +361,26 @@ Template.importCV.events({
     }
 
     Meteor.setTimeout(function() {
-      $( "#dialog-message" ).dialog({
-        dialogClass: "no-close",
-        height: "auto",
-        width: 400,
-        resizable: false,
-        modal: true,
-        buttons: {
-          Ok: function() {
-            $( this ).dialog( "close" );
-            $( '#csv' ).attr( 'disabled', '' );
-            t.res.set( null );
-
-            FlowRouter.go( 'admin-students', { _id: Meteor.userId() });
-          }
-        }
-      });
+      $( "#cv-student-import-confirm" ).modal( 'show' );
     }, 100);
 //-------------------------------------------------------------------
   },
 
+
+
+  'click #cv-leave-yes'( e, t ) {
+    e.preventDefault();
+    
+    $( '#csv' ).attr( 'disabled', '' );
+    t.res.set( null );
+    
+    $( "#cv-student-import-confirm" ).modal('hide');
+    
+        //NECESSARY DELAY OR DIALOG CAUSES DISPLAY ISSUES ON DESTINATION
+    Meteor.setTimeout(function(){
+      FlowRouter.go( 'admin-students', { _id: Meteor.userId() });
+    }, 500);
+//-------------------------------------------------------------------
+  },
+  
 });

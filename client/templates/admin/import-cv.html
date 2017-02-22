@@ -188,11 +188,55 @@
   </div>
   </div>
   
-<div id="dialog-message" title="Student Import complete">
-  <p>
-    <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-    Your files have been successfully imported..
-  </p>
+<!-- CONFIRM MODAL -->
+<div class="search-list assign">
+<div  class="modal fade left"
+      id = "cv-student-import-confirm"
+      tabindex = "-1"
+      role = "dialog"
+      aria-labelledby = "myModalLabel">
+
+  <div class="modal-dialog">
+    <div class="pop-up-area students">
+      
+      <!-- <button type          = "button"
+              id            = "popup-close"
+              data-dismiss  = "modal"
+              aria-label    = "Close">x</button> -->
+
+      <div class = "popup-body">
+        <br>
+        <h2>STUDENT IMPORT COMPLETE:</h2>
+        
+        <form action="">
+          <div class="row">
+            <div class="col-sm-12" > <!-- col-sm-offset-1 -->
+              <p style="color:white;font-size:2em;">
+                Your files have been successfully imported..
+              </p>
+            </div>
+          </div><!-- row -->
+          <br><br><br>
+          <div class = "row">
+            <div class = "col-sm-12 text-right">
+
+              <input  id    = "cv-leave-yes"
+                      type  = "submit"
+                      value = "Leave" />
+              <!--
+              <input  id    = "cb-leave-no"
+                      type  = "submit"
+                      value = "Stay" />
+              -->
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+</div>
+<!-- /CONFIRM modal -->
+  
 {{/if}}
 </template>

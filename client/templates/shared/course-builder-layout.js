@@ -3,8 +3,6 @@ import { Students  }    from '../../../both/collections/api/students.js';
 
 import './course-builder-layout.html';
 
-import '../../../public/jquery-ui-1.12.0.custom/jqueryui-dark.css';
-
 Template.courseBuilderLayout.onCreated(function(){
 
 

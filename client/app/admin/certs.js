@@ -368,7 +368,7 @@ function initC( d, c ) {
      	//sp.appendChild( im );
      	
       child.id        = `cert-holder-${i}`;
-      child.className = "d-cur sortable ui-widget-content degree-drop";
+      child.className = "d-cur sortable ui-widget-content degree-drop"; 
       child.innerHTML = c[i].name;
       child.dataset.dc = c[i].credits;
       child.dataset.di = c[i]._id;

@@ -401,6 +401,7 @@ Template.courseBuilderPage.onRendered( function() {
         FlowRouter.getQueryParam( "id"  )
      )
   {
+    
     //RESTORE THE SESSION
     let tb = Session.get( 'obj' );
     Session.set( 'obj', null );
@@ -575,6 +576,7 @@ Template.courseBuilderPage.events({
       
     t.$( '#cb-leave-confirm' ).modal('hide');
     
+    //NECESSARY DELAY OR DIALOG CAUSES DISPLAY ISSUES ON DESTINATION
     Meteor.setTimeout(function(){
       if ( Meteor.user().roles.teacher ) {
         FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
@@ -1024,12 +1026,12 @@ Template.courseBuilderPage.events({
         return;
       }
       
-      let tb = Session.get( 'tbo' );
-      tb.name            = name;
-      tb.credits         = Number(credits);
-      tb.passing_percent = Number(percent);
-      tb.keywords        = keys;
-      tb.icon            = "/img/icon-4.png";
+      let tb              = Session.get( 'tbo' );
+      tb.name             = name;
+      tb.credits          = Number(credits);
+      tb.passing_percent  = Number(percent);
+      tb.keywords         = keys;
+      tb.icon             = "/img/icon-4.png";
       Session.set( 'tbo', tb );
 
       
