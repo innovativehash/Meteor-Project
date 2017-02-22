@@ -13,41 +13,47 @@ import '../../templates/admin/admin-test-creator.html';
 let Test      = new Mongo.Collection(null)
   , testidnum = undefined;
 
-/*
- * CREATED
- */
-Template.adminTestCreator.onCreated(function(){
-/*
-  $('#cover').show();
-*/
 
+
+/*=============================================
+ * CREATED
+ ============================================*/
+Template.adminTestCreator.onCreated(function(){
+  /*
+    $('#cover').show();
+  */
+//-------------------------------------------------------------------
 });
 
 
-/*
+
+
+/*==============================================
  * RENDERED
- */
+ *=============================================*/
 Template.adminTestCreator.onRendered(function(){
 
-/*
-  $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
-    $("#cover").hide();
-    $( ".dashboard-header-area" ).fadeIn( 'slow' );
-  });
-*/
-$( '#tf-edit' ).hide();
-$( '#mc-edit' ).hide();
-$( '.test-help-contents' ).hide();
-
-$( '#t-btn-prev' ).prop('disabled', true);
-$( '#t-btn-next' ).prop('disabled', true);
-
+  /*
+    $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
+      $("#cover").hide();
+      $( ".dashboard-header-area" ).fadeIn( 'slow' );
+    });
+  */
+  $( '#tf-edit' ).hide();
+  $( '#mc-edit' ).hide();
+  $( '.test-help-contents' ).hide();
+  
+  $( '#t-btn-prev' ).prop('disabled', true);
+  $( '#t-btn-next' ).prop('disabled', true);
+//-------------------------------------------------------------------
 });
 
 
-/*
+
+
+/*================================
  * EVENTS
- */
+ *===============================*/
 Template.adminTestCreator.events({
 
   /*
@@ -69,24 +75,25 @@ Template.adminTestCreator.events({
   },
   */
 
+
   /*
-   *
+   *********************************
    * .JS-SHOW-TEST-HELP  ::(CLICK)::
-   *
+   *********************************
    */
    'click .js-show-test-help'( e, t ) {
      e.preventDefault();
-     e.stopImmediatePropagation();
      
      t.$( '.test-help-contents' ).slideToggle();
+//-------------------------------------------------------------------
    },
    
    
   
   /*
-   *
+   *****************
    * .JS-TEST-CANCEL
-   *
+   *****************
    */
   'click .js-test-cancel'( e, t ) {
     e.preventDefault();
@@ -96,24 +103,42 @@ Template.adminTestCreator.events({
       FlowRouter.go( `/teacher/dashboard/course-builder/${Meteor.userId()}?rtn=test&cancel=true` );
     } else if ( Meteor.user().roles.admin ) {
       FlowRouter.go( `/admin/dashboard/course-builder/${Meteor.userId()}?rtn=test&cancel=true` );
-    }    
+    }
+//-------------------------------------------------------------------
   },
   
   
   
   /*
-   *
+   ********************************
    * .JS-TEST-COMPLETE  ::(CLICK)::
-   *
+   ********************************
    */
   'click .js-test-complete'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
+    
+    if ( $('#test-name').val() == '' ) {
+      Bert.alert("You can't save an unnamed test!", 'danger');
+      return;
+    }
+  
+    //NO RECORD PRESENT ALTERNATE WAY
+    //console.log( Test.find({questions: {$exists: false}}).count() );
+
+    let cnt = Test.find({questions: null}).count();
+    if ( cnt >= 1 ) {
+      Bert.alert("You can't save a test with no question/answer!", 'danger');
+      return;
+    }
     
     let lastId  = t.$( 'div#ans-mc input:last' ).attr( 'id' );
     let tot_q   =  t.$( '[ name="qnum" ]' ).val();
     
     Number(tot_q--);
+    
+    if ( tot_q <= 0 ) {
+      Bert.alert("You can't save an empty test!", 'danger' );
+    }
     
     //UPDATE LOCAL DB
     Test.update( { _id: testidnum },
@@ -163,42 +188,48 @@ Template.adminTestCreator.events({
 
 
   /*
-   *
+   ************************
    * #TEST-NAME  ::(BLUR)::
-   *
+   ************************
    */
   'blur #test-name'( e, t ){
     //let course_name = FlowRouter.current().path.slice( FlowRouter.current().path.indexOf('?') + 1 );
 
-      if ( testidnum && testidnum == Test.findOne({ _id: testidnum })._id ) {
+    if ( testidnum && testidnum == Test.findOne({ _id: testidnum })._id ) {
 
-        Test.update({ _id: testidnum }, {$set:{test_name: t.$( '#test-name' ).val()} });
-      } else {
-
+      Test.update({ _id: testidnum }, 
+                  { $set:{ test_name: t.$( '#test-name' ).val() } });
+    } else {
+      try {
+        let cid = Meteor.user().profile && Meteor.user().profile.company_id;
+      
         testidnum = Test.insert({
-                                  test_name: t.$( '#test-name' ).val(),
-                                  company_id: Meteor.user().profile.company_id
-                                });
-      }                          
-      
-      if ( ! t.$( '#test-name').val() ) {
-        t.$( '#test-name' ).css( 'border', '2px solid red' );
-      } else {
-        t.$( '#test-name' ).css( 'border', 'none' );
+                                test_name: t.$( '#test-name' ).val(),
+                                company_id: cid
+                              });
+      } catch(e) {
+        console.log(e);
       }
+    }                          
       
-      //let testName  = t.$( '#test-name' ).val();
-      //testidnum     = Tests.findOne({ test_name: testName })._id;
-      //t.$( '#test-name' ).attr( 'readonly', true);
+    if ( ! t.$( '#test-name').val() ) {
+      t.$( '#test-name' ).css( 'border', '2px solid red' );
+    } else {
+      t.$( '#test-name' ).css( 'border', 'none' );
+    }
+    
+    //let testName  = t.$( '#test-name' ).val();
+    //testidnum     = Tests.findOne({ test_name: testName })._id;
+    //t.$( '#test-name' ).attr( 'readonly', true);
 //-------------------------------------------------------------------
   },
 
 
 
   /*
-   *
+   ***********************
    * #QUESTION  ::(BLUR)::
-   *
+   ***********************
    */
   'blur #question'( e, t ){
     e.preventDefault();
@@ -208,19 +239,21 @@ Template.adminTestCreator.events({
     } else {
       t.$( '#question' ).css( 'border', 'none' );
     }
-    
+ //-------------------------------------------------------------------   
   },
   
   
   
   /*
-   *
+   ******************
    * #TF  ::(CLICK)::
+   ******************
    *
    * SELECT TRUE/FALSE ANSWER TYPE
    *
    */
   'click #tf'( e, t ) {
+    e.preventDefault();
 
     t.$( '#ans-tf' ).removeClass( 'hide' );
     t.$( '#ans-mc' ).addClass(    'hide' );
@@ -228,14 +261,17 @@ Template.adminTestCreator.events({
   },
 
 
+
   /*
-   *
+   ******************
    * #MC  ::(CLICK)::
+   ******************
    *
    * SELECt MULTIPLE CHOICE ANSWER TYPE
    *
    */
   'click #mc'( e, t ){
+    e.preventDefault();
 
     t.$( '#ans-mc' ).removeClass( 'hide' );
     t.$( '#ans-tf' ).addClass(    'hide' );
@@ -245,8 +281,9 @@ Template.adminTestCreator.events({
 
 
   /*
-   *
+   *************************
    * #MC-SUBMIT  ::(CLICK)::
+   *************************
    *
    * SUBMIT MULTIPLE CHOICE ANSWERS FOR CURRENT QUESTION
    *
@@ -355,9 +392,9 @@ Template.adminTestCreator.events({
     //clear out added dom elements
     if ( lastId != 'C' ){
       for( let i = 3; i <= spread; i++ ){
-        t.$( '#lab' + String.fromCharCode( i + 65) ).remove();
-        t.$( '#'    + String.fromCharCode( i + 65) ).remove();
-        t.$( '#opt' + String.fromCharCode( i + 65) ).remove();
+        t.$( '#lab' + String.fromCharCode( i + 65 ) ).remove();
+        t.$( '#'    + String.fromCharCode( i + 65 ) ).remove();
+        t.$( '#opt' + String.fromCharCode( i + 65 ) ).remove();
         t.$( '#question' ).val('');
       }
     }
@@ -408,15 +445,15 @@ Template.adminTestCreator.events({
 
 
   /*
-   *
+   ***********************
    * #MC-EDIT  ::(CLICK)::
+   ***********************
    *
    * SUBMIT EDIT'S MULTIPLE CHOICE ANSWERS FOR CURRENT QUESTION
    *
    */
   'click #mc-edit'( e, t ){
     e.preventDefault();
-    e.stopImmediatePropagation();
     
     let qnmbr       = Number( t.$( '#q_num' ).text() )
       , q           = t.$( '#question' ).val()
@@ -435,9 +472,13 @@ Template.adminTestCreator.events({
 
     //serialize
     for( let i = 0; i <= spread; i++ ){
+      
       if ( t.$( '#' + String.fromCharCode( i + 65 ) ).val() != '' ) {
+        
         answers[i] = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
+        
         if ( String.fromCharCode( i + 65 ) == correct_a ) {
+          
           correct_ans = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
         }
       }
@@ -445,7 +486,7 @@ Template.adminTestCreator.events({
     
     let num_ans = answers.length;
     
-    Test.update( { questions:{$elemMatch:{ question_num:{$eq: Number(qnmbr) } }}},
+    Test.update( { questions:{ $elemMatch:{ question_num:{ $eq: Number(qnmbr) } }}},
                  { $set:
                       {
                         "questions.$.question":       q,
@@ -460,9 +501,9 @@ Template.adminTestCreator.events({
     //clear out added dom elements
     if ( lastId != 'C' ){
       for( let i = 3; i <= spread; i++ ){
-        t.$( '#lab' + String.fromCharCode( i + 65) ).remove();
-        t.$( '#'    + String.fromCharCode( i + 65) ).remove();
-        t.$( '#opt' + String.fromCharCode( i + 65) ).remove();
+        t.$( '#lab' + String.fromCharCode( i + 65 ) ).remove();
+        t.$( '#'    + String.fromCharCode( i + 65 ) ).remove();
+        t.$( '#opt' + String.fromCharCode( i + 65 ) ).remove();
         t.$( '#question' ).val('');
       }
     }
@@ -471,20 +512,21 @@ Template.adminTestCreator.events({
     
     t.$( '#t-btn-next' ).click();
     return;
+//-------------------------------------------------------------------
   },
   
   
   
   /*
-   *
+   *************************
    * #TF-SUBMIT  ::(CLICK)::
+   *************************
    *
    * SUBMIT TRUE/FALSE ANSWERS TO CURRENT QUESTION
    *
    */
   'click #tf-submit'( e, t ){
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     //question
     let q                     = t.$( '#question' ).val();
@@ -530,66 +572,92 @@ Template.adminTestCreator.events({
                         question_type:  'tf'
                       }
                     }
-                  }
-    );
+                  });
 
 console.log( Test.find().fetch() );
     //clean up the ui
     t.$( '.js-tf' ).prop( 'checked', false );
     t.$( '#question' ).val('');
     t.$( '#ans-tf' ).addClass( 'hide' );
+    $('#correct_ans').val('Please Select')
 //-------------------------------------------------------------------
   },
 
 
 
   /*
-   *
+   ***********************
    * #TF-EDIT  ::(CLICK)::
+   ***********************
    *
    * SUBMIT EDIT'S TRUE/FALSE ANSWERS TO CURRENT QUESTION
    *
    */
   'click #tf-edit'( e, t ){
     e.preventDefault();
-    e.stopImmediatePropagation();
     
-    let qnmbr = Number( t.$( '#q_num' ).text() )
-      , q = t.$( '#question' ).val()
+    let qnmbr     = Number( t.$( '#q_num' ).text() )
+      , q         = t.$( '#question' ).val()
       , correct_a = t.$( 'input[ name="optradio" ]:checked' ).val();
+      
+   if ( ! t.$( '#test-name' ).val() ) {
+      Bert.alert( 'Please ensure you\'ve named the test', 'danger' );
+      t.$( '#test-name' ).css( 'border', '4px solid red' );
+      return;
+    }
+    
+    if ( !q ) {
+      Bert.alert('Please enter a question before saving...', 'danger' );
+      t.$( '#question' ).css( 'border', '2px solid red' );
+      return;
+    }
+    
+    if ( ! correct_a ) {
+      Bert.alert('Please select a correct answer for this question before saving.', 'danger' );
+      return;
+    }
 
-    Test.update( { questions:{$elemMatch:{ question_num:{$eq: Number(qnmbr) } }}},
-                 { $set:
-                      {
+    Test.update({ questions: { 
+                    $elemMatch: { 
+                      question_num:{
+                        $eq: Number(qnmbr) 
+                      } 
+                    }
+                  }
+                },
+                { $set: {
                         "questions.$.question":       q,
                         "questions.$.correct_answer": correct_a,
                         "questions.$.question_type":  'tf'
-                      },
-                    $unset:
-                      {
+                  },
+                  $unset: {
                         "questions.$.num_answers":  "",
                         "questions.$.answers":      ""
-                      }
                   }
-    );
+                });
+                
+    $('#correct_ans').val('Please Select');
+    
 console.log( Test.find().fetch() );
+
     t.$( '#t-btn-next' ).click();
     return;
-
 //-------------------------------------------------------------------    
   },
   
   
   
   /*
-   *
+   ********************
    * #PLUS  ::(CLICK)::
+   ********************
    *
    * ADD ADDITIONAL MULTIPLE CHOICE ANSWERS
    *
    */
   'click #plus'( e, t ){
-
+    e.preventDefault();
+    
     //what is the last questions letter?
     let lastLetter = t.$( e.currentTarget ).closest().context.previousElementSibling.innerText.charCodeAt(0);
 
@@ -598,13 +666,16 @@ console.log( Test.find().fetch() );
 
     //convert ascii number back into character, i.e 65 = A
     nextChar   = String.fromCharCode( lastLetter );
+    
     //create new multiple choice answer
     t.$( e.currentTarget ).before( '<label id="lab' + nextChar + '">' + nextChar +
-                                '<input id="'        + nextChar +
+                                '<input id="'       + nextChar +
                                 '"' + 'type="text" class="form-control" placeholder="enter answer...">' +
                                 '</label>' );
+                                
     //create new multiple choice correct answer <option>
     let opt       = document.createElement( 'option' );
+    
     opt.value     = nextChar;
     opt.setAttribute( 'id', 'opt' + nextChar );
     opt.innerHTML = nextChar;
@@ -615,8 +686,9 @@ console.log( Test.find().fetch() );
 
  
   /*
-   *
+   **************************
    * #T-BTN-PREV  ::(CLICK)::
+   **************************
    *
    * NAVIGATE FORWARD THROUGH QUESTIONS
    *
@@ -627,10 +699,10 @@ console.log( Test.find().fetch() );
     let curr_question = Number( t.$( '#q_num' ).text() );
     
     if ( curr_question <= 1 ) {
-      $( '#t-btn-prev' ).prop('disabled', true);
+      //$( '#t-btn-prev' ).prop('disabled', true);
       return;
     } else {
-      $( '#t-btn-prev' ).prop('disabled', false);
+      //$( '#t-btn-prev' ).prop('disabled', false);
     }
     
     t.$( '#tf-edit' ).show();
@@ -645,7 +717,13 @@ console.log( Test.find().fetch() );
     curr_question = Number( curr_question - 1)
     t.$( '#q_num' ).text( curr_question );
     
-    let t_ques = Test.findOne({ _id: testidnum },{questions:{$elemMatch:{question_num:curr_question}}})
+    let t_ques = Test.findOne({ _id: testidnum },
+                              { questions:
+                                { 
+                                  $elemMatch:{ question_num:curr_question }
+                                }
+                              })
+                              
       , arr_idx = curr_question - 1; //adjust for 0 based array
 
     let q_type  = t_ques.questions[arr_idx].question_type
@@ -675,10 +753,12 @@ console.log( Test.find().fetch() );
       case 'mc':
         t.$( '#ans-mc' ).removeClass( 'hide' );
         t.$( '#ans-tf' ).addClass(    'hide' );
-        let pos = _.indexOf( ans, c_ans ); //locate position of ans in array;
+        
+        //LOCATE POSITION OF ANS IN ARRAY
+        let pos = _.indexOf( ans, c_ans );
         
         ans.forEach(function( el, idx ){ 
-          if ( idx > 2 ) t.$( '#plus' ).click();
+          if ( idx > 2 ) t.$( '#plus' ).click(); //ONLY 3 INITAL MC ANSWERS
           t.$( `#${posAlphabet(idx)}` ).val( el ); 
         });
         
@@ -687,18 +767,21 @@ console.log( Test.find().fetch() );
         } else {
           $( '#correct_ans' ).val( posAlphabet( pos ) );
         }
+        
         t.$( '#question' ).val( ques );
         
         break;
     }
 console.log( Test.find().fetch() );
+//-------------------------------------------------------------------
   },
   
   
   
   /*
-   *
+   **************************
    * #T-BTN-NEXT  ::(CLICK)::
+   **************************
    *
    * NAVIGATE FORWARD THROUGH QUESTIONS
    *
@@ -732,9 +815,14 @@ console.log( Test.find().fetch() );
       , num_ans = 0
       , ans     = [];
     
-    t_ques = Test.findOne({ _id: testidnum },{questions:{$elemMatch:{question_num:String(curr_question)}}});
+    t_ques = Test.findOne({ _id: testidnum },
+                          { questions:
+                            { $elemMatch:
+                              { question_num:String(curr_question) }
+                            }
+                          });
  
-    q_type = t_ques.questions[curr_question].question_type;
+    q_type  = t_ques.questions[curr_question].question_type;
       
     ques    = t_ques.questions[curr_question].question;
       
@@ -784,8 +872,7 @@ console.log( Test.find().fetch() );
     }
 console.log( Test.find().fetch() );
   }
-
-
+//-------------------------------------------------------------------
 });
 
 
