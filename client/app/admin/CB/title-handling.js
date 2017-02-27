@@ -19,14 +19,11 @@
 
 
 
- /**
-   *
-   * #ADDED-TITLE  ::(BLUR)::
-   *
-   */
+/**********************************************************
+ * #ADDED-TITLE  ::(BLUR)::
+ *********************************************************/
   export function cbAddedTitleBlur( e, t, contentTracker, titlesTracker ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     if ( t.$( '#added-title' ).val() == undefined || t.$( '#added-title' ).val() == '' ) {
       try {
@@ -52,6 +49,7 @@
     // CONTENT FLAG
     contentTracker.titles++;
     Session.set('contentTracker', contentTracker);
+    
     //UNIQUE ID 
     ++tit_id;
 
@@ -74,6 +72,7 @@
         
         let tb = Session.get( 'tbo' );
         
+        $( '.js-edit-button' ).show();
         $( '#cb-toolbar-text' ).show();
         
         // MAKE THIS THE CURRENTLY SELECTED ITEM

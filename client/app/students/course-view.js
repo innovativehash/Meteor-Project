@@ -10,7 +10,6 @@ import { ReactiveVar }    from 'meteor/reactive-var';
 import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
 import { Courses }        from '../../../both/collections/api/courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
-import { Scratch }        from '../../../both/collections/api/scratch.js';
 
 import '../../templates/student/course-view.html';
 
@@ -18,9 +17,9 @@ import '../../templates/student/course-view.html';
 let b, c, len;
 
 
-/* *****************************************************************************
+/*=========================================================
  * CREATED
- *******************************************************************************/
+ *=======================================================*/
 Template.courseView.onCreated( function() {
   
   //$( '#cover' ).show();
@@ -33,9 +32,9 @@ Template.courseView.onCreated( function() {
 
 
 
-/* *****************************************************************************
+/*=========================================================
  * RENDERED
- *******************************************************************************/
+ *=======================================================*/
 Template.courseView.onRendered( function() {
   $('#yosco').hide();
 /*
@@ -46,9 +45,10 @@ Template.courseView.onRendered( function() {
                                       }
   );
 */
-  //let self = this;
-  //self.subscribe("name", function() {
-
+    //let self = this;
+    //self.subscribe("name", function() {
+    //console.log( FlowRouter.getQueryParam("builder"))
+    
     this.autorun(function() { //self
       try {
         
@@ -68,7 +68,8 @@ Template.courseView.onRendered( function() {
             //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
             if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == "test" ) 
             {
-              Scratch.insert({ id:  c.pages[no + 1].page });
+              //Scratch.insert({ id:  c.pages[no + 1].page });
+              Session.set('Scratch', c.pages[no+1].page );
             }
             
             $( '#fb-template' ).empty();
@@ -89,7 +90,8 @@ Template.courseView.onRendered( function() {
             //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
             if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == "test" ) 
             {
-              Scratch.insert({ id:  c.pages[no + 1].page });
+              //Scratch.insert({ id:  c.pages[no + 1].page });
+              Session.set('Scratch', c.pages[no+1].page );
             }
             
             Bert.alert({
@@ -112,7 +114,8 @@ Template.courseView.onRendered( function() {
             //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
             if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == 'test' ) 
             {
-              Scratch.insert({ id: c.pages[no + 1].page });
+              //Scratch.insert({ id: c.pages[no + 1].page });
+              Session.set('Scratch', c.pages[no+1].page );
             }
 
             Bert.alert({
@@ -135,7 +138,8 @@ Template.courseView.onRendered( function() {
             //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
             if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == 'test' ) 
             {
-              Scratch.insert({ id: c.pages[no + 1].page });
+              //Scratch.insert({ id: c.pages[no + 1].page });
+              Session.set('Scratch', c.pages[no+1].page );
             }
             
             Bert.alert({
@@ -163,7 +167,6 @@ Template.courseView.onRendered( function() {
             
             $( '#fb-template' ).hide();
             $( '#fb-template' ).empty();
-            
             $( '#test_v' ).show();
             
           // WILL NEED TO CODE PP, PDF, SCORM
@@ -181,9 +184,9 @@ Template.courseView.onRendered( function() {
 
 
 
-/* *****************************************************************************
+/*=========================================================
  * HELPERS
- *******************************************************************************/
+ *=======================================================*/
 Template.courseView.helpers({
 
   course: () => {
@@ -211,31 +214,33 @@ Template.courseView.helpers({
 
 
 
-/* *****************************************************************************
+/*=========================================================
  * EVENTS
- *******************************************************************************/
+ *=======================================================*/
 Template.courseView.events({
 
-  /*
+  /********************************************************
    * #LOGOUT  ::(CLICK)::
-   */
+   *******************************************************/
   'click #cv-logout': function( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
-
+    
+    Session.set('Scratch', '');
+    
     Meteor.logout();
     FlowRouter.go( '/login' );
 //-------------------------------------------------------------------
   },
 
 
-  /*
+  /********************************************************
    * .JS-BACK-TO-HOME  ::(CLICK)::
-   */
+   *******************************************************/
   'click #course-view-page-back'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
+    Session.set('Scratch', '');
+    
     if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
     } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
@@ -248,9 +253,9 @@ Template.courseView.events({
   },
 
 
-  /*
+  /********************************************************
    * CV-DASHBOARD-LINK
-   */
+   *******************************************************/
   'click #cv-dashboard-link'( e, t ) {
       e.preventDefault();
       
@@ -260,11 +265,13 @@ Template.courseView.events({
   },
    
    
-   /*
+   /*******************************************************
     * CV-COURSES-LINK
-    */
+    ******************************************************/
   'click #cv-courses-link'( e, t ) {
     e.preventDefault();
+    
+    Session.set('Scratch', '');
     
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
@@ -278,9 +285,9 @@ Template.courseView.events({
   
   
   
-  /*
+  /********************************************************
    * CV_PREV_BUTTON ::(CLICK)::
-   */
+   *******************************************************/
   'click #cv-prev-btn'( e, t ) {
     e.preventDefault();
 
@@ -293,9 +300,9 @@ Template.courseView.events({
   },
 
 
-  /*
+  /********************************************************
    * CV-NEXT-BUTTON ::(CLICK)::
-   */
+   *******************************************************/
   'click #cv-next-btn'( e, t ) {
     e.preventDefault();
 

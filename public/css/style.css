@@ -2352,10 +2352,12 @@ body.login {
     float: right;
     text-align: center;
 }
-
+/*
 .search-list {
     margin-top: 80px;
 }
+*/
+.search-list {magin: 0; }
 
 .search-list table {}
 
@@ -2987,6 +2989,17 @@ body.login {
 }
 
 .footer-page {
+  background: #37ACE9;
+  border-top: 1px solid #181818;
+  padding: 20px 0;
+  position: relative;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+}
+
+/*
+.footer-page {
     background: #37ACE9;
     border-top: 1px solid #181818;
     padding: 20px 0;
@@ -2995,7 +3008,29 @@ body.login {
     left: 0;
     bottom: 0;
 }
-
+*/
+/*
+.footer-page {
+  background: #37ACE9;
+  border-top: 1px solid #181818;
+  padding: 20px 0;
+  position: relative !important;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+}
+*/
+/*
+.footer-page {
+  background: #37ACE9;
+  border-top: 1px solid #181818;
+  padding: 20px 0;
+  position: relative;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+}
+*/
 .footer-filter {}
 
 .footer-filter h2 {

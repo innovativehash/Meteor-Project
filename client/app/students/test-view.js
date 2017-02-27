@@ -11,13 +11,13 @@ import { Students }       from '../../../both/collections/api/students.js';
 import { Courses  }       from '../../../both/collections/api/courses.js';
 import { Tests    }       from '../../../both/collections/api/tests.js';
 import { Newsfeeds }      from '../../../both/collections/api/newsfeeds.js';
-import { Scratch }        from '../../../both/collections/api/scratch.js';
 
 
 import '../../templates/student/test-view.html';
 
 let id;
 //let Scratch = new Mongo.Collection(null)
+
 
 Template.testView.onCreated(function(){
     
@@ -34,10 +34,10 @@ Template.testView.onRendered(function(){
 Template.testView.helpers({
   
   test() {
-
-    id = Scratch.findOne({});
+    //console.log( Session.get('Scratch'));
+    id = Session.get('Scratch');
     try{
-      return Tests.findOne({ _id: id.id });
+      return Tests.findOne({ _id: id });
     } catch(e) {
       return;
     }
@@ -73,17 +73,17 @@ Template.testView.events({
     */
 
     let total_questions = Number( $( '#tot_q' ).val() );
-  console.log( 'total_questions = ' + total_questions );
+  //console.log( 'total_questions = ' + total_questions );
   
     let total_score     = 0;
     for ( let i = 1; i <= total_questions; i++ ) {
       total_score += Number( getAnswer( i ) );
     }
-  console.log( 'total_score= ' + total_score );
+  //console.log( 'total_score= ' + total_score );
   
     let percent = Number( total_score / total_questions ) * 100;
     $( '#yosco' ).show();
-  console.log( 'percent = ' + percent );
+  //console.log( 'percent = ' + percent );
   
 //TODO:  GET CORRECT ANS PERCENTAGE FOR THIS TEST AND USE IT
 
@@ -129,12 +129,7 @@ Template.testView.events({
 
     $( '#submit-answers' ).prop( 'disabled', true );
     
-    //
-    //TODO: Make Meteor Method to wipe Scratch, replace this
-    //
-    
-  console.log( 'scratch remove ' + id._id );
-    Scratch.remove({ _id: id._id });
+    Session.set('Scratch', '');
     
     Meteor.setTimeout(function(){
       if ( Meteor.user().roles.admin ) {

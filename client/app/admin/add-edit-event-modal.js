@@ -19,14 +19,19 @@ let closeModal = () => {
 };
 
 
+/*=========================================================
+ * ON CREATED
+ *=======================================================*/
 Template.addEditEventModal.onCreated( () => {
 
   //let template = Template.instance();
   //template.subscribe( 'students' );
-  //---------------------------------------------------------------------------
-  /*
+  //-------------------------------------------------------
+  
+  
+  /********************************************************
    * SELECT2 INSTANTIATE
-   */
+   *******************************************************/
   $.getScript( '/js/select2.min.js', function() {
     $(document).ready(function(){
       $( '[name="type"]' ).select2({
@@ -44,28 +49,21 @@ Template.addEditEventModal.onCreated( () => {
       });
       
     });
+    
     //console.log('addEditEventModal:: select2.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'addEditEventModal:: load select2.js fail' );
   });
   
-  $( '[name="timezone"]' ).trigger("change");
-/*
-  $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function(){  
-    $( '[name="start"]' ).datepicker();
-    $( '[name="end"]' ).datepicker();
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'addEditEventModal:: load jquery-ui.js fail' );
-  });
-*/
-});
-
-
-Template.addEditEventModal.onRendered(function(){
   
+  $( '[name="timezone"]' ).trigger("change");
+
 });
 
 
+/*=========================================================
+ * HELPERS
+ *=======================================================*/
 Template.addEditEventModal.helpers({
   
   start() {
@@ -75,6 +73,7 @@ Template.addEditEventModal.helpers({
     } catch(e) {
       return;
     }
+//---------------------------------------------------------
   },
   
   
@@ -84,7 +83,8 @@ Template.addEditEventModal.helpers({
       return moment(e).format('Y-MM-DD');
     } catch(e) {
       return;
-    } 
+    }
+//---------------------------------------------------------
   },
   
   
@@ -116,12 +116,14 @@ Template.addEditEventModal.helpers({
       return tz;
     } catch (e) {
       //console.log( e );
-    } 
+    }
+//---------------------------------------------------------
   },
   
   cntx() {
     try {
-      let s   = Students.find({ company_id: Meteor.user().profile.company_id }).fetch()
+      let s   = Students.find({ company_id: Meteor.user().profile.company_id, 
+                              $where: function(){ return this._id != Meteor.userId() } }).fetch()
         , evt = Events.findOne( Session.get( 'eventModal' ).event ) && Events.findOne( Session.get('eventModal').event ).students;
         
         if ( Session.get('eventModal').type !== 'edit' ) {
@@ -139,6 +141,7 @@ Template.addEditEventModal.helpers({
       //console.log( e );
       return;
     }
+//---------------------------------------------------------
   },
   
   modalType( type ) {
@@ -146,6 +149,7 @@ Template.addEditEventModal.helpers({
     if ( eventModal ) {
       return eventModal.type === type;
     }
+//---------------------------------------------------------
   },
   
   
@@ -158,13 +162,14 @@ Template.addEditEventModal.helpers({
         label:  eventModal.type  === 'edit' ? 'Edit' : 'Add an'
       };
     }
+//---------------------------------------------------------
   },
   
   
   /*
-   * to help set the currently selected event type in the 
-   * “Event Type” select box when editing an existing event 
-   * (this will ensure that the selected option is the current value in the database).
+   * TO HELP SET THE CURRENTLY SELECTED EVENT TYPE IN THE 
+   * “EVENT TYPE” SELECT BOX WHEN EDITING AN EXISTING EVENT 
+   * (THIS WILL ENSURE THAT THE SELECTED OPTION IS THE CURRENT VALUE IN THE DATABASE).
    */
   selected( v1, v2 ) {
     return v1 === v2;
@@ -172,17 +177,17 @@ Template.addEditEventModal.helpers({
   
   
   /* 
-   * Once it has our Session variable, it decides what data to return the modal
-   * via the {{event}} helper.
+   * ONCE IT HAS OUR SESSION VARIABLE, IT DECIDES WHAT DATA TO RETURN THE MODAL
+   * VIA THE {{EVENT}} HELPER.
    *
-   * (1) If we’re EDITING, we want to return the actual 
-   *     event item in the database that’s being edited (remember, for the edit 
-   *     event we pass the event’s _id value). 
-   * (2) If we’re ADDING a new event, we want to take the clicked date and set
-   *     it in both the “Event Starts” and “Event Ends” fields 
-   *     (these are disabled, but confirm the date that was clicked). 
-   *     We set the same date for both as we’re only supporting single-date 
-   *     items in this snippet.
+   * (1) IF WE’RE EDITING, WE WANT TO RETURN THE ACTUAL 
+   *     EVENT ITEM IN THE DATABASE THAT’S BEING EDITED (REMEMBER, FOR THE EDIT 
+   *     EVENT WE PASS THE EVENT’S _ID VALUE). 
+   * (2) IF WE’RE ADDING A NEW EVENT, WE WANT TO TAKE THE CLICKED DATE AND SET
+   *     IT IN BOTH THE “EVENT STARTS” AND “EVENT ENDS” FIELDS 
+   *     (THESE ARE DISABLED, BUT CONFIRM THE DATE THAT WAS CLICKED). 
+   *     WE SET THE SAME DATE FOR BOTH AS WE’RE ONLY SUPPORTING SINGLE-DATE 
+   *     ITEMS IN THIS SNIPPET.
    */
   event() {
     let eventModal = Session.get( 'eventModal' );
@@ -194,20 +199,29 @@ Template.addEditEventModal.helpers({
             end:    eventModal.date
           };
     }//if
+//---------------------------------------------------------
   }// event
   
 });
 
 
-/*
+/*=========================================================
  * EVENT HANDLERS
- */
+ *=======================================================*/
 Template.addEditEventModal.events({
-  'click .close'( e, t ) {
   
+  /********************************************************
+   * .CLOSE  ::(CLICK)::
+   *******************************************************/
+  'click .close'( e, t ) {
+    e.preventDefault();
+    
   },
   
   
+  /********************************************************
+   * .JS-EVENT-MODAL-BUTTON  ::(CLICK)::
+   *******************************************************/
   'click .js-event-modal-button' ( event, template ) {
     event.preventDefault();
 
@@ -374,9 +388,13 @@ This training shall take place on ${moment(eventItem.start).format('M-D-Y')} at 
           closeModal();
         }//else
       });
+//---------------------------------------------------------
   },
   
   
+  /********************************************************
+   * .DELETE-EVENT
+   *******************************************************/
   'click .delete-event' ( event, template ) {
     let eventModal = Session.get( 'eventModal' );
     
@@ -391,6 +409,7 @@ This training shall take place on ${moment(eventItem.start).format('M-D-Y')} at 
         }
       });
     }
+//---------------------------------------------------------
   }
 });
 

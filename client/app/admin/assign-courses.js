@@ -13,16 +13,20 @@ import { Certifications } from '../../../both/collections/api/certifications.js'
 import '../../templates/admin/assign-courses.html';
 
 
-/*
+
+/*=========================================================
  * ON CREATED
- */
+ *========================================================*/
 Template.assignCourses.onCreated(function() {
 
   //$("#assign-courses-cover").show();  //set-up fade-in screen
 
-  /*
+  Session.set('assign-toggle-cert', false );
+  Session.set('assign-toggle-dip', false);
+  
+  /********************************************************
    * MULTI-SELECT AUTOCOMPLETE COMBOBOX
-   */
+   *******************************************************/
   $.getScript( '/js/select2.min.js', function() {
     $( document ).ready(function(){
       
@@ -44,9 +48,9 @@ Template.assignCourses.onCreated(function() {
 });
 
 
-/*
+/*=========================================================
  * ON RENDERED
- */
+ *=======================================================*/
 Template.assignCourses.onRendered(function(){
   //complete fade-in screen
 /*
@@ -58,9 +62,9 @@ Template.assignCourses.onRendered(function(){
 });
 
 
-/*
+/*=========================================================
  * HELPERS
- */
+ *=======================================================*/
 Template.assignCourses.helpers({
 
   courses: () => {
@@ -104,15 +108,14 @@ Template.assignCourses.helpers({
 
 
 
-/*
+/*=========================================================
  * EVENTS
- */
+ *=======================================================*/
 Template.assignCourses.events({
 
-  /*
+  /********************************************************
    * #ASN-COURSE
-   *
-   */
+   *******************************************************/
   'click .asn-course'( e, t ) {
     e.preventDefault();
     
@@ -135,80 +138,93 @@ Template.assignCourses.events({
   
   
   
-  /*
+  /********************************************************
    * #ASSIGN-CERT  ::(CLICK)::
-   *
-   */
+   *******************************************************/
   'click #assign-cert'( e, t ) {
     e.preventDefault();
     
-    try {
-      let cos = [], recs = [];
-      let certs = Certifications.find({ company_id: Meteor.user().profile.company_id}).fetch();
-      for ( let i = 0, ilen = certs.length; i < ilen; i++ ) {
-        cos = (certs[i].courses);
-      }
-      for ( let j = 0, jlen = cos.length; j < jlen; j++ ) {
-        recs[j] = Courses.find({ _id: cos[j] }).fetch()
-      }
-      
-      for ( let k = 0, klen = recs.length; k < klen; k++ ) {
-        let li = document.createElement( 'li' );
-        let a  = document.createElement( 'a'  );
-        
-        a.href =  `/admin/dashboard/course-viewer/${Meteor.userId()}?builder=${recs[k][0].built_id}&course=${recs[k][0]._id}`;
-        a.innerHTML = recs[k][0].name;
-        a.dataset.dc = recs[k][0].credits;
-        a.dataset.di = recs[k][0]._id
-        
-        li.appendChild( a );
-        document.getElementById('cert-courses').appendChild( li );
-        
-      }
-    } catch(e) {
-      console.log( e );
-    }
+    let tog = Session.get( 'assign-toggle-cert' );
+    tog = !tog;
     
+    if ( tog ) {
+      try {
+        let cos = [], recs = [];
+        let certs = Certifications.find({ company_id: Meteor.user().profile.company_id}).fetch();
+        for ( let i = 0, ilen = certs.length; i < ilen; i++ ) {
+          cos = (certs[i].courses);
+        }
+        for ( let j = 0, jlen = cos.length; j < jlen; j++ ) {
+          recs[j] = Courses.find({ _id: cos[j] }).fetch()
+        }
+        
+        for ( let k = 0, klen = recs.length; k < klen; k++ ) {
+          let li = document.createElement( 'li' );
+          let a  = document.createElement( 'a'  );
+          
+          a.href =  `/admin/dashboard/course-viewer/${Meteor.userId()}?builder=${recs[k][0].built_id}&course=${recs[k][0]._id}`;
+          a.innerHTML   = recs[k][0].name;
+          a.dataset.dc  = recs[k][0].credits;
+          a.dataset.di  = recs[k][0]._id
+          
+          li.appendChild( a );
+          document.getElementById('cert-courses').appendChild( li );
+          
+        }
+        Session.set( 'assign-toggle-cert', tog );
+      } catch(e) {
+        console.log( e );
+      }
+    } else {
+      Session.set('assign-toggle-cert', tog);
+      $( '#cert-courses' ).empty();
+    }
   },
   
   
   
-  /*
+  /********************************************************
    * #ASSIGN-DIPLOMA  ::(CLICK)::
-   *
-   */
+   *******************************************************/
   'click #assign-diploma'( e, t ) {
     e.preventDefault();
-    try {
-      let cos = [], recs = [];
-      
-      let dips    = Diplomas.find({ company_id: Meteor.user().profile.company_id}).fetch();
-      for ( let i = 0, ilen = dips.length; i < ilen; i++ ) {
-        cos = (dips[i].courses);
-      }
-      for ( let j = 0, jlen = cos.length; j < jlen; j++ ) {
-        recs[j] = Courses.find({ _id: cos[j] }).fetch()
-      }
-      //console.log( recs[0][0] );
-      //console.log( recs[1][0] );
-      
-      for ( let k = 0, klen = recs.length; k < klen; k++ ) {
-        let li         = document.createElement( 'li' );
-        let a          = document.createElement( 'a'  );
-        //let br         = document.createElement( 'br' );
-        a.href         = `/admin/dashboard/course-viewer/${Meteor.userId()}?builder=${recs[k][0].built_id}&course=${recs[k][0]._id}`;
-        a.innerHTML    = recs[k][0].name;
-        a.dataset.dc   = recs[k][0].credits;
-        a.dataset.di   = recs[k][0]._id;
+    
+    let tog = Session.get('assign-toggle-dip');
+    tog = !tog;
+    
+    if ( tog ) {
+      try {
+        let cos = [], recs = [];
         
-        li.appendChild(a);
+        let dips    = Diplomas.find({ company_id: Meteor.user().profile.company_id}).fetch();
+        for ( let i = 0, ilen = dips.length; i < ilen; i++ ) {
+          cos = (dips[i].courses);
+        }
+        for ( let j = 0, jlen = cos.length; j < jlen; j++ ) {
+          recs[j] = Courses.find({ _id: cos[j] }).fetch()
+        }
         
-        document.getElementById('dip-courses').appendChild( li );
+        for ( let k = 0, klen = recs.length; k < klen; k++ ) {
+          let li         = document.createElement( 'li' );
+          let a          = document.createElement( 'a'  );
+  
+          a.href         = `/admin/dashboard/course-viewer/${Meteor.userId()}?builder=${recs[k][0].built_id}&course=${recs[k][0]._id}`;
+          a.innerHTML    = recs[k][0].name;
+          a.dataset.dc   = recs[k][0].credits;
+          a.dataset.di   = recs[k][0]._id;
+          
+          li.appendChild(a);
+          
+          document.getElementById('dip-courses').appendChild( li );
+        }
+        Session.set('assign-toggle-dip', tog);
+      } catch(e) {
+           console.log( e );
       }
-    } catch(e) {
-         console.log( e );
+    } else {
+      Session.set('assign-toggle-dip', tog);
+      $( '#dip-courses' ).empty();
     }
-   
   },
   
   
@@ -231,9 +247,9 @@ Template.assignCourses.events({
   },
 
 
-    /*
+    /******************************************************
      * #ASSIGN  ::(CLICK)::
-     */
+     *****************************************************/
    'click #assign'( e, t ) {
      e.preventDefault();
      e.stopImmediatePropagation();
@@ -251,7 +267,7 @@ Template.assignCourses.events({
       t.$( '.add-course' ).attr( 'data-type', typ );
     }
 
-    //selects
+    //SELECTS
     t.$( '#assign-by-dept-radio' ).val( false ).trigger( 'change' );
     t.$( '#assign-by-dept-radio' ).attr('disabled',false);
     
@@ -275,9 +291,9 @@ Template.assignCourses.events({
   },
 
 
-  /*
+  /********************************************************
    * .ADD-COURSE  ::(CLICK)::
-   */
+   *******************************************************/
   'click .add-course'( e, t ) {
     //todo:  don't allow empty submission
     //todo:  reset all switches to OFF
@@ -307,9 +323,9 @@ Template.assignCourses.events({
  
     let o   = { id: idx, name: nm, credits: cr, num: 1, icon: ic, type: type, date_assigned: new Date() };
     
-    /*
+    /*-----------------------------------------------------
      * ALL STUDENTS
-     */
+     *---------------------------------------------------*/
     if ( as == true ) {
 
     //let url = 'https://collective-university-nsardo.c9users.io/login';
@@ -328,9 +344,9 @@ Template.assignCourses.events({
       
       Bert.alert( `${type} has been assigned`, 'success', 'growl-top-right' );
 
-    /*
+    /*-----------------------------------------------------
      * ASSIGN BY NAME
-     */
+     *---------------------------------------------------*/
     } else if ( abn == true ) {
 
       if ( ! Array.isArray( assignByName ) ) {
@@ -339,7 +355,7 @@ Template.assignCourses.events({
         return;                                       // toast: must enter at
       }                                               // least one name!
 
-      //assign this/these student(s) to course
+      //ASSIGN THIS/THESE STUDENT(S) TO COURSE
       let s     = Students.find({ company_id: Meteor.user().profile.company_id }).fetch(),
           slen  = s.length,
           alen;
@@ -360,9 +376,9 @@ Template.assignCourses.events({
       Bert.alert( `${type} has been assigned`, 'success', 'growl-top-right' );
 
 
-    /*
+    /*----------------------------------------------------
      * ASSIGN BY DEPARTMENT
-     */
+     *---------------------------------------------------*/
     } else if ( abd == true ) {
 
       if ( ! Array.isArray( assignByDept ) ) {
@@ -413,9 +429,9 @@ Template.assignCourses.events({
 //-------------------------------------------------------------------
 
 
-  /*
+  /********************************************************
    * #ALL-STUDENTS  ::(CLICK)::
-   */
+   *******************************************************/
   'click #all-students'( e, t ) {
     e.preventDefault();
     console.log('click all');
@@ -435,9 +451,10 @@ Template.assignCourses.events({
 //-----------------------------------------------------------------
   },
 
-  /*
+
+  /********************************************************
    * #ASSIGN-BY-DEPT ::(CLICK)::
-   */
+   *******************************************************/
   'click #assign-by-dept'( e, t ) {
     e.preventDefault();
     
@@ -461,6 +478,10 @@ Template.assignCourses.events({
 //-----------------------------------------------------------------
   },
   
+  
+  /********************************************************
+   * #WRAP-BY-NAME  ::(CLICK)::
+   *******************************************************/
   'click #wrap-by-name'( e, t ){
     e.preventDefault();
     
@@ -480,9 +501,10 @@ Template.assignCourses.events({
 //-----------------------------------------------------------------
   },
   
-  /*
+  
+  /********************************************************
    * #BY-NAME ( ASSIGN-BY-NAME )  ::(click)::
-   */
+   *******************************************************/
   'change #by-name'( e, t ) {
     e.preventDefault();
     
@@ -495,9 +517,9 @@ Template.assignCourses.events({
   },
 
 
-/*
+/**********************************************************
  * #SEARCH-COURSES  ::(KEYPRESS)::
- */
+ *********************************************************/
   'keypress #search-courses': function(event){
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -513,9 +535,9 @@ Template.assignCourses.events({
   },
 
 
-  /*
+  /********************************************************
    * #DASHBOARD-PAGE  ::(CLICK)::
-   */
+   *******************************************************/
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();

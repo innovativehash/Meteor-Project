@@ -10,7 +10,9 @@ import { Events }     from '../../../both/collections/api/events.js';
 import './teacher-give-credit.html';
 
 
-
+/*==============================================
+ * CREATED
+ *============================================*/
 Template.teacherGiveCredit.onCreated(function(){
 
   $.getScript( '/js/select2.min.js', function() {
@@ -23,11 +25,16 @@ Template.teacherGiveCredit.onCreated(function(){
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'teacherGiveCredit:: load select2.js fail' );
   });  
-  
+//---------------------------------------------------------  
 });
+
+
 
 let evt = [], cnt;
 
+/*=========================================================
+ * HELPERS
+ *=======================================================*/
 Template.teacherGiveCredit.helpers({
 
   tsData() {
@@ -57,10 +64,17 @@ Template.teacherGiveCredit.helpers({
 });
 
 
+/*=========================================================
+ * EVENTS
+ *=======================================================*/
 Template.teacherGiveCredit.events({
 
+/**********************************************************
+ * #TEACHER-CREDIT-SUBMIT
+ *********************************************************/
   'click #teacher-credit-submit'( e, t ) {
     e.preventDefault();
+    
     let credits = 2;
     
     for ( let i = 0; i < cnt; i++ ) {
@@ -76,16 +90,29 @@ Template.teacherGiveCredit.events({
                         });
       
       }//for
+
       Events.remove({ _id: evt[i]._id });
     }//for
+    
+    //ASSIGN TEACHER A FIXED 2 CREDITS
+    Students.update({ _id: Meteor.userId() },
+                    {
+                      $inc: { current_credits: 2 }
+                    });
+//--------------------------------------------------------- 
   },
   
   
+/**********************************************************
+ * #TEACHER-CREDIT-CANCEL
+ *********************************************************/
   'click #teacher-credit-cancel'( e, t ) {
     e.preventDefault();
     
     let id = t.$( '#teacher-credit-cancel' ).data( 'id' );
     
     Meteor.call( 'removeEvent', id );
+//--------------------------------------------------------- 
   },
+  
 });

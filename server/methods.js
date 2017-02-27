@@ -16,6 +16,7 @@ import { Companies }    from '../both/collections/api/companies.js';
 import { BuiltCourses } from '../both/collections/api/built-courses.js';
 import { Events }       from '../both/collections/api/events.js';
 import { Scorms }       from '../both/collections/api/scorms.js';
+import { Courses }      from '../both/collections/api/courses.js';
 
 
 Meteor.methods({
@@ -745,6 +746,11 @@ Meteor.methods({
                       $pull:{ current_courses:{ link_id: cid }},
                       $push:{ courses_completed: { name: name, link_id: cid, passing_percent: percent, credits: credits, date_completed: new Date() }},
                       $inc:{ current_credits: Number(credits), compl_courses_cnt: 1 }
+                    });
+                    
+    Courses.update( { _id: cid },
+                    {
+                      $inc:{ times_completed: 1 }
                     });
   },
 

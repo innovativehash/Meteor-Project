@@ -25,11 +25,9 @@
 
 
 
-  /**
-   *
+  /********************************************************
    * #COURSE-BUILDER-IMAGE ::(CHANGE)::
-   *
-   */
+   *******************************************************/
   export function cbImageChange( e, t /*,Images*/ ) {
     
     e.preventDefault();
@@ -74,7 +72,7 @@
       myimage = null;
     };
 
-    // reads in image, calls back fr.onload
+    // READS AN IMAGE, CALLS BACK fr.ONLOAD
     fr.readAsDataURL( fil );
 
     Meteor.setTimeout( function() {
@@ -88,8 +86,8 @@
       }
     }, 200);
     
-    e.currentTarget.files = undefined;
-    e.currentTarget.files[0] = undefined;
+    e.currentTarget.files         = undefined;
+    e.currentTarget.files[0]      = undefined;
     e.currentTarget.files[0].name = undefined;
     
     itype = '';
@@ -130,17 +128,15 @@
 		);
 */
     
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------
   }
 
 
 
-  /**
-   *
+  /********************************************************
    * #CB-IMAGE-SAVE  ::(CLICK)::
-   *
-   */
-  export function cbImageSave( e, t, contentTracker, imagesTracker ) {
+   *******************************************************/
+  export function cbImageSave( e, t, contentTracker ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -221,5 +217,5 @@
     $( '#preview-image' ).attr( 'src', null );
     t.$( '#add-image' ).modal( 'hide' );
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------
   };

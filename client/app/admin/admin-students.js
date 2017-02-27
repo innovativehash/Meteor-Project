@@ -202,24 +202,24 @@ Template.adminStudents.events({
 
     //DEPT MUST HAVE A VALUE
 
-    //let dpt = Departments.find({}).fetch();
+    let dpt = Departments.find({}).fetch();
 
     //clear created by code options
-    //$( '.js-dept option' ).each(function(){
-    //  $(this).remove();
-    //});
+    $( '.js-dept option' ).each(function(){
+      $(this).remove();
+    });
 
-    //Meteor.setTimeout(function(){
+    Meteor.setTimeout(function(){
 
-      //$( '.js-dept' ).append( '<option></option>' );
+      $( '.js-dept' ).append( '<option></option>' );
       
-      //for( let i = 0, l = dpt.length; i < l; i++ ){
-        //if ( dpt[i].name != '')
-          //$( '.js-dept' ).append( `<option value="${dpt[i]._id}">` +
-                                  //`${dpt[i].name}</option>` 
-                              //);
-      //}
-    //}, 500);
+      for( let i = 0, l = dpt.length; i < l; i++ ){
+        if ( dpt[i].name != '')
+          $( '.js-dept' ).append( `<option value="${dpt[i]._id}">` +
+                                  `${dpt[i].name}</option>` 
+                              );
+      }
+    }, 500);
 //-------------------------------------------------------------------
   },
 
@@ -257,19 +257,19 @@ Template.adminStudents.events({
       let dept      = $( '.js-dept :selected' ).text();
       let opt       = $( '#sel1' ).val();
       
-      if ( fname == '' ) {
+      if ( fname == '' || _.isNull(fname) || _.isUndefined(fname) ) {
         Bert.alert('First Name is a required field', 'danger');
         return;
       }
-      if ( lname == '' ) {
+      if ( lname == '' || _.isNull(lname) || _.isUndefined(lname) ) {
         Bert.alert('Last Name is a required field', 'danger');
         return;
       }
-      if ( email == '' ) {
+      if ( email == '' || _.isNull(email) || _.isUndefined(email) ) {
         Bert.alert('Email is a required field', 'danger');
         return;
       }
-      if ( dept == '' ) {
+      if ( dept == '' || _.isNull(dept)   || _.isUndefined(dept) ) {
         Bert.alert('Department is a required field', 'danger');
         return;
       }
@@ -291,17 +291,11 @@ Template.adminStudents.events({
       Meteor.call( 'addUser', email, password, fname, lname, opt, dept, co.name, co._id );
 
       if ( opt == 'student' || opt == 'teacher' ) {
+        
         //                        TO      FROM                              SUBJECT       BODY
         Meteor.call( 'sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text );
       }
       
-      /*
-      Meteor.call('sendEmail',
-                  'nsardo@msn.com',
-                  'bob@example.com',
-                  'Hello from Meteor!',
-                  'This is a test of Email.send.');
-      */
 
       //clear created by code options
       //$( '.js-dept option').each(function(){
@@ -313,7 +307,7 @@ Template.adminStudents.events({
       $( '.js-email' ).val('');
 
       Bert.alert( 'Account Created', 'success', 'growl-top-right' );
-      $( '#addStudentModal' ).modal( "hide" );
+
 //-------------------------------------------------------------------
   },
 
@@ -332,7 +326,7 @@ Template.adminStudents.events({
       let id = t.$( e.currentTarget ).data( 'id' );
       let s  = Students.findOne({ _id: id });
 
-
+      //DISPLAY VALUES CURRENTLY IN THE DATABASE
       t.$( '.js-fn' ).attr( 'placeholder', s.fname );
       t.$( '.js-ln' ).attr( 'placeholder', s.lname );
       t.$( '.js-email' ).attr( 'placeholder', s.email );
@@ -391,8 +385,6 @@ Template.adminStudents.events({
 
     let s  = Students.findOne({ _id: id });
 
-
-    //DEPT MUST HAVE A VALUE
     let r   = $( '.js-role' ).select2( 'data' )[0].text.toLowerCase(),
         fn  = $( '.js-fn' ).attr('placeholder'),
         em  = $( '.js-email' ).attr('placeholder'),
@@ -400,10 +392,10 @@ Template.adminStudents.events({
         url = 'https://collective-university-nsardo.c9users.io/login';
 
     //if ( d == '' ) d = 'sales';
-    if ( d == '' ) {
+    if ( d == '' || _.isNull(d) || _.isUndefined(d) ) {
       Bert.alert('Department must not be blank', 'danger');
       return;
-    } else if ( r == '' ) {
+    } else if ( r == '' || _.isNull(r) || _.isUndefined(r) ) {
       Bert.alert('User Role must not be blank', 'danger');
       return;
     }

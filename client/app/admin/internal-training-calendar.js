@@ -19,9 +19,9 @@ let isPast  = ( date ) => {
 
 
 
-/*
+/*=========================================================
  * CREATED
- */
+ *=======================================================*/
 Template.internalTrainingCalendar.onCreated( () => {
   //$('#cover').show();
   
@@ -30,14 +30,14 @@ Template.internalTrainingCalendar.onCreated( () => {
   template.subscribe( 'events' );
   
 
-  //---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 });
 
 
 
-/*
+/*=========================================================
  * RENDERED
- */
+ *=======================================================*/
 Template.internalTrainingCalendar.onRendered(function(){
   /*
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
@@ -46,18 +46,19 @@ Template.internalTrainingCalendar.onRendered(function(){
   });
   */
   
- /*
+ /*********************************************************
   * FULLCALENDAR
-  */
+  ********************************************************/
   $( '#calendar' ).fullCalendar({
 
-    // options and callbacks here
+
+    // OPTIONS AND CALLBACKS HERE
     events( start, end, timezone, callback ) {
 
       // GET THIS INDIVIDUAL STUDENT'S CALENDAR
       // EXPIRED EVENTS NOT SHOWN
       let data = Events.find({ $and: [ {$where: function(){ return moment(this.end).isSameOrAfter(moment())}},
-                                        {students: Meteor.userId() } ] 
+                                        {teacher: Meteor.userId() } ] 
                               }).fetch().map( ( event ) => {
 
         //student can't edit
@@ -68,22 +69,25 @@ Template.internalTrainingCalendar.onRendered(function(){
       if ( data ) {
         callback( data );
       }
+    //---------------------------------------------------------
     },
     
     
-    /*
-     * each element rendered to the calendar will pass through this method
-     * and take on the appropriate formatting
-     */
-    eventRender(  event   /* actual event item on the calendar, NOT JS Event */, 
-                  element /* the element where the item is being rendered as
-                             a JQuery elem*/                                ) {
+  /*
+   * EACH ELEMENT RENDERED TO THE CALENDAR WILL PASS THROUGH THIS METHOD
+   * AND TAKE ON THE APPROPRIATE FORMATTING
+   */
+    eventRender(  event   /* ACTUAL EVENT ITEM ON THE CALENDAR, NOT JS EVENT */, 
+                  element /* THE ELEMENT WHERE THE ITEM IS BEING RENDERED AS
+                             A JQUERY ELEM*/                                ) {
       element.find( '.fc-content' ).html(
         `<h4>${ event.title }</h4>
         <p>${event.startTime}<br>${event.location}</p>
         `
       );
+    //---------------------------------------------------------
     },
+    
     
     eventDragStart( event ) {},
     
@@ -115,33 +119,34 @@ Template.internalTrainingCalendar.onRendered(function(){
         revert();
         Bert.alert( 'Sorry, you can\'t move items to the past!', 'danger' );
       }
+    //---------------------------------------------------------
     },
     
     
-    /*
-     * fired whenever we click on the actual day square in the calendar
-     */
+  /*
+   * FIRED WHENEVER WE CLICK ON THE ACTUAL DAY SQUARE IN THE CALENDAR
+   */
     dayClick( date ) {
     
       Session.set( 'eventModal', { type: 'add', date: date.format() } );
       
       $( '#add-edit-event-modal' ).modal( 'show' );
-      
+    //---------------------------------------------------------  
     },
     
     
-    /*
-     * fired whenever we click directly on an event
-     */
-    eventClick( event /* literally the rendered event’s data,
-                         returned from the event()            */ ) {
+  /*
+   * FIRED WHENEVER WE CLICK DIRECTLY ON AN EVENT
+   */
+    eventClick( event /* LITERALLY THE RENDERED EVENT’S DATA,
+                         RETURNED FROM THE event()            */ ) {
                        
       Session.set( 'eventModal', { type: 'edit', event: event._id } );
 
       $( '#add-edit-event-modal' ).modal( 'show' );
 
     }
-
+  //---------------------------------------------------------
   }); //fullcalendar
   
   
@@ -153,6 +158,3 @@ Template.internalTrainingCalendar.onRendered(function(){
   });
 
 });
-
-
-Template.internalTrainingCalendar.events({});

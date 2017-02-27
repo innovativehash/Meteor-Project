@@ -8,20 +8,18 @@
   let txt_id = -1;
 
 
-  /**
+  /********************************************************
    * RESET
-   */
+   *******************************************************/
   export function cbTextReset() {
     txt_id = -1;
   }
 
 
 
-  /*
-   *
+  /********************************************************
    * #ADDED-TEXT  ::(BLUR)::
-   *
-   */
+   *******************************************************/
   export function cbAddedTextBlur( e, t, contentTracker, textsTracker ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -44,33 +42,37 @@
 
 /*
 <span id="span_text-${txt_id}"
-                                         style = "z-index:1;border-radius:5px;background-color:white;position:absolute;border:none !important;cursor:move;"
-                                         class = "draggable ui-widget-content">
+  style = "z-index:1;border-radius:5px;background-color:white;position:absolute;border:none !important;cursor:move;"
+  class = "draggable ui-widget-content">
 */
     t.$( '#fb-template' ).append( `<span  style="font-size:18px;cursor:move;z-index:1;border-radius:5px;background-color:white;position:absolute;border:none !important;"
                                           id="txt-${txt_id}">${txt}</span>`);
 
     t.$( `#txt-${txt_id}` ).offset({ left: pos.left, top: pos.top });
     t.$( `#txt-${txt_id}` ).draggable();
-    
-    //tbo.texts[txt_id] = `#txt-${txt_id}`;
-    
-    //t.$( `#txt-${txt_id}` ).resizable();
 
-    //--------------------------
-    // TEXT OBJECT CLICK EVENT
-    //--------------------------
+/*
+    tbo.texts[txt_id] = `#txt-${txt_id}`;
+    t.$( `#txt-${txt_id}` ).resizable();
+*/
+
+  //--------------------------
+  // TEXT OBJECT CLICK EVENT
+  //--------------------------
   (function(txt_id) {
     e.preventDefault();
 
     //document.getElementById( `span_text-${txt_id}` ).onmouseup =  (e) => {
+    
     $( `#txt-${txt_id}` ).on("mouseup", function(){
       e.preventDefault();
       
       textsTracker.push( txt_id );
       
+      $( '.js-edit-button' ).show();
       $( '#cb-toolbar-text' ).show();
       
+      //INSERT CURRENT ELEMENT IN HIDDEN INPUT
       t.$( '#cb-current' ).val( `#txt-${txt_id}` );
 
       
@@ -95,5 +97,5 @@
 */
     });//mouseup
   })( txt_id );//anon func
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------
 };

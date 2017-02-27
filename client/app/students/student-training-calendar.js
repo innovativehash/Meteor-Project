@@ -21,9 +21,9 @@ let isPast = ( date ) => {
 
 
 
-/*
+/*=========================================================
  * CREATED
- */
+ *=======================================================*/
 Template.studentTrainingCalendar.onCreated( () => {
   //$('#cover').show();
   
@@ -36,9 +36,9 @@ Template.studentTrainingCalendar.onCreated( () => {
 
 
 
-/*
+/*=========================================================
  * RENDERED
- */
+ *=======================================================*/
 Template.studentTrainingCalendar.onRendered(function(){
   /*
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
@@ -52,7 +52,7 @@ Template.studentTrainingCalendar.onRendered(function(){
   */
   $( '#calendar' ).fullCalendar({
 
-    // options and callbacks here
+    // OPTIONS AND CALLBACKS HERE
     events( start, end, timezone, callback ) {
 
       // GET THIS INDIVIDUAL STUDENT'S CALENDAR
@@ -73,12 +73,12 @@ Template.studentTrainingCalendar.onRendered(function(){
     
     
     /*
-     * each element rendered to the calendar will pass through this method
-     * and take on the appropriate formatting
+     * EACH ELEMENT RENDERED TO THE CALENDAR WILL PASS THROUGH THIS METHOD
+     * AND TAKE ON THE APPROPRIATE FORMATTING
      */
-    eventRender(  event   /* actual event item on the calendar, NOT JS Event */, 
-                  element /* the element where the item is being rendered as
-                             a JQuery elem*/                                ) 
+    eventRender(  event   /* ACTUAL EVENT ITEM ON THE CALENDAR, NOT JS EVENT */, 
+                  element /* THE ELEMENT WHERE THE ITEM IS BEING RENDERED AS
+                             A JQUERY ELEM*/                                ) 
     {
       element.find( '.fc-content' ).html(
         `<h4>${ event.title }</h4>
@@ -124,19 +124,19 @@ Template.studentTrainingCalendar.onRendered(function(){
     
     
     /*
-     * fired whenever we click on the actual day square in the calendar
+     * FIRED WHENEVER WE CLICK ON THE ACTUAL DAY SQUARE IN THE CALENDAR
      */
     dayClick( date ) {},
     
     
     /*
-     * fired whenever we click directly on an event
+     * FIRED WHENEVER WE CLICK DIRECTLY ON AN EVENT
      */
-    eventClick( event /* literally the rendered event’s data,
-                         returned from the event()            */ ) 
+    eventClick( event /* LITERALLY THE RENDERED EVENT’S DATA,
+                         RETURNED FROM THE event()            */ ) 
     {
       
-      //event-title, event-description, event-location, event-start-time
+      //EVENT-TITLE, EVENT-DESCRIPTION, EVENT-LOCATION, EVENT-START-TIME
       $( '[name="event-title"]' ).val( event.title );
       $( '[name="event-description"]' ).val( event.description );
       $( '[name="event-location"]' ).val( event.location );

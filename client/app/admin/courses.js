@@ -13,16 +13,17 @@ import '../../templates/admin/courses.html';
 //import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
 
 
-/*
+/*=========================================================
  * CREATED
- */
+ *========================================================*/
 Template.courses.onCreated(function(){
 
   //$("#courses-cover").show();
 
-  /*
+
+  /********************************************************
    * BOOTSTRAP3-DIALOG
-   */
+   *******************************************************/
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function(){
       //console.log('Course:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {
@@ -31,10 +32,10 @@ Template.courses.onCreated(function(){
 //-------------------------------------------------------------------
 
 
-/*
+/**********************************************************
  * SELECT2
  * multi-select combo box
- */
+ *********************************************************/
   $.getScript( '/js/select2.min.js', function(){
     $( document ).ready(function(){
       $('#search-courses').select2({
@@ -50,9 +51,9 @@ Template.courses.onCreated(function(){
 });
 
 
-/*
+/**********************************************************
  * RENDERED
- */
+ *********************************************************/
 Template.courses.onRendered(function(){
 /*
   $( '#courses-cover' ).delay( 100 ).fadeOut( 'slow', function() {
@@ -63,9 +64,9 @@ Template.courses.onRendered(function(){
 });
 
 
-/*
+/**********************************************************
  * DESTROYED
- */
+ *********************************************************/
 Template.courses.onDestroyed(function(){
 
   Session.set( 'searchTerm', null );
@@ -73,9 +74,11 @@ Template.courses.onDestroyed(function(){
 });
 
 //Courses.find({ $or: [ {company_id:Meteor.user().profile.company_id}, {public:true}] }).fetch()
-/*
+
+
+/**********************************************************
  * HELPERS
- */
+ *********************************************************/
 Template.courses.helpers({
 
   courses: () => {
@@ -92,14 +95,16 @@ Template.courses.helpers({
 });
 
 
-/*
+
+/*=========================================================
  * EVENTS
- */
+ *=======================================================*/
 Template.courses.events({
 
-  /*
+
+  /********************************************************
    * .JS-ADD-COURSE-FROM-LIBRARY  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-add-course-from-library'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -121,10 +126,11 @@ Template.courses.events({
   },
 */
 
-  /*
+
+  /********************************************************
    * #SEARCH-COURSES  ::(CHANGE)::
    * scroll to selected course
-   */
+   *******************************************************/
   'change #search-courses'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -141,9 +147,9 @@ Template.courses.events({
   },
 
 
-  /*
+  /********************************************************
    * .JS-EDIT-COURSE  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-edit-course'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -198,9 +204,9 @@ Template.courses.events({
   },
 
 
-  /*
+  /********************************************************
    * .JS-DELETE-COURSE  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-delete-course'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -249,16 +255,16 @@ Template.courses.events({
   },
 
 
-  /*
+  /********************************************************
    * #SEARCH-COURSES  ::(KEYPRESS)::
-   */
+   *******************************************************/
   'keypress #search-courses': function(event){
     if ( event.which == 13){
       event.preventDefault();
       event.stopImmediatePropagation();
 
-      let idx = $ ("#search-courses" ).val(),
-          item = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
+      let idx   = $ ("#search-courses" ).val(),
+          item  = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
 
       return item;
     }
@@ -266,9 +272,9 @@ Template.courses.events({
   },
 
 
-  /*
+  /********************************************************
    * #DASHBOARD-PAGE  ::(CLICK)::
-   */
+   *******************************************************/
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -278,9 +284,9 @@ Template.courses.events({
   },
 
 
-  /*
+  /********************************************************
    * .JS-COURSE-BUILDER  ::(CLICK)::
-   */
+   ******************************************************/
   'click .js-course-builder'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();

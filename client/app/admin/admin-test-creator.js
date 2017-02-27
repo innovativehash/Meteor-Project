@@ -193,34 +193,37 @@ Template.adminTestCreator.events({
    ************************
    */
   'blur #test-name'( e, t ){
-    //let course_name = FlowRouter.current().path.slice( FlowRouter.current().path.indexOf('?') + 1 );
-
-    if ( testidnum && testidnum == Test.findOne({ _id: testidnum })._id ) {
-
-      Test.update({ _id: testidnum }, 
-                  { $set:{ test_name: t.$( '#test-name' ).val() } });
-    } else {
-      try {
-        let cid = Meteor.user().profile && Meteor.user().profile.company_id;
-      
-        testidnum = Test.insert({
-                                test_name: t.$( '#test-name' ).val(),
-                                company_id: cid
-                              });
-      } catch(e) {
-        console.log(e);
+      if ( ! t.$( '#test-name').val() ) {
+        t.$( '#test-name' ).css( 'border', '2px solid red' );
+      } else {
+        t.$( '#test-name' ).css( 'border', 'none' );
       }
-    }                          
       
-    if ( ! t.$( '#test-name').val() ) {
-      t.$( '#test-name' ).css( 'border', '2px solid red' );
-    } else {
-      t.$( '#test-name' ).css( 'border', 'none' );
-    }
+      let tid;
+      try {
+        tid = Test.findOne({ _id: testidnum })._id;
+        if ( testidnum && testidnum == tid ) {
+  
+          Test.update({ _id: testidnum }, 
+                      { $set:{ test_name: t.$( '#test-name' ).val() } });
+        }
+      } catch (e) {
+        //console.log( e );
+        //console.log( e.name );
+        //console.log( e.message );
+        try {
+          let cid = Meteor.user().profile && Meteor.user().profile.company_id;
+        
+          testidnum = Test.insert({
+                                  test_name: t.$( '#test-name' ).val(),
+                                  company_id: cid
+                                });
+        } catch(e) {
+          console.log(e);
+        }//inner try
+      }//outer try
     
-    //let testName  = t.$( '#test-name' ).val();
-    //testidnum     = Tests.findOne({ test_name: testName })._id;
-    //t.$( '#test-name' ).attr( 'readonly', true);
+      console.log( Test.find().fetch() );
 //-------------------------------------------------------------------
   },
 
@@ -323,7 +326,7 @@ Template.adminTestCreator.events({
       return;
     }
     
-    if ( correct_a == 'Correct Answer' ) {
+    if ( correct_a == 'Please Select' ) {
       Bert.alert('Please select a correct answer for this question before saving.', 'danger' );
       return;      
     }
@@ -367,7 +370,6 @@ Template.adminTestCreator.events({
             Bert.alert( `Contigious values from A TO ${String.fromCharCode(correctAscii)}`, 'danger');
             return;
           }
-         
         }
       }
       //    65 66 67  | 65 66 67  | 65 66 67
@@ -400,7 +402,7 @@ Template.adminTestCreator.events({
     }
 
     //current question number
-    let questionNum    =  t.$( '[ name="qnum" ]' ).val();
+    let questionNum           =  t.$( '[ name="qnum" ]' ).val();
     let currentQuestionNumber = questionNum;
 
     //bump question number to next
@@ -438,7 +440,7 @@ Template.adminTestCreator.events({
 
     t.$( '#ans-mc' ).addClass( 'hide' );
     
-    console.log( Test.find().fetch() );
+    //console.log( Test.find().fetch() );
 //-------------------------------------------------------------------
   },
 
@@ -459,8 +461,38 @@ Template.adminTestCreator.events({
       , q           = t.$( '#question' ).val()
       , correct_a   = t.$( '#correct_ans' ).val()
       , answers     = []
+      , A           = $('#A').val()
+      , B           = $('#B').val()
+      , C           = $('#C').val()
       , correct_ans;
-      
+ 
+    if ( ! t.$( '#test-name' ).val() ) {
+      Bert.alert( 'Please ensure you\'ve named the test', 'danger' );
+      t.$( '#test-name' ).css( 'border', '4px solid red' );
+      return;
+    }
+    
+    if ( !q ) {
+      Bert.alert('Please enter a question before saving...', 'danger' );
+      t.$( '#question' ).css( 'border', '2px solid red' );
+      return;
+    } 
+    
+    if ( A == '' ) {
+      Bert.alert("Answer box 'A' MUST have an answer entered!", 'danger');
+      return;
+    } else if ( B == '' ) {
+      Bert.alert("Answer box 'B' MUST have an answer entered!", 'danger');
+      return;
+    } else if ( C == '' ) {
+      Bert.alert("Answer box 'C' MUST have an answer entered!", 'danger' );
+      return;
+    } else if ( correct_a == "Please Select" ) {
+      Bert.alert("Correct Answer Dropdown must have an answer selected!", 'danger');
+      return;
+    }
+
+    
     //id of last multiple choice answer
     let lastId      = t.$( 'div#ans-mc input:last' ).attr( 'id' );
 
@@ -508,7 +540,7 @@ Template.adminTestCreator.events({
       }
     }
     
-    console.log( Test.find().fetch() );
+    //console.log( Test.find().fetch() );
     
     t.$( '#t-btn-next' ).click();
     return;
@@ -574,7 +606,7 @@ Template.adminTestCreator.events({
                     }
                   });
 
-console.log( Test.find().fetch() );
+//console.log( Test.find().fetch() );
     //clean up the ui
     t.$( '.js-tf' ).prop( 'checked', false );
     t.$( '#question' ).val('');
@@ -638,7 +670,7 @@ console.log( Test.find().fetch() );
                 
     $('#correct_ans').val('Please Select');
     
-console.log( Test.find().fetch() );
+//console.log( Test.find().fetch() );
 
     t.$( '#t-btn-next' ).click();
     return;
@@ -772,7 +804,7 @@ console.log( Test.find().fetch() );
         
         break;
     }
-console.log( Test.find().fetch() );
+//console.log( Test.find().fetch() );
 //-------------------------------------------------------------------
   },
   
@@ -870,7 +902,7 @@ console.log( Test.find().fetch() );
         
         break;
     }
-console.log( Test.find().fetch() );
+//console.log( Test.find().fetch() );
   }
 //-------------------------------------------------------------------
 });

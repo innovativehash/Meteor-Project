@@ -52,8 +52,28 @@ http://scorm.academy-smart.org.ua/player/listStudentCourses/company_id/user_id
    * CB-SCORM-CHANGE
    *
    */
-  export function cbScormChange( e, t, tbo, contentTracker ) {
+  export function cbScormChange( e, t, contentTracker ) {
     e.preventDefault();
     
+    if ( e.currentTarget.files === 'undefined' ) {
+      console.log('aborted');
+      return;
+    }
+
+    let itype = e.currentTarget.files[0].type
+      , name  = e.currentTarget.files[0].name
+      , ext   = name.slice(name.lastIndexOf('.'));
     
+    if ( itype != 'application/zip' || ext != '.zip' ) {
+      Bert.alert( 'Incompatible File Format: must be a zipped SCORM file', 'danger' );
+
+      e.currentTarget.files         = undefined;
+      e.currentTarget.files[0]      = undefined;
+      e.currentTarget.files[0].name = undefined;
+      itype = '';
+      name  = '';
+      ext   = '';
+      $('#course-builder-scorm').val('')
+      return;
+    }
   }
