@@ -55,7 +55,7 @@ Template.courseView.onRendered( function() {
         let no  = Template.instance().page.get()
           , c   = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "builder" ) }).fetch()[0]
           , cid = FlowRouter.getQueryParam( "course" );
-        
+
         Template.instance().total.set( c.pages.length -1 );
 
         if ( c && c.pages ) {
@@ -195,6 +195,11 @@ Template.courseView.helpers({
     return;
   },
 
+  cname: () => {
+    let cid = FlowRouter.getQueryParam( "course" );
+    return Courses.find({ _id: cid }).fetch()[0].name;  
+  },
+  
   fname: () => {
     try {
       return Students.findOne({ _id: Meteor.userId() }).fname;
