@@ -960,7 +960,7 @@ Template.courseBuilderPage.events({
     //////////////////////////////////////////////////////////
 
       // CLEAR THE CONTENT TRACKER
-      let ct = Session.get('contentTracker');
+      let ct    = Session.get('contentTracker');
       ct.titles = 0;
       ct.texts  = 0;
       ct.images = 0;
@@ -1039,7 +1039,7 @@ Template.courseBuilderPage.events({
     t.$( '#intro-modal' ).modal( 'hide' );
     
       // CLEAR THE CONTENT TRACKER
-      let ct = Session.get('contentTracker');
+      let ct    = Session.get('contentTracker');
       ct.titles = 0;
       ct.texts  = 0;
       ct.images = 0;
@@ -1098,7 +1098,8 @@ Template.courseBuilderPage.events({
    *******************************************************/
   'click #cb-save'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
+    
+    let uname = Students.findOne({ _id: Meteor.userId() }, { fullName:1 }).fullName;
     
     t.$( '#intro-modal' ).modal( 'hide' );
     
@@ -1157,7 +1158,7 @@ Template.courseBuilderPage.events({
 
       Newsfeeds.insert({
                         owner_id:       Meteor.userId(),
-                        poster:         Meteor.user().username,
+                        poster:         uname,
                         poster_avatar:  Meteor.user().profile.avatar,
                         type:           "new-course",
                         private:        false,

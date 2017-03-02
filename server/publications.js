@@ -77,10 +77,6 @@ Meteor.publish( 'scorms', function(){
   return Scorms.find();
 });
 
-Meteor.publish( 'scratch', function(){
-  return Scratch.find();
-});
-
 Meteor.publish( 'students', function(){
   return Students.find();
 });

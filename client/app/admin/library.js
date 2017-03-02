@@ -6,7 +6,7 @@
  */
 import { Courses }    from '../../../both/collections/api/courses.js';
 import { Newsfeeds }  from '../../../both/collections/api/newsfeeds.js';
-
+import { Students }   from '../../../both/collections/api/students.js';
 
 import '../../templates/admin/library.html';
 
@@ -191,6 +191,8 @@ Template.library.events({
   'click .js-lib-add'( e, t ) {
     e.preventDefault();
     
+    let s = Students.find({ _id: Meteor.userId() }).fetch();
+    
     //ASSIGN PUBLIC COURSE TO THIS CUSTOMER'S LIBRARY
     Courses.update( { _id: Session.get( 'add-course-data').id },
                     { $push: {company_id: Meteor.user().profile.company_id }
@@ -198,7 +200,7 @@ Template.library.events({
     
     Newsfeeds.insert({
                         owner_id:       Meteor.userId(),
-                        poster:         Meteor.user().username,
+                        poster:         s.fullName,
                         poster_avatar:  Meteor.user().profile.avatar,
                         type:           "new-course",
                         private:        false,

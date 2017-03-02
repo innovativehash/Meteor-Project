@@ -7,6 +7,9 @@
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 
+import { Companies }    from '../../../both/collections/api/companies.js';
+import { Students }     from '../../../both/collections/api/students.js';
+
 import '../../templates/admin/import-cv.html';
 
 
@@ -183,7 +186,7 @@ Template.importCV.events({
    *******************************************************/
   'click #csv-help-btn'( e, t ) {
     e.preventDefault();
-    console.log('clickjab');
+
     $( '#csv-dialog' ).dialog("open");
     $( '#csv-dialog button.ui-state-disabled:active' ).css('background-color','none');
 //---------------------------------------------------------
@@ -252,8 +255,7 @@ Template.importCV.events({
           s1 += m;
         } else {
           if ( s[i].split(',').length - 1 != m ) {
-            console.log( 'separator mismatch');
-            console.log( i );
+            console.log( 'separator mismatch line: 257');
             t.$( '#csv-error2' ).text(`SEPARATOR MISMATCH IN FILE ON LINE ${i+1}`).css({'margin':'5px 5px 5px 5px;','padding':'5px 5px 5px 5px;','border':'1px dashed red','border-radius':'5px','background-color':'Crimson','color':'white', 'font-weight':'900'});
             s1 = 0;
             return;
@@ -263,7 +265,6 @@ Template.importCV.events({
             t.$( '#csv-error2' ).attr('style',''); //remove artifacts from screen
           }
         }
-        console.log( 'not in conditions i= ' + i );
       }
       
     };
@@ -307,14 +308,16 @@ Template.importCV.events({
     e.stopImmediatePropagation();
 
     let
-      num_props, num_recs, records, temp, pa,
-      studentObj = {},
-      errStr = 'you must assign a mapping to all fields.',
+      num_props, num_recs, records, temp, pa, headers,
+      studentObj = [],
+      errStr = 'you must assign a mapping to all your fields.',
       p0 = $( '.selectpicker.p0 option:selected' ).val(),
       p1 = $( '.selectpicker.p1 option:selected' ).val(),
       p2 = $( '.selectpicker.p2 option:selected' ).val(),
       p3 = $( '.selectpicker.p3 option:selected' ).val(),
-      p4 = $( '.selectpicker.p4 option:selected' ).val();
+      p4 = $( '.selectpicker.p4 option:selected' ).val(),
+      c_id    = Meteor.user().profile.company_id
+      c_name  = Companies.find({ _id: c_id }).fetch()[0].name; 
 
     temp      = Template.instance().res.get();
     headers   = temp[0];
@@ -322,45 +325,71 @@ Template.importCV.events({
     records   = temp.slice(1);
     num_recs  = records.length;
 
-    if ( p0 == '' && num_props >  0 ) console.log( errStr );
-    if ( p1 == '' && num_props >= 1 ) console.log( errStr );
-    if ( p2 == '' && num_props >= 2 ) console.log( errStr );
-    if ( p3 == '' && num_props >= 3 ) console.log( errStr );
-    if ( p4 == '' && num_props >  4 ) console.log( errStr );
-
+    if ( p0 == '' && num_props == 1 ) Bert.alert( errStr, 'danger' );
+    if ( p1 == '' && num_props == 2 ) Bert.alert( errStr, 'danger' );
+    if ( p2 == '' && num_props == 3 ) Bert.alert( errStr, 'danger' );
+    if ( p3 == '' && num_props == 4 ) Bert.alert( errStr, 'danger' );
+    if ( p4 == '' && num_props == 5 ) Bert.alert( errStr, 'danger' );
+ 
+    /* ASSIGN random password */
+    //todo: assign random password;
+    let password    = 'afdsjkl83212'
+      , adminEmail  = 'admin@collectiveuniversity.com'
+      , videoLink   = 'TO BE ADDED'  //BE SURE TO MAKE IT: http:// xxx
+      , url       = 'https://collective-university-nsardo.c9users.io/login';
+      //, url = 'http://collectiveuniversity.com/login';
+      
     pa = [ p0, p1, p2, p3, p4 ];
     for ( let i = 0; i < num_recs; i++ ) {
+      studentObj[i] = {};
       for ( let j = 0; j < num_props; j++ ) {
+        
         switch( pa[j] ) {
           case 'f':
-            studentObj.f = records[i][j];
+            studentObj[i].f = records[i][j];
+            //console.log( records[i][j]);
             break;
           case 'l':
-            studentObj.l = records[i][j];
+            studentObj[i].l = records[i][j];
+            //console.log( records[i][j]);
             break;
           case 'e':
-            studentObj.e = records[i][j];
+            studentObj[i].e = records[i][j];
+            //console.log( records[i][j]);
             break;
           case 'd':
-            studentObj.d = records[i][j];
+            studentObj[i].d = records[i][j];
+            //console.log( records[i][j]);
             break;
           case 'c':
-            studentObj.c = records[i][j];
+            studentObj[i].c = records[i][j];
+            //console.log( records[i][j]);
             break;
         }
+
       }
-      Meteor.call(  'addUser',
-                    studentObj.e,
-                    "pass",
-                    studentObj.f,
-                    studentObj.l,
-                    studentObj.c = studentObj.c || "student",
-                    studentObj.d = studentObj.d || "sales");
+
+      Meteor.call(  'addUser',                            
+                    studentObj[i].e,                              /*email*/
+                    password,                                     /*password*/
+                    studentObj[i].f,                              /*first name*/
+                    studentObj[i].l,                              /*last name*/
+                    studentObj[i].c = studentObj.c || "student",  /*opt*/
+                    studentObj[i].d = studentObj.d || "sales",    /*dept*/
+                    c_name,                                       /*company*/
+                    c_id                                          /*company id*/
+                  );
+
+        let text      = `Hello ${studentObj[i].f},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${studentObj[i].e}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video: ${videoLink}\n\nIf you have any questions, please contact: ${adminEmail}`;
+
+        //                        TO      FROM                              SUBJECT       BODY
+        Meteor.call( 'sendEmail', studentObj[i].e, 'admin@collectiveuniversity.com', 'New Account', text );
     }
 
     Meteor.setTimeout(function() {
       $( "#cv-student-import-confirm" ).modal( 'show' );
     }, 100);
+
 //---------------------------------------------------------
   },
 

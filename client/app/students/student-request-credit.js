@@ -9,7 +9,8 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 
 //import { Blaze } from 'meteor/blaze'
 
-import { Newsfeeds }     from '../../../both/collections/api/newsfeeds.js';
+import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
+import { Students }     from '../../../both/collections/api/students.js';
 
 import '../../templates/student/student-request-credit.html';
 
@@ -140,7 +141,7 @@ Template.studentRequestCredit.events({
     // NOTICE
     // 'You sent a request for credit.  The Admin will let you know...'
 
-    let name = Meteor.user() && Meteor.user().username;
+    let name = Students.findOne({ _id: Meteor.userId() }, { fullName:1 }).fullName;
 
     Newsfeeds.insert({
       owner_id: Meteor.userId(),

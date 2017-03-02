@@ -9,7 +9,7 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 
 //import { Blaze } from 'meteor/blaze'
 
-import { Newsfeeds }     from '../../../both/collections/api/newsfeeds.js';
+import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Students }     from '../../../both/collections/api/students.js';
 
 import '../../templates/shared/postbox.html';
@@ -119,7 +119,7 @@ Template.postbox.events({
         return;
       }
 
-      let name  = Meteor.user() && Meteor.user().username;
+      let name  = Students.findOne({ _id: Meteor.userId() }, { fullName:1 }).fullName;
       let co_id = Meteor.user() && Meteor.user().profile.company_id;
       //let co_id = Students.findOne({_id: Meteor.userId()}).company_id;
 

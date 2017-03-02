@@ -213,6 +213,8 @@ Template.newsfeed.events({
     if ( e.keyCode === 13 ) {
       e.preventDefault();
       e.stopImmediatePropagation();
+      
+      let uname = Students.findOne({ _id: FlowRouter.getParam("_id") }, { fullName:1 }).fullName;
 
       var id = $( e.target ).data( 'id' );
       $( e.target ).css( "outline", "#0000FF solid thick" );
@@ -232,7 +234,7 @@ Template.newsfeed.events({
         Comments.insert({ 
                           owner_id:       id,
                           poster_id:      Meteor.userId(),
-                          poster_name:    Meteor.user().username,
+                          poster_name:    uname,
                           poster_avatar:  Meteor.user().profile.avatar,
                           comment:        commentary,
                           date:           new Date() 
@@ -258,7 +260,8 @@ Template.newsfeed.events({
    */
   'click .js-comment-button':  _.debounce( function ( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
+    
+    let uname = Students.findOne({ _id: FlowRouter.getParam("_id") }, { fullName:1 }).fullName;
 
     var id = $( e.currentTarget ).data( 'id' );
     var commentary = $( `#ta-${id}` ).val().trim();
@@ -271,7 +274,7 @@ Template.newsfeed.events({
       Comments.insert({ 
                         owner_id:       id,
                         poster_id:      Meteor.userId(),
-                        poster_name:    Meteor.user().username,
+                        poster_name:    uname,
                         poster_avatar:  Meteor.user().profile.avatar,
                         comment:        commentary,
                         date:           new Date() 

@@ -51,7 +51,7 @@ Template.studentRecord.helpers({
 
   uname: () => {
     try {
-      return Meteor.users.findOne({ _id: FlowRouter.getParam("_id") }, { username:1 }).username;
+      return Students.findOne({ _id: FlowRouter.getParam("_id") }, { fullName:1 }).fullName;
     } catch(e) {
       return;
     }

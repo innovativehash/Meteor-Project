@@ -51,10 +51,11 @@ Template.testView.events({
    * #SUBMIT-ANSWERS  ::(CLICK)::
    */
   'click #submit-answers'( e, t ){
+    e.preventDefault();
     
     let cid             = FlowRouter.getQueryParam( "course" )
       , c               = Courses.find({ _id: cid}).fetch()[0]
-      , s               = Students.find({ _id: Meteor.userId() }).fetch()[0]
+      , uname           = Students.findOne({ _id: Meteor.userId() }, { fullName:1 }).fullName
       , credits         = Number(c.credits)
       , passing_percent = Number(c.passing_percent)
       , name            = c.name;
@@ -97,11 +98,11 @@ Template.testView.events({
         
         Newsfeeds.insert({ 
                             owner_id:       Meteor.userId(),
-                            poster:         Meteor.user().username,
+                            poster:         uname,
                             poster_avatar:  Meteor.user().profile.avatar,
                             type:           "passed-course",
                             private:        false,
-                            news:           `${Meteor.user().username} has just passed the course: ${name}!`,
+                            news:           `${uname} has just passed the course: ${name}!`,
                             comment_limit:  3,
                             company_id:     Meteor.user().profile.company_id,
                             likes:          0,

@@ -18,17 +18,17 @@ import { Companies }    from '../../../both/collections/api/companies.js';
 import '../../templates/admin/admin-students.html';
 
 
-/*
+/*=========================================================
  * CREATED
- */
+ *=======================================================*/
 Template.adminStudents.onCreated( function() {
 
   //$("#students-cover").show();
 
 
-  /*
+  /********************
    * BOOTSTRAP3-DIALOG
-   */
+   *******************/
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
       //console.log('student:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {
@@ -37,12 +37,12 @@ Template.adminStudents.onCreated( function() {
     //console.log( 'settings ' + settings );
     //console.log( 'exception: ' + exception );
   });
-//-------------------------------------------------------------------
+//---------------------------------------------------------
 
 
-  /*
+  /********************************************************
    * SELECT2
-  */
+  ********************************************************/
   $.getScript( '/js/select2.min.js', function() {
     $( document ).ready(function(){
       
@@ -77,13 +77,14 @@ Template.adminStudents.onCreated( function() {
     //console.log( 'settings ' + settings );
     //console.log( 'exception: ' + exception );
   });
+//--------------------------------------------------------- 
 });
 
 
 
-/*
+/**********************************************************
  * RENDERED
- */
+ *********************************************************/
 Template.adminStudents.onRendered( function() {
 /*
   $( '#students-cover' ).delay( 100 ).fadeOut( 'slow', function() {
@@ -91,13 +92,14 @@ Template.adminStudents.onRendered( function() {
     $( ".filter-buttons" ).fadeIn( 'slow' );
   });
 */
-
+//---------------------------------------------------------
 });
 
 
-/*
+
+/*=========================================================
  * HELPERS
- */
+ *=======================================================*/
 Template.adminStudents.helpers({
 
   students() {
@@ -113,7 +115,8 @@ Template.adminStudents.helpers({
       return;
     }
   },
-  
+//---------------------------------------------------------
+
   departments() {
     try {
       return Departments.find({ company_id: Meteor.user().profile.company_id }).fetch();
@@ -121,19 +124,19 @@ Template.adminStudents.helpers({
       return;
     }
   },
-
+//---------------------------------------------------------
 });
 
 
 
-/*
+/*=========================================================
  * EVENTS
- */
+ *=======================================================*/
 Template.adminStudents.events({
 
-  /*
+  /********************************************************
    * #SEARCH-STUDENTS  ::(CHANGE)::
-   */
+   *******************************************************/
   'change #search-students'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -150,9 +153,9 @@ Template.adminStudents.events({
   },
 
 
-  /*
+  /********************************************************
    * #CLOSE-SEARCH  ::(CLICK)::
-   */
+   *******************************************************/
   'click #close-search'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -163,9 +166,9 @@ Template.adminStudents.events({
 
 
 
-  /*
+  /********************************************************
    * .JS-STUDENT  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-student'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -181,9 +184,9 @@ Template.adminStudents.events({
   },
 
 
-  /*
+  /********************************************************
    * .JS-IMPORT-STUDENTS-CSV  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-import-students-csv'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -193,12 +196,11 @@ Template.adminStudents.events({
   },
 
 
-  /*
+  /********************************************************
    * .JS-ADD-STUDENT  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-add-student'( e, t ) {
     e.preventDefault();
-    //e.stopImmediatePropagation();
 
     //DEPT MUST HAVE A VALUE
 
@@ -220,13 +222,13 @@ Template.adminStudents.events({
                               );
       }
     }, 500);
-//-------------------------------------------------------------------
+//---------------------------------------------------------
   },
 
 
-  /*
+  /********************************************************
    * .JS-STUDENT-ADD-SUBMIT  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-add-student-submit'( e, t ) {
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -301,6 +303,10 @@ Template.adminStudents.events({
         Meteor.call( 'sendEmail', email, 'admin@collectiveuniversity.com', 'New Account', text );
       }
       
+ /*
+  * HANDLE:
+  * IF opt == 'admin'
+  */
 
       //clear created by code options
       //$( '.js-dept option').each(function(){
@@ -313,17 +319,17 @@ Template.adminStudents.events({
 
       Bert.alert( 'Account Created', 'success', 'growl-top-right' );
 
-//-------------------------------------------------------------------
+//---------------------------------------------------------
   },
 
 
 
-  /*
+  /********************************************************
    * .JS-EDIT-STUDENT  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-edit-student'( e, t ) {
       e.preventDefault();
-      //e.stopImmediatePropagation();
+
       //DEPT MUST HAVE A VALUE
 
       const sTypes = [ 'student', 'teacher', 'admin' ];
@@ -374,14 +380,14 @@ Template.adminStudents.events({
     
         $( 'select[name="js-role"]').find('option:contains("' + capitalizeFirstLetter(s.role) + '")' ).attr( "selected",true );
       }, 500);
-//-------------------------------------------------------------------
+//---------------------------------------------------------
   },
 
 
 
-  /*
+  /********************************************************
    * .JS-EDIT-STUDENT-SUBMIT  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-edit-student-submit'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -421,7 +427,10 @@ Template.adminStudents.events({
       let text = `Hello ${fn},\n\nThe administrator of Collective University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${em}\n`;
       Meteor.call('sendEmail', em, 'admin@collectiveuniversity.com', 'Upgraded Account', text );
     }
-
+    
+/*
+ * CHECK FOR ADMIN CREATED USER AND SEND EMAIL
+ */
 
     t.$( '.js-fn' ).attr( 'placeholder',     "" );
     t.$( '.js-ln' ).attr( 'placeholder',     "" );
@@ -438,14 +447,14 @@ Template.adminStudents.events({
     Bert.alert( 'Edits to student record are saved', 'success', 'growl-top-right' );
     $( '#editStudentModal' ).modal( "hide" );
 
-//-------------------------------------------------------------------
+//---------------------------------------------------------
   },
 
 
 
-  /*
+  /********************************************************
    * #POPUP-CLOSE  ::(CLICK)::
-   */
+   *******************************************************/
    'click #popup-close'( e, t ){
      e.preventDefault();
       t.$( '.js-fn' ).attr( 'placeholder', "" );
@@ -461,12 +470,12 @@ Template.adminStudents.events({
         t.$(this).remove();
       });
    },
+//---------------------------------------------------------
 
 
-
-  /*
+  /********************************************************
    * .JS-DELETE-STUDENT  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-delete-student'( e, t ) {
     e.preventDefault();
 
@@ -483,9 +492,9 @@ Template.adminStudents.events({
 
 
 
-  /*
+  /********************************************************
    * .JS-STUDENT-DELETE-SUBMIT  ::(CLICK)::
-   */
+   *******************************************************/
   'click .js-delete-student-submit'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -503,19 +512,19 @@ Template.adminStudents.events({
 
     $( '#deleteStudentModal' ).modal( 'hide' );
 
-//-------------------------------------------------------------------
+//---------------------------------------------------------
   },
 
 
-  /*
+  /********************************************************
    * #DASHBOARD-PAGE  ::(CLICK)::
-   */
+   *******************************************************/
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-//-------------------------------------------------------------------
+//---------------------------------------------------------
   },
 
 });
