@@ -197,7 +197,12 @@ Template.courseView.helpers({
 
   cname: () => {
     let cid = FlowRouter.getQueryParam( "course" );
-    return Courses.find({ _id: cid }).fetch()[0].name;  
+    try {
+      return Courses.find({ _id: cid }).fetch()[0].name;
+    } catch(e) {
+      return;
+      //console.log(e);
+    }
   },
   
   fname: () => {
@@ -205,6 +210,7 @@ Template.courseView.helpers({
       return Students.findOne({ _id: Meteor.userId() }).fname;
     } catch(e) {
       return;
+      //console.log(e);
     }
   },
 

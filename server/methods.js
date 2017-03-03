@@ -531,11 +531,7 @@ Meteor.methods({
     check( [ to, from, subject, text ], [String] );
     // Let other method calls from the same client start running,
     // without waiting for the email sending to complete.
-    console.log('---------------------------------------');
-    console.log('to = ' + to );
-    console.log('from = ' + from );
-    console.log('subject = ' + subject );
-    console.log('text = ' + text );
+
     this.unblock();
     Email.send({
       to:       to,

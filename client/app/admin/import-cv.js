@@ -46,26 +46,6 @@ Template.importCV.onCreated( function() {
 //---------------------------------------------------------
   });
 
-
-  /********************************************************
-   * JQUERY-UI
-   *******************************************************/
-  $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function() {
-
-    $( '#csv-dialog' ).dialog({
-        autoOpen: false,
-        position: {
-          my: "left top",
-          at: "left top",
-          of: "#csv-help-btn"
-        }
-    });    
-      //console.log('insertCSV:: jquery-ui.min.js loaded...');
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'importCSV:: load jquery-ui.min.js fail' );
-//---------------------------------------------------------
-  });
-
 });
 
 
@@ -187,12 +167,36 @@ Template.importCV.events({
   'click #csv-help-btn'( e, t ) {
     e.preventDefault();
 
-    $( '#csv-dialog' ).dialog("open");
-    $( '#csv-dialog button.ui-state-disabled:active' ).css('background-color','none');
+    $('<div class="alert alert-success alert-dismissable">'+
+            '<button type="button" class="close" ' + 
+                    'data-dismiss="alert" aria-hidden="true">' + 
+                '<strong>' + 'X' + '</strong>' +
+            '</button>' + 
+          '<p style="color:#006400;font-size:1.2em;">' +
+                'The expected format of CSV files is a header line, follwed by individual data lines. For example, a header line might be:' +
+                '<br><br><strong><em>' + 'first_name,last_name,email' + '</em></strong><br><br>' +
+                'with or without quotes. The next line would begin the data, each item on its own line. Example:' +
+                '<br><br><strong><em>' + 'John,Smith,john@example.com' + '</em></strong><br><br>' +
+                'either quoted or not. Each line following would be constructed the same way.' +
+          '</p>' +
+         '</div>').appendTo("#alerts");
+    //$( '#cv-student-import-help' ).modal( 'show' );
+
 //---------------------------------------------------------
   },
   
-  
+ 
+ 
+  /********************************************************
+   * #CV-HELP-CLOSE
+   *******************************************************/
+   'click #cv-help-close'( e, t ) {
+     
+    //$( '#cv-student-import-help' ).modal('hide');
+//---------------------------------------------------------     
+   },
+   
+   
   
   /********************************************************
    * #CSV  ::(CHANGE)::
@@ -325,12 +329,27 @@ Template.importCV.events({
     records   = temp.slice(1);
     num_recs  = records.length;
 
-    if ( p0 == '' && num_props == 1 ) Bert.alert( errStr, 'danger' );
-    if ( p1 == '' && num_props == 2 ) Bert.alert( errStr, 'danger' );
-    if ( p2 == '' && num_props == 3 ) Bert.alert( errStr, 'danger' );
-    if ( p3 == '' && num_props == 4 ) Bert.alert( errStr, 'danger' );
-    if ( p4 == '' && num_props == 5 ) Bert.alert( errStr, 'danger' );
- 
+    if ( p0 == '' && num_props == 1 ) {
+      Bert.alert( errStr, 'danger' );
+      return;
+    }
+    if ( p1 == '' && num_props == 2 ) {
+      Bert.alert( errStr, 'danger' );
+      return;
+    }
+    if ( p2 == '' && num_props == 3 ) {
+      Bert.alert( errStr, 'danger' );
+      return;
+    }
+    if ( p3 == '' && num_props == 4 ) {
+      Bert.alert( errStr, 'danger' );
+      return;
+    }
+    if ( p4 == '' && num_props == 5 ) {
+      Bert.alert( errStr, 'danger' );
+      return;
+    }
+    
     /* ASSIGN random password */
     //todo: assign random password;
     let password    = 'afdsjkl83212'

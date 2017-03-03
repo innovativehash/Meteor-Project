@@ -40,6 +40,7 @@ Meteor.startup(() => {
     encodeURIComponent( smtp.server )   + ':' + smtp.port;
 
   //process.env.MAIL_URL="smtp://gcc.programmer:K81sgr82me!@smtp.gmail.com:587/";
+  
   process.env.ROOT_URL = 'https://collective-university-nsardo.c9users.io';
   //process.env.ROOT_URL = "http://collectiveuniversity.com";
 /*  
