@@ -355,8 +355,8 @@ Template.importCV.events({
     let password    = 'afdsjkl83212'
       , adminEmail  = 'admin@collectiveuniversity.com'
       , videoLink   = 'TO BE ADDED'  //BE SURE TO MAKE IT: http:// xxx
-      , url       = 'https://collective-university-nsardo.c9users.io/login';
-      //, url = 'http://collectiveuniversity.com/login';
+      //, url       = 'https://collective-university-nsardo.c9users.io/login';
+      , url = 'http://collectiveuniversity.com/login';
       
     pa = [ p0, p1, p2, p3, p4 ];
     for ( let i = 0; i < num_recs; i++ ) {
