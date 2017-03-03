@@ -25,13 +25,13 @@ Template.signup.events({
   'submit': ( e, t ) => {
     e.preventDefault();
   
-    let fname       = $( '#fname' ).val() // OR e.target.fname.value
-      , lname       = $( '#lname' ).val()
-      , email       = $( '#email' ).val()
-      , password    = $( '#password' ).val()
-      , company     = $( '#company' ).val()
-      , phone       = $( '#phone' ).val()
-      , university  = $( '#university' ).val()
+    let fname       = $( '#fname' ).val().trim() // OR e.target.fname.value
+      , lname       = $( '#lname' ).val().trim()
+      , email       = $( '#email' ).val().trim()
+      , password    = $( '#password' ).val().trim()
+      , company     = $( '#company' ).val().trim()
+      , phone       = $( '#phone' ).val().trim()
+      , university  = $( '#university' ).val().trim()
       , text
       , opt         = 'admin'
       , dept        = 'admin'

@@ -256,8 +256,8 @@ Template.adminStudents.events({
       let fname     = $( '.js-fn' ).val().trim();
       let lname     = $( '.js-ln' ).val().trim();
       let email     = $( '.js-email' ).val().trim();
-      let dept      = $( '.js-dept :selected' ).text();
-      let opt       = $( '#sel1' ).val();
+      let dept      = $( '.js-dept :selected' ).text().trim();
+      let opt       = $( '#sel1' ).val().trim();
       
       if ( fname == '' || _.isNull(fname) || _.isUndefined(fname) ) {
         Bert.alert('First Name is a required field', 'danger');
@@ -290,8 +290,8 @@ Template.adminStudents.events({
       /* 
        *
        */
-      //let url       = 'https://collective-university-nsardo.c9users.io/login';
-      let url = 'http://collectiveuniversity.com/login';
+      let url       = 'https://collective-university-nsardo.c9users.io/login';
+      //let url = 'http://collectiveuniversity.com/login';
       let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video: ${videoLink}\n\nIf you have any questions, please contact: ${adminEmail}`;
 
       //ALL FIELDS MUST BE FILLED OUT OR ERR
@@ -396,12 +396,12 @@ Template.adminStudents.events({
 
     let s  = Students.findOne({ _id: id });
 
-    let r   = $( '.js-role' ).select2( 'data' )[0].text.toLowerCase(),
-        fn  = $( '.js-fn' ).attr('placeholder'),
-        em  = $( '.js-email' ).attr('placeholder'),
+    let r   = $( '.js-role' ).select2( 'data' )[0].text.toLowerCase().trim(),
+        fn  = $( '.js-fn' ).attr('placeholder').trim(),
+        em  = $( '.js-email' ).attr('placeholder').trim(),
         d   = $( '.js-dept' ).select2( 'data' )[0].text;
         url = 'https://collective-university-nsardo.c9users.io/login';
-
+  
     //if ( d == '' ) d = 'sales';
     if ( d == '' || _.isNull(d) || _.isUndefined(d) ) {
       Bert.alert('Department must not be blank', 'danger');

@@ -315,11 +315,11 @@ Template.importCV.events({
       num_props, num_recs, records, temp, pa, headers,
       studentObj = [],
       errStr = 'you must assign a mapping to all your fields.',
-      p0 = $( '.selectpicker.p0 option:selected' ).val(),
-      p1 = $( '.selectpicker.p1 option:selected' ).val(),
-      p2 = $( '.selectpicker.p2 option:selected' ).val(),
-      p3 = $( '.selectpicker.p3 option:selected' ).val(),
-      p4 = $( '.selectpicker.p4 option:selected' ).val(),
+      p0 = $( '.selectpicker.p0 option:selected' ).val().trim(),
+      p1 = $( '.selectpicker.p1 option:selected' ).val().trim(),
+      p2 = $( '.selectpicker.p2 option:selected' ).val().trim(),
+      p3 = $( '.selectpicker.p3 option:selected' ).val().trim(),
+      p4 = $( '.selectpicker.p4 option:selected' ).val().trim(),
       c_id    = Meteor.user().profile.company_id
       c_name  = Companies.find({ _id: c_id }).fetch()[0].name; 
 
@@ -355,8 +355,8 @@ Template.importCV.events({
     let password    = 'afdsjkl83212'
       , adminEmail  = 'admin@collectiveuniversity.com'
       , videoLink   = 'TO BE ADDED'  //BE SURE TO MAKE IT: http:// xxx
-      //, url       = 'https://collective-university-nsardo.c9users.io/login';
-      , url = 'http://collectiveuniversity.com/login';
+      , url       = 'https://collective-university-nsardo.c9users.io/login';
+      //, url = 'http://collectiveuniversity.com/login';
       
     pa = [ p0, p1, p2, p3, p4 ];
     for ( let i = 0; i < num_recs; i++ ) {

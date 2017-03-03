@@ -23,18 +23,20 @@ Template.login.events({
     e.stopImmediatePropagation();
 
     //e.target.email.value
-    var email     = $( '#email' ).val();
+    var email     = $( '#email' ).val().trim();
     //e.target.password.value
-    var password  = $( '#password' ).val();
+    var password  = $( '#password' ).val().trim();
 
     Meteor.logoutOtherClients();
     
     Meteor.loginWithPassword( email, password, ( error ) => {
-      let s = Students.find({ _id: Meteor.userId() }).fetch()[0];
-      
-      //console.log( 'login with pw uid & roles ' + Meteor.userId() + ' ' + Meteor.user().roles[0]) /* DEBUG */
+      //console.log( email );
+      //console.log( password );
+      //console.log( Meteor.userId() );
+      let s = Students.find({ _id: Meteor.userId() });
+      //console.log( s );
       if ( error ) {
-        
+        console.log(s);
         console.log( 'log in error ' + error );
         Bert.alert( 'Please provide a valid Account Email and Password!', 'danger', 'fixed-top', 'fa-frown-o' );  
         
