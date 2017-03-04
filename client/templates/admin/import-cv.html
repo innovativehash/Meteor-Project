@@ -31,13 +31,33 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="import-body">
-        <div style="position:fixed;width:65%;z-index:15" id="alerts"></div>
+        <div style="position:fixed;width:55%;z-index:15;display:none;" id="alerts">
+          <div class="alert alert-success alert-dismissable">
+            <!--
+            <button type="button" 
+                    class="close"
+                    data-dismiss="alert" 
+                    aria-hidden="true"> 
+              <strong>X</strong>
+            </button>
+            -->
+            <p style="color:#006400;font-size:1.2em;">
+                  The expected format of CSV files is a header line, follwed by individual data lines. For example, a header line might be:
+                  <br><br><strong><em>first_name,last_name,email</em></strong><br><br>
+                  with or without quotes (if you use quotes, make sure there are NO SPACES before or after the word in quotes. Spaces between two words is OK. So,<br><br>
+                  <strong><em>"first name"</em></strong> is Ok, <strong><em>" first name"</em></strong>, for example, is not.
+                  <br><br> The next line would begin the data, each item on its own line. Example:
+                  <br><br><strong><em>John,Smith,john@example.com</em></strong><br><br>
+                  either quoted or not. Each line following would be constructed the same way.
+            </p>
+          </div>
+        </div>
         <label class="import" for="csv" style="border:1px solid green;border-radius:10px;margin-right:5px;">
           <input type="file"  id="csv"  style="margin-top:10px;margin-bottom:10px;margin-left:15px;height:auto;width:auto"/>
         </label>
-        <span   id="csv-error1"></span>
-        <span   id="csv-error2"></span>
-        <button id="csv-help-btn" class="pull-right btn btn-success">NEED HELP?</button>
+
+        <button id="csv-help-btn" class="pull-right btn btn-success"><i class="fa fa-question-circle fa-lg" aria-hidden="true"></i>
+        &nbsp;&nbsp;Toggle HELP&nbsp;&nbsp;<i class="fa fa-question-circle fa-lg" aria-hidden="true"></i></button>
         <div class="import-body-list">
           <div class="single-import-body">
             <table>

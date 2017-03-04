@@ -126,7 +126,7 @@ Template.importCV.helpers({
 });
 
 
-
+let tog = true;
 /*=========================================================
  * EVENTS
  *=======================================================*/
@@ -167,19 +167,7 @@ Template.importCV.events({
   'click #csv-help-btn'( e, t ) {
     e.preventDefault();
 
-    $('<div class="alert alert-success alert-dismissable">'+
-            '<button type="button" class="close" ' + 
-                    'data-dismiss="alert" aria-hidden="true">' + 
-                '<strong>' + 'X' + '</strong>' +
-            '</button>' + 
-          '<p style="color:#006400;font-size:1.2em;">' +
-                'The expected format of CSV files is a header line, follwed by individual data lines. For example, a header line might be:' +
-                '<br><br><strong><em>' + 'first_name,last_name,email' + '</em></strong><br><br>' +
-                'with or without quotes. The next line would begin the data, each item on its own line. Example:' +
-                '<br><br><strong><em>' + 'John,Smith,john@example.com' + '</em></strong><br><br>' +
-                'either quoted or not. Each line following would be constructed the same way.' +
-          '</p>' +
-         '</div>').appendTo("#alerts");
+    $("#alerts").slideToggle();
     //$( '#cv-student-import-help' ).modal( 'show' );
 
 //---------------------------------------------------------
@@ -244,12 +232,8 @@ Template.importCV.events({
       slen  = raw_file.split('\n').length -1;
       
       if ( slen == 0 ) {
-        console.log( 'not separate lines' );
-        t.$( '#csv-error1' ).text('NO SEPARATE LINES IN FILE').css({'margin':'5px 5px 5px 5px;','padding':'5px 5px 5px 5px;','border':'1px dashed red','border-radius':'5px','background-color':'Crimson','color':'white', 'font-weight':'900'});
+        Bert.alert( "The format of data in the file is incorrect. Please click 'Need Help?' button to see the correct format of data.", 'danger');
         return;
-      } else {
-        t.$( '#csv-error1' ).text('');
-        t.$( '#csv-error1' ).attr('style',''); //remove artifacts from screen
       }
       
       for( let i = 0; i < slen; i++ ) {
@@ -259,14 +243,11 @@ Template.importCV.events({
           s1 += m;
         } else {
           if ( s[i].split(',').length - 1 != m ) {
-            console.log( 'separator mismatch line: 257');
-            t.$( '#csv-error2' ).text(`SEPARATOR MISMATCH IN FILE ON LINE ${i+1}`).css({'margin':'5px 5px 5px 5px;','padding':'5px 5px 5px 5px;','border':'1px dashed red','border-radius':'5px','background-color':'Crimson','color':'white', 'font-weight':'900'});
+            Bert.alert( "The format of data in the file is incorrect. Please click 'Need Help?' button to see the correct format of data.", 'danger');
             s1 = 0;
             return;
           } else {
             s1 += s[i].split(',').length -1;
-            t.$( '#csv-error2' ).text('');
-            t.$( '#csv-error2' ).attr('style',''); //remove artifacts from screen
           }
         }
       }
@@ -278,7 +259,7 @@ Template.importCV.events({
 
     Meteor.setTimeout( function() {
         if ( s1 == 0 ) {
-          Bert.alert('Not a valid input file', 'danger');
+          Bert.alert( "The format of data in the file is incorrect. Please click 'Need Help?' button to see the correct format of data.", 'danger');
           return;
         }
         

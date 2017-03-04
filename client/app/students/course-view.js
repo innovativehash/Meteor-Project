@@ -259,7 +259,7 @@ Template.courseView.events({
     } else if ( Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
     }
-
+    return;
 //-------------------------------------------------------------------
   },
 
@@ -269,8 +269,17 @@ Template.courseView.events({
    *******************************************************/
   'click #cv-dashboard-link'( e, t ) {
       e.preventDefault();
-      
-      $( '#course-view-page-back' ).click();
+
+      Session.set('Scratch', '');
+    
+      if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+        FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
+      } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+        FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+      } else if ( Meteor.user().roles && Meteor.user().roles.student ) {
+        FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
+      }
+      //$( '#course-view-page-back' ).click();
       return;
 //-------------------------------------------------------------------
   },
