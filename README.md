@@ -1,6 +1,6 @@
 # collective-university
 
-Unip the project
+Unzip the project
 cd into it
 
 $ npm init
