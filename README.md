@@ -1,8 +1,10 @@
 # collective-university
 
-Unip the project cd into it
+Unzip the project cd into it
 
-$ npm init $ meteor
+$ npm init 
+
+$ meteor
 
 After it is running, before doing anything else, you need to seed the DB. Note the Dump folder in the project tree. You'll need an instance of mongoDB installed on your system, besides the version that meteor ships with.
 
