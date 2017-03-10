@@ -2,7 +2,7 @@
 
 Unzip the project cd into it
 
-$ npm init 
+$ npm install 
 
 $ meteor
 
