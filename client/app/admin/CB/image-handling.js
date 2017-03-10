@@ -91,12 +91,6 @@
     e.currentTarget.files[0].name = undefined;
     
     itype = '';
-//
-  		//let files = t.$( "input.file_bag" )[0].files
-  		//let fil = t.$( '#course-builder-image' ).get(0).files[0]
-/*  		
-  		let fil = t.$( '#course-builder-image' )[0].files
-		  , sf    = t.$( '#course-builder-image' ).data('subfolder');
  
 		S3.upload(
 		          {
@@ -109,7 +103,7 @@
 				        
 				        let img = $( '#preview-image' );
 
-                img.attr( "src", ig ); // ig
+                img.attr( "src", ig );
                 img.appendTo( '.image-preview' );
                 
 				        a_img_id = Images.insert({
@@ -126,7 +120,7 @@
 				                                });
 		         }
 		);
-*/
+
     
 //---------------------------------------------------------
   }
@@ -136,7 +130,7 @@
   /********************************************************
    * #CB-IMAGE-SAVE  ::(CLICK)::
    *******************************************************/
-  export function cbImageSave( e, t, contentTracker ) {
+  export function cbImageSave( e, t, page_no, P ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -147,70 +141,68 @@
     
     ++img_id;
 
-    t.$( '#fb-template' ).append( `<div id="ig-${img_id}" style="top:100px;left:200px;display:inline-block;position:absolute;cursor:move;"><img id="im-${img_id}" src="${ig}"></div>` );
+
+    t.$( '#fb-template' ).append( `<div id="ig-${img_id}" data-pid="0" style="top:'100px';left:'200px';display:inline-block;position:absolute;cursor:move;"><img id="im-${img_id}" src="${ig}"></div>` );
     
-    //let tb = Session.get( 'tbo' );
-    
-    //tb.images[img_id] = `#ig-${img_id}`;
     
     $( `#ig-${img_id}` ).draggable();
     $( `#im-${img_id}` ).resizable();
-/*
-  Don't need to sort image, as is captured as part of page with title, text, img
-  
-    tbo.images[img_id] = {  page: Template.instance().page.get(),
-                            id: img_id,
-                            image: ig,
-                            a_img_id: a_img_id
-                         };
-*/
-    (function(img_id){
+    
+    let pos   = {top:'100px', left:'200px'}
+      , my_id = Session.get('my_id');
+    
+    P.update( { _id: my_id },
+              { $push: 
+                {
+                  objects: {
+                    type:     'image',
+                    page_no:  page_no,
+                    id:       img_id,
+                    offset:   pos,
+                    img_id:   `im-${img_id}`,
+                    src:      `${ig}`
+                  }
+                }
+              });
+                        
+    Meteor.setTimeout(function(){
+
+      $( `#ig-${img_id}` ).attr( 'data-pid', `${my_id}` );
+      //console.log( $( `#ig-${img_id}` ).data('pid'));
+    }, 500);
+    
+    (function( img_id, my_id ){
 
       //document.getElementById( `ig-${img_id}` ).onmouseup =  (e) => {
       $( `#ig-${img_id}` ).on("mouseup", function(){
         e.preventDefault();
-        e.stopImmediatePropagation();
 
+      //let tb = Session.get( 'tbo' );
+      
       $( '#cb-toolbar-media' ).show();
       
       t.$( '#cb-current' ).val( `#ig-${img_id}` );
       
-/*
-      imagesTracker.push( img_id );
+      //tb.images[img_id] = `#ig-${img_id}`;
+      
+      let pos = $( `#tit-${tit_id}` ).offset();
+        
+      //Session.set( 'tbo', tb );
 
-        let p = $( `#ig-${img_id}` ).position();
-
-        tbo.images[img_id].top  = p && p.top;
-        tbo.images[img_id].left = p && p.left;
-*/
-// };
-
-/*
-      if ( ! t.$( `#close-img-${img_id}` ).length ) {
-          $( `#ig-${img_id}` ).append( `<button type="button"
-                                                id="close-img-${img_id}"
-                                                class="btn btn-danger btn-xs">
-                                          <span class="glyphicon glyphicon-trash"></span>
-                                        </button>` );
-        //CLOSE BUTTON EVENT
-        t.$( `#close-img-${img_id}` ).on( "click", (e) => {
-          e.preventDefault();
-
-          //delete tbo.images[img_id];
-          contentTracker.images--;
-          $( `#${e.currentTarget.parentNode.id}` ).remove();
-        });
-      }// if
-
-      // BUTTON TIMER
-      Meteor.setTimeout(function(){
-        t.$( `#close-img-${img_id}` ).off( "click" );
-        t.$( `#close-img-${img_id}` ).remove();
-      }, 2000);
-*/
+      P.update({ _id: my_id, "objects.page_no": page_no },
+               { $set:
+                  {
+                    "objects.$.type":     'image',
+                    "objects.$.page_no":  page_no,
+                    "objects.$.id":       img_id,
+                    "objects.$.offset":   pos,
+                    "objects.$.img_id":   `im-${img_id}`,
+                    "objects.$.src":      `${ig}`                  
+                  }
+              });
     }); //onmouseup
 
-  })(img_id);
+  })( img_id, my_id );
 
     ig  = null;
     ext = null;

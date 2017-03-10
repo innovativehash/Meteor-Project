@@ -33,7 +33,7 @@ Template.cbToolbar.onRendered(function(){
   $( '#cb-toolbar-text'  ).hide();
   $( '#cb-toolbar-media' ).hide();
   $( '#cb-toolbar-video' ).hide();
-  $( '.js-edit-button' ).hide();
+  $( '.js-edit-button'   ).hide();
   
 });
 
@@ -43,55 +43,6 @@ Template.cbToolbar.onRendered(function(){
  * EVENTS
  *========================*/
 Template.cbToolbar.events({
-  
-  
-/**********************************************************
- * .JS-BOLD-BUTTON ::(CLICK)::
- *********************************************************/
-  'click .js-bold-button'( e, t ) {
-    e.preventDefault();
-    let cur = $( '#cb-current' ).val();
-    
-    if ( $( `${cur}` ).css('fontWeight') != 'bold' ) {
-      $( `${cur}` ).css('fontWeight', 'bold');
-    } else {
-      $( `${cur}` ).css('fontWeight', 'normal' );
-    }
-//---------------------------------------------------------
-  },
-  
-  
-/**********************************************************
- * .JS-ITALIC-BUTTON  ::(CLICK)::
- *********************************************************/
-  'click .js-italic-button'( e, t ) {
-    e.preventDefault();
-    let cur = $( '#cb-current' ).val();
-    
-    if ( $( `${cur}` ).css('fontStyle') != 'italic' ) {
-      $( `${cur}` ).css('fontStyle', 'italic');
-    } else {
-      $( `${cur}` ).css('fontStyle', 'normal');
-    }
-//---------------------------------------------------------
-  },
-  
-  
-/**********************************************************
- * .JS-UNDERLINE-BUTTON  ::(CLICK)::
- *********************************************************/
-  'click .js-underline-button'( e, t ) {
-    e.preventDefault();
-    let cur = $( '#cb-current' ).val();
-    console.log( 'cur = ' + cur );
-    
-    if ( $( `${cur}` ).css( 'textDecoration' ) != 'underline' ) {
-      $( `${cur}` ).css( 'textDecoration', 'underline' );
-    } else {
-      $( `${cur}` ).css('textDecoration', '');
-    }
-//---------------------------------------------------------
-  },
   
   
 /**********************************************************
@@ -226,7 +177,6 @@ Template.cbToolbar.events({
                                               rows="3" 
                                               style="font-size:18px;font-weight:bold;z-index:2;border-radius:5px;background-color:white;cursor:move;border:1px dashed !important;">${text}</textarea>` ).css({ 'color': 'grey', 'position': `element(${currentItem})`, 'right': 0, 'bottom': 0 });
       
-      
       //$( '#toolb-added-title' )
       $( '#toolb-added-title' ).effect( "highlight", {}, 2000 ).focus();
       
@@ -251,13 +201,17 @@ Template.cbToolbar.events({
  *********************************************************/
   'input .js-font-size'( e, t ) {
     e.preventDefault();
-    let cur = $( '#cb-current' ).val();
     
-    let fsz = $(e.currentTarget).val();
+    let cur = $( '#cb-current' ).val()
+      , id  = $( `${cur}` ).data('pid')
+      , fsz = $(e.currentTarget).val()
+      , pg  = $( `${cur}` ).data('page');
     
     $( `${cur}` ).css( 'font-size',`${fsz}px` );
     
     $( '#fnt' ).val( fsz );
+    P.update( { _id: id, "objects.page_no": pg }, {$set:{"objects.$.fontSize": fsz }});
+    //console.log( P.find({ _id: id }).fetch() );
 //---------------------------------------------------------
   },
   
@@ -267,14 +221,76 @@ Template.cbToolbar.events({
  *********************************************************/
   'input .js-opacity'( e, t ) {
     e.preventDefault();
-    let cur = $( '#cb-current' ).val();
+    let cur = $( '#cb-current' ).val()
+      , id  = $( `${cur}` ).data('pid')
+      , op  = $(e.currentTarget).val()
+      , pg  = $( `${cur}` ).data('page');
     
-    let fsz = $(e.currentTarget).val();
+    $( `${cur}` ).css( 'opacity', op );
     
-    $( `${cur}` ).css( 'opacity', fsz );
-    
-    $( '#op' ).val( fsz );
+    $( '#op' ).val( op );
+    P.update({ _id: id, "objects.page_no":pg }, {$set:{"objects.$.opacity": op }});
 //---------------------------------------------------------
   },
   
+  
+/**********************************************************
+ * .JS-UNDERLINE-BUTTON  ::(CLICK)::
+ *********************************************************/
+  'click .js-underline-button'( e, t ) {
+    e.preventDefault();
+    
+    let cur = $( '#cb-current' ).val()
+      , id  = $( `${cur}` ).data('pid')
+      , pg  = $( `${cur}` ).data('page');
+
+    
+    if ( $( `${cur}` ).css( 'textDecoration' ) != 'underline' ) {
+      $( `${cur}` ).css( 'textDecoration', 'underline' );
+      P.update({ _id: id, "objects.page_no": pg }, {$set:{ "objects.$.textDecoration": 'underline' }});
+    } else {
+      $( `${cur}` ).css('textDecoration', '');
+      P.update( { _id: id, "objects.page_no": pg }, {$set:{ "objects.$.textDecoration": ''}});
+    }
+//---------------------------------------------------------
+  },
+ 
+/**********************************************************
+ * .JS-BOLD-BUTTON ::(CLICK)::
+ *********************************************************/
+  'click .js-bold-button'( e, t ) {
+    e.preventDefault();
+    let cur = $( '#cb-current' ).val()
+      , id  = $( `${cur}` ).data('pid')
+      , pg  = $( `${cur}` ).data('page');
+    
+    if ( $( `${cur}` ).css('fontWeight') != 'bold' ) {
+      $( `${cur}` ).css('fontWeight', 'bold');
+      P.update({ _id: id, "objects.page_no": pg }, {$set:{ "objects.$.fontWeidht": 'bold'}});
+    } else {
+      $( `${cur}` ).css('fontWeight', 'normal' );
+      P.update({ _id: id, "objects.page_no": pg }, {$set:{ "objects.$.fontWeight": '' }});
+    }
+//---------------------------------------------------------
+  },
+  
+  
+/**********************************************************
+ * .JS-ITALIC-BUTTON  ::(CLICK)::
+ *********************************************************/
+  'click .js-italic-button'( e, t ) {
+    e.preventDefault();
+    let cur = $( '#cb-current' ).val()
+      , id  = $( `${cur}` ).data('pid')
+      , pg  = $( `${cur}` ).data('page');
+    
+    if ( $( `${cur}` ).css('fontStyle') != 'italic' ) {
+      $( `${cur}` ).css('fontStyle', 'italic');
+      P.update({ _id: id, "objects.page_no": pg }, {$set:{"objects.$.fontStyle": 'italic' }});
+    } else {
+      $( `${cur}` ).css('fontStyle', 'normal');
+      P.update({ _id: id, "objects.page_no": pg }, {$set:{ "objects.$.fontStyle": 'normal' }});
+    }
+//---------------------------------------------------------
+  }, 
 });

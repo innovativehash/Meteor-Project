@@ -4,35 +4,26 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  */
 export class CreateDOM {
-
+  
   constructor( o ) {
     this.domObj = o;
+    this.titles = [];
+    this.texts  = [];
+    this.markup = [];
   }
 
-  makeTitles(){
-    let len           = this.domObj.titles.length
-      , titlesA       = '';
+  makeTitle( obj ){
 
-    for ( let i = 0; i < len; i++ ) {
-      if ( this.domObj.titles[i] ) {
-        titlesA += `<span style="background-color:${this.domObj.titles[i].backgroundColor};position:absolute;left:${this.domObj.titles[i].left};top:${this.domObj.titles[i].top};font-size:${this.domObj.titles[i].fontSize};font-style:${this.domObj.titles[i].fontStyle};font-weight:${this.domObj.titles[i].fontWeight};opacity:${this.domObj.titles[i].opacity};text-decoration:${this.domObj.titles[i].textDecoration};">${this.domObj.titles[i].text}</span>`;
-      }
-    }
-    return titlesA;
+    this.titles.push(`<span id="${obj.id}" style="position:relative;font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
+    this.markup.push( `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });` );
   }
 
-  makeTexts(){
-    let len         = this.domObj.texts.length
-      , textsA      = '';
+  makeTexts( obj ){
 
-    for ( let i = 0; i < len; i++ ) {
-      if ( this.domObj.texts[i] ) {
-        textsA += `<span style="background-color:${this.domObj.texts[i].backgroundColor};position:absolute;left:${this.domObj.texts[i].left};top:${this.domObj.texts[i].top};font-size:${this.domObj.texts[i].fontSize};font-style:${this.domObj.texts[i].fontStyle};font-weight:${this.domObj.texts[i].fontWeight};opacity:${this.domObj.texts[i].opacity};text-decoration:${this.domObj.texts[i].textDecoration};">${this.domObj.texts[i].text}</span>`;
-      }
-    }
-    return textsA;
+    this.texts.push(`<span id="${obj.id}" style="position:relative;font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
+    this.markup.push( `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`);
   }
-
+/*
   makeImages() {
     let len           = this.domObj.images.length
       , imagesA       = '';
@@ -51,37 +42,43 @@ export class CreateDOM {
 
     for ( let i = 0; i < len; i++ ) {
       if ( this.domObj.videos[i] ) {
-        videosA += `<div id="vid-${i}">`;
+        videosA += this.domObj.videos[i].url;
       }
     }
     return videosA;
   }
 
+  makePdfs() {
+    let len   = this.domObj.pdfs.length
+      , pdfsA = '';
+      
+    for ( let i = 0; i < len; i++ ) {
+      if ( this.domObj.pdfs[i] ) {
+        pdfsA += this.domObj.pdfs[i].url;
+      }
+    }
+    return pdfsA;
+  }
+*/ 
+  
   buildDOM() {
-
-    let l1 = this.domObj.images.length
-      , l2 = this.domObj.titles.length
-      , l3 = this.domObj.texts.length;
-
-    for( let i = 0; i < l1; i++ ) {
-      if ( this.domObj.images[i] )  $( `#ig-${i}` ).remove();
+    for ( let i = 0, ilen = this.domObj.length; i < ilen; i++ ) {
+      switch( this.domObj[i].type ) {
+        case 'title':
+          this.makeTitle( this.domObj[i] );
+          break;
+        case 'text':
+          this.makeText( this.domObj[i] );
+          break;
+      }
     }
-    for( let i = 0; i < l2; i++ ) {
-      if ( this.domObj.titles[i] )  $( `#div-title-${i}` ).remove()
+    let ret_str = '';
+    for ( let j = 0, jlen = this.titles.length; j < jlen; j++ ) {
+      ret_str += this.titles[j];
     }
-    for( let i = 0; i < l3; i++ ) {
-      if ( this.domObj.texts[i] )   $( `#span-text-${i}` ).remove()
+    for ( let k = 0, klen = this.texts.length; k < klen; k++ ) {
+      ret_str += this.texts[k];
     }
-    //$('#ig-0').remove();
-    //$('#div-title-0').remove();
-    //$('#span-text-0').remove();
-
-    if ( ! this.makeImages() && ! this.makeTexts() && ! this.makeTitles() && ! this.makeVideos() ) {
-      return false;
-    } else {
-      return `${ this.makeTitles() }${ this.makeTexts() }${ this.makeImages() }`;
-    }
-
-    //$('#fb-template').html( `${ this.makeTitles() }${ this.makeTexts() }${ this.makeImages() }` );
+    return [ret_str, this.markup];
   }
 }

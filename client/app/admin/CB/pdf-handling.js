@@ -42,13 +42,20 @@ export function cbPDFChange( e, t ) {
  * id = add-pdf
  * pdf dialog
  */
-export function cbPDFSave( e, t, contentTracker, Pdfs ) {
+export function cbPDFSave(  e, 
+                            t, 
+                            page_no,
+                            Pdfs,
+                            P
+                          ) 
+{
   e.preventDefault();
   
   Bert.alert( 'Please standby...', 'success' );
   
   let fil   = t.$( '#course-builder-pdf' )[0].files
-	  , sf    = t.$( '#course-builder-pdf' ).data('subfolder');
+	  , sf    = t.$( '#course-builder-pdf' ).data('subfolder')
+	  , my_id = Session.get('my_id');
     
 	S3.upload(
 	          {
@@ -61,7 +68,7 @@ export function cbPDFSave( e, t, contentTracker, Pdfs ) {
 		          if ( error ) throw error;
 		          
 			        //delete result._id;
-			        pdf = result.secure_url;
+			        pdf   = result.secure_url;
                 
             	pdf_id =	Pdfs.insert({
               				          loaded:           result.loaded,
@@ -75,8 +82,18 @@ export function cbPDFSave( e, t, contentTracker, Pdfs ) {
               				          file:             result.file,
               				          created_at:       moment().format()
             			       });
- 
-            //Bert.alert('Successfully processed PDF, loading...');
+            
+            P.update({ _id: my_id },
+                     { $push: 
+                        {
+                          objects: {
+                                type:     'pdf',
+                                page_no:  page_no,
+                                url:      pdf
+                          }
+                        }
+                      });
+            
             
             $( '#cb-toolbar-video' ).show();
             t.$( '#cb-current' ).val( '#pdd' );
@@ -86,27 +103,20 @@ export function cbPDFSave( e, t, contentTracker, Pdfs ) {
             t.$( '#fb-template' ).empty();
             t.$( '#fb-template' ).append( obj );
         
-        /*
-            '<object data="' + pdf + '" type="application/pdf" width="100%" height="auto">' +
-            '<iframe src="' + pdf + '" width="100%" height="auto" style="border: none;">' +
-            'This browser does not support PDFs. Please download the PDF to view it: <a href="' + pdf + '">Download PDF</a>' +
-            '</iframe>' +
-            '</object>';
-        */
             contentTracker.pdfs++;
             
             Session.set( 'contentTracker', contentTracker );
             
             pdf = null;
             
-            let tb = Session.get( 'tbo' );
-            
+            //let tb = Session.get( 'tbo' );
+            /*
             tb.pdfs[0] = { 
-                      url: `${obj}`,
+                      url:    `${obj}`,
                       pdf_id: pdf_id
                       };
-                      
-            Session.set( 'tbo', tb );
+            */        
+            //Session.set( 'tbo', tb );
                      			       
   	       }//callback
 	);//S3.upload()

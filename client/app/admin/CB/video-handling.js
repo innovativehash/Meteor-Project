@@ -22,7 +22,7 @@
    * #ADDED-VIDEO  ::(CHANGE)::
    *
    */
-  export function addedVideoURL( e, t, contentTracker ) {
+  export function addedVideoURL( e, t, page_no, P ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -37,7 +37,8 @@
       , url
       , patt
       , conv
-      tb = Session.get( 'tbo' );
+      //, tb    = Session.get( 'tbo' )
+      , my_id = Session.get('my_id');
 
     conv = match[2];
     
@@ -54,58 +55,30 @@
     contentTracker.videos++;
     Session.set('contentTracker', contentTracker);
     
-    ++vid_id;
+    //++vid_id;
+
 
     //tbo.videos.push( {page: Template.instance().page.get(), id: ++vid_id, url: vid} );
-    tb.videos[vid_id] = url;
-    Session.set( 'tbo', tb );
+    
+    //tb.videos[vid_id] = url;
+    //Session.set( 'tbo', tb );
     
     Bert.alert('Loading video...', 'success' );
     
     //add to the canvas
     t.$( '#fb-template' ).html( url );
     
-/*    
-    t.$( '#fb-template iframe' ).on( "click", (e) => {
-        $( '#cb-toolbar-video' ).show();
-        $( '#cb-current' ).val( '#vid' );
-    });
-*/
+    P.update( { _id: my_id },
+              {   
+                type:     'video',
+                page_no:  page_no,
+                url:      url
+              });
 
     $( '#cb-toolbar-video' ).show();
     t.$( '#cb-current' ).val( `#vid` );
     
-/*
-    if ( ! t.$( `#close-vid-${vid_id}` ).length ) {
-        $( '#fb-template' ).append( `<button  type="button"
-                                              id="close-vid-${vid_id}"
-                                              class="btn btn-danger btn-xs">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                      </button>` );
 
-        //CLOSE BUTTON EVENT
-        t.$( `#close-vid-${vid_id}` ).on( "click", (e) => {
-          e.preventDefault();
 
-          tbo.videos.splice( vid_id, 1 );
-          //console.log( tbo.videos );
-          //tbo.videos[vid_id] = null;
-
-          contentTracker.videos--;
-          $( '#fb-template iframe' ).remove();
-          $( `#close-vid-${vid_id}` ).remove();
-        });
-    }
-*/
-
-//    BuiltCourses.update({ _id: built_id },
-//                        { $addToSet:
-//                          { pages:
-//                            {
-//                              page: Template.instance().page.get(),
-//                              video: vid
-//                            }
-//                          }
-//                        });
 //-----------------------------------------------------------------------------
 }

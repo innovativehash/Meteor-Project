@@ -9,6 +9,7 @@ import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
 
 import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
+import { Pages }          from '../../../both/collections/api/pages.js';
 import { Courses }        from '../../../both/collections/api/courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
 import { Images }         from '../../../both/collections/api/images.js';
@@ -22,6 +23,7 @@ import '../../templates/admin/course-builder-page.html';
 /*
  * IMPORT BROKEN-OUT EVENT HANDLERS
  */
+import * as CBCreateDOM from './CB/createDOM.js';
 import * as CBImage from './CB/image-handling.js';
 import * as CBTitle from './CB/title-handling.js';
 import * as CBTexts from './CB/texts-handling.js';
@@ -32,8 +34,10 @@ import * as CBSCORM from './CB/scorm-handling.js';
 
 //import {CreateDOM}  from './CB/createDOM.js';
 
-let contentTracker, 
-    counter         = 1;
+let contentTracker 
+  , counter         = 1
+  , P               = new Mongo.Collection(null)
+  , db_id           = '';
     
 var pages = []; 
     
@@ -55,44 +59,36 @@ Template.courseBuilderPage.onCreated( function() {
   this.total  = new ReactiveVar(1);
 
   //tracker to make sure page always has content before it can be saved/next(ed)
-  Session.set( 'contentTracker',  { 
-                          titles:0,
-                          texts:0,
-                          images:0,
-                          pdfs:0,
-                          ppts:0,
-                          videos:0,
-                          scorms:0,
-                          tests:0
-                        });
+  Session.set(  'contentTracker',  
+                { 
+                  titles:0,
+                  texts:0,
+                  images:0,
+                  pdfs:0,
+                  ppts:0,
+                  videos:0,
+                  scorms:0,
+                  tests:0
+                });
   
-  Session.set( 'tbo', {
-    
-      titles: [],
-      texts:  [],
-      images: [],
-      videos: [],
-      pdfs:   [],
-      ppts:   [],
-      scorms: [],
-      tests:  [],
-      name: '',
-      credits: 0,
-      page: 0,
-      total: 0,
-      keywords: '',
-      icon: '',
-      passing_percent: ''
-  });
-  
-  this.titlesTracker  = [];
-  this.textsTracker   = [];
-  this.imagesTracker  = [];
-  this.pdfsTracker    = [];
-  this.pptsTracker    = [];
-  this.scormsTracker  = [];
-  this.testsTracker   = [];
-  this.videosTracker  = [];
+  Session.set(  'tbo', 
+                {
+                  //titles: [],
+                  //texts:  [],
+                  //images: [],
+                  //videos: [],
+                  //pdfs:   [],
+                  //ppts:   [],
+                  //scorms: [],
+                  tests:  [],
+                  //name: '',
+                  //credits: 0,
+                  page: 0,
+                  total: 0
+                  //keywords: '',
+                  //icon: '',
+                  //passing_percent: ''
+                });
 
   this.page.set(1);
   this.total.set(1);
@@ -114,7 +110,7 @@ Template.courseBuilderPage.onCreated( function() {
       },
       cursor: "move",
       helper: "clone",
-      snap: true,
+      snap:   true,
       /*handle: "img"*/
     });
 
@@ -290,11 +286,13 @@ Template.courseBuilderPage.onCreated( function() {
               return;
             }
           
-            $( '#cb-toolbar-text' ).hide();
+            $( '#cb-toolbar-text'  ).hide();
             $( '#cb-toolbar-media' ).hide();
             $( '#cb-toolbar-video' ).hide();
             
             let tb = Session.get( 'tbo' );
+            tb.page = t.page.get();
+            tb.total = t.total.get();
             Session.set( 'obj', tb );
 
             if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
@@ -355,11 +353,11 @@ Template.courseBuilderPage.onCreated( function() {
   /*******************
    * HTML2CANVAS
    ******************/
-  $.getScript( '/js/html2canvas.js', function() {
+  //$.getScript( '/js/html2canvas.js', function() {
     //console.log('CB:: chosen,jquery.min.js loaded...');
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'CB:: load html2canvas.js fail' );
-  });
+  //}).fail( function( jqxhr, settings, exception ) {
+    //console.log( 'CB:: load html2canvas.js fail' );
+  //});
 //-------------------------------------------------------------------
 
 }); //END ONCREATED
@@ -403,10 +401,10 @@ Template.courseBuilderPage.onRendered( function() {
     //console.log( FlowRouter.getQueryParam('rtn'));
     //console.log( FlowRouter.getQueryParam('cancel'));
     //console.log( Session.get('tbo'));
-    console.log( Session.get('obj'));
+    //console.log( Session.get('obj'));
     
     tb = Session.get( 'obj' );
-    if ( tb && tb.page ) {
+    if ( tb && tb.page && tb.total ) {
       this.page.set( tb.page );
       this.total.set( tb.total );
     } else {
@@ -514,7 +512,7 @@ Template.courseBuilderPage.events({
   
   
   /********************************************************
-   * CB-LEAVE-YES  ::(CLICK)::
+   * CB-LEAVE-YES  ::(CLICK)::    [LEAVE COURSE BUILDER]
    *******************************************************/
   'click #cb-leave-yes'( e, t ) {
     e.preventDefault();
@@ -529,34 +527,30 @@ Template.courseBuilderPage.events({
       ct.scorms = 0;
       ct.tests  = 0;
       Session.set('contentTracker', ct);
-      
-      t.titlesTracker = [];
-      t.textsTracker  = [];
-      t.imagesTracker = [];
   
       // ADVANCE PAGE COUNTS
       t.page.set( 1 );
       t.total.set( 1 );
       
-      pages = [];
+      //pages = [];
       
       let tb      =  Session.get('tbo');
       if ( tb ) {
-        tb.titles   = [];
-        tb.texts    = [];
-        tb.images   = [];
-        tb.videos   = [];
-        tb.pdfs     = [];
-        tb.ppts     = [];
-        tb.scorms   = [];
+        //tb.titles   = [];
+        //tb.texts    = [];
+        //tb.images   = [];
+        //tb.videos   = [];
+        //tb.pdfs     = [];
+        //tb.ppts     = [];
+        //tb.scorms   = [];
         tb.tests    = [];
-        tb.total    = 0;
-        tb.name     = '';
-        tb.credits  = 0;
-        tb.passeing_percent = '';
-        tb.keywords = '';
-        tb.icon     = '';
-        tb.page     = 0;
+        //tb.total    = 0;
+        //tb.name     = '';
+        //tb.credits  = 0;
+        //tb.passeing_percent = '';
+        //tb.keywords = '';
+        //tb.icon     = '';
+        //tb.page     = 0;
         Session.set( 'tbo', tb );
         tb = null;
       }
@@ -578,19 +572,101 @@ Template.courseBuilderPage.events({
         console.log( 'cb lineno: 570' );
       }
     }, 500);
- //---------------------------------------------------------   
+//---------------------------------------------------------  
+  },
+
+
+/********************************************************
+ * CB-PREV  ::(CLICK)::    [PREVIOUS BUTTON CLICK]
+ *******************************************************/
+  'click #cb-prev-btn'( e, t ) {
+    e.preventDefault(); 
+
+    //IF WE'RE ON THE FIRST PAGE, RETURN
+    if ( t.page.get() <= 1 ) {
+      return;
+    } else {
+      //DECREMENT PAGE NUMBER
+      t.page.set(   t.page.get()  - 1 );
+      
+      $('#fb-template').empty();
+    }
+    
+    let rtn_arr, pp, o = [];
+
+    try {
+      pp = P.find({ _id: Session.get('my_id') }).fetch();
+      
+      for( let i = 0, ilen= pp[0].objects.length; i < ilen; i++ ) {
+        if ( pp[0].objects[i].page_no == t.page.get() )
+          o.push( pp[0].objects[i] );
+      }
+
+      rtn_arr = handlePrevious( o );    
+    
+    
+      let funcs = rtn_arr[1];
+    
+      //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
+      $('#fb-template').append( rtn_arr[0] ); 
+      
+      //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
+      for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
+        eval( funcs[i] );
+      } 
+      
+    } catch(ReferenceError) {
+      console.log( 'no record' );
+      return;
+    }
+//---------------------------------------------------------  
   },
   
   
   
-  /********************************************************
-   * CB-NEXT  ::(CLICK)::
-   *******************************************************/
+/********************************************************
+ * CB-NEXT  ::(CLICK)::    [NEXT BUTTON CLICK]
+ *******************************************************/
   'click #cb-next-btn'( e, t ) {
     e.preventDefault();
-    
-    let tb = Session.get( 'tbo' );
-    
+      
+      //ARE THERE STILL PAGES SAVED FOR COURSE?
+      if ( t.page.get() < t.total.get() ) {
+
+        //ADVANCE TO NEXT PAGE
+        t.page.set(   t.page.get()  + 1 );
+      
+        let rtn_arr, o = [];
+        
+        let pp = P.find({ _id: Session.get('my_id') }).fetch();
+
+        //ARE THERE RECORDS FOR THIS PAGE?
+        for( let i = 0, ilen= pp[0].objects.length; i < ilen; i++ ) {
+          if ( pp[0].objects[i].page_no == t.page.get() )
+          o.push( pp[0].objects[i] );
+        }
+
+        rtn_arr = handlePrevious( o );
+
+        if ( rtn_arr != undefined ) {
+
+          let funcs   = rtn_arr[1];
+      
+          $('#fb-template').empty();
+          
+          //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
+          $('#fb-template').append( rtn_arr[0] ); 
+            
+          //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
+          for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
+            eval( funcs[i] );
+          }
+          return;
+        }//INNER IF
+      }//OUTER IF
+  
+
+/*    
     if ( t.page.get() < tb.page ) {
         t.page.set( tb.page );
     }
@@ -598,18 +674,21 @@ Template.courseBuilderPage.events({
     if ( t.total.get() < tb.total ) {
       t.total.set( tb.total );
     }
-
-    //SAVE TEST (IT'S OUTSIDE MAIN FLOW SO NEEDS TO BE CHECKED FIRST)
+*/
+    let ct = Session.get('contentTracker');
+    
+//---------------------------------------------------------------
+//SAVE TEST (IT'S OUTSIDE MAIN FLOW SO NEEDS TO BE CHECKED FIRST)
+//---------------------------------------------------------------
     if ( Session.get( 'test_id' ) ) {
-      
-      //$( '#prompt' ).text('Your Test Was Added To This Course');
-      //$( '#prompt' ).show();
-      
+      /*
       pages[ t.page.get() ] = {
                           no: t.page.get(),
                           page: Session.get( 'test_id' ),
                           type: "test"
                         };
+      */
+      P.insert({ page_no: t.page.get(), type:"test", t_id: Session.get('test_id')});
       
       Session.set( 'test_id', null );
 
@@ -625,11 +704,13 @@ Template.courseBuilderPage.events({
       ct.tests  = 0;
       Session.set('contentTracker', ct);
       
+      //ADVANCE TO NEXT PAGE
       t.page.set(   t.page.get()  + 1 );
       t.total.set(  t.total.get() + 1 );
 
-      tb.page  = t.page.get();
-      tb.total = t.total.get();
+      let tb    = Session.get( 'tbo' );
+      tb.page   = t.page.get();
+      tb.total  = t.total.get();
       Session.set( 'tbo', tb );
       
       counter   = t.page.get();
@@ -642,8 +723,13 @@ Template.courseBuilderPage.events({
       
       return;
     }
+//-----------------------------------------------/TESTS----------  
 
-    let ct = Session.get('contentTracker');
+
+//---------------------------------------------------------------
+// IS THERE ANY CONTENT THAT NEEDS TO BE ADDRESSED?
+//---------------------------------------------------------------
+    //let ct = Session.get('contentTracker');
     if (  ct.titles == 0 &&
           ct.texts  == 0 &&
           ct.images == 0 &&
@@ -653,7 +739,8 @@ Template.courseBuilderPage.events({
           ct.scorms == 0 &&
           ct.tests  == 0
         )
-    {
+    { 
+
           Bert.alert( 
                       'There is no content!', 
                       'danger', 
@@ -662,45 +749,31 @@ Template.courseBuilderPage.events({
                     );
                     
           $(e.currentTarget).prop('disabled', false);
+          
+          //NO? 
           return;
     }
+//-----------------------------------------------/IS THERE CONTENT----------
 
 
-    // ASSEMBLE THE PAGE
-    //let cd = new CreateDOM( tbo );
-
-    //DISABLE CLICK EVENT FOR ITEM INFO POP-UPS SO IT ISN"T CAPTURED
-    t. titlesTracker.forEach(function(el){
-      if ( el )
-        $(`#tit-${el}`).off("mouseup");
-    });
-
-    t.textsTracker.forEach(function(el){
-      if ( el )
-        $(`#txt-${el}`).off("mouseup");
-    });
-
-    t.imagesTracker.forEach(function(el){
-      if ( el )
-        $(`#ig-${el}`).off("mouseup");
-    });
-
-
-    //SAVE VIDEO no, page, type
-    if ( tb.videos.length ) {
-    
+//-----------------------------------------------
+//SAVE VIDEO
+//-----------------------------------------------
+    //let ct = Session.get('contentTracker');
+    if ( ct.videos > 0 ) {
+      /*
       pages[ t.page.get() ] = {
                           no: t.page.get(),
                           url: tb.videos[0],
                           type: "video"
                         };
-                                  
-      tb.videos                = [];
+      */                            
+      //tb.videos                = [];
 
       // CLEAR THE DIV
       $( '#fb-template' ).empty();
       
-      let ct = Session.get('contentTracker');
+      //let ct = Session.get('contentTracker');
       // CLEAR THE CONTENT TRACKER
       ct.titles = 0;
       ct.texts  = 0;
@@ -732,11 +805,16 @@ Template.courseBuilderPage.events({
       
       return;
     }
+//----------------------------------------------------------/SAVE VIDEO-----
 
-    //SAVE PDF
-    if ( tb.pdfs.length ) {
+
+//----------------------------------------------------------
+//SAVE PDF
+//----------------------------------------------------------
+    //let ct = Session.get('contentTracker');
+    if ( ct.pdfs > 0 ) {
       let p   = t.page.get();
-      
+      /*
       // STORE THE PAGE
       pages[p] = {
                         no:   t.page.get(),
@@ -744,15 +822,15 @@ Template.courseBuilderPage.events({
                         type: "pdf",
                         pdf_id: tb.pdfs[0].pdf_id
                       };
- 
+      */ 
       // CLEAR PDF'S ARRAY     
-      tb.pdfs                = [];
+      //tb.pdfs                = [];
       
       //CLEAR THE DIV
       $( '#fb-template' ).empty();
       
       // CLEAR THE CONTENT TRACKER
-      let ct = Session.get('contentTracker');
+      //let ct = Session.get('contentTracker');
       ct.titles = 0;
       ct.texts  = 0;
       ct.images = 0;
@@ -784,22 +862,28 @@ Template.courseBuilderPage.events({
 
       return;
     }
+//---------------------------------------------------------/SAVE PDF----------
 
-    //SAVE PPT
-    if ( tb.ppts.length ) {
+
+//---------------------------------------------------------
+//SAVE PPT
+//---------------------------------------------------------
+    //let ct = Session.get('contentTracker');
+    if ( ct.ppts > 0 ) {
+      /*
       pages[ t.page.get() ] = {
                           no: t.page.get(),
                           url: tb.ppts[0],
                           type: "ppt"
                         };
-                                  
-      tb.ppts                  = [];
+      */                            
+      //tb.ppts                  = [];
       
       //CLEAR THE DIV
       $( '#fb-template' ).empty();
       
       // CLEAR THE CONTENT TRACKER
-      let ct = Session.get('contentTracker');
+      //let ct = Session.get('contentTracker');
       ct.titles = 0;
       ct.texts  = 0;
       ct.images = 0;
@@ -828,16 +912,22 @@ Template.courseBuilderPage.events({
 
       return;
     }
+//----------------------------------------------------/SAVE POWERPOINT-------
     
-    //SAVE SCORM
-    if ( tb.scorms.length ) {
+    
+//----------------------------------------------------
+//SAVE SCORM
+//----------------------------------------------------
+    //let ct = Session.get('contentTracker');
+    if ( ct.scorms > 0 ) {
+      /*
       pages[ t.page.get() ] = {
                           no:   t.page.get(),
                           url:  tb.scorms[0],
                           type: "scorm"
                         };
-                                  
-      tb.scorms                = [];
+      */                            
+      //tb.scorms                = [];
       
       //CLEAR THE DIV
       $( '#fb-template' ).empty();
@@ -871,16 +961,18 @@ Template.courseBuilderPage.events({
                 
       return;
     }
+//----------------------------------------------------------/SAVE SCORM-------
     
 
-    /*
-     * 
-     * SAVE TITLES, TEXT, IMAGES
-     *
-     */
-    let ctk = Session.get('contentTracker');
-    if ( ctk.titles > 0 || ctk.texts > 0 || ctk.images > 0 ) {
+//-----------------------------------------------------------
+//SAVE TITLES, TEXT, IMAGES
+//-----------------------------------------------------------
+    //let ct = Session.get('contentTracker');
+    if ( ct.titles > 0 || ct.texts > 0 || ct.images > 0 ) {
+console.log( 'in text, title, image of next' );
       Bert.alert( 'Adding...', 'success', 'growl-top-right' );
+      
+    /*
       let p   = t.page.get()
         , url = ''
         , img = '';
@@ -898,62 +990,56 @@ Template.courseBuilderPage.events({
                               page: img, 
                               type: "page" 
                           };
-
+    
           img = null;
+
           // CLEAR THE DIV
           $( '#fb-template' ).empty();
         });
-    	
-      ctk.titles = 0;
-      ctk.texts  = 0;
-      ctk.images = 0;
-      ctk.videos = 0;
-      ctk.pdfs   = 0;
-      ctk.ppts   = 0;
-      ctk.scorms = 0;
-      ctk.tests  = 0;
-      Session.set('contentTracker', ctk);
+*/    	
+      // CLEAR THE DIV
+      $( '#fb-template' ).empty();
       
-      tb.titles  = [];
-      tb.texts   = [];
-      tb.images  = [];
+      ct.titles = 0;
+      ct.texts  = 0;
+      ct.images = 0;
+      ct.videos = 0;
+      ct.pdfs   = 0;
+      ct.ppts   = 0;
+      ct.scorms = 0;
+      ct.tests  = 0;
+      Session.set('contentTracker', ct);
+      
+      
+      $( '.js-edit-button'  ).hide();
+      $( '#cb-toolbar-text' ).hide();
+      $( '#cb-toolbar-media').hide();
       
       //ADVANCE PAGE COUNTS
       t.page.set(   t.page.get()  + 1 );
       t.total.set(  t.total.get() + 1 );
       counter = t.page.get();
-      
-      tb.page  = t.page.get();
-      tb.total = t.total.get();
-      
-      Session.set( 'tbo', tb );
-      
-      $( '.js-edit-button' ).hide();
-      $( '#cb-toolbar-text' ).hide();
-      $( '#cb-toolbar-media' ).hide();
-      
+        
+      //tb.page  = t.page.get();
+      //tb.total = t.total.get();
       return;
     }
+//------------------------------------------/SAVE TITLES, TEXTS, IMAGES-------
 
-/*
-    CBTexts.cbTextReset();
-    CBTitle.cbTitleReset();
-    CBImage.cbImageReset();
-    CBVideo.cbVideoReset();
-*/
   
   return;
- //--------------------------------------------------------
+//----------------------------------/NEXT-----------------
   },
 
 
 
-  /********************************************************
-   * #NEW-COURSE-SAVE  ::(CLICK)::
-   *******************************************************/
+/********************************************************
+ * #NEW-COURSE-SAVE  ::(CLICK)::  [INITIAL DIALOG]
+ *******************************************************/
   'click #new-course-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
+
 
     //////////////////////////////////////////////////////////
     // HANDLE/HARDER ERROR CHECKING, NO ALLOW EMPTY FIELDS  //
@@ -970,16 +1056,12 @@ Template.courseBuilderPage.events({
       ct.scorms = 0;
       ct.tests  = 0;
       Session.set('contentTracker', ct);
-      
-      t.titlesTracker = [];
-      t.textsTracker  = [];
-      t.imagesTracker = [];
   
       // ADVANCE PAGE COUNTS
       t.page.set( 1 );
       t.total.set( 1 );
       
-      pages = [];
+      //pages = [];
 
       counter   = t.page.get(); 
       
@@ -1015,19 +1097,22 @@ Template.courseBuilderPage.events({
         return;
       }
       
-      let tb              = Session.get( 'tbo' );
-      tb.name             = name;
-      tb.credits          = Number(credits);
-      tb.passing_percent  = Number(percent);
-      tb.keywords         = keys;
-      tb.icon             = "/img/icon-4.png";
-      Session.set( 'tbo', tb );
-
+      //let tb              = Session.get( 'tbo' );
       
-    //built_id = BuiltCourses.findOne({ name: name })._id;
+      let my_id = P.insert({
+                            name:             name,
+                            credits:          Number(credits),
+                            passing_percent:  Number(percent),
+                            keywords:         keys,
+                            icon:             "/img/icon-4.png"
+                           });
+                           
+      //Session.set( 'tbo', tb );
 
-    t.$( '#intro-modal' ).modal( 'hide' );
-//-----------------------------------------------------------------------------
+      Session.set( 'my_id', my_id );
+    
+      t.$( '#intro-modal' ).modal( 'hide' );
+//-----------------------------------------------/INITIAL DIALOG------
   },
 
 
@@ -1049,34 +1134,24 @@ Template.courseBuilderPage.events({
       ct.scorms = 0;
       ct.tests  = 0;
       Session.set('contentTracker', ct);
-      t.titlesTracker = [];
-      t.textsTracker  = [];
-      t.imagesTracker = [];
   
       // ADVANCE PAGE COUNTS
       t.page.set( 1 );
       t.total.set( 1 );
       
-      pages = [];
+      //pages = [];
       
       let tb = Session.get( 'tbo' );
       
       tb          = {};
-      tb.titles   = [];
-      tb.texts    = [];
-      tb.images   = [];
-      tb.videos   = [];
-      tb.pdfs     = [];
-      tb.ppts     = [];
-      tb.scorms   = [];
+      //tb.titles   = [];
+      //tb.texts    = [];
+      //tb.images   = [];
+      //tb.videos   = [];
+      //tb.pdfs     = [];
+      //tb.ppts     = [];
+      //tb.scorms   = [];
       tb.tests    = [];
-      tb.name     = '';
-      tb.credits  = 0;
-      tb.passing_percent = '';
-      tb.keywords = '';
-      tb.icon     = '';
-      tb.page     = 0;
-      tb.total    = 0;
       
       counter     = t.page.get();
       
@@ -1093,11 +1168,28 @@ Template.courseBuilderPage.events({
   
   
   
-  /********************************************************
-   * #CB-SAVE  ::(CLICK)::
-   *******************************************************/
+/********************************************************
+ * #CB-SAVE  ::(CLICK)::  [SAVE COURSE]
+ *******************************************************/
   'click #cb-save'( e, t ) {
     e.preventDefault();
+    
+    let id  = Session.get('my_id')
+      , rec = `page-${t.page.get()}`
+      , d   = P.findOne({ _id: id })
+      , end = Pages.findOne({ _id: id });
+
+    delete d._id; 
+//Pages.insert({ pages:[{page:rec, objs: d.objects}], count: t.page.get()});
+Pages.insert({ objects: d.objects });
+return;
+    //HANDLE CASE WHERE USER CLICKS SAVE WITHOUT SAVING CURRENT PAGE:
+    if ( end == null ) {    
+      Pages.insert({ page: rec, objs: d.objects });
+    }
+    
+    P.remove({ _id: id });
+    Session.set( 'my_id', null );
     
     let uname = Students.findOne({ _id: Meteor.userId() }, { fullName:1 }).fullName;
     
@@ -1132,6 +1224,7 @@ Template.courseBuilderPage.events({
                                           name:         tb.name,
                                           pages:        pages,
                                           company_id:   cid,
+                                          page_id:      db_id,
                                           creator_type: role,
                                           creator_id:   uid,
                                           created_at:   cd,
@@ -1196,23 +1289,19 @@ Template.courseBuilderPage.events({
       ct.tests  = 0;
       Session.set('contentTracker', ct);
       
-      t.titlesTracker = [];
-      t.textsTracker  = [];
-      t.imagesTracker = [];
-  
       // ADVANCE PAGE COUNTS
       t.page.set( 1 );
       t.total.set( 1 );
       
-      pages = [];
+      //pages = [];
       tb    = {};
-      tb.titles  = [];
-      tb.texts   = [];
-      tb.images  = [];
-      tb.videos  = [];
-      tb.pdfs    = [];
-      tb.ppts    = [];
-      tb.scorms  = [];
+      //tb.titles  = [];
+      //tb.texts   = [];
+      //tb.images  = [];
+      //tb.videos  = [];
+      //tb.pdfs    = [];
+      //tb.ppts    = [];
+      //tb.scorms  = [];
       tb.tests   = [];
       
       Session.set( 'tbo', tb );
@@ -1242,7 +1331,7 @@ Template.courseBuilderPage.events({
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
     //Template.instance().page.set( 1 );
     //Template.instance().total.set( 1 );
-//-------------------------------------------------------------------
+//---------------------------------------------/SAVE COURSE-------
   },
   
   
@@ -1320,7 +1409,7 @@ Template.courseBuilderPage.events({
   'change #course-builder-scorm'( e, t ) {
     e.preventDefault();
     
-    CBSCORM.cbScormChange( e, t, contentTracker );
+    CBSCORM.cbScormChange( e, t, Session.get('contentTracker') );
 //---------------------------------------------------------
   },
   
@@ -1373,7 +1462,12 @@ Template.courseBuilderPage.events({
     e.preventDefault();
     e.stopImmediatePropagation();
     
-    CBPDF.cbPDFSave( e, t, Session.get('contentTracker'), Pdfs );
+    CBPDF.cbPDFSave(  e, 
+                      t, 
+                      t.page.get(),
+                      Pdfs,
+                      P
+                    );
   },
 //---------------------------------------------------------
 
@@ -1395,7 +1489,11 @@ Template.courseBuilderPage.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    CBImage.cbImageSave( e, t, Session.get('contentTracker') );
+    CBImage.cbImageSave(  e, 
+                          t,
+                          t.page.get(), 
+                          P 
+                        );
   },
 //---------------------------------------------------------
 
@@ -1405,7 +1503,11 @@ Template.courseBuilderPage.events({
    *******************************************************/
   'blur #added-title'( e, t ) {
     
-    CBTitle.cbAddedTitleBlur( e, t, Session.get('contentTracker'), t.titlesTracker );
+    CBTitle.cbAddedTitleBlur( e, 
+                              t, 
+                              t.page.get(),
+                              P
+                            );
   },
 //---------------------------------------------------------
 
@@ -1415,7 +1517,11 @@ Template.courseBuilderPage.events({
    *******************************************************/
   'blur #added-text'( e, t ) {
     
-    CBTexts.cbAddedTextBlur( e, t, Session.get('contentTracker'), t.textsTracker );
+    CBTexts.cbAddedTextBlur(  e, 
+                              t, 
+                              t.page.get(),
+                              P
+                            );
   },
 //---------------------------------------------------------
 
@@ -1425,7 +1531,11 @@ Template.courseBuilderPage.events({
    *******************************************************/
   'change #added-video'( e, t ) {
 
-    CBVideo.addedVideoURL( e, t, Session.get('contentTracker') );
+    CBVideo.addedVideoURL(  e, 
+                            t, 
+                            t.page.get(), 
+                            P 
+                          );
   },
 //---------------------------------------------------------  
   
@@ -1772,3 +1882,33 @@ function testForVideoOrPdfOnPage( ct ) {
     return false;
   }
 }
+
+/**********************************************************
+ * HANDLE PREVIOUS
+ *********************************************************/
+ function handlePrevious( o ) {
+
+
+    let funcs   = ''                    //FUNCS FROM CLASS TO POSITION ELEMENTS
+      , content = ''                    //RENDERED MARKUP (AND FUNCS) RETURNED
+      , cd                              //RENDERING CLASS INSTANCE
+      , mark_up = '';                   //RENDERED MARKUP RETURN VARIABLE
+
+
+    //if ( p.length == 0 ) return;
+    
+    //CREATE INSTANCE OF CBCreateDOM CLASS
+    cd        = new CBCreateDOM.CreateDOM( o );
+    
+    //RETRIEVE RESULT OF PROCESSING RETURNED DATABASE ELEMENTS
+    content   = cd.buildDOM();
+ 
+    //PULL OUT THE MARKUP RETURNED FROM CLASS
+    mark_up   = content[0];
+    
+    //PULL OUT THE JQUERY FUNCTIONS RETURNED FROM CLASS
+    funcs     = content[1];
+    
+    return [ mark_up, funcs ];
+ 
+ }

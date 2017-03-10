@@ -232,7 +232,7 @@ Template.importCV.events({
       slen  = raw_file.split('\n').length -1;
       
       if ( slen == 0 ) {
-        Bert.alert( "The format of data in the file is incorrect. Please click 'Need Help?' button to see the correct format of data.", 'danger');
+        Bert.alert( "The format of data in the file is incorrect. Please click 'Toggle Help?' button to see the correct format of data.", 'danger');
         return;
       }
       
@@ -243,7 +243,7 @@ Template.importCV.events({
           s1 += m;
         } else {
           if ( s[i].split(',').length - 1 != m ) {
-            Bert.alert( "The format of data in the file is incorrect. Please click 'Need Help?' button to see the correct format of data.", 'danger');
+            Bert.alert( "The format of data in the file is incorrect. Please click 'Toggle Help?' button to see the correct format of data.", 'danger');
             s1 = 0;
             return;
           } else {
@@ -259,7 +259,7 @@ Template.importCV.events({
 
     Meteor.setTimeout( function() {
         if ( s1 == 0 ) {
-          Bert.alert( "The format of data in the file is incorrect. Please click 'Need Help?' button to see the correct format of data.", 'danger');
+          Bert.alert( "The format of data in the file is incorrect. Please click 'Toggle Help?' button to see the correct format of data.", 'danger');
           return;
         }
         
