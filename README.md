@@ -4,6 +4,7 @@ Unip the project
 cd into it
 
 $ npm init
+
 $ meteor
 
 After it is running, before doing anything else, you need to seed the DB. Note the Dump folder in the project tree.
