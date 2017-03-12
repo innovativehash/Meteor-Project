@@ -1,6 +1,6 @@
 # collective-university
 
-Unzip the project cd into it
+Unzip the project cd into it:
 
 $ npm install 
 
