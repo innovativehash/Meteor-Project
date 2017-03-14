@@ -2488,6 +2488,8 @@ body.login {
     background: transparent;
     border: 0;
     box-shadow: 0 0 0;
+    width: initial;
+    z-index: 9999;
 }
 
 .popup-body {
@@ -3233,7 +3235,7 @@ body.login {
     font-style: normal;
 }
 
-.select2-container {
+.popup-body .select2-container {
     width: 100% !important;
 }
 
