@@ -171,7 +171,7 @@ Template.courseBuilderPage.onCreated( function() {
             
           case 'video':
             
-            if ( testForItemsOnPage( Session.get('contentTracker'), pv ))
+            if ( testForItemsOnPage( Session.get('contentTracker'), p ))
             {
               
              Bert.alert(  
