@@ -145,7 +145,19 @@ Template.courses.events({
       }, 'fast');
 //-------------------------------------------------------------------
   },
+  
+  /********************************************************
+   * .JS-CLICK-COURSE  ::(CLICK)::
+   *******************************************************/
+  'click .js-click-course'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
 
+      let href = $( e.currentTarget ).data( 'href' );
+
+      href = String( href );
+      window.location = href;
+  },
 
   /********************************************************
    * .JS-EDIT-COURSE  ::(CLICK)::
