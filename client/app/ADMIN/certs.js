@@ -309,6 +309,19 @@ Template.certs.events({
     });
 
     Bert.alert( 'Certificate Created!', 'success', 'growl-top-right' );
+    
+     Newsfeeds.insert({
+                 owner_id:       Meteor.userId(),
+                  poster:        Meteor.user().username, 
+                  poster_avatar:  Meteor.user().profile.avatar,
+                  type:           "Certificate",
+                  private:        false,
+                  news:           `A New Certification has been added: ${course_name}`,
+                  comment_limit:  3,
+                  company_id:     c_id,
+                  likes:          0,
+                  date:           new Date()       
+    }); 
 
     Meteor.setTimeout(function(){
       FlowRouter.go(  'admin-degrees-and-certifications', 

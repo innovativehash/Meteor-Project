@@ -7,7 +7,7 @@
 
 import { Tests }     from '../../../both/collections/api/tests.js';
 
-import '../../templates/admin/admin-test-creator.html';
+import './admin-test-creator.html';
 
 
 let Test      = new Mongo.Collection(null)

@@ -180,8 +180,8 @@ Template.studentCourseListing.events = {
         Meteor.call( 'updateCurrentCourses', cid );
       }, 300);
       
-      //FlowRouter.go( '/teacher/dashboard/course-view/' + Meteor.userId() + `?course=${course}`);
-      let queryParams = { builder: `${builder}`, course: `${cid}` };
+      //FlowRouter.go( '/teacher/dashboard/course-view/' + Meteor.userId() + `/?course=${course}`);
+      let queryParams = { course: `${cid}` };
       let params      = { _id: Meteor.userId() };
       let routeName   = "student-course-view";
       let path        = FlowRouter.path( routeName, params, queryParams );

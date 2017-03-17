@@ -27,6 +27,32 @@
 	<!-- <link rel="stylesheet" type="text/css" media="screen" href="https://formbuilder.online/assets/css/form-builder.min.css"> -->
 
 	<script src="/js/vendor/modernizr-2.8.3.min.js"></script>
+	
+<script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
+<!--
+<script type="text/javascript">
+
+	window.onload = function()
+	{
+	  
+		CKEDITOR.replace( 'editor1',
+		  {
+		    
+		  }).focus();
+	
+	}
+</script>
+-->
+<!--
+<script src='//cloud.tinymce.com/stable/tinymce.min.js'></script>
+<script>
+  window.onload = function() {
+    tinymce.init({
+      selector: '#editor1'
+    });
+  };
+</script>
+-->
 
 		<!-- <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script> -->
   </head>
@@ -157,7 +183,7 @@
 {{#if or isTeacher isAdmin}}
 
       {{> Template.dynamic template=main  }}
-      
+     
 {{/if}}
 
 
@@ -182,5 +208,6 @@ window.__lo_site_id = 74511;
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(wa, s);
   })();
 </script>
+
 </body>
 </template>

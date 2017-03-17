@@ -402,7 +402,57 @@ Meteor.methods({
                            );
   },
  //-----------------------------------------------------------------------------
- 
+
+
+  'saveBuiltCourse': function( 
+                               cname, /* course name    */
+                               c_id,  /* company_id     */
+                               role,  /* role of author */
+                               credits,
+                               keywords,
+                               passing_percent,
+                               icon,
+                               pages, /* object containing course */
+                               uname
+                              ) 
+  {
+    check( cname,           String );
+    check( c_id,            String );
+    check( role,            String );
+    check( credits,         Number );
+    check( keywords,        [String] );
+    check( passing_percent, Number );
+    check( icon,            String );
+    check( pages,           [Object] );
+    check( uname,           String );
+    
+     Newsfeeds.insert({
+                 owner_id:       Meteor.userId(),
+                  poster:         uname,
+                  poster_avatar:  Meteor.user().profile.avatar,
+                  type:           "new-course",
+                  private:        false,
+                  news:           `A New Course has been added: ${cname}`,
+                  comment_limit:  3,
+                  company_id:     c_id,
+                  likes:          0,
+                  date:           new Date()       
+    });   
+    
+    return BuiltCourses.insert({
+                  cname:             cname,
+                  company_id:       c_id,
+                  creator_type:     role,
+                  credits:          credits,
+                  keywords:         keywords,
+                  passing_percent:  passing_percent,
+                  icon:             icon,
+                  pages:            pages,
+                  created_at:       new Date()
+    });
+  },
+//-----------------------------------------------------------------------------
+  
  
   'saveBuiltCoursePdf': function( id, data, page ) {
     
@@ -449,6 +499,7 @@ Meteor.methods({
 //-----------------------------------------------------------------------------
 
 
+  
   'saveCompanyColor'( id, data ) {
     
     Companies.update( { _id: id }, 

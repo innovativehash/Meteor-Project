@@ -311,6 +311,19 @@ Template.degrees.events({
     });
 
     Bert.alert( 'Degree Created!', 'success', 'growl-top-right' );
+    
+      Newsfeeds.insert({
+                 owner_id:       Meteor.userId(),
+                  poster:         Meteor.user().username,
+                  poster_avatar:  Meteor.user().profile.avatar,
+                  type:           "Diplomas",
+                  private:        false,
+                  news:           `A New Degree has been added: ${course_name}`,
+                  comment_limit:  3,
+                  company_id:     c_id,
+                  likes:          0,
+                  date:           new Date()       
+    });    
 
     Meteor.setTimeout(function(){
       FlowRouter.go(  'admin-degrees-and-certifications', 

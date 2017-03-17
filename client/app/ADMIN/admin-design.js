@@ -101,7 +101,7 @@ Template.adminDesign.events({
     let myimage = new Image();
     fr.onload   = function() {
       ig        = this.result;
-
+/*
       //orig
       myimage.src = ig;
       console.log( 'img.width   = ' + myimage.width );
@@ -116,6 +116,7 @@ Template.adminDesign.events({
       console.log( 'img.height  = ' + myimage.height );
       b = new Buffer( foo, 'base64' ).length
       console.log( 'img.size ' + b );
+*/
     };
 
     // reads in image, calls back fr.onload
@@ -123,9 +124,9 @@ Template.adminDesign.events({
     Meteor.setTimeout( function() {
       if ( foo ) {
         let co_id = Students.findOne({ _id: Meteor.userId() }).company_id;
-        t.$( '#logo-preview' ).attr( "src", foo ); // ig
-
-        Meteor.call( 'saveCompanyLogo', co_id, foo );
+        t.$( '#logo-preview' ).attr( "src", ig ); // foo
+        t.$( '#logo-preview' ).css({width:'150px', height:'150px'});
+        Meteor.call( 'saveCompanyLogo', co_id, ig );
       } else {
           img = null;
       }
