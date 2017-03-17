@@ -10,8 +10,6 @@ import { Tests }        from '../../../both/collections/api/tests.js';
 
 import '../../templates/admin/courses.html';
 
-//import '../../../public/bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css';
-
 
 /*=========================================================
  * CREATED
@@ -113,20 +111,7 @@ Template.courses.events({
 //-------------------------------------------------------------------
   },
 
-
-  /*
-   * .JS-CREATE-TEST  ::(CLICK)::
-   
-  'click .js-create-test'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    FlowRouter.go( 'admin-test-creator', { _id: Meteor.userId() });
-//-------------------------------------------------------------------
-  },
-*/
-
-
+ 
   /********************************************************
    * #SEARCH-COURSES  ::(CHANGE)::
    * scroll to selected course

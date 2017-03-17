@@ -27,13 +27,11 @@ kadira:blaze-layout
 lookback:body-class
 twbs:bootstrap
 jquery@1.11.10
-msavin:mongol
 shell-server@0.2.1
 tmeasday:html5-history-api
 aldeed:collection2
 autopublish@1.0.7
 email@1.1.18
-arch:ace-editor
 themeteorchef:bert
 fortawesome:fontawesome
 fullcalendar:fullcalendar
@@ -42,3 +40,4 @@ http
 check
 deanius:promise
 manuel:reactivearray
+msavin:mongol
