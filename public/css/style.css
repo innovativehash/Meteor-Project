@@ -1706,7 +1706,7 @@ body.login {
 .profile-link {
     position: absolute;
     right: 20px;
-    top: -10px;
+    top: -20px;
 }
 
 .profile-link > a {

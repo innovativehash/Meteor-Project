@@ -547,7 +547,7 @@ body.main .logo a img, .footer-logo a img {width: 55px;}
 .advance-time-button {text-align: center;}
 .advance-time-button button {font-size: 20px;margin: 0 3px;padding: 5px 20px 8px;}
 .promotion-content {text-align: center;}
-.dashboard-body-area .container, .dashboard-header-area .container {padding-left: 15px;padding-right: 15px;}
+.dashboard-body-area .container, .dashboard-header-area .container {padding-left: 15px;padding-right: 15px;position:relative;}
 .dash-post-single-list .comment-text a,.dash-post-single-list .comment-text p {font-size: 15px;line-height: 20px;}
 .comment-text {width: 76%;}
 }
