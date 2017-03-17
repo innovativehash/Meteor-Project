@@ -31,9 +31,6 @@ let CoursesSchema = new SimpleSchema({
   'company_id': {
     type: [String]
   },
-  'built_id': {
-    type: String
-  },
   'public': {
     type: Boolean
   },

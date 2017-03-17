@@ -8,13 +8,14 @@ import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
 
 import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
-import { Courses }        from '../../../both/collections/api/courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
 
-import '../../templates/student/course-view.html';
+import * as CBCreateDOM from '../CB/createDOM.js';
+
+import './course-view.html';
 
 
-let b, c, len;
+let b, c, len, page, total;
 
 
 /*=========================================================
@@ -26,6 +27,8 @@ Template.courseView.onCreated( function() {
 
   this.page       = new ReactiveVar(1);
   this.total      = new ReactiveVar(1);
+  
+  this.render;
 //-------------------------------------------------------------------
 });
 
@@ -41,144 +44,112 @@ Template.courseView.onRendered( function() {
   $( '#cover' ).delay( 1000 ).fadeOut( 'slow',
                                       function() {
                                         $( "#cover" ).hide();
-                                        $( ".dashboard-header-area" ).fadeIn( 'slow' );
+                                        $( ".dashboard-header-area" )
+                                            .fadeIn( 'slow' );
                                       }
   );
 */
     //let self = this;
     //self.subscribe("name", function() {
     //console.log( FlowRouter.getQueryParam("builder"))
+
     
     this.autorun(function() { //self
       try {
+       let bc= BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" )}).fetch();
+       let pg_num  = Template.instance().page.get();
         
-        let no  = Template.instance().page.get()
-          , c   = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "builder" ) }).fetch()[0]
-          , cid = FlowRouter.getQueryParam( "course" );
+       Template.instance().total.set( bc[0].pages.length );
 
-        Template.instance().total.set( c.pages.length -1 );
+        //IS THE DATABASE PRESENT?
+        if ( bc && bc[0] && bc[0].pages ) {
+          render( bc );
+          
+        }
+      } catch(e) {
+        console.log( e );
+        return;
+      }
+    }); //autorun
+//-----------------------ON RENDERED------------AUTORUN---------------------- 
 
-        if ( c && c.pages ) {
-          
-          // REGULAR PAGES
-          if ( c && c.pages && c.pages[no].type == 'page' ) {
-            
-            $( '#test_v' ).hide();
-            
-            //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
-            if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == "test" ) 
-            {
-              //Scratch.insert({ id:  c.pages[no + 1].page });
-              Session.set('Scratch', c.pages[no+1].page );
-            }
-            
-            $( '#fb-template' ).empty();
-            
-            //let im  = document.createElement('img');
-            //let doc = document.getElementById('fb-template');
-            //im.src  = c.pages[no].page;
-            //doc.appendChild(im);
-          
-            $( '#fb-template' ).html( `<img id="pg" data="${c.pages[no].page}">` );
-            $( '#pg' ).attr( 'src', c.pages[no].page );
-            $( '#fb-template' ).show();  
-            
-          // VIDEO PAGES
-          } else if ( c && c.pages && c.pages[no].type == 'video' ) {
-            $( '#test_v' ).hide();
-            
-            //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
-            if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == "test" ) 
-            {
-              //Scratch.insert({ id:  c.pages[no + 1].page });
-              Session.set('Scratch', c.pages[no+1].page );
-            }
-            
-            Bert.alert({
-                        title:    'Loading Video',
-                        message:  'Give it a few seconds to load...',
-                        type:     'success',
-                        style:    'growl-top-right',
-                        icon:     'fa-youtube'
-                      });
-                      
-           
-            $( '#fb-template' ).empty();
-            $( '#fb-template' ).html( c.pages[no].url );
-            $( '#fb-template' ).show();
-          
-          // PDF PAGE
-          } else if ( c && c.pages && c.pages[no].type == 'pdf' ) {
-            $( '#test_v' ).hide();
-            
-            //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
-            if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == 'test' ) 
-            {
-              //Scratch.insert({ id: c.pages[no + 1].page });
-              Session.set('Scratch', c.pages[no+1].page );
-            }
+  /*****************
+   * RENDER FUNCTION
+   ****************/
+  render =   
+    (function( bc ){
+      let rtn_arr
+        , o       = [];
+      
+      try {
 
-            Bert.alert({
+       if ( bc[0].pages.length != undefined ) {
+          for( let i = 0, ilen = bc[0].pages.length; i < ilen; i++ ) {
+            if ( bc[0].pages[i].page_no == Template.instance().page.get() ){
+              $( '#test_v' ).hide();
+              $( '#fb-template' ).show();
+              
+              if ( bc[0].pages[i].type == 'test' ) {
+                Session.set('test', bc[0].pages[i].t_id );
+                $( '#fb-template' ).hide();
+                $( '#fb-template' ).empty();
+                $( '#test_v' ).show(); 
+                break;
+                
+              } else 
+                  if ( bc[0].pages[i].type == 'pdf') {
+                    Bert.alert({
                         title:    'Loading PDF',
                         message:  'Give it a few seconds to load...',
                         type:     'success',
                         style:    'growl-top-right',
                         icon:     'fa-youtube'
-                      });    
-                      
-            
-            $( '#fb-template' ).empty();
-            $( '#fb-template' ).html( c.pages[no].url );
-            $( '#fb-template' ).show();
-           
-          // SCORM PAGE
-          } else if ( c && c.pages && c.pages[no].type == 'scorm' ) {
-            $( '#test_v' ).hide();
-            
-            //PRE-CACHE TEST ID IF IT'S THE NEXt PAGE
-            if ( c && c.pages && c.pages[no + 1] && c.pages[no + 1].type == 'test' ) 
-            {
-              //Scratch.insert({ id: c.pages[no + 1].page });
-              Session.set('Scratch', c.pages[no+1].page );
-            }
-            
-            Bert.alert({
+                  }); 
+              } else
+                  if ( bc[0].pages[i].type == 'video' ) {
+                    Bert.alert({
+                        title:    'Loading Video',
+                        message:  'Give it a few seconds to load...',
+                        type:     'success',
+                        style:    'growl-top-right',
+                        icon:     'fa-youtube'
+                    });      
+              } else
+                  if ( bc[0].pages[i].type == 'scorm' ) {
+                    Bert.alert({
                         title:    'Loading SCORM',
                         message:  'Give it a few seconds of load...',
                         type:     'success',
                         style:    'growl-top-right',
-                      });
-                      
-            $( '#fb-template' ).empty();
-            $( '#fb-template' ).html( c.pages[no].url );
-            $( '#fb-template' ).show();
+                    });
+              }
             
-          // TEST PAGES
-          } else if ( c && c.pages && c.pages[no].type == 'test') {
-            
-            ////////////////////////////////////////////////////////////////////
-            //  NOTES:                                                        //
-            //  Need to pre-seed scratch db so that it is ready BEFORE this   //
-            //  this point is reached.  Then need to remove this record before//
-            //  Module is left, so that there is only ever one record in      //
-            //  scratch.  If there are x tests, preseed the first, remove     //
-            //  after test is taken.  Seed for the next, lather, rinse, repeat//
-            ////////////////////////////////////////////////////////////////////
-            
-            $( '#fb-template' ).hide();
-            $( '#fb-template' ).empty();
-            $( '#test_v' ).show();
-            
-          // WILL NEED TO CODE PP, PDF, SCORM
+              o.push( bc[0].pages[i] );
+            }
           }
+        } else {
+            o.push(bc[0].pages );
         }
-      } catch(e) {
-        //console.log( e );
-        return;
-      }
-    }); //autorun
+        
+        rtn_arr = handlePrevious( o );   
+        
+        let funcs = rtn_arr[1];
   
-//-------------------------------------------------------------------
+        //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
+        $('#fb-template').append( rtn_arr[0] ); 
+        
+        //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
+        for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
+          eval( funcs[i] );
+        } 
+  
+     } catch(ReferenceError) {
+        console.log( 'no record line:650' );
+      }
+  });
+ 
+  
+//------------------------------------------------------ON RENDERED-------------
 });
 
 
@@ -198,7 +169,7 @@ Template.courseView.helpers({
   cname: () => {
     let cid = FlowRouter.getQueryParam( "course" );
     try {
-      return Courses.find({ _id: cid }).fetch()[0].name;
+      return BuiltCourses.find({ _id: cid }).fetch()[0].cname;
     } catch(e) {
       return;
       //console.log(e);
@@ -215,10 +186,10 @@ Template.courseView.helpers({
   },
 
   page: () =>
-    Template.instance().page.get(),
+   Template.instance().page.get(),
 
   total: () =>
-    Template.instance().total.get()
+   Template.instance().total.get()
 //-------------------------------------------------------------------
 });
 
@@ -334,3 +305,33 @@ Template.courseView.events({
 //-------------------------------------------------------------------
   }
 });
+
+/**********************************************************
+ * HANDLE PREVIOUS
+ *********************************************************/
+ function handlePrevious( o ) {
+
+
+    let funcs   = ''                    //FUNCS FROM CLASS TO POSITION ELEMENTS
+      , content = ''                    //RENDERED MARKUP (AND FUNCS) RETURNED
+      , cd                              //RENDERING CLASS INSTANCE
+      , mark_up = '';                   //RENDERED MARKUP RETURN VARIABLE
+
+
+    //if ( p.length == 0 ) return;
+    
+    //CREATE INSTANCE OF CBCreateDOM CLASS
+    cd        = new CBCreateDOM.CreateDOM( o );
+    
+    //RETRIEVE RESULT OF PROCESSING RETURNED DATABASE ELEMENTS
+    content   = cd.buildDOM();
+ 
+    //PULL OUT THE MARKUP RETURNED FROM CLASS
+    mark_up   = content[0];
+    
+    //PULL OUT THE JQUERY FUNCTIONS RETURNED FROM CLASS
+    funcs     = content[1];
+    
+    return [ mark_up, funcs ];
+ 
+ }
