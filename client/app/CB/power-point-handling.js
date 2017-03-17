@@ -90,7 +90,7 @@ console.log( e.currentTarget );           //element
    * id = add-powerpoint
    * powerpoint dialog
    */
-  export function cbPowerPointSave( e, t, tbo, contentTracker, PowerPoints ) {
+  export function cbPowerPointSave( e, t, tbo, PowerPoints ) {
     e.preventDefault();
     
     //------------------------------------------------------------
@@ -103,6 +103,10 @@ console.log( e.currentTarget );           //element
     
     console.log('save');
     console.log( pp_id );
+    
+    let ct = Session.get('contentTracker');
+    ct.page_no[page_no].ppts++;
+    Session.set('contentTracker', ct );
     
     if ( pp ) {
       Bert.alert('Please stand-by. Processing', 'success' );
