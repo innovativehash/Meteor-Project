@@ -468,7 +468,7 @@ body.main .logo a img, .footer-logo a img {width: 55px;}
 .search-box button#close-search {margin-top: 3px;}
 .search-box input {width: 60%;}
 .search-box {margin-top: 20px;width: 100%;}
-.search-list table tbody th {font-size: 11px;text-align: right;}
+.search-list table tbody th {font-size: 25px;text-align: right;}
 .search-list table tbody th img {width: 20px;margin-right: 5px;float: none;position: relative;}
 .search-list table tbody td {font-size: 11px;text-align: right;}
 .search-list table tbody td button {margin: 3px 3px;}
