@@ -64,6 +64,11 @@ p[class="type-Birthday"] {
   
   
   {{#if or isAdmin isTeacher }}
+    <button id='create-training-event-button'
+            class="btn btn-success"
+            style="margin-bottom:10px;">
+      ADD EVENT
+    </button>
     {{> addEditEventModal }}
   {{/if}}
   <!-- <div><a class="test-ics">Add to Calendar</a></div> -->
