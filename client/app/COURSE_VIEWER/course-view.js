@@ -83,7 +83,7 @@ Template.courseView.onRendered( function() {
       
       try {
 
-       if ( bc[0].pages.length != undefined ) {
+       if ( (bc && bc[0] && bc[0].pages && bc[0].pages.length) != undefined ) {
           for( let i = 0, ilen = bc[0].pages.length; i < ilen; i++ ) {
             if ( bc[0].pages[i].page_no == Template.instance().page.get() ){
               $( '#test_v' ).hide();

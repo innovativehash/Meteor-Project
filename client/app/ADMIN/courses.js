@@ -289,7 +289,7 @@ Template.courses.events({
     e.stopImmediatePropagation();
 
     //t.currentScreen.set('courseBuilder');
-    FlowRouter.go( 'admin-course-builder', { _id: Meteor.userId() });
+    FlowRouter.go( `/admin/dashboard/course-builder/${Meteor.userId()}/?rtn=courses` );
   }
 //-------------------------------------------------------------------
 });

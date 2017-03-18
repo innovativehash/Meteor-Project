@@ -38,7 +38,9 @@
 
                 <button class = "js-library-course-builder">Build Course</button>
 
-                <!-- <button class="js-add-course-from-lib">Add From Library</button> -->
+                <!-- <button class="js-add-course-from-lib">
+                        Add From Library
+                        </button> -->
 
                 <button class       = "js-load-scorm"
                         type        = "button"
@@ -49,7 +51,9 @@
                 </button>
 
                 <div class = "col-sm-4 col-sm-offset-8">
-                  <select id = "search-courses" data-placeholder="Search Courses" style = "width:auto;">
+                  <select id = "search-courses" 
+                          data-placeholder="Search Courses" 
+                          style = "width:auto;">
                     <option></option>
                     
                     {{#with courses}}
@@ -180,7 +184,7 @@
                       <th class = "name">
                         <img src = "{{icon}}" alt="">
                         <a  id = "{{course_id}}" 
-                              href = "/admin/dashboard/course-viewer/{{uid}}?builder={{built_id}}&course={{_id}}">
+                              href = "/admin/dashboard/course-viewer/{{uid}}?course={{_id}}">
                             {{name}}
                           </a>
                       </th>
