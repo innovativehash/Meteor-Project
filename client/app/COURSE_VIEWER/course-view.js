@@ -59,7 +59,7 @@ Template.courseView.onRendered( function() {
        let bc= BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" )}).fetch();
        let pg_num  = Template.instance().page.get();
         
-       Template.instance().total.set( bc[0].pages.length );
+       Template.instance().total.set( bc[0] && bc[0].pages && bc[0].pages.length );
 
         //IS THE DATABASE PRESENT?
         if ( bc && bc[0] && bc[0].pages ) {
@@ -223,11 +223,12 @@ Template.courseView.events({
 
     Session.set('Scratch', '');
     
-    if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+    if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+    } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin ) {
       FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles && Meteor.user().roles.student ) {
+      console.log('in admin');
+    } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
     }
     return;
