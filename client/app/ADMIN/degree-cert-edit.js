@@ -197,6 +197,10 @@ Template.degreeCertEdit.events({
       , ary           = []
       , order;
     
+    if ( cname == '' ) {
+      Bert.alert('Degree name is required!', 'danger');
+      return;
+    }
     order = $( '#dc-current-courses' ).sortable('toArray');
 
     if ( order == '' ) {
