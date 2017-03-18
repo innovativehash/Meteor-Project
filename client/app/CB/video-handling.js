@@ -28,7 +28,7 @@
 ////////////////////////////
 //    VIDEO MUST BE ON IT'S OWN page FOR NOW
 ////////////////////////////
-
+// ([a-z][A-Z])\w+ ["oTugjssqOtO", "oT"] 'https://www.youtube.com/embed/oTugjssqOT0'
     let vid   = t.$( '#added-video' ).val()
       , m     = /(v=)(.*)(#)?/g
       , match = m.exec(vid)
@@ -37,8 +37,14 @@
       , conv
       //, tb    = Session.get( 'tbo' )
       , my_id = Session.get('my_id');
-
-    conv = match[2];
+    
+    if ( match == null ) {
+      m = /([a-z][A-Z])\w+/;
+      match = m.exec(vid);
+      conv = match[0];
+    } else {
+      conv = match[2];
+    }
     
     //IS THERE AN &LIST IN THE VIDEO ID?
     patt = new RegExp("[?&]list");

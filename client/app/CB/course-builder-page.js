@@ -42,7 +42,8 @@ let contentTracker
   , db_id           = ''
   , editor1
   , page      //this
-  , total;    //this
+  , total     //this
+  , rtn;
     
 
 
@@ -58,6 +59,9 @@ Template.courseBuilderPage.onCreated( function() {
 
   $( '#cover' ).show();
 
+console.log( FlowRouter.getQueryParam('rtn'));
+  this.rtn    = new ReactiveVar( FlowRouter.getQueryParam('rtn') );
+console.log( this.rtn.get() );
   this.page   = new ReactiveVar(1)
   this.total  = new ReactiveVar(1);
 
@@ -464,6 +468,14 @@ Template.courseBuilderPage.onRendered( function() {
  *=======================================================*/
 Template.courseBuilderPage.helpers({
 
+  cbNavBack: () => {
+    if ( Template.instance().rtn.get() == 'library' ) {
+      console.log( Template.instance().rtn.get() );
+      return 'Back To Library';
+    } else if ( Template.instance().rtn.get() == 'courses' ) {
+      return 'Back To Courses';
+    }
+  },
   
   fname: () => {
     try {
@@ -656,13 +668,13 @@ Template.courseBuilderPage.events({
     $( '#cb-media-toolbar' ).hide();
     
     if (
-        ct.page_no[page_no].titles == 0 &&
-        ct.page_no[page_no].texts  == 0 &&
-        ct.page_no[page_no].images == 0 &&
-        ct.page_no[page_no].pdfs   == 0 &&
-        ct.page_no[page_no].videos == 0 &&
-        ct.page_no[page_no].ppts   == 0 &&
-        ct.page_no[page_no].scorms == 0
+        ct && ct.page_no && ct.page_no[page_no].titles == 0 &&
+        ct && ct.page_no && ct.page_no[page_no].texts  == 0 &&
+        ct && ct.page_no && ct.page_no[page_no].images == 0 &&
+        ct && ct.page_no && ct.page_no[page_no].pdfs   == 0 &&
+        ct && ct.page_no && ct.page_no[page_no].videos == 0 &&
+        ct && ct.page_no && ct.page_no[page_no].ppts   == 0 &&
+        ct && ct.page_no && ct.page_no[page_no].scorms == 0
         )
     {
       t.page.set( t.page.get() - 1 );
@@ -896,6 +908,7 @@ console.log( P.find({}).fetch() );
     e.preventDefault();
     e.stopImmediatePropagation();
       
+    
     t.$( '#cb-leave-confirm' ).modal('show');
     return;
 //-------------------------------------------------------------------
@@ -925,14 +938,14 @@ console.log( P.find({}).fetch() );
       // CLEAR THE CONTENT TRACKER
     if ( ! _.isUndefined( Session.get('contentTracker') ) ) {
         let ct = Session.get('contentTracker');
-        ct.titles = 0;
-        ct.texts  = 0;
-        ct.images = 0;
-        ct.videos = 0;
-        ct.pdfs   = 0;
-        ct.ppts   = 0;
-        ct.scorms = 0;
-        ct.tests  = 0;
+        ct && (ct.titles = 0);
+        ct && (ct.texts  = 0);
+        ct && (ct.images = 0);
+        ct && (ct.videos = 0);
+        ct && (ct.pdfs   = 0);
+        ct && (ct.ppts   = 0);
+        ct && (ct.scorms = 0);
+        ct && (ct.tests  = 0);
         Session.set('contentTracker', ct);
       }  
       // ADVANCE PAGE COUNTS
@@ -952,10 +965,18 @@ console.log( P.find({}).fetch() );
     //NECESSARY DELAY OR DIALOG CAUSES DISPLAY ISSUES ON DESTINATION
     Meteor.setTimeout(function(){
       try {
-        if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
-          FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-        } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
-          FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+        if ( Template.instance().rtn.get() == 'courses' ) {
+          if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+            FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+          } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+            FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+          }
+        } else if ( Template.instance().rtn.get() == 'library' ) {
+          if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+            FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+          } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+            FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
+          }         
         }
       } catch(e) {
         console.log(e);
@@ -2078,10 +2099,10 @@ if ( ! ct.page_no[counter] ) {
       
       t.$( '#intro-modal' ).modal( 'hide' );
       Meteor.setTimeout(function(){
-        if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+        if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin ) {
           FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
           return;
-        } else if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+        } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
           FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
           return;
         }

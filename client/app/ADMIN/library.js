@@ -228,7 +228,7 @@ Template.library.events({
   'click .js-library-course-builder'( e, t ) {
     e.preventDefault();
     
-    FlowRouter.go( 'admin-course-builder', { _id: Meteor.userId() });
+    FlowRouter.go( `/admin/dashboard/course-builder/${Meteor.userId()}/?rtn=library`);
   },
   
   
