@@ -133,7 +133,11 @@
 
                           <div class="row">
                             <div class="col-sm-4">
-                              <span style="margin-left:50px;"><em><strong>Credits</strong></em></span>
+                              <span style="margin-left:50px;">
+                                <em>
+                                  <strong>Credits</strong>
+                                </em>
+                              </span>
                             </div>
                             <div class="col-sm-7">
                               
@@ -188,7 +192,9 @@
                     {{#with courses}}
                     {{#each this}}
                     
-                      <tr class="js-click-course" id = "{{_id}}" data-href="/admin/dashboard/course-viewer/{{uid}}?builder={{built_id}}&course={{_id}}">
+                      <tr class="js-click-course" 
+                          id = "{{_id}}" 
+                          data-href="/admin/dashboard/course-viewer/{{uid}}/?course={{_id}}">
                         
                         <th class = "name">
                           <img src = "{{icon}}" alt="">
