@@ -158,3 +158,9 @@ Template.internalTrainingCalendar.onRendered(function(){
   });
 
 });
+
+Template.internalTrainingCalendar.events({
+    'click #create-training-event-button'( e, t ) {
+    $( '#add-edit-event-modal' ).modal( 'show' );
+  },
+})
