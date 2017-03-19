@@ -126,3 +126,16 @@ Template.home.onRendered(function() {
       });
   
 });
+
+
+Template.home.events({
+  
+  'click #home-request-tour-btn'( e, t ) {
+    let email = $( '#home-email-info' ).val().trim();
+    Meteor.call('sendEmail',  'molly@collectiveuniversity.com', 
+                              'mrroboto@cuwebsite.com',
+                              'Request Tour',
+                              `Autognerated Email from collectiveuniversity.com the following contact is requesting a tour: ${email}`);
+  },
+  
+});
