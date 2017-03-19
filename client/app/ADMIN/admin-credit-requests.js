@@ -92,6 +92,7 @@ Template.adminCreditRequests.events({
 
     BootstrapDialog.show({
       title: "Approve Student Credit",
+      closable: false,
       message:   $( '<p>How many credits would you like to award?</p><input id="credits" placeholder="credits..">' ),
       buttons: [{
               label: 'Ok',
@@ -115,7 +116,20 @@ Template.adminCreditRequests.events({
                     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
                   }, 1500);
               }
-      }]
+      },
+      {
+              label: 'CANCEL',
+              cssClass: 'btn-danger',
+              action: function( dialog ) {
+                BootstrapDialog.confirm('If you cancel, credit will not be given, Ok?', function(result){
+                    if(result) {
+                        dialog.close(); //alert('Yup.');
+                    }else {
+                        //alert('Nope.');
+                    }
+                });                
+              }
+      }]//Buttons
     });
 //-------------------------------------------------------------------
   },
