@@ -10,7 +10,7 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 
 import { Students }   from '../../../both/collections/api/students.js';
 
-import '../../templates/mainMenu/login.html';
+import './login.html';
 
 
 /*

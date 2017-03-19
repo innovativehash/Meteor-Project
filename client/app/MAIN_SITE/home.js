@@ -20,7 +20,7 @@ import "../../../public/js/source/helpers/jquery.fancybox-media.js";
 */
 import "../../../public/bower_components/ekko-lightbox/dist/ekko-lightbox.min.css";
 import "../../../public/bower_components/ekko-lightbox/dist/ekko-lightbox.min.js";
-import '../../templates/home/home.html';
+import './home.html';
 
 /*
  * CREATED

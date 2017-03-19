@@ -1,6 +1,13 @@
 <template name="signup">
 <!-- signup Template -->
 <!-- Nicholas Sardo <nsardo@aol.com> -->
+  <style>
+
+  .ui-tooltip {
+    background-color: black;
+    width: 210px;
+  }
+  </style>
   <div class="signingup-area">
     <div class="container">
       <div class="row">
@@ -72,18 +79,27 @@
               <div class="row">
                 <div class="col-sm-6">
                   <label for="password">
-                    Password
+                    Password<br>
+                    <span style="font-size:8px;">
+                      <bold></bold>
+                    </span>
                   </label>
-                  <input  id="password" 
-                          type="text" 
+                  <input  id="password"
+                          name="password"
+                          type="text"
+                          data-toggle="tooltip"
+                          title="Must be a min of 8 characters, and include at least one each of: numbers, lowercase letters, uppercase letters, and a punctuation character"
                           style="color: DarkBlue" required>
                 </div>
                 <div class="col-sm-6">
                   <label for="cpassword">
                     Confirm Password
                   </label>
-                  <input  id="cpassword" 
-                          type="text" 
+                  <input  id="cpassword"
+                          name="cpassword"
+                          type="text"
+                          data-toggle="tooltip"
+                          title="Must be a min of 8 characters, and include at least one each of: numbers, lowercase letters, uppercase letters, and a punctuation character"
                           style="color: DarkBlue" required>
                 </div>
               </div>

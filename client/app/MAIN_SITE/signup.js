@@ -11,8 +11,16 @@ import { Students }   from '../../../both/collections/api/students.js';
 import { Companies }  from '../../../both/collections/api/companies.js';
 
 
-import '../../templates/mainMenu/signup.html';
+import './signup.html';
 
+/*
+ * ON CREATED
+ */
+ Template.signup.onCreated(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+//-------------------------------------------------------------------
+ });
+ 
 
 /*
  * EVENTS
@@ -28,11 +36,12 @@ Template.signup.events({
     let fname       = $( '#fname' ).val().trim() // OR e.target.fname.value
       , lname       = $( '#lname' ).val().trim()
       , email       = $( '#email' ).val().trim()
+      , cemail      = $( '#cemail' ).val().trim()
       , password    = $( '#password' ).val().trim()
+      , cpassword   = $( '#cpassword').val().trim()
       , company     = $( '#company' ).val().trim()
       , phone       = $( '#phone' ).val().trim()
       , university  = $( '#university' ).val().trim()
-      , text
       , opt         = 'admin'
       , dept        = 'admin'
       , email_id
@@ -40,7 +49,20 @@ Template.signup.events({
     
 
     
-    // ALL FIELDS MUST BE FILLED OUT OR ERROR
+    //EMAIL'S AND PASSORDS MUST MATCH 
+    if ( email !== cemail ) {
+      Bert.alert("Your email's donot match!", 'danger' );
+      return;
+    }
+    if ( password !== cpassword ) {
+      Bert.alert('Your passwords donot match!', 'danger');
+      return;
+    }
+    
+    if ( ! testPassword( password ) ) {
+      Bert.alert('Must be a min of 8 characters, and include at least one each of: numbers, lowercase letters, uppercase letters, and a punctuation character', 'danger');
+    }
+    
     try { 
       company_id = Companies.findOne({ name: company });  //don't allow duplicate companies
       email_id   = Students.findOne({ email: email });    //don't allow duplicate emails
@@ -70,3 +92,25 @@ Template.signup.events({
 //-------------------------------------------------------------------
   },
 });
+
+function testPassword( pw ) {
+  //CAPITOL LETTERS
+  let caps = pw.match(/[A-Z]/i);
+  //LOWERCASE LETTERS
+  let lows = pw.match(/[a-z]/i);
+  //NUMBERS
+  let nums = /[0-9]/.test(pw);
+  //PUNCTUATION
+  let punc = /[\32-\151]/.test(pw);
+  //LENGTH
+  let len = pw.length;
+  
+  if ( caps && lows && nums && punc && (len >= 8) ) {
+    console.log('true');
+    return true;
+  } else {
+    console.log('false');
+    return false;
+  }
+    
+}
