@@ -12,7 +12,7 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 import { Courses }     from '../../../both/collections/api/courses.js';
 import { Students }    from '../../../both/collections/api/students.js';
 
-import '../../templates/student/student-records.html';
+import './student-records.html';
 
 
 /*

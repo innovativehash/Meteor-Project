@@ -10,7 +10,7 @@ import { Template }   from 'meteor/templating';
 import { Students }   from '../../../both/collections/api/students.js';
 import { Events }     from '../../../both/collections/api/events.js';
 
-import '../../templates/student/student-dashboard.html';
+import './student-dashboard.html';
 
 
 /*

@@ -8,7 +8,7 @@ import { Events }      from '../../../both/collections/api/events.js';
 import { Students }    from '../../../both/collections/api/students.js';
 import { TimeZones }   from '../../../both/collections/api/timezones.js';
 
-import '../../templates/admin/add-edit-event-modal.html';
+import './add-edit-event-modal.html';
 
 
 

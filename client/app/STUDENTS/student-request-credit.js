@@ -12,7 +12,7 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Students }     from '../../../both/collections/api/students.js';
 
-import '../../templates/student/student-request-credit.html';
+import './student-request-credit.html';
 
 
 /*
