@@ -123,10 +123,12 @@ Template.adminCreditRequests.events({
                                     });
   
                     Newsfeeds.remove({ _id: recordId });                    
+                    
                     dialog.close();
 
                     Meteor.setTimeout(function() {
                       FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+                      Bert.alert( `Student assigned ${credits} for training.`, 'success');
                     }, 1500);
                   } 
               }
