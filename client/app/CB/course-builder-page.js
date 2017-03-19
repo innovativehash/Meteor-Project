@@ -59,9 +59,7 @@ Template.courseBuilderPage.onCreated( function() {
 
   $( '#cover' ).show();
 
-console.log( FlowRouter.getQueryParam('rtn'));
   this.rtn    = new ReactiveVar( FlowRouter.getQueryParam('rtn') );
-console.log( this.rtn.get() );
   this.page   = new ReactiveVar(1)
   this.total  = new ReactiveVar(1);
 
@@ -965,13 +963,13 @@ console.log( P.find({}).fetch() );
     //NECESSARY DELAY OR DIALOG CAUSES DISPLAY ISSUES ON DESTINATION
     Meteor.setTimeout(function(){
       try {
-        if ( Template.instance().rtn.get() == 'courses' ) {
+        if ( t.rtn.get() == 'courses' ) {
           if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
             FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
           } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
             FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
           }
-        } else if ( Template.instance().rtn.get() == 'library' ) {
+        } else if ( t.rtn.get() == 'library' ) {
           if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
             FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
           } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
@@ -980,7 +978,7 @@ console.log( P.find({}).fetch() );
         }
       } catch(e) {
         console.log(e);
-        console.log( 'cb lineno: 570' );
+        console.log( 'cb lineno: 983' );
       }
     }, 500);
 //---------------------------------------------------------  
@@ -1654,8 +1652,8 @@ if ( ! ct.page_no[counter] ) {
         return;
       }
       
-      if ( Meteor.user().roles.teacher )  role = 'teacher';
-      if ( Meteor.user().roles.admin )    role = 'admin';
+      if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher )  role = 'teacher';
+      if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin )    role = 'admin';
       
       if ( keys == null ) keys = [""];
       Session.set('cinfo', {
