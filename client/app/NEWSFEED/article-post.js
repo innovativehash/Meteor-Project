@@ -8,7 +8,7 @@ import { Template }   from 'meteor/templating';
 
 //import { Students }   from '../../../both/collections/api/students.js';
 
-import '../../templates/shared/article-post.html';
+import './article-post.html';
 
 
 Template.articlePost.events({

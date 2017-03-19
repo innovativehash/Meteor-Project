@@ -16,7 +16,7 @@ import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Comments  }    from '../../../both/collections/api/comments.js';
 import { Students  }    from '../../../both/collections/api/students.js';
 
-import '../../templates/shared/newsfeed.html';
+import './newsfeed.html';
 
 
 /*
@@ -53,9 +53,13 @@ Template.newsfeed.helpers({
     //var feed  = Newsfeeds.find({ owner_id: owner}, { sort: { date: -1 } }).fetch();
     
     try {
-      let feed = Newsfeeds.find({ $or:[  { private: false, company_id: Meteor.user().profile.company_id}, {poster:"SuperAdmin"}] }, 
-                                  { sort: { date: -1 } }).fetch();           //most recent at top
-  
+      //ALL RECORDS FOR THIS COMPANY, OR ALL FROM SUPERADMIN
+     // let feed = Newsfeeds.find({ $or:[  { private: false, company_id: Meteor.user().profile.company_id}, {poster:"SuperAdmin"}] }, 
+     //                             { sort: { date: -1 } }).fetch();           //most recent at top
+     
+      //ALL RECORDS FOR THIS COMPANY, NEWEST FIRST 
+      let feed = Newsfeeds.find({ private: false, company_id: Meteor.user().profile.company_id},
+                                { sort: {date: -1}}).fetch();
       for( let i = 0; i < feed.length; i++ ) {
         var com = Comments.find(  { owner_id: feed[i]._id }, 
                                   { sort: { date: -1 } }).fetch(); //most recent at top
