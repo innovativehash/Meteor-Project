@@ -10,6 +10,7 @@ import { ReactiveVar }  from 'meteor/reactive-var';
 
 import { Courses }      from '../../../both/collections/api/courses.js';
 import { Diplomas }     from '../../../both/collections/api/diplomas.js';
+import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 
 import '../../templates/admin/degrees.html';
 

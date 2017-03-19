@@ -13,7 +13,7 @@ import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Students }     from '../../../both/collections/api/students.js';
 import { Companies }    from '../../../both/collections/api/companies.js';
 
-import '../../templates/shared/student-dashboard-layout.html';
+import './student-dashboard-layout.html';
 
 
 /*
@@ -162,7 +162,7 @@ Template.studentDashboardLayout.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if ( Meteor.user().roles.student ) {
+    if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
     } else if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
@@ -178,9 +178,9 @@ Template.studentDashboardLayout.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if ( Meteor.user().roles && Meteor.user().roles.student ) {
+    if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+    } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
     }
 //-------------------------------------------------------------------
@@ -194,9 +194,9 @@ Template.studentDashboardLayout.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if ( Meteor.user().roles.student ) {
+    if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-request-credit', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles.teacher ) {
+    } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-request-credit', { _id: Meteor.userId() });
     }
 //-------------------------------------------------------------------
@@ -210,9 +210,9 @@ Template.studentDashboardLayout.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if ( Meteor.user().roles.student ) {
+    if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-records', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles.teacher ) {
+    } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-records', { _id: Meteor.userId() });
     }
 //-------------------------------------------------------------------
@@ -226,9 +226,9 @@ Template.studentDashboardLayout.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if ( Meteor.user().roles.student ) {
+    if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-training-calendar', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles.teacher ) {
+    } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-training-calendar', { _id: Meteor.userId() });
     }
 //-------------------------------------------------------------------

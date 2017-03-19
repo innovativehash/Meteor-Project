@@ -159,19 +159,20 @@ Template.courses.events({
 
       BootstrapDialog.show({
         title: "Edit Course",
-        message:  '<div class="pop-up-area students">' +
-                      '<div class="popup-body">' +
-                          '<div class="row">' +
+        message:  //'<div class="pop-up-area students">' +
+                      //'<div class="popup-body">' +
+                         // '<div class="row">' +
                               '<div class="col-sm-6">' +
                                 '<label>Course Name:</label>'+
                                   '<input class="js-name" type="text" placeholder="' + c.name + '"' + '/>' +
                                 '</div>' +
-                                '<div class="row">' +
+                               // '<div class="row">' +
                                     '<div class="col-sm-6">' +
                                       '<label>Credits:</label>' +
                                         '<input class="js-credits" type="text" placeholder="' + c.credits + '"' + '/>' +
-                                      '</div>' +
-                                  '</div></div>',
+                                     // '</div>' +
+                                 // '</div>' +
+                                  '</div>',
         buttons: [
           {
             label: 'Commit Edit',

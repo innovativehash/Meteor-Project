@@ -134,11 +134,21 @@ Template.studentRequestCredit.events({
     details = $( '#details').val().trim();
     option  = $( '.js-credit-select option:selected' ).text();
 
+    if ( details == '' ) {
+      Bert.alert('You must enter a description of the training!', 'danger');
+      return;
+    } else
+        if ( option == "Choose One" ) {
+          Bert.alert('You must select the type of training received in the dropdown', 'danger');
+          return;
+    }
+
     //t.view.parentView.parentView.parentView._templateInstance.
     $( '.credit-request' ).hide();
 
     let name = Students.findOne({ _id: Meteor.userId() }, { fullName:1 }).fullName;
 
+    Bert.alert('Credit Request successfully sent', 'success' );
     Newsfeeds.insert({
       owner_id: Meteor.userId(),
       poster:   name,
@@ -155,7 +165,6 @@ Template.studentRequestCredit.events({
       //Template.instance().parentview.message = "sent";
       $( '#details' ).val('');
       $( '.js-credit-select' ).prop('selectedIndex', 0);
-      Bert.alert('Credit Request successfully sent', 'success' );
       FlowRouter.go( 'student-dashboard', {_id: Meteor.userId() });
     }, 200);
 //-------------------------------------------------------------------

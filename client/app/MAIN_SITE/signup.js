@@ -51,16 +51,17 @@ Template.signup.events({
     
     //EMAIL'S AND PASSORDS MUST MATCH 
     if ( email !== cemail ) {
-      Bert.alert("Your email's donot match!", 'danger' );
+      Bert.alert("Your email's do not match!", 'danger' );
       return;
     }
     if ( password !== cpassword ) {
-      Bert.alert('Your passwords donot match!', 'danger');
+      Bert.alert('Your passwords do not match!', 'danger');
       return;
     }
     
     if ( ! testPassword( password ) ) {
       Bert.alert('Must be a min of 8 characters, and include at least one each of: numbers, lowercase letters, uppercase letters, and a punctuation character', 'danger');
+      return;
     }
     
     try { 

@@ -128,7 +128,7 @@ Template.adminCreditRequests.events({
 
                     Meteor.setTimeout(function() {
                       FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-                      Bert.alert( `Student assigned ${credits} for training.`, 'success');
+                      Bert.alert( `Student assigned ${credits} credits for training.`, 'success');
                     }, 1500);
                   } 
               }
