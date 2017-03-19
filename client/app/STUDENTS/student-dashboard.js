@@ -18,7 +18,7 @@ import './student-dashboard.html';
  */
 Template.studentDashboard.onCreated( function() {
 
-  $("#cover").show();
+  //$("#cover").show();
 
 });
 
@@ -27,12 +27,12 @@ Template.studentDashboard.onCreated( function() {
  * RENDERED
  */
 Template.studentDashboard.onRendered( function(){
-  
+/*  
   $( '#cover' ).delay( 500 ).fadeOut( 'slow', function() {
     $( "#cover" ).hide();
     $( ".dashboard-header-area" ).fadeIn( 'slow' );
   });
-  
+*/
 });
 
 Template.studentDashboard.helpers({

@@ -137,10 +137,6 @@ Template.studentRequestCredit.events({
     //t.view.parentView.parentView.parentView._templateInstance.
     $( '.credit-request' ).hide();
 
-    //todo:
-    // NOTICE
-    // 'You sent a request for credit.  The Admin will let you know...'
-
     let name = Students.findOne({ _id: Meteor.userId() }, { fullName:1 }).fullName;
 
     Newsfeeds.insert({
@@ -159,6 +155,7 @@ Template.studentRequestCredit.events({
       //Template.instance().parentview.message = "sent";
       $( '#details' ).val('');
       $( '.js-credit-select' ).prop('selectedIndex', 0);
+      Bert.alert('Credit Request successfully sent', 'success' );
       FlowRouter.go( 'student-dashboard', {_id: Meteor.userId() });
     }, 200);
 //-------------------------------------------------------------------
