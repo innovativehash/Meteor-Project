@@ -68,11 +68,20 @@ Template.courseBuilderLayout.events({
 
     Session.set( 'cb-leave', 'dashboard' );
     if ( FlowRouter.getRouteName() == 'admin-test-creator' ) {
-      $( '#cb-leave-warning-text' ).html('By clicking <strong>"LEAVE"</strong> <strong><em>neither</em></strong> this test, <stong><em>nor</em></strong> your course will be saved');
+      $( '#cb-leave-warning-text' ).html( 
+                                      'By clicking <strong>"LEAVE"</strong>'+
+                                      ' <strong><em>neither</em></strong>' +
+                                      ' this test, <stong><em>nor</em></strong>'+
+                                      ' your course will be saved');
       $( '#cb-page-leave-warning' ).modal();
     }
     if ( FlowRouter.getRouteName() == 'admin-course-builder' ) {
-      $( '#cb-leave-warning-text' ).html('By clicking <strong>"LEAVE"</strong> <strong><em>neither</em></strong> this course, <stong><em>nor</em></strong> any associated test will be saved');
+      $( '#cb-leave-warning-text' ).html(
+                                      'By clicking <strong>"LEAVE"</strong> ' + 
+                                      '<strong><em>neither</em></strong> ' + 
+                                      'this course, ' +
+                                      '<stong><em>nor</em></strong>' +
+                                      ' any associated test will be saved');
       $( '#cb-page-leave-warning' ).modal();
     }
   },
@@ -87,11 +96,20 @@ Template.courseBuilderLayout.events({
       
     Session.set('cb-leave', 'courses');
     if ( FlowRouter.getRouteName() == 'admin-test-creator' ) {
-      $( '#cb-leave-warning-text' ).html('By clicking <strong>"LEAVE"</strong> <strong><em>neither</em></strong> this test, <stong><em>nor</em></strong> your course will be saved');
+      $( '#cb-leave-warning-text' ).html(
+                                      'By clicking <strong>"LEAVE"</strong>' + 
+                                      ' <strong><em>neither</em></strong>' + 
+                                      ' this test, ' + 
+                                      '<stong><em>nor</em></strong>' + 
+                                      ' your course will be saved');
       $( '#cb-page-leave-warning' ).modal();
     }
     if ( FlowRouter.getRouteName() == 'admin-course-builder' ) {
-      $( '#cb-leave-warning-text' ).html('By clicking <strong>"LEAVE"</strong> <strong><em>neither</em></strong> this course, <stong><em>nor</em></strong> any associated test will be saved');
+      $( '#cb-leave-warning-text' ).html(
+                                  'By clicking <strong>"LEAVE"</strong> ' +
+                                  '<strong><em>neither</em></strong> ' + 
+                                  'this course, <stong><em>nor</em></strong>' +
+                                  ' any associated test will be saved');
       $( '#cb-page-leave-warning' ).modal();
     }
   },
@@ -110,7 +128,8 @@ Template.courseBuilderLayout.events({
     
     t. $( '#cb-page-leave-warning' ).modal('hide');
 
-    if ( FlowRouter.getRouteName() == 'admin-test-creator' &&  Session.get('cb-leave') == 'dashboard') {
+    if (FlowRouter.getRouteName() == 'admin-test-creator' &&  
+        Session.get('cb-leave')   == 'dashboard') {
       Session.set('cb-leave', null );
       if ( Meteor.user().roles.admin ) {
         Meteor.setTimeout(function(){
@@ -122,7 +141,8 @@ Template.courseBuilderLayout.events({
           FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
         }, 500);
       }
-    } else if ( FlowRouter.getRouteName() == 'admin-test-creator' && Session.get('cb-leave') == 'courses' ) {
+    } else if ( FlowRouter.getRouteName() == 'admin-test-creator' && 
+                Session.get('cb-leave')   == 'courses' ) {
        Session.set('cb-leave', null );
       if ( Meteor.user().roles.admin ) {
         Meteor.setTimeout(function(){
@@ -136,7 +156,8 @@ Template.courseBuilderLayout.events({
       }     
     }
 
-    if ( FlowRouter.getRouteName() == 'admin-course-builder' && Session.get('cb-leave') == 'dashboard' ) {
+    if (FlowRouter.getRouteName() == 'admin-course-builder' && 
+        Session.get('cb-leave')   == 'dashboard' ) {
       Session.set('cb-leave', null );
       if ( Meteor.user().roles.admin ) {
         Meteor.setTimeout(function(){
@@ -148,7 +169,8 @@ Template.courseBuilderLayout.events({
           FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
         }, 500);
       }      
-    } else if ( FlowRouter.getRouteName() == 'admin-course-builder' && Session.get('cb-leave') == 'courses' ) {
+    } else if ( FlowRouter.getRouteName() == 'admin-course-builder' && 
+                Session.get('cb-leave') == 'courses' ) {
       Session.set('cb-leave', null );
       if ( Meteor.user().roles.admin ) {
         Meteor.setTimeout(function(){

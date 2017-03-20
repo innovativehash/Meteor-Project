@@ -200,7 +200,14 @@
                         <th class = "name">
                           <img src = "{{icon}}" alt="">
                           <a  id = "{{course_id}}">                              
-                            {{name}}
+                            {{#if isArchived}}
+                              <del>{{name}}</del>
+                              <span class="label label-primary">
+                                &nbsp;&nbsp;archived
+                              </span>
+                            {{else}}
+                              {{name}}
+                            {{/if}}
                           </a>
                         </th>
                         
@@ -217,7 +224,7 @@
                           </button>
                           
                           <button id        = "delete" 
-                                  class     = "js-delete-course" 
+                                  class     = "js-archive-course" 
                                   data-id   = "{{_id}}" 
                                   data-name = "{{name}}">
                             <img src = "/img/delete.png" alt="">
