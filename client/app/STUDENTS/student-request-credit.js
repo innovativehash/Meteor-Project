@@ -61,7 +61,8 @@ var ig = ''
   , ext
   , option
   , content
-  , fname;
+  , fname
+  , itype;
 
 /*
  * EVENTS
@@ -80,24 +81,32 @@ Template.studentRequestCredit.events({
    option   = $( '.js-credit-select' ).val().trim();
    content  = $( '#details' ).val().trim();
    fname    = e.currentTarget.files[0].name;
-
+   ext      = name.slice(name.lastIndexOf('.'));
+   itype    = e.currentTarget.files[0].type;
+   
     if ( e.currentTarget.files === undefined ) {
       console.log('aborted');
       return;
     }
-
-    let mark = ( e.currentTarget.files[0].name ).lastIndexOf( '.' ) + 1;
-
-    ext  = ( e.currentTarget.files[0].name ).slice( mark );
-    if ( ext === ( 'jpg' || 'jpeg' ) ) {
-      ext = 'jpeg';
-    } else if ( ext === 'pdf' ) {
-      ext = 'pdf';
-    } else if ( ext === 'png' ) {
-      ext = 'png';
-    } else {
+    
+    console.log( 'itype = ' + itype );
+    console.log( 'ext   = ' + ext   );
+    
+    if (  itype != 'application/pdf'  && itype  != 'application/zip'  &&
+          itype != 'image/png'        && itype  != 'image/jpeg'       &&
+          ext   != '.pdf'             && ext    != '.zip'             &&
+          ext   != '.png'             && ext    != '.jpg'             &&
+          ext   != '.jpeg'              
+        ) 
+    {
+      Bert.alert('Only Images, Zipped files, and PDF files may be submitted', 'danger');
+      e.currentTarget.files         = undefined;
+      e.currentTarget.files[0]      = undefined;
+      e.currentTarget.files[0].name = undefined;
       return;
-    }
+    }   
+    
+    
 
     let fil = $( '.js-credit-attachment' ).get(0).files[0];
      //2 read file using file reader
@@ -167,6 +176,8 @@ Template.studentRequestCredit.events({
       $( '.js-credit-select' ).prop('selectedIndex', 0);
       FlowRouter.go( 'student-dashboard', {_id: Meteor.userId() });
     }, 200);
+    
+    ig = fname = option = ext = itype = content = null;
 //-------------------------------------------------------------------
   },
 });
