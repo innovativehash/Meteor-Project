@@ -110,7 +110,8 @@ Template.courseBuilderPage.onCreated( function() {
           
           case 'title':
             // that.contentTracker
-            if ( ! testForVideoOrPdfOnPage( Session.get('contentTracker'), p  ) ) {
+            if ( ! testForVideoOrPdfOnPage( 
+                                        Session.get('contentTracker'), p  ) ) {
               $( '#cb-media-toolbar' ).hide();
               $( '#cb-toolbar-video' ).hide();
               
@@ -123,7 +124,8 @@ Template.courseBuilderPage.onCreated( function() {
             
           case 'text':
             
-            if ( ! testForVideoOrPdfOnPage( Session.get('contentTracker'), p ) ) {
+            if ( ! testForVideoOrPdfOnPage( Session.get('contentTracker'), 
+                                            p ) ) {
               $( '#cb-media-toolbar' ).hide();
               $( '#cb-toolbar-video' ).hide();
               
@@ -891,7 +893,11 @@ Template.courseBuilderPage.events({
 console.log( P.find({}).fetch() );
     $( '#fb-template iframe' ).remove();
     $( '#cb-current' ).val('');
-    if ( Number( ct.page_no[page_no].videos) > 0 ) ct.page_no[page_no].videos--;
+    
+    if ( Number( ct.page_no[page_no].videos) > 0 ) {
+      ct.page_no[page_no].videos--;
+    }
+    
     Session.set('contentTracker', ct);
     $( '#cb-video-toolbar' ).hide();    
 //---------------------------------------------------------  
@@ -1271,7 +1277,9 @@ console.log('next save t, t, i, p, v')
 
           if ( o[j].type == 'title' ) {
 
-            P.update( { _id: my_id },{ $pull: { objects:{ id:{$eq: o[j].id} } }});
+            P.update( { _id: my_id },
+                      { $pull: { objects:{ id:{$eq: o[j].id} } }});
+                      
 console.log('next titles');
             P.update( { _id: my_id },
                       { $push:
@@ -1295,7 +1303,9 @@ console.log('next titles');
 
           } else
             if ( o[j].type == 'text' ) {
-              P.update( { _id: my_id },{$pull: { objects:{ id:{$eq: o[j].id} } }});
+              P.update( { _id: my_id },
+                        {$pull: { objects:{ id:{$eq: o[j].id} } }});
+                        
 console.log( 'next text' );
             P.update( { _id: my_id },
                       { $push:
@@ -1319,8 +1329,9 @@ console.log( 'next text' );
             } else
               if ( o[j].type == 'image' ) {
 console.log('next image');
-//console.log( o[j] );
-                P.update( { _id: my_id },{ $pull: { objects:{ id:{$eq: o[j].id} } }});
+                P.update( { _id: my_id },
+                          { $pull: { objects:{ id:{$eq: o[j].id} } }});
+                          
                 P.update({ _id: my_id },
                          { $push:
                             { objects:
@@ -1343,7 +1354,9 @@ console.log('next image');
             } else 
               if ( o[j].type == 'video' ) {
  console.log('next video');
-                P.update( { _id: my_id },{ $pull: { objects:{ id:{$eq: o[j].id} } }});
+                P.update( { _id: my_id },
+                          { $pull: { objects:{ id:{$eq: o[j].id} } }});
+                          
                 P.update( { _id: my_id },
                           { $push: 
                             { objects:
@@ -1652,8 +1665,13 @@ if ( ! ct.page_no[counter] ) {
         return;
       }
       
-      if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher )  role = 'teacher';
-      if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin )    role = 'admin';
+      if (  Meteor.user() && 
+            Meteor.user().roles && 
+            Meteor.user().roles.teacher )  role = 'teacher';
+            
+      if (  Meteor.user() && 
+            Meteor.user().roles && 
+            Meteor.user().roles.admin )    role = 'admin';
       
       if ( keys == null ) keys = [""];
       Session.set('cinfo', {
@@ -1795,7 +1813,8 @@ if ( ! ct.page_no[counter] ) {
               creator_id:       cinfo.creator_id,
               created_at:       new Date(),
               approved:         true,
-              type:             'course'
+              type:             'course',
+              isArchived:       false
             });
           }
     }); 
@@ -2097,10 +2116,15 @@ if ( ! ct.page_no[counter] ) {
       
       t.$( '#intro-modal' ).modal( 'hide' );
       Meteor.setTimeout(function(){
-        if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin ) {
+        if (  Meteor.user() && 
+              Meteor.user().roles && 
+              Meteor.user().roles.admin ) {
           FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
           return;
-        } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
+          
+        } else if ( Meteor.user() && 
+                    Meteor.user().roles && 
+                    Meteor.user().roles.teacher ) {
           FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
           return;
         }
@@ -2383,12 +2407,13 @@ function addTitle( x, y ) {
 function addText( x, y ) {
   $( '#cb-text-toolbar' ).show();
 /*
-  $( '#fb-template' ).append( '<textarea  id="added-text" ' +
-                                          'rows="3" ' + 
-                                          'style="z-index:2;border-radius:5px;'+
-                                          'position:absolute;margin-left:10%;' +
-                                          'margin-right:10%;' +
-                                          'width:73%;" autofocus></textarea>' 
+  $( '#fb-template' ).append( 
+                              '<textarea  id="added-text" ' +
+                              'rows="3" ' + 
+                              'style="z-index:2;border-radius:5px;'+
+                              'position:absolute;margin-left:10%;' +
+                              'margin-right:10%;' +
+                                'width:73%;" autofocus></textarea>' 
                             ).css( 'color', 'grey' );
 
   let pos = $('#added-text').position();
@@ -2444,7 +2469,13 @@ if (
  *********************************************************/
 function testForVideoOrPdfOnPage( ct, p ) {
   
-  if ( (ct && ct.page_no[p] && ct.page_no[p].videos != 0) || (ct && ct.page_no[p] && ct.page_no[p].pdfs != 0) ) {
+  if ( (ct && 
+        ct.page_no[p] && 
+        ct.page_no[p].videos != 0) || 
+        (ct && 
+        ct.page_no[p] && 
+        ct.page_no[p].pdfs != 0) ) 
+  {
     return true;
   } else {
     return false;
@@ -2457,10 +2488,10 @@ function testForVideoOrPdfOnPage( ct, p ) {
  function handlePrevious( o ) {
 
 
-    let funcs   = ''                    //FUNCS FROM CLASS TO POSITION ELEMENTS
-      , content = ''                    //RENDERED MARKUP (AND FUNCS) RETURNED
-      , cd                              //RENDERING CLASS INSTANCE
-      , mark_up = '';                   //RENDERED MARKUP RETURN VARIABLE
+    let funcs   = ''                  //FUNCS FROM CLASS TO POSITION ELEMENTS
+      , content = ''                  //RENDERED MARKUP (AND FUNCS) RETURNED
+      , cd                            //RENDERING CLASS INSTANCE
+      , mark_up = '';                 //RENDERED MARKUP RETURN VARIABLE
 
 
     //if ( p.length == 0 ) return;

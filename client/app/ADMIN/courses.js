@@ -124,7 +124,10 @@ Template.courses.events({
     $( 'tr').css( 'border', '' );
     $( 'tr' ).css( 'background-color', '' );
     
-    $( 'tr#' + idx ).css( 'border', '1px solid' ).css( 'background-color', 'PaleTurquoise' );
+    $( 'tr#' + idx ).css( 'border', 
+                          '1px solid' ).css(  'background-color', 
+                                              'PaleTurquoise' );
+                                              
     $( 'html, body' ).animate({
       scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
@@ -203,13 +206,21 @@ Template.courses.events({
 
 
   /********************************************************
-   * .JS-DELETE-COURSE  ::(CLICK)::
+   * .JS-ARCHIVE-COURSE  ::(CLICK)::
    *******************************************************/
-  'click .js-delete-course'( e, t ) {
+  'click .js-archive-course'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    /* ARE YOU SURE YOU WANT TO DELETE... */
+    let idx = $( e.currentTarget ).data( 'id' );
+    let nm  = $( e.currentTarget ).data( 'name' );
+    
+    Bert.alert(`Course ${nm} has been archived`, 'success');
+    
+    Courses.update({ _id: idx },
+                    { $set: { isArchived: true }});
+/*
+    // ARE YOU SURE YOU WANT TO DELETE... 
     let idx = $( e.currentTarget ).data( 'id' );
     let nm  = $( e.currentTarget ).data( 'name' );
     BootstrapDialog.show({
@@ -223,14 +234,14 @@ Template.courses.events({
                           '<span style="color:white;">' + nm + '</span>' +
                         '</div></div></div></div></div>',
       buttons: [{
-              /* 
-              DELETE ASSOC:
-              built-courses,
-              tests,
-              pdfs
-              ppts
-              scorms
-              */
+              
+              //DELETE ASSOC:
+              //bubilt-courses,
+              //tests,
+              //pdfs
+              //ppts
+              //scorms
+    
               label: 'Delete Course',
               cssClass: 'btn-danger',
               action: function( dialog ) {
@@ -249,6 +260,7 @@ Template.courses.events({
             }
         }]
     });
+*/
 //-------------------------------------------------------------------
   },
 
