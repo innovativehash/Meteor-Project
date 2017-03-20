@@ -60,7 +60,7 @@ Template.signup.events({
     }
     
     if ( ! testPassword( password ) ) {
-      Bert.alert('Must be a min of 8 characters, and include at least one each of: numbers, lowercase letters, uppercase letters, and a punctuation character', 'danger');
+      Bert.alert('Please refer to tooltip for proper password formation', 'danger');
       return;
     }
     
@@ -102,7 +102,10 @@ function testPassword( pw ) {
   //NUMBERS
   let nums = /[0-9]/.test(pw);
   //PUNCTUATION
-  let punc = /[\32-\151]/.test(pw);
+  //ALT: /[\x21\x23-\x26\x2a\x2b\3f\x7e\x40]/.test('~')
+  // ! # $ % & * + ? ~ @
+  let punc = /[\x21\x23\x24\x25\x26\x2a\x2b\x3f\x7e\x40]/.test(pw);
+  
   //LENGTH
   let len = pw.length;
   

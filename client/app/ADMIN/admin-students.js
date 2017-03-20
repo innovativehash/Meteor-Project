@@ -278,10 +278,10 @@ Template.adminStudents.events({
     
       $( '#addStudentModal' ).modal( "hide" );
       
-      /* ASSIGN random password */
-      //todo: assign random password;
+      //let password    = 'afdsjkl83212'
       
-      let password    = 'afdsjkl83212'
+      /* ASSIGN random password */
+      let password = generateRandomPassword()
         , adminEmail  = 'admin@collectiveuniversity.com'
         , videoLink   = 'TO BE ADDED';  //BE SURE TO MAKE IT: http:// xxx
       
@@ -291,7 +291,7 @@ Template.adminStudents.events({
       /* 
        *
        */
-      let url       = 'https://collective-university-dev-nsardo.c9users.io/login';
+      let url       = 'https://collective-university-nsardo.c9users.io/login';
       //let url = 'http://collectiveuniversity.com/login';
       let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video: ${videoLink}\n\nIf you have any questions, please contact: ${adminEmail}`;
 
@@ -551,7 +551,45 @@ Blaze.TemplateInstance.prototype.parentTemplate = function (levels) {
     }
 };
 
-
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+
+/****************************
+ * RANDOME PASSWORD GENERATOR
+ ***************************/
+function generateRandomPassword() {
+  let pw    = ''
+  
+      // ! # $ % & * + ? ~ @
+    , punc  =  [33,35,36,37,38,42,43,63,64,126];
+    
+    
+  do {   
+    //RETURN PUNC CHARACTER 20% OF THE TIME
+    if (  Math.floor( (Math.random() * 100) + 1) <= 20  ) {
+      let pran = Math.floor( (Math.random() * 9));		//0 - 9
+      pw += String.fromCharCode(punc[pran]);
+    } else {
+      //80% OF THE TIME RETURN EITHER UPPER OR LOWER CASE LETTER
+	    pw += returnRandomLetterAndCase(); 
+    }
+  } while ( pw.length != 8 ); //8 CHARACTER PASSWORDS RETURNED
+  
+  return pw;                  //RETURN CREATED PASSWORD
+}
+
+function returnRandomLetterAndCase() {
+	let lran = Math.floor( (Math.random() * 25) ) + 97 	//LOWERCASE LETTER
+	  , uran = Math.floor( (Math.random() * 25) ) + 65	//UPPERCASE LETTER
+	  , l = '';
+
+	if ( Math.floor( (Math.random() * 100) + 1) <= 51  ) {
+		l = String.fromCharCode(lran);         		
+	} else if ( Math.floor(  (Math.random() * 100) + 1) > 52 ) {
+		l = String.fromCharCode(uran);
+	}
+	return l;
+}
+//-----------------END RANDOM PASSWORD GENERATOR-----------
