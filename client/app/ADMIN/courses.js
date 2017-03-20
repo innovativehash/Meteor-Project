@@ -205,6 +205,24 @@ Template.courses.events({
   },
 
 
+/********************************************************
+   * .JS-UN ARCHIVE-COURSE  ::(CLICK)::
+   *******************************************************/
+  'click .js-unarchive-course'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    let idx = $( e.currentTarget ).data( 'id' );
+    let nm  = $( e.currentTarget ).data( 'name' );
+    
+    Bert.alert(`Course ${nm} has been un-archived`, 'success');
+    
+    Courses.update({ _id: idx },
+                    { $set: { isArchived: false }});
+  },
+  
+  
+  
   /********************************************************
    * .JS-ARCHIVE-COURSE  ::(CLICK)::
    *******************************************************/
