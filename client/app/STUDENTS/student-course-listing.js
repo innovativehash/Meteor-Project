@@ -141,6 +141,10 @@ Template.studentCourseListing.helpers({
                           ! Template.instance().o[i].approved) {
               //DON'T SHOW IT
               Template.instance().o[i].dontShow = true;
+              
+            } else if ( (Template.instance().o[i].isArchived )) {
+              
+              Template.instance().o[i].dontShow = true;
 
             //OTHERWISE, THIS COURSE IS AVAILABLE TO BE TAKEN
             } else {

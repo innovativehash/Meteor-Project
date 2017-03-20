@@ -222,14 +222,21 @@
                                   data-name = "{{name}}">
                             <img src="/img/edit.png" alt="">
                           </button>
-                          
-                          <button id        = "delete" 
-                                  class     = "js-archive-course" 
-                                  data-id   = "{{_id}}" 
-                                  data-name = "{{name}}">
-                            <img src = "/img/delete.png" alt="">
-                          </button>
-                          
+                          {{#if isArchived}}
+                            <button id        = "delete"
+                                    class     = "js-unarchive-course"
+                                    data-id   = "{{_id}}"
+                                    data-name = "{{name}}">
+                              <img src = "/img/delete.png" alt = "">
+                            </button>
+                          {{else}}
+                            <button id        = "delete" 
+                                    class     = "js-archive-course" 
+                                    data-id   = "{{_id}}" 
+                                    data-name = "{{name}}">
+                              <img src = "/img/delete.png" alt="">
+                            </button>
+                          {{/if}}
                         </td>
                       </tr>
                     {{/each}}
