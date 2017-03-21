@@ -57,7 +57,7 @@ Template.adminStudents.onCreated( function() {
         placeholder: "Department",
         allowClear: true,
         multiple: false,
-        tags:false,
+        tags:true,
         //maximumSelectionLength: 2,
 
       });
@@ -203,7 +203,7 @@ Template.adminStudents.events({
     e.preventDefault();
 
     //DEPT MUST HAVE A VALUE
-
+/*
     let dpt = Departments.find({}).fetch();
 
     //clear created by code options
@@ -222,6 +222,7 @@ Template.adminStudents.events({
                               );
       }
     }, 500);
+*/
 //---------------------------------------------------------
   },
 
@@ -238,6 +239,7 @@ Template.adminStudents.events({
       //console.log( t.$('.js-dept').val() );
 
       //INSERT ADDED DEPT TO DEPT DB if it doesn't exist
+/*
       let foo
         , opt_dpt_id = t.$('.js-dept option:selected').val()
         , opt_dpt_nm = t.$('.js-dept option:selected').text().toLowerCase();
@@ -249,14 +251,14 @@ Template.adminStudents.events({
         if ( opt_dpt_id != null && opt_dpt_id != '' )
           foo = Departments.insert({ company_id: Meteor.user().profile.company_id, name: opt_dpt_nm });
       }
-
+*/
 
       let co = Companies.findOne({ _id: Meteor.user().profile.company_id });
 
       let fname     = $( '.js-fn' ).val().trim();
       let lname     = $( '.js-ln' ).val().trim();
       let email     = $( '.js-email' ).val().trim();
-      let dept      = $( '.js-dept :selected' ).text().trim();
+      let dept      = "" //$( '.js-dept :selected' ).text().trim();
       let opt       = $( '#sel1' ).val().trim();
       
       if ( fname == '' || _.isNull(fname) || _.isUndefined(fname) ) {
@@ -271,11 +273,12 @@ Template.adminStudents.events({
         Bert.alert('Email is a required field', 'danger');
         return;
       }
+  /*
       if ( dept == '' || _.isNull(dept)   || _.isUndefined(dept) ) {
         Bert.alert('Department is a required field', 'danger');
         return;
       }
-    
+  */
       $( '#addStudentModal' ).modal( "hide" );
       
       //let password    = 'afdsjkl83212'
