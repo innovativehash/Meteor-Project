@@ -92,14 +92,13 @@ Template.studentRequestCredit.events({
     console.log( 'itype = ' + itype );
     console.log( 'ext   = ' + ext   );
     
-    if (  itype != 'application/pdf'  && itype  != 'application/zip'  &&
-          itype != 'image/png'        && itype  != 'image/jpeg'       &&
-          ext   != '.pdf'             && ext    != '.zip'             &&
-          ext   != '.png'             && ext    != '.jpg'             &&
+    if (  itype != 'application/pdf'  && itype  != 'image/jpeg'       &&
+          itype != 'image/png'        && ext    != '.jpg'             &&
+          ext   != '.pdf'             && ext    != '.png'             && 
           ext   != '.jpeg'              
         ) 
     {
-      Bert.alert('Only Images, Zipped files, and PDF files may be submitted', 'danger');
+      Bert.alert('Only Images, and PDF files may be submitted', 'danger');
       e.currentTarget.files         = undefined;
       e.currentTarget.files[0]      = undefined;
       e.currentTarget.files[0].name = undefined;
