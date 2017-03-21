@@ -58,7 +58,7 @@ Template.studentCourseListing.helpers({
     if ( st_courses_completed && st_courses_completed.courses_completed ) {
       var st_courses_completedl = st_courses_completed.courses_completed.length;
       for ( let i = 0; i < st_courses_completedl; i++ ) {
-        Template.instance().cor_com.push( st_courses_completed.courses_completed[i].link_id ); //
+        Template.instance().cor_com.push( st_courses_completed.courses_completed[i]._id );
       }
     }
 
@@ -70,7 +70,7 @@ Template.studentCourseListing.helpers({
     if ( st_current_courses && st_current_courses.current_courses ) {
       var st_current_coursesl = st_current_courses.current_courses.length;
       for ( let i = 0; i < st_current_coursesl; i++ ) {
-        Template.instance().cur_cor.push( st_current_courses.current_courses[i].link_id ); //
+        Template.instance().cur_cor.push( st_current_courses.current_courses[i]._id );
       }
     }
 
@@ -83,7 +83,7 @@ Template.studentCourseListing.helpers({
       var st_assigned_coursesl = st_assigned_courses.assigned_courses.length;
 
       for ( let i = 0; i < st_assigned_coursesl; i++ ) {
-        Template.instance().ass_cor.push( st_assigned_courses.assigned_courses[i].link_id ); //
+        Template.instance().ass_cor.push( st_assigned_courses.assigned_courses[i].id );
       }
     }
 
@@ -101,16 +101,21 @@ Template.studentCourseListing.helpers({
       //LOOP OVER ALL COURSES
       for ( let i = 0; i < ocl; i++ ) {
         //IF THIS STUDENT HAS ALREADY COMPLETED THIS COURSE
-        var found = _.filter( Template.instance().cor_com.list(), ( m ) => { return m == Template.instance().o[i]._id })
-        if ( found.length > 0 ) {
+        let cfound = _.filter( Template.instance().cor_com.list(), ( m ) => { return m == Template.instance().o[i]._id });
+        if ( cfound.length > 0 ) {
           Template.instance().o[i].buttonText = 'retake'; //completed
           Template.instance().o[i].completed = true;
           Session.set('show_tr', true);
+        }
+        let afound = _.filter( Template.instance().ass_cor.list(), ( m ) => { return m == Template.instance().o[i]._id });
+        if ( afound.length > 0 ) {
+          Template.instance().o[i].assigned = true;
         }
       }
     
       //FULL LIST OF AVAILABLE COURSES
       if ( Template.instance().o ) {
+        
         //PRE-CALC COUNT
         let ocl = Template.instance().o.length;
         for ( let i = 0; i < ocl; i++ ) {
@@ -150,12 +155,15 @@ Template.studentCourseListing.helpers({
             } else {
               //SHOW IT
               Template.instance().o[i].buttonText = 'begin';
+              
             }
           }
         }
       }
-      
+      Template.instance().o = _.sortBy( Template.instance().o, 'assigned' );
+
       return Template.instance().o;
+      
       
     } catch(e) {
       return;
@@ -177,8 +185,8 @@ Template.studentCourseListing.events = {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-      let builder   = $( e.currentTarget ).data( 'bid' )
-        , cid       = $( e.currentTarget ).data( 'id' );
+      let //builder   = $( e.currentTarget ).data( 'bid' )
+          cid       = $( e.currentTarget ).data( 'id' );
       
       Meteor.setTimeout(function(){
         Meteor.call( 'updateCurrentCourses', cid );
