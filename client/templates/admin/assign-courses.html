@@ -60,7 +60,7 @@
                       <tr id="{{_id}}">
                         {{#if eq type "course"}}
                         <th class="name">
-                          <a href="#" class="asn-course" data-id="{{_id}}" data-builder="{{built_id}}">
+                          <a href="#" class="asn-course" data-id="{{_id}}">
                             <img src="{{icon}}" alt="">{{name}}
                           </a>
                         </th>
@@ -144,6 +144,7 @@
                     </label>
                     <span>OR</span>
                   </div>
+                  
                     <div id="wrap-by-name" class="assign-body">
                       <select data-placeholder  = "student name" 
                               id                = "by-name" 
@@ -158,9 +159,11 @@
                     </div>
                 </div>
               </div>
+              
               <div class="col-sm-6">
                 <div class="single-assign">
                   <div class="assign-title">
+                    
                       <input  id    = "assign-by-dept-radio"
                               type  = "radio" 
                               name  = "checkbox" 
@@ -170,6 +173,7 @@
                         Assign by department
                       </label>
                   </div>
+                  
                   <div class="assign-body">
                     <select id                = "by-dept" 
                             style             = ""

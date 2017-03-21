@@ -37,7 +37,7 @@ Template.assignCourses.onCreated(function() {
         allowClear: true
       });
       $( '#by-dept' ).select2({
-        allowClear: true
+        //allowClear: true
       });
     });
     //console.log('Assign Courses:: chosen,jquery.min.js loaded...');
@@ -90,7 +90,7 @@ Template.assignCourses.helpers({
   
   dept: () => {
     try {
-      return Departments.find({}).fetch();
+      return Departments.find({ company_id: Meteor.user().profile.company_id }).fetch();
     } catch( e ) {
       return;
     }
@@ -120,13 +120,13 @@ Template.assignCourses.events({
     e.preventDefault();
     
     try {
-      let id  = $( e.currentTarget ).data('id')
-        , bld = $( e.currentTarget ).data('builder');
+      let id  = $( e.currentTarget ).data('id');
+       // , bld = $( e.currentTarget ).data('builder');
       console.log( bld );
       let params = {
         _id: Meteor.userId()
       };
-      let queryParams = {builder: bld, course: id};
+      let queryParams = {course: id};
       var routeName   = "admin-course-viewer";
       var path        = FlowRouter.path(routeName, params, queryParams);
       FlowRouter.go( path );
@@ -162,7 +162,7 @@ Template.assignCourses.events({
           let li = document.createElement( 'li' );
           let a  = document.createElement( 'a'  );
           
-          a.href =  `/admin/dashboard/course-viewer/${Meteor.userId()}?builder=${recs[k][0].built_id}&course=${recs[k][0]._id}`;
+          a.href =  `/admin/dashboard/course-viewer/${Meteor.userId()}?course=${recs[k][0]._id}`;
           a.innerHTML   = recs[k][0].name;
           a.dataset.dc  = recs[k][0].credits;
           a.dataset.di  = recs[k][0]._id
@@ -208,7 +208,7 @@ Template.assignCourses.events({
           let li         = document.createElement( 'li' );
           let a          = document.createElement( 'a'  );
   
-          a.href         = `/admin/dashboard/course-viewer/${Meteor.userId()}?builder=${recs[k][0].built_id}&course=${recs[k][0]._id}`;
+          a.href         = `/admin/dashboard/course-viewer/${Meteor.userId()}?&course=${recs[k][0]._id}`;
           a.innerHTML    = recs[k][0].name;
           a.dataset.dc   = recs[k][0].credits;
           a.dataset.di   = recs[k][0]._id;
@@ -321,7 +321,14 @@ Template.assignCourses.events({
     
     type    = type.slice( 0, type.length - 1 );
  
-    let o   = { id: idx, name: nm, credits: cr, num: 1, icon: ic, type: type, date_assigned: new Date() };
+      let o   = { id: idx, 
+                  name: nm, 
+                  credits: cr, 
+                  num: 1, 
+                  icon: ic, 
+                  type: type, 
+                  date_assigned: new Date() 
+                };
     
     /*-----------------------------------------------------
      * ALL STUDENTS
@@ -337,7 +344,7 @@ Template.assignCourses.events({
 
       for ( let i = 0; i < slen; i++ ) {
         if ( s[i].role == 'admin' ) continue;
-        Students.update({ _id: s[i]._id },{ $push:{ current_courses: o } });
+        Students.update({ _id: s[i]._id },{ $push:{ assigned_courses: o } });
 
         //Meteor.call('sendEmail', s[i].email, 'admin@collectiveuniversity.com', 'Assigned Course', text_wo_due_date);
       }
@@ -369,10 +376,11 @@ Template.assignCourses.events({
           if ( s[i].role == 'admin' ) continue; //don't assign to admin
           if ( (s[i].fullName).indexOf( assignByName[j] ) != -1 ) {
 
-            Students.update({ _id: s[i]._id },{ $push:{ current_courses: o } });
+            Students.update({ _id: s[i]._id },{ $push:{ assigned_courses: o } });
           }
         }
       }
+      
       Bert.alert( `${type} has been assigned`, 'success', 'growl-top-right' );
 
 
@@ -397,14 +405,16 @@ Template.assignCourses.events({
         for ( let j = 0; j < dlen; j++ ) {
           if ( s[i].role == 'admin') continue;
           if ( (s[i].department).indexOf( assignByDept[j] ) != -1 ) {
-            Students.update( { _id: s[i]._id },{ $push:{ current_courses: o } });
+            Students.update( { _id: s[i]._id },{ $push:{ assigned_courses: o } });
           }
         }
       }
+      
       Bert.alert( `${type} has been assigned`, 'success', 'growl-top-right' );
 
 
     } else {
+      
       Bert.alert( "You MUST select one of:\n 'all students', \n'names', or \n'departments'",
                   'danger' );
       return;
