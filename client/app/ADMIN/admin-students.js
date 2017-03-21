@@ -294,7 +294,7 @@ Template.adminStudents.events({
       /* 
        *  CHANGE THIS FOR PRODUCTION
        */
-      let url       = 'https://collective-university-dev--nsardo.c9users.io/login';
+      let url       = 'https://collective-university-dev-nsardo.c9users.io/login';
       //let url = 'http://collectiveuniversity.com/login';
       let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video: ${videoLink}\n\nIf you have any questions, please contact: ${adminEmail}`;
 
