@@ -64,6 +64,7 @@
         <br><br>
         <form action="">
           <div class="row">
+            
             <div class="col-sm-6">
               <br>
               <input  class       = "js-fn input-lg" 
@@ -71,15 +72,20 @@
                       placeholder = "First Name"
                       style       = "width:100%;">
             </div>
+            
             <br>
+            
             <div class="col-sm-6">
                 <input  class       = "js-ln input-lg" 
                         type        = "text" 
                         placeholder = "Last Name"
                         style       = "width: 100%;">
             </div>
+            
           </div>
+          
           <br>
+          
           <div class="row">
             <br>
             <div class="col-sm-6">
@@ -89,6 +95,17 @@
                         style       = "width: 100%;">
             </div>
             
+            <div class="col-sm-6">
+              <select id    = "sel1"  
+                      class = "form-control input-lg">
+                
+                <option value = "student">Student</option>
+                <option value = "teacher">Teacher</option>
+                <option value = "admin" >Admin</option>
+                
+              </select>
+            </div>
+ <!--         
             <div class="col-sm-6">
 
               <select class="js-dept form-control input-lg">
@@ -101,8 +118,11 @@
               </select>
                 
             </div>
+ -->           
           </div>
+         
           <br>
+<!--         
           <div class="row">
             <br>
             <div class="col-sm-6">
@@ -116,13 +136,14 @@
                 
               </select>
               
-              <!--
+              
               <select id          = "sel1"  
                       class       = "js-role form-control" 
                       data-style  = "btn-sss"></select>
-              -->
+              
             </div>
           </div>
+-->
           <div class="row">
             <br><br><br><br>
             <div class="col-sm-12 text-right">
@@ -255,11 +276,6 @@
   </div>
 
 
-
-
-
-
-
 <!-- EDIT STUDENT MODAL -->
 <div  class           = "modal fade left" 
       id              = "editStudentModal" 
@@ -310,20 +326,22 @@
                                         style       = "width:100%;"/>
             </div>
             
+            
             <div class="col-sm-6">
               
               <select name  = "js-dept" 
                       class = "js-dept form-control input-lg">
-               <!-- <option></option> -->
-               <!--
+              <!--
+               <option></option>
+               
                   {{#with departments}}
                   {{#each this}}
                   <option value="{{_id}}">{{name}}</option>
                   {{/each}}
                   {{/with}}
-                -->
+              -->
               </select>
-                      
+                   
             </div>
           </div>
           <br>
@@ -331,7 +349,7 @@
             <br>
             <div class="col-sm-6">
               
-              <select class = "js-role form-control" 
+              <select class = "js-role form-control input-lg" 
                       name  = "js-role"></select>
 
             </div>
