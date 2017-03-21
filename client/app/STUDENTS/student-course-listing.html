@@ -49,6 +49,10 @@
                         <span style = "text-decoration: line-through;">
                           {{name}}
                         </span>
+                      {{/if}}
+                      {{#if assigned}}
+                          {{name}}
+                          <span class="label label-primary" style="margin-left:15px;">assigned</span>
                       {{else}}
                         {{name}}
                       {{/if}}
