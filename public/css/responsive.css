@@ -58,6 +58,23 @@
 body.main .container {width: 1170px;}
 
 .dashboard-body-area .container, .dashboard-header-area .container {padding-left: 395px;}
+
+/* below css added by mahabub */
+.dashboard-body-area > .course-view-full{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.profile-link {    
+    top: -2px;
+}
+
+.page-back-home a {    
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.dashboard-header-area .dash-title{
+	 margin-top: 15px;
+}
 }
 
 
@@ -66,6 +83,34 @@ body.main .container {width: 1170px;}
 .admin-dashbord .container,.admin .container,.container {width: 765px;}
 .sidebar-menu-area {left: 0 !important;}
 body.main .container {width: 1170px;}
+/* below css added by mahabub */
+.profile-link {    
+    top: -2px;
+}
+
+.page-back-home a {    
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.dashboard-header-area .dash-title{
+	 margin-top: 15px;
+}
+
+.profile-link {    
+    top: -2px;
+}
+
+.page-back-home a {    
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.dashboard-header-area .dash-title{
+	 margin-top: 15px;
+}
+.diamonds {
+	top: 12px;
+}
+
 }
 
 /* Medium Desktop Layout */
@@ -74,8 +119,54 @@ body.main .container {width: 1170px;}
 .sidebar-menu-area {left: 0 !important;}
 .dashboard-body-area.admin .container {width: 100%;}
 body.main .container {width: 1170px;}
+
+/* below css added by mahabub */
+.dashboard-body-area > .course-view-full{
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
+.profile-link {    
+    top: -2px;
+}
+
+.page-back-home a {    
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.dashboard-header-area .dash-title{
+	 margin-top: 15px;
+}
+.diamonds {
+	top: 12px;
+}
+
+
+}
+
+/* Nexus 10 */
+@media only screen and (min-width: 768px) and (max-width: 820px) {
+	
+	.profile-bar {
+    margin-right: 0px;
+    margin-top: 20px;	
+	}
+	.page-back-home a {
+		padding:10px 10px;
+	}
+	.profile-link {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+}
+.dashboard-header-area .dash-title{
+	 margin-top: 15px;
+}
+
+.nexus-width{
+	width: 39%;
+}
+}
 /* Small Desktop Layout */
 @media only screen and (min-width: 991px) and (max-width: 1200px) {
 .signup-form h2 {font-size: 30px;margin-bottom: 10px;}
@@ -158,10 +249,31 @@ body.main .container {width: 1170px;}
 .list-title {margin-top: 0;}
 .list-title h2 {font-size: 25px;}
 body.main .container {width: 970px;}
-
 .dashboard-body-area .container, .dashboard-header-area .container {width: 100%;padding-left: 305px;padding-right: 45px;}
 .profile-bar ul li button {margin-right: 5px;}
 .certificate-course ul li {font-size: 15px;}
+
+/* below css added by mahabub */
+.dashboard-body-area > .course-view-full{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.profile-link {    
+    top: -2px;
+}
+
+.page-back-home a {    
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.dashboard-header-area .dash-title{
+	 margin-top: 15px;
+}
+.profile-bar{
+	margin-right: 0px;
+}
+
 }
 
 /* Tablet Layout */
@@ -274,10 +386,15 @@ body.main .container {width: 970px;}
 .single-customize-title label {font-size: 16px;}
 .color-picker input {width: 159px;}
 body.main .container {width: 750px;}
-
-
 .dashboard-body-area .container, .dashboard-header-area .container {padding-left: 60px;padding-right: 60px;}
 .certificate-course ul li {font-size: 15px;}
+
+/* below css added by mahabub */
+.dashboard-body-area >.course-view-full{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 }
 
 
@@ -550,6 +667,21 @@ body.main .logo a img, .footer-logo a img {width: 55px;}
 .dashboard-body-area .container, .dashboard-header-area .container {padding-left: 15px;padding-right: 15px;position:relative;}
 .dash-post-single-list .comment-text a,.dash-post-single-list .comment-text p {font-size: 15px;line-height: 20px;}
 .comment-text {width: 76%;}
+#fb-template{
+    font-size: 16px;
+}
+.dashboard-body-area{
+    padding-top: 0px;
+}
+.profile-link {
+    margin-top: 51px;
+}
+.profile-bar {
+    margin-top: 20px;
+}
+.padding-top-75{
+    padding-top: 10px;
+}
 }
 
 
@@ -559,4 +691,120 @@ body.main .logo a img, .footer-logo a img {width: 55px;}
 .single-course-content p {font-size: 14px;}
 
 .dash-post-single-comment-form {width: 80%;}
+
+}
+
+/*
+
+Mahabub media query started from here ..
+*/
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 480px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+      #fb-template{
+    font-size: 15px;
+}
+.dashboard-body-area{
+    padding-top: 0px;
+}
+.profile-link {
+    margin-top: 51px;
+}
+.profile-bar {
+    margin-top: 20px;
+}
+#create-training-event-button{
+margin-top:10px;
+}
+.event-model-title{
+	font-size:18px;
+}
+.pop-up-area.eventpop button#popup-close {
+	margin-top:0px;
+}
+
+
+  }
+  
+  /* ----------- iPhone 5 and 5S ----------- */
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 568px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+	  
+#create-training-event-button{
+margin-top:10px;
+}	
+#fb-template{
+    font-size: 15px;
+}
+.dashboard-body-area{
+    padding-top: 0px;
+}
+.profile-link {
+    margin-top: 40px;
+}
+.profile-bar {
+    margin-top: 20px;
+}
+
+.page-back-home a {
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid #fff;
+    padding: 5px 5px;
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.diamonds {
+    left: 50%;
+    top: -5px;
+    margin-left: -83px;
+}
+.footer-filter h2 {
+    color: #fff;
+    margin: 0;
+    font-size: 16px;
+    margin-top: 15px;
+    padding: 5px 10px;
+    border: 1px solid #fff;
+    display: inline-block;
+}    
+.save-button button {
+    color: #5f5f5f;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+    border: 1px solid #fff;
+    padding: 6px 14px;
+    background: url(/img/bg-7.png) repeat-x scroll 0 0 / auto 100%;
+    font-size: 16px;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+.padding-top-75{
+    padding-top: 10px;
+}
+.curse-builder-box{
+    padding: 0px;
+}
+
+.event-model-title{
+	font-size:21px;
+}
+.pop-up-area.eventpop button#popup-close {
+	margin-top:0px;
+}
+.comment-text{
+	margin-top:5px;
+}
+.dash-post-single-list .comment-avatar {
+	top:0px;
+}
 }
