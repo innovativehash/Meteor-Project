@@ -9,8 +9,8 @@
 -->
 <div class="dashboard-header-area">
    <div class="col-sm-7">
-        <div>
-          <ul style="margin: 0;padding: 0;list-style: none;">
+        <div class="dash-title">
+          <ul style="margin: 0;padding: 0;list-style: none;" >
             <li style="display: inline-block;color: white;font-size: 18px;position: relative;">
               <a  style="color: white;cursor:pointer;" 
                   id="cv-dashboard-link">
@@ -33,10 +33,10 @@
   <div class="container">
     <div class="row">     
 
-      <div class="col-sm-5">
+      <div class="col-sm-5 nexus-width">
         <div class="profile-bar">
           <ul>
-            <li>
+            <!--li>
               <button>
                 <img  src="/img/message.png" 
                       alt="">
@@ -47,6 +47,13 @@
                 <img  src="/img/notification.png" 
                       alt="">
               </button>
+            </li-->
+            <li>
+               <div class="page-back-home"> <a id="course-view-page-back" style="cursor:pointer;">
+			  <i class="fa fa-long-arrow-left"></i>
+			  Back To Courses
+			</a>
+               </div>
             </li>
           </ul>
         </div>
@@ -83,8 +90,8 @@
 </div><!-- dashboard-header-area -->
 
 
-<div class="dashboard-body-area">
-	<div class="sidebar-menu-area course-builder-sidebar">
+<div class="dashboard-body-area padding-top-75">
+	<!--div class="sidebar-menu-area course-builder-sidebar">
 		<div class="buttons">
 			<button id="open">
 				<span></span>
@@ -102,16 +109,19 @@
 			  Back To Courses
 			</a>
 		</div>
-  </div><!-- sidebar-menu-area course-builder-sidebar -->
+  </div-->
+    
+    <!-- sidebar-menu-area course-builder-sidebar -->
 
 
-  <div class="container">
+  <div class="container course-view-full">
 <!-- min-height:690px;position:relative -->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
       
       <div  id  = "fb-template"
           style = "background-color:white;"
-          class = "curse-builder-box centered-block">
+          class = "curse-builder-box centered-block padding-15-lf-rf">
+         
       </div>
       
     </div>
