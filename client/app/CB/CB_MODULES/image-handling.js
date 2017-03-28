@@ -91,21 +91,22 @@
     e.currentTarget.files[0].name = undefined;
     
     itype = '';
- 
+
 		S3.upload(
 		          {
-        				files:  fil, //files,
-        				path:   'images' //"subfolder"
+        				files:  fil,      //files,
+        				path:   'images'  //"subfolder"
 			        },
 			        
 			        function( error, result ){
-				        ig = result.secure_url;
+				        let img_id = result.secure_url;
 				        
-				        let img = $( '#preview-image' );
 
-                img.attr( "src", ig );
-                img.appendTo( '.image-preview' );
-                
+				        //let img = $( '#preview-image' );
+
+                //img.attr( "src", img_id );
+                //img.appendTo( '.image-preview' );
+                console.log(img_id);
 				        a_img_id = Images.insert({
                         				          loaded:           result.loaded,
                         				          percent_uploaded: result.percent_uploaded,
@@ -118,6 +119,7 @@
                         				          file:             result.file,
                         				          created_at:       moment().format()
 				                                });
+				      console.log( a_img_id);
 		         }
 		);
 
@@ -136,26 +138,41 @@
 
     t.$( '#course-builder-image' ).val('');
     
-    let ct = Session.get('contentTracker');
-    ct.page_no[page_no].images++;
-    Session.set('contentTracker', ct);
+    if ( ig == '' || ig == undefined || ig == null ) {
+      Bert.alert('You must upload an image before you can save', 'danger' );
+      return;
+    }
     
-    t.$( '#fb-template' ).append( `<div id="ig-${master_num}" data-img_lnk="${a_img_id}" class="ui-widget" data-pid="0" style="top:'100px';left:'200px';text-align: center; width: auto;height:autborder: 4px solid #eee;
-        padding: 10px; float: left; margin: 0 auto;box-shadow:5px 5px 5px #888;position:relative;cursor:move;"><img id="im-${master_num}" src="${ig}" style="display: block; margin:auto"></div>` );
+    t.$( '#fb-template' ).append( `<div id="ig-${master_num}" data-img_lnk="${a_img_id}" class="ui-widget-content" data-pid="0" style="top:'100px';left:'200px';text-align: center; width: auto;height:autborder: 4px solid #eee;
+        padding: 10px; float: left; margin: 0 auto;box-shadow:5px 5px 5px #888;position:relative;overflow:hidden;cursor:move;"><img id="im-${master_num}" src="${ig}" class="ui-widget-content" style="position:relative; display: block; margin:auto"></div>` );
     
-    
-    $( `#ig-${master_num}` ).draggable();
+    $( `#ig-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
     $( `#ig-${master_num}` ).resizable({ 
       handles: "all", 
-      autoHide: false,
+      autoHide: true,
       aspectRatio: true,
       alsoResize: `#im-${master_num}`,
-      //containment: "parent"
+      containment: "#fb-template"
     });
+    $( `#im-${master_num}` ).resizable();
     
-    let pos   = {top:'100px', left:'200px'}
-      , my_id = Session.get('my_id');
-console.log('image initial');
+    let pos   = {top:'100px', left:'200px'};
+      
+    P.append({
+              page_no:          page_no,
+              type:             'image',
+              id:               `ig-${master_num}`,
+              iid:              `im-${master_num}`,
+              img_lnk:          a_img_id,
+              offset:           $(`#ig-${master_num}`).offset(),
+              iwidth:           $(`#im-${master_num}`).width(),
+              iheight:          $(`#im-${master_num}`).height(),
+              opacity:          $(`#ig-${master_num}`).css('opacity'),
+              dwidth:           $(`#ig-${master_num}`).width(),
+              dheight:          $(`#ig-${master_num}`).height(),
+              src:              $(`#im-${master_num}`).attr('src')           
+    });
+/*
     P.update( { _id: my_id },
               { $push: 
                 {
@@ -175,10 +192,10 @@ console.log('image initial');
                   }
                 }
               });
-
+*/
     Meteor.setTimeout(function(){
 
-      $( `#ig-${master_num}` ).attr( 'data-pid', `${my_id}` );
+      $( `#ig-${master_num}` ).attr( 'data-pid', `${Session.get('my_id')}` );
       //console.log( $( `#ig-${master_num}` ).data('pid'));
     }, 500);
     
@@ -186,18 +203,38 @@ console.log('image initial');
 
       //document.getElementById( `ig-${master_num}` ).onmouseup =  (e) => {
       $( `#ig-${master_num}` ).on("mouseup", function(){
-console.log('enter media click');
+        
         e.preventDefault();
       
       //SHOW MEDIA TOOLBAR
+      $( '#cb-title-toolbar' ).hide();
+      $( '#cb-text-toolbar' ).hide();
       $( '#cb-media-toolbar' ).show();
       
       t.$( '#cb-current' ).val( `ig-${master_num}` );
       
       let pos = $( `#ig-${master_num}` ).offset()
         , src = $( `#im-${master_num}` ).attr('src')
-        , id  = `ig-${master_num}`;
-
+        , id  = `ig-${master_num}`
+        , idx = P.indexOf( `ig-${master_num}` );
+        
+      P.remove( `ig-${master_num}` );
+      
+      P.insert( idx, {
+                    page_no:          page_no,
+                    type:             'image',
+                    id:               `ig-${master_num}`,
+                    iid:              `im-${master_num}`,
+                    img_lnk:          a_img_id,
+                    offset:           $(`#ig-${master_num}`).offset(),
+                    iwidth:           $(`#im-${master_num}`).width(),
+                    iheight:          $(`#im-${master_num}`).height(),
+                    opacity:          $(`#ig-${master_num}`).css('opacity'),
+                    dwidth:           $(`#ig-${master_num}`).width(),
+                    dheight:          $(`#ig-${master_num}`).height(),
+                    src:              $(`#im-${master_num}`).attr('src') 
+      });
+/*
       P.update({ _id: my_id, "objects.id": id },
                { $set:
                   {
@@ -206,6 +243,8 @@ console.log('enter media click');
                     "objects.$.type":         'image',
                     "objects.$.iid":          `im-${master_num}`,
                     "objects.$.img_lnk":      a_img_id,
+                    "objects.$.offset":       $(`#im-${master_num}`).offset(),
+                    "objects.$.zIndex":       $(`#im-${master_num}`).css('z-index'),
                     "objects.$.iwidth":       $(`#im-${master_num}`).width(),
                     "objects.$.iheight":      $(`#im-${master_num}`).height(),
                     "objects.$.opacity":      $(`#ig-${master_num}`).css('opacity'),
@@ -215,10 +254,12 @@ console.log('enter media click');
                     "objects.$.src":          src                  
                   }
               });
-console.log( P.find({}).fetch() );
+*/
+
+P.print();
     }); //onmouseup
 
-  })( master_num, my_id );
+  })( master_num );
 
     ig  = null;
     ext = null;

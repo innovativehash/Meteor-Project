@@ -52,19 +52,20 @@ export function cbPDFSave(  e,
 {
   e.preventDefault();
   
-  Bert.alert( 'Please standby...', 'success' );
-  
   let fil   = t.$( '#course-builder-pdf' )[0].files
 	  , sf    = t.$( '#course-builder-pdf' ).data('subfolder')
 	  , my_id = Session.get('my_id')
 	  , pdf
 	  , pdf_id
 	  , obj;
-	  
-  let ct = Session.get('contentTracker');
-  ct.page_no[page_no].pdfs++;
-  Session.set('contentTracker', ct );
-  
+
+	if ( fil.length == 0 ) {
+	  Bert.alert('You must select a PDF file to save', 'danger');
+	  return;
+	}
+	
+	Bert.alert( 'Please standby...', 'success' );
+	
 	S3.upload(
 	          {
       				files:  fil, //files,
@@ -100,49 +101,26 @@ export function cbPDFSave(  e,
             
             t.$( '#fb-template' ).empty();
             t.$( '#fb-template' ).append( obj );
-//console.log( pdf );
-//console.log( pdf_id );
-
-/*  
-          P.update( { _id: my_id },
-                    {$set:
-                      { objects:
-                        {
-                        id:      `pdf-${master_num}`,
-                        page_no: page_no,
-                        type:     'pdf',
-                        url:      obj,
-                        s3:       pdf,
-                        pdf_lnk:  pdf_id
-                      }
-                      }
-                    });
-*/
           
-           P.update( { _id: my_id },
-            { $push: 
-                { objects: 
-                  {
+           P.append({
                     page_no:  page_no,
                     id:       `pdf-${master_num}`,
                     type:     'pdf',
                     url:      obj,
                     s3:       pdf,
                     pdf_lnk:  pdf_id
-                  }
-                }
               });
            
-            let ct = Session.get('contentTracker');
-            ct.pdfs++;
-            Session.set( 'contentTracker', ct );
-
             pdf = null;
                      			       
   	       }//callback
 	);//S3.upload()
 
-    t.$( '#add-pdf' ).modal( 'hide' );
+  $( '#cb-title-toolbar' ).hide();
+  $( '#cb-text-toolbar'  ).hide();
+  $( '#cb-video-toolbar' ).hide();
+  
+  t.$( '#add-pdf' ).modal( 'hide' );
 //-----------------------------------------------------------------------------
 };
 

@@ -117,7 +117,9 @@ Template.adminTestCreator.events({
   'click .js-test-complete'( e, t ) {
     e.preventDefault();
     
-    if ( $('#test-name').val() == '' ) {
+    let str = $('#test-name').val();
+    if ( str == '' || (!str.replace(/\s/g, '').length)) 
+    {
       Bert.alert("You can't save an unnamed test!", 'danger');
       return;
     }
@@ -193,7 +195,10 @@ Template.adminTestCreator.events({
    ************************
    */
   'blur #test-name'( e, t ){
-      if ( ! t.$( '#test-name').val() ) {
+      let tn_str = t.$('#test-name').val();
+      
+      if ( ! tn_str || (! tn_str.replace(/\s/g, '').length)) 
+      {
         t.$( '#test-name' ).css( 'border', '2px solid red' );
       } else {
         t.$( '#test-name' ).css( 'border', 'none' );
@@ -222,7 +227,7 @@ Template.adminTestCreator.events({
           console.log(e);
         }//inner try
       }//outer try
-    
+      
       console.log( Test.find().fetch() );
 //-------------------------------------------------------------------
   },
@@ -237,11 +242,14 @@ Template.adminTestCreator.events({
   'blur #question'( e, t ){
     e.preventDefault();
     
-    if ( ! t.$( '#question' ).val() ) {
+    let q_str = t.$( '#question' ).val();
+    
+    if ( ! q_str || (!q_str.replace(/\s/g, '').length) ) {
       t.$( '#question' ).css( 'border', '2px solid red' );
     } else {
       t.$( '#question' ).css( 'border', 'none' );
     }
+    
  //-------------------------------------------------------------------   
   },
   
@@ -303,33 +311,32 @@ Template.adminTestCreator.events({
 
     //test name
     let nm          = t.$( '#test-name' ).val();
-
-    //question
-    let q           = t.$( '#question' ).val();
-
-    //correct answer
-    let correct_a   = t.$( '#correct_ans' ).val(); //A, B, C
-    let correct_ans;
-
-    //id of last multiple choice answer
-    let lastId      = t.$( 'div#ans-mc input:last' ).attr( 'id' );
-    
-    if ( ! nm ) {
+    if ( ! nm || (!nm.replace(/\s/g, '').length) ) {
       Bert.alert( 'Please give the test a name.', 'danger' );
       t.$( '#test-name' ).css( 'border', '2px solid red' );
       return;
     }
     
-    if ( ! q ) {
+    //question
+    let q           = t.$( '#question' ).val();
+    if ( ! q || (!q.replace(/\s/g, '').length) ) {
       Bert.alert( 'Please enter a question before saving...', 'danger' );
       t.$( '#question' ).css( 'border', '2px solid red' );
       return;
     }
     
+    //correct answer
+    let correct_a   = t.$( '#correct_ans' ).val(); //A, B, C
     if ( correct_a == 'Please Select' ) {
-      Bert.alert('Please select a correct answer for this question before saving.', 'danger' );
+      Bert.alert('Please ensure you\'ve entered both question\'s and the correct answer before saving.', 'danger' );
       return;      
     }
+    
+    let correct_ans;
+
+    //id of last multiple choice answer
+    let lastId      = t.$( 'div#ans-mc input:last' ).attr( 'id' );
+
    /* 
     //A IS EMPTY
     if ( t.$( '#A' ).val() == '' || t.$( '#B' ).val() == '' ) {
@@ -352,7 +359,7 @@ Template.adminTestCreator.events({
 
       for ( let i = 65; i <= correctAscii; i++ ) {
         
-        if ( t.$( `#${String.fromCharCode(i)}` ).val() == '' ) {
+        if ( t.$( `#${String.fromCharCode(i)}` ).val() == '' || (!t.$( `#${String.fromCharCode(i)}` ).val().replace(/\s/g, '').length) ) {
           Bert.alert( `Answers must be supplied for all items, A through ${String.fromCharCode(correctAscii)}`, 'danger' );
           return;
         }
@@ -361,12 +368,12 @@ Template.adminTestCreator.events({
 
       for ( let j = 65; j <= lastIdAscii; j++ ) {//correctAscii
         
-        if ( t.$( `#${String.fromCharCode(j)}` ).val() == '' ) {
+        if ( t.$( `#${String.fromCharCode(j)}` ).val() == '' || (!t.$( `#${String.fromCharCode(j)}` ).val().replace(/\s/g, '').length) ) {
           if ( j == 65 || j == 66 ) { //always the case
             Bert.alert('At a minimum, two answers are needed: BOTH A and B','danger');
             return;
           }
-          if ( j < correctAscii && t.$( `#${String.fromCharCode(j)}` ).val() == '' ) {
+          if ( j < correctAscii && ( t.$( `#${String.fromCharCode(j)}` ).val() == '' || (!t.$( `#${String.fromCharCode(j)}` ).val().replace(/\s/g, '').length)) ) {
             Bert.alert( `Contigious values from A TO ${String.fromCharCode(correctAscii)}`, 'danger');
             return;
           }
@@ -430,10 +437,7 @@ Template.adminTestCreator.events({
     $( '#t-btn-prev' ).prop('disabled', false);
     $( '#t-btn-next' ).prop('disabled', false);
     
-    //CLEAR INITIAL MULTIPLE CHOICE ANSWER BOXES
-    t.$('#A').val('');
-    t.$('#B').val('');
-    t.$('#C').val('');
+    resetMC();
 
     //CLEAR QUESTION
     t.$( '#question' ).val('');
@@ -466,25 +470,25 @@ Template.adminTestCreator.events({
       , C           = $('#C').val()
       , correct_ans;
  
-    if ( ! t.$( '#test-name' ).val() ) {
+    if ( ! t.$( '#test-name' ).val() || (!t.$('#test-name').val().replace(/\s/g, '').length) ) {
       Bert.alert( 'Please ensure you\'ve named the test', 'danger' );
       t.$( '#test-name' ).css( 'border', '4px solid red' );
       return;
     }
     
-    if ( !q ) {
+    if ( !q || (!q.replace(/\s/g, '').length)) {
       Bert.alert('Please enter a question before saving...', 'danger' );
       t.$( '#question' ).css( 'border', '2px solid red' );
       return;
     } 
     
-    if ( A == '' ) {
+    if ( A == '' || (!A.replace(/\s/g, '').length)) {
       Bert.alert("Answer box 'A' MUST have an answer entered!", 'danger');
       return;
-    } else if ( B == '' ) {
+    } else if ( B == '' || (!B.replace(/\s/g, '').length) ) {
       Bert.alert("Answer box 'B' MUST have an answer entered!", 'danger');
       return;
-    } else if ( C == '' ) {
+    } else if ( C == '' || (!C.replace(/\s/g, '').length) ) {
       Bert.alert("Answer box 'C' MUST have an answer entered!", 'danger' );
       return;
     } else if ( correct_a == "Please Select" ) {
@@ -570,13 +574,13 @@ Template.adminTestCreator.events({
     $( '#t-btn-next' ).prop('disabled', false);
     
 
-    if ( ! t.$( '#test-name' ).val() ) {
+    if ( ! t.$( '#test-name' ).val() || (!t.$('#test-name').val().replace(/\s/g, '').length)) {
       Bert.alert( 'Please ensure you\'ve named the test', 'danger' );
       t.$( '#test-name' ).css( 'border', '4px solid red' );
       return;
     }
     
-    if ( !q ) {
+    if ( !q || (!q.replace(/\s/g, '').length)) {
       Bert.alert('Please enter a question before saving...', 'danger' );
       t.$( '#question' ).css( 'border', '2px solid red' );
       return;
@@ -632,13 +636,13 @@ Template.adminTestCreator.events({
       , q         = t.$( '#question' ).val()
       , correct_a = t.$( 'input[ name="optradio" ]:checked' ).val();
       
-   if ( ! t.$( '#test-name' ).val() ) {
+   if ( ! t.$( '#test-name' ).val() || (!t.$('#test-name').val().replace(/\s/g, '').length)) {
       Bert.alert( 'Please ensure you\'ve named the test', 'danger' );
       t.$( '#test-name' ).css( 'border', '4px solid red' );
       return;
     }
     
-    if ( !q ) {
+    if ( !q || (!q.replace(/\s/g, '').length) ) {
       Bert.alert('Please enter a question before saving...', 'danger' );
       t.$( '#question' ).css( 'border', '2px solid red' );
       return;
@@ -824,13 +828,15 @@ Template.adminTestCreator.events({
     let curr_question = Number( t.$( '#q_num' ).text() )
       , ques_counter  = Number( t.$( '[ name="qnum" ]' ).val() );
     
+    if ( curr_question == ques_counter ) return;
+    
     Number(curr_question++);
      if ( curr_question >= ques_counter ) {
         hideQTypes();
         resetMC();
         resetTF();
         t.$( '#q_num' ).text( ques_counter );
-        
+      
         t.$( '#tf-edit' ).hide();
         t.$( '#tf-submit' ).show();
         t.$( '#mc-edit' ).hide();
@@ -931,11 +937,11 @@ function resetTF() {
   $( '#question' ).val('');
 }
 
-function resetMC( num ) {
+function resetMC() {
   $('#A').val('');
   $('#B').val('');
   $('#C').val('');
-  
+  $('#correct_ans').val('Please Select')
   $('#question').val('');
 }
 

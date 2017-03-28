@@ -173,7 +173,7 @@
                   min   = "0" 
                   max   = "1" 
                   value = "1" 
-                  step  = ".1"/>
+                  step  = ".1">
         </div>
         
       </div>
@@ -222,12 +222,12 @@
 <!-- CB-TEXT-TOOLBAR -->
   <div id="cb-text-toolbar">
     <div class="btn-group" style= "margin-top: -40px;">
+      <button type="button"
+              class="js-cb-text-edit btn btn-primary">
+        EDIT
+      </button>
       <button id="cb-editor-save-text" class="btn btn-success">
         SAVE
-      </button>
-      <button type="button"
-              class="js-cb-text-edit btn btn-success">
-        EDIT
       </button>
       <button type="button"
               class="js-cb-text-delete btn btn-danger">
@@ -539,7 +539,7 @@
                 <div class="row">
               	  <div class="col-sm-6">
               		  <div class="course-single-input">
-              			  <label for="course-builder-name">Please choose course name:</label>
+              			  <label for="course-builder-name">* Please choose course name:</label>
               			  <input  id      = "course-builder-name"
                               class   = "form-control"
                               type    = "text"
@@ -547,7 +547,7 @@
                         placeholder = "name" >
               		  </div>
               		  <div class="course-single-input">
-              			  <label for="course-builder-credits">How many credits is this course worth?</label>
+              			  <label for="course-builder-credits">* How many credits is this course worth?</label>
               			  <input  id          = "course-builder-credits"
               			          class       = "form-control"
                               type        = "number"
@@ -576,7 +576,7 @@
                               placeholder = "Percentage">
               			  <p>Leave blank if you want completion to indicate passing.</p>
                       
-                      <input  id    = "new-course-save"
+                      <input  id    = "cb-initial-dialog"
                               type  = "submit"
                               value = "SAVE">
               		  </div>
