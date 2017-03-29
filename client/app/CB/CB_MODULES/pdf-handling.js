@@ -65,7 +65,7 @@ export function cbPDFSave(  e,
 	}
 	
 	Bert.alert( 'Please standby...', 'success' );
-	
+
 	S3.upload(
 	          {
       				files:  fil, //files,
@@ -78,7 +78,7 @@ export function cbPDFSave(  e,
 		          
 			        //delete result._id;
 			        pdf   = result.secure_url;
-                
+
             	pdf_id =	Pdfs.insert({
               				          loaded:           result.loaded,
               				          percent_uploaded: result.percent_uploaded,
@@ -91,7 +91,7 @@ export function cbPDFSave(  e,
               				          file:             result.file,
               				          created_at:       moment().format()
             			       });
-            
+
             $( '#cb-video-toolbar' ).show();
             t.$( '#cb-current' ).val( `pdf-${master_num}` );
             

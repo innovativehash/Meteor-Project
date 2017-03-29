@@ -8,6 +8,9 @@
 
 
   let a_img_id  = ''
+    , img_id    = ''
+    , iwidth    = ''
+    , iheight   = ''
     , ig        = ''
     , itype     = '';
 
@@ -67,6 +70,8 @@
       //DEBUG INFO:
       console.log( 'img.width   = ' + myimage.width );
       console.log( 'img.height  = ' + myimage.height );
+      iwidth = myimage.width;
+      iheight = myimage.height;
       let b                     = new Buffer( ig, 'base64' ).length
       console.log( 'img.size ' + b );
       myimage = null;
@@ -91,22 +96,46 @@
     e.currentTarget.files[0].name = undefined;
     
     itype = '';
+//---------------------------------------------------------
+  }
 
+
+
+  /********************************************************
+   * #CB-IMAGE-SAVE  ::(CLICK)::
+   *******************************************************/
+  export function cbImageSave( e, t, page_no, master_num, P, Images ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    let fil   = t.$( '#course-builder-image' )[0].files
+	    , sf    = t.$( '#course-builder-image' ).data('subfolder')
+	    , obj;
+
+console.log(sf);
+
+  	if ( fil.length == 0 ) {
+  	  Bert.alert('You must upload an image before you can save', 'danger');
+  	  return;
+  	}
+	
+	  Bert.alert( 'Please standby...', 'success' );	  
+
+	  
 		S3.upload(
 		          {
         				files:  fil,      //files,
-        				path:   'images'  //"subfolder"
+        				path:   sf  //"subfolder"
 			        },
 			        
 			        function( error, result ){
+console.log('enter callback');
+
 				        let img_id = result.secure_url;
 				        
+                if ( error ) throw error;
 
-				        //let img = $( '#preview-image' );
-
-                //img.attr( "src", img_id );
-                //img.appendTo( '.image-preview' );
-                console.log(img_id);
+console.log(img_id);
 				        a_img_id = Images.insert({
                         				          loaded:           result.loaded,
                         				          percent_uploaded: result.percent_uploaded,
@@ -119,152 +148,131 @@
                         				          file:             result.file,
                         				          created_at:       moment().format()
 				                                });
-				      console.log( a_img_id);
+console.log( result.file );
+/*
+<div id="ig-${master_num}" 
+                            data-img_lnk="${a_img_id}" 
+                            data-pid="0" 
+                            style=" top:'100px';
+                                    left:'200px';
+                                    text-align: center; 
+                                    border: 4px solid #eee;
+                                    width:${iwidth + 10}px;
+                                    height:${iheight + 10}px;
+                                    float: left;
+                                    margin: 0 auto;
+                                    box-shadow:5px 5px 5px #888;
+                                    position:relative;
+                                    overflow:hidden;
+                                    cursor:move;">
+                            </div>
+*/
+                obj = `<div id="ig-${master_num}" 
+                            style="cursor:move;max-width:40%;max-height:40%">
+                        <img  id="im-${master_num}" 
+                              src="${img_id}"
+                              style="margin:0 auto;
+                              z-index:10;
+                              width:${iwidth}px;
+                              height:${iheight}px; 
+                              max-width:100%;
+                              max-height:100%;
+                              position:relative; 
+                              display:block;">
+                      </div>`;
+                     
+                  t.$( '#fb-template' ).append( obj );
+
+                  $( `#ig-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
+                  
+                  $( `#ig-${master_num}` ).resizable({ 
+                    handles: "all", 
+                    autoHide: false,
+                    aspectRatio: true,
+                    alsoResize: `#im-${master_num}`,
+                    containment: "#fb-template"
+                  });
+                  
+                  $( `#im-${master_num}` ).resizable();
+                  
+              
+                  //$( `#ig-${master_num}` ).attr( 'data-pid', `${Session.get('my_id')}` );
+                    //console.log( $( `#ig-${master_num}` ).data('pid'));
+
+                  P.append({
+                            page_no:          page_no,
+                            type:             'image',
+                            id:               `ig-${master_num}`,
+                            iid:              `im-${master_num}`,
+                            img_lnk:          a_img_id,
+                            offset:           $(`#ig-${master_num}`).offset(),
+                            iwidth:           $(`#im-${master_num}`).width(),
+                            iheight:          $(`#im-${master_num}`).height(),
+                            opacity:          $(`#ig-${master_num}`).css('opacity'),
+                            dwidth:           $(`#ig-${master_num}`).width(),
+                            dheight:          $(`#ig-${master_num}`).height(),
+                            src:              img_id         
+                  });
+                  
+/*
+                  
+                  (function( master_num ){
+              
+                    //document.getElementById( `ig-${master_num}` ).onmouseup =  (e) => {
+                    $( `#ig-${master_num}` ).on("mouseup", function(){
+                      
+                      e.preventDefault();
+                    
+                    //SHOW MEDIA TOOLBAR
+                    $( '#cb-title-toolbar' ).hide();
+                    $( '#cb-text-toolbar' ).hide();
+                    $( '#cb-media-toolbar' ).show();
+                    
+                    t.$( '#cb-current' ).val( `ig-${master_num}` );
+                    
+                    let pos = $( `#ig-${master_num}` ).offset()
+                      , src = $( `#im-${master_num}` ).attr('src')
+                      , id  = `ig-${master_num}`
+                      , idx = P.indexOf( `ig-${master_num}` );
+                      
+                    P.remove( `ig-${master_num}` );
+                    
+                    P.insert( idx, {
+                                  page_no:          page_no,
+                                  type:             'image',
+                                  id:               `ig-${master_num}`,
+                                  iid:              `im-${master_num}`,
+                                  img_lnk:          a_img_id,
+                                  offset:           $(`#ig-${master_num}`).offset(),
+                                  iwidth:           $(`#im-${master_num}`).width(),
+                                  iheight:          $(`#im-${master_num}`).height(),
+                                  opacity:          $(`#ig-${master_num}`).css('opacity'),
+                                  dwidth:           $(`#ig-${master_num}`).width(),
+                                  dheight:          $(`#ig-${master_num}`).height(),
+                                  src:              $(`#im-${master_num}`).attr('src') 
+                    });
+              
+                  }); //onmouseup
+            
+                })( master_num );
+*/             
+                  ig  = null;
+                  ext = null;
+                  $( '#preview-image' ).attr( 'src', null );
+                  t.$( '#add-image' ).modal( 'hide' );
+P.print();
+                  t.$( '#course-builder-image' ).val('');
 		         }
 		);
-
-    
-//---------------------------------------------------------
-  }
-
-
-
-  /********************************************************
-   * #CB-IMAGE-SAVE  ::(CLICK)::
-   *******************************************************/
-  export function cbImageSave( e, t, page_no, master_num, P ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    t.$( '#course-builder-image' ).val('');
-    
-    if ( ig == '' || ig == undefined || ig == null ) {
-      Bert.alert('You must upload an image before you can save', 'danger' );
-      return;
-    }
-    
-    t.$( '#fb-template' ).append( `<div id="ig-${master_num}" data-img_lnk="${a_img_id}" class="ui-widget-content" data-pid="0" style="top:'100px';left:'200px';text-align: center; width: auto;height:autborder: 4px solid #eee;
-        padding: 10px; float: left; margin: 0 auto;box-shadow:5px 5px 5px #888;position:relative;overflow:hidden;cursor:move;"><img id="im-${master_num}" src="${ig}" class="ui-widget-content" style="position:relative; display: block; margin:auto"></div>` );
-    
-    $( `#ig-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
-    $( `#ig-${master_num}` ).resizable({ 
-      handles: "all", 
-      autoHide: true,
-      aspectRatio: true,
-      alsoResize: `#im-${master_num}`,
-      containment: "#fb-template"
-    });
-    $( `#im-${master_num}` ).resizable();
-    
-    let pos   = {top:'100px', left:'200px'};
-      
-    P.append({
-              page_no:          page_no,
-              type:             'image',
-              id:               `ig-${master_num}`,
-              iid:              `im-${master_num}`,
-              img_lnk:          a_img_id,
-              offset:           $(`#ig-${master_num}`).offset(),
-              iwidth:           $(`#im-${master_num}`).width(),
-              iheight:          $(`#im-${master_num}`).height(),
-              opacity:          $(`#ig-${master_num}`).css('opacity'),
-              dwidth:           $(`#ig-${master_num}`).width(),
-              dheight:          $(`#ig-${master_num}`).height(),
-              src:              $(`#im-${master_num}`).attr('src')           
-    });
-/*
-    P.update( { _id: my_id },
-              { $push: 
-                {
-                  objects: {
-                    page_no:          page_no,
-                    type:             'image',
-                    id:               `ig-${master_num}`,
-                    iid:              `im-${master_num}`,
-                    img_lnk:          a_img_id,
-                    offset:           $(`#ig-${master_num}`).offset(),
-                    iwidth:           $(`#im-${master_num}`).width(),
-                    iheight:          $(`#im-${master_num}`).height(),
-                    opacity:          $(`#ig-${master_num}`).css('opacity'),
-                    dwidth:           $(`#ig-${master_num}`).width(),
-                    dheight:          $(`#ig-${master_num}`).height(),
-                    src:             `${ig}` 
-                  }
-                }
-              });
-*/
-    Meteor.setTimeout(function(){
-
-      $( `#ig-${master_num}` ).attr( 'data-pid', `${Session.get('my_id')}` );
-      //console.log( $( `#ig-${master_num}` ).data('pid'));
-    }, 500);
-    
-    (function( master_num, my_id ){
-
-      //document.getElementById( `ig-${master_num}` ).onmouseup =  (e) => {
-      $( `#ig-${master_num}` ).on("mouseup", function(){
-        
-        e.preventDefault();
-      
-      //SHOW MEDIA TOOLBAR
-      $( '#cb-title-toolbar' ).hide();
-      $( '#cb-text-toolbar' ).hide();
-      $( '#cb-media-toolbar' ).show();
-      
-      t.$( '#cb-current' ).val( `ig-${master_num}` );
-      
-      let pos = $( `#ig-${master_num}` ).offset()
-        , src = $( `#im-${master_num}` ).attr('src')
-        , id  = `ig-${master_num}`
-        , idx = P.indexOf( `ig-${master_num}` );
-        
-      P.remove( `ig-${master_num}` );
-      
-      P.insert( idx, {
-                    page_no:          page_no,
-                    type:             'image',
-                    id:               `ig-${master_num}`,
-                    iid:              `im-${master_num}`,
-                    img_lnk:          a_img_id,
-                    offset:           $(`#ig-${master_num}`).offset(),
-                    iwidth:           $(`#im-${master_num}`).width(),
-                    iheight:          $(`#im-${master_num}`).height(),
-                    opacity:          $(`#ig-${master_num}`).css('opacity'),
-                    dwidth:           $(`#ig-${master_num}`).width(),
-                    dheight:          $(`#ig-${master_num}`).height(),
-                    src:              $(`#im-${master_num}`).attr('src') 
-      });
-/*
-      P.update({ _id: my_id, "objects.id": id },
-               { $set:
-                  {
-                    "objects.$.page_no":      page_no,
-                    "objects.$.id":           `ig-${master_num}`, 
-                    "objects.$.type":         'image',
-                    "objects.$.iid":          `im-${master_num}`,
-                    "objects.$.img_lnk":      a_img_id,
-                    "objects.$.offset":       $(`#im-${master_num}`).offset(),
-                    "objects.$.zIndex":       $(`#im-${master_num}`).css('z-index'),
-                    "objects.$.iwidth":       $(`#im-${master_num}`).width(),
-                    "objects.$.iheight":      $(`#im-${master_num}`).height(),
-                    "objects.$.opacity":      $(`#ig-${master_num}`).css('opacity'),
-                    "objects.$.offset":       pos,
-                    "objects.$.dwidth":       $(`#ig-${master_num}`).width(),
-                    "objects.$.dheight":      $(`#ig-${master_num}`).height(),
-                    "objects.$.src":          src                  
-                  }
-              });
-*/
-
-P.print();
-    }); //onmouseup
-
-  })( master_num );
-
-    ig  = null;
-    ext = null;
-    $( '#preview-image' ).attr( 'src', null );
-    t.$( '#add-image' ).modal( 'hide' );
+		
+    //$(`#im-${master_num}`).attr('src') 
 
 //---------------------------------------------------------
   };
+  
+//BYTE ARRAY TO BASE64 ENCODE
+function byteArrayToBase64Encode(data)
+{
+    var str = data.reduce(function(a,b){ return a+String.fromCharCode(b) },'');
+    return btoa(str).replace(/.{76}(?=.)/g,'$&\n');
+}

@@ -881,7 +881,7 @@ Template.courseBuilderPage.events({
       , keys    = t.$( '#tags' ).val()
       , role
       , creator_id  = Meteor.userId()
-      , cid         = Meteor.user().profile.company_id;
+      , cid         = Meteor.user() && Meteor.user().profile && Meteor.user().profile.company_id;
 
       if ( percent  == '' ) percent = 1001; //completion is passing
       
@@ -1561,7 +1561,8 @@ let pobj = P.dump();
                           t,
                           t.page.get(), 
                           master_num++,
-                          P 
+                          P,
+                          Images
                         );
   },
 //---------------------------------------------------------
