@@ -110,7 +110,7 @@ Template.testView.events({
       
       }
       
-      Bert.alert( 'Congradulations!! You passed the test.', 
+      Bert.alert( 'Congratulations!! You passed the test!', 
                   'success', 
                   'fixed-top' );
       
@@ -119,7 +119,7 @@ Template.testView.events({
       $( '#score' ).addClass( 'label-danger' );
       $( '#score' ).text( percent + '%' );
       
-      Bert.alert( 'Sorry, you failed to earn the minimum score to pass', 
+      Bert.alert( 'Sorry, you failed to achieve the minimum score to pass', 
                   'danger', 
                   'fixed-top' );
     }

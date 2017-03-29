@@ -2969,6 +2969,9 @@ body.login {
     min-height: 625px; 
     /*max-height: 425px; */
     position: relative;
+    overflow:scroll; /*added by nfs*/
+    overflow-x: auto;
+    overflow-y: auto;
 }
 
 .curse-builder-box .notice {

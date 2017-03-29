@@ -40,7 +40,7 @@
                                           data-pid="0"
                                           data-page="${page_no}"
                                           data-editing="false">
-                                      ${txt}
+                                      ${escapeHtml(txt)}
                                   </span>`);
 
     t.$( `#txt-${master_num}` ).offset({ left: pos.left, top: pos.top });
@@ -50,7 +50,7 @@
       page_no:        page_no,
       type:           'text',
       id:             `txt-${master_num}`,
-      text:           txt,
+      text:           escapeHtml(txt),
       offset:         pos,
       zIndex:         $( `#txt-${master_num}` ).css('z-index'),
       fontSize:       $( `#txt-${master_num}` ).css('font-size'),
@@ -116,7 +116,7 @@ P.print();
       page_no:        page_no,
       type:           'text',
       id:             id,
-      text:           str,
+      text:           escapeHtml(str),
       offset:         pos,
       zIndex:         $( `#txt-${master_num}` ).css('z-index'),
       fontSize:       $( `#txt-${master_num}` ).css('font-size'),

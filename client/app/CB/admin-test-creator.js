@@ -22,6 +22,8 @@ Template.adminTestCreator.onCreated(function(){
   /*
     $('#cover').show();
   */
+  Test.remove({});
+  testidnum = undefined;
 //-------------------------------------------------------------------
 });
 
@@ -177,7 +179,10 @@ Template.adminTestCreator.events({
 
     if ( ! t.$( '#ans-mc' ).hasClass( 'hide' ) )
       t.$( '#ans-mc' ).addClass( 'hide' );
-
+    
+    //CLEAR LOCAL DB
+    Test.remove({});
+    
     //RETURN TO COURSE BUILDER
     if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( `/teacher/dashboard/course-builder/${Meteor.userId()}?rtn=test&id=${testidnum}` );
@@ -328,7 +333,7 @@ Template.adminTestCreator.events({
     //correct answer
     let correct_a   = t.$( '#correct_ans' ).val(); //A, B, C
     if ( correct_a == 'Please Select' ) {
-      Bert.alert('Please ensure you\'ve entered both question\'s and the correct answer before saving.', 'danger' );
+      Bert.alert('Please ensure you\'ve entered at least two alternative answers and the correct answer before saving', 'danger' );
       return;      
     }
     

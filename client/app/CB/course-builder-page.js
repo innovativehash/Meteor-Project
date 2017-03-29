@@ -104,7 +104,9 @@ Template.courseBuilderPage.onCreated( function() {
           //, t = $('#p').attr('data-t');
           
         switch ( draggedType ) {
-          
+/*
+ * TITLE
+ */
           case 'title':
              try {
 
@@ -152,6 +154,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
             
           case 'text':
+/*
+ * TEXT
+ */
               try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -203,13 +208,20 @@ Template.courseBuilderPage.onCreated( function() {
 			        $( '.js-cb-text-delete' ).hide();
 			        $( '#cb-editor-save-text' ).show();
               $( '#cb-text-toolbar' ).show();
-
+              
+              $( '#fb-template' ).hide();
+              $( '#cb-next-btn' ).prop('disabled', true );
+              $( '#cb-prev-btn' ).prop('disabled', true );
+              
 			       editor1 = CKEDITOR.appendTo( 'editor1', config, html );
 			          
               //addText( evt.pageX, evt.pageY );
               break;
               
           case 'g-image':
+/*
+ * IMAGE
+ */
                try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -263,6 +275,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
             
           case 'video':
+/*
+ * VIDEO
+ */
                 try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -320,6 +335,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
             
           case 'pdf':
+/*
+ * PDF
+ */
                  try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -378,6 +396,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
             
           case 'powerpoint':
+/*
+ * PPT
+ */
                  try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -441,6 +462,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
             
           case 'scorm':
+/*
+ * SCORM
+ */
                  try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -504,6 +528,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
             
           case 'test':
+/*
+ * TEST
+ */
                  try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -639,6 +666,10 @@ Template.courseBuilderPage.onRendered( function() {
   $('#cb-title-toolbar').hide();
   $('#cb-video-toolbar').hide();
   
+/*
+ * SUCCESSFUL RETURN FROM TEST CREATION
+ */
+ 
   if (  FlowRouter.getQueryParam( "rtn" ) &&
         FlowRouter.getQueryParam( "id"  )
      )
@@ -666,11 +697,15 @@ Template.courseBuilderPage.onRendered( function() {
     this.page.set( test_session_bak.page );
     this.total.set( test_session_bak.total );
     this.return_page.set(test_session_bak.rtn_page);
-    console.log( this.return_page.get() );
+    
     P.print()
     return;
   }
   
+/*
+ * CANCELED TEST RETURN
+ */
+ 
   if (  FlowRouter.getQueryParam( "rtn" ) &&
         FlowRouter.getQueryParam( "cancel" )
      )
@@ -686,7 +721,8 @@ Template.courseBuilderPage.onRendered( function() {
       this.return_page.set( test_session_bak.rtn_page);
       this.rtn.set( test_session_bak.rtn_page );
     }
-    
+console.log( Session.get('obj'));
+console.log( Session.get('Scratch'));    
     Session.set('obj', null);
     test_session_bak = null;
     return;
@@ -777,7 +813,10 @@ Template.courseBuilderPage.events({
     $( '#cb-video-toolbar' ).hide();
  
     let p   = t.page.get()
-      , tt  = t.total.get();
+      , tt  = t.total.get()
+      , chk = P.dumpPage(p);
+      
+    if ( chk == undefined ) return;
        
     
     $('#fb-template').empty().show();
@@ -1359,7 +1398,8 @@ let pobj = P.dump();
    let cur = $('#cb-current').val()
     , txt = editor1 && editor1.getData(); //CKEDITOR.instances.editor1.getData();
 	  
-	 if ( txt == '' || txt == undefined || txt == null ) {
+	 //DON'T ACCEPT EMPTY INPUT
+	 if ( txt == '' || txt == undefined || txt == null || (! txt.replace(/\s/g, '').length) ) {
 	   Bert.alert('You must enter text to be saved', 'danger');
 	   return;
 	 }
@@ -1413,6 +1453,12 @@ let pobj = P.dump();
                             );
    }
    
+   //SHOW CANVAS AS IT WAS HIDDEN WHEN TEXT EDITOR WAS DISPLAYED
+   $( '#fb-template' ).show();
+   
+   //ALLOW PAGE ADVANCE / DECREMENT
+   $( '#cb-next-btn' ).prop('disabled', false );
+   $( '#cb-prev-btn' ).prop('disabled', false );
 		//Bert.alert('Saving Text...', 'success');
     
     //CKEDITOR.instances.editor1.setData('');

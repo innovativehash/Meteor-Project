@@ -214,15 +214,19 @@ export class PageObject {
   }
 
   dumpPage( p ) {
-    let current = this.head
-      , arr     = Number( current.element.page_no ) == Number( p ) ? [current.element] : [];
-    while( current.next ) {
-      current = current.next;
-      if ( Number( current.element.page_no ) == Number( p ) ) {
-        arr.push( current.element )
+    try {
+      let current = this.head
+        , arr     = Number( current.element.page_no ) == Number( p ) ? [current.element] : [];
+      while( current.next ) {
+        current = current.next;
+        if ( Number( current.element.page_no ) == Number( p ) ) {
+          arr.push( current.element )
+        }
       }
+      return arr;
+    } catch (e) {
+      ;
     }
-    return arr;
   }
   
   getHead(){

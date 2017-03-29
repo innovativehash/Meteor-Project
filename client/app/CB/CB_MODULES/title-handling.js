@@ -45,19 +45,11 @@ console.log( 'page no ' + page_no );
     t.$( `#tit-${master_num}` ).offset({ left: pos.left, top: pos.top });
     t.$( `#tit-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
     
-/* DEBUG
-console.log('------------');
-console.log('before initial insert')
-P.print();
-console.log( P.dump() );
-console.log('-------------');
-*/
-
     P.append({
                     page_no:  page_no,
                     type:     'title',
                     id:       `tit-${master_num}`,
-                    text:     str,
+                    text:     escapeHtml(str),
                     offset:   pos,
                     zIndex:           $( `#tit-${master_num}` ).css('z-index'),
                     fontSize:         $( `#tit-${master_num}` ).css('font-size'),
@@ -67,13 +59,6 @@ console.log('-------------');
                     textDecoration:   $( `#tit-${master_num}` ).css('text-decoration'),
                     opacity:          $( `#tit-${master_num}` ).css('opacity')
               });
-/* DEBUG  
-console.log('------------');
-console.log('after insert');
-P.print();
-console.log( P.dump() );
-console.log('------------');
-*/
     Meteor.setTimeout(function(){
       
       //$( `#tit-${master_num}` ).attr( 'data-pid', `${my_id}` );
@@ -108,20 +93,12 @@ console.log('------------');
         $( '#cb-title-toolbar' ).show();
         $( '#cb-text-toolbar' ).hide();
 
-/* DEBUG        
-console.log('-------');    
-console.log('before mouseup update');
-P.print();
-console.log( P.dump() );
-console.log('-----------');
-*/
-
         P.remove( `tit-${master_num}` );
         P.insert( idx, { 
                       page_no:  page_no,
                       id:       id,
                       type:     'title',
-                      text:     str,
+                      text:     escapeHtml(str),
                       offset:   pos,
                       zIndex:           $( `#tit-${master_num}` ).css('z-index'),
                       fontSize:         $( `#tit-${master_num}` ).css('font-size'),
@@ -131,12 +108,6 @@ console.log('-----------');
                       textDecoration:   $( `#tit-${master_num}` ).css('text-decoration'),
                       opacity:          $( `#tit-${master_num}` ).css('opacity')
                   });
-/* DEBUG
-console.log('----------');            
-console.log('after mouseup update');
-console.log( P.print() );
-console.log('----------');
-*/
       });//onmouseup
 
     })( master_num, my_id );//anon function

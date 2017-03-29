@@ -10,11 +10,11 @@ import * as CBCreateDOM from './createDOM.js';
 
 
 export function render( e, t, arr, P ) {
-    
     for( let z = 0, zlen = arr.length; z < zlen; z++ ) {
       if ( arr[z].type == 'test') {
         $('#fb-template').hide();
         $('#test_v').show();
+        Session.set('Scratch', arr[z].id );
       }  else {
         $('#test_v').hide();
         $('#fb-template').show();
