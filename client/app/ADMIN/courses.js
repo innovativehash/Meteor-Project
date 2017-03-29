@@ -154,53 +154,12 @@ Template.courses.events({
     e.preventDefault();
     e.stopImmediatePropagation();
 
-     /* OPEN EDIT DIALOG */
       let idx = $( e.currentTarget ).data( 'id' );
 
       idx = String( idx );
       let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
 
-      BootstrapDialog.show({
-        title: "Edit Course",
-        message:  //'<div class="pop-up-area students">' +
-                      //'<div class="popup-body">' +
-                         // '<div class="row">' +
-                              '<div class="col-sm-6">' +
-                                '<label>Course Name:</label>'+
-                                  '<input class="js-name" type="text" placeholder="' + c.name + '"' + '/>' +
-                                '</div>' +
-                               // '<div class="row">' +
-                                    '<div class="col-sm-6">' +
-                                      '<label>Credits:</label>' +
-                                        '<input class="js-credits" type="text" placeholder="' + c.credits + '"' + '/>' +
-                                     // '</div>' +
-                                 // '</div>' +
-                                  '</div>',
-        buttons: [
-          {
-            label: 'Commit Edit',
-            cssClass: 'btn-success',
-            action: function( dialog ) {
-              let nm = $( ".js-name" ).val().trim()    || c.name;
-              let cr = $( ".js-credits" ).val().trim() || c.credits;
-
-              Courses.update( { _id: c._id  },
-                              {
-                                $set: { "name": nm, "credits": cr }
-                              });
-              Bert.alert( 'Course changes successfully saved.', 'success' );
-              
-              dialog.close();
-            }
-          },
-          {
-            label: 'Cancel Edit',
-            cssClass: 'btn-danger',
-            action: function( dialog ) {
-              dialog.close();
-            }
-          }]
-        });
+      //navigate to course builder for editing.
 //-------------------------------------------------------------------
   },
 
@@ -237,48 +196,7 @@ Template.courses.events({
     
     Courses.update({ _id: idx },
                     { $set: { isArchived: true }});
-/*
-    // ARE YOU SURE YOU WANT TO DELETE... 
-    let idx = $( e.currentTarget ).data( 'id' );
-    let nm  = $( e.currentTarget ).data( 'name' );
-    BootstrapDialog.show({
-      title: "Delete Course",
-      message:  '<div class="pop-up-area students">' +
-                  '<div class="popup-body">' +
-                    '<div class="row">' +
-                      '<div class="col-sm-12">' +
-                        '<strong>Are you sure you want to delete this course?</strong>' +
-                        '<div class="name">' +
-                          '<span style="color:white;">' + nm + '</span>' +
-                        '</div></div></div></div></div>',
-      buttons: [{
-              
-              //DELETE ASSOC:
-              //bubilt-courses,
-              //tests,
-              //pdfs
-              //ppts
-              //scorms
-    
-              label: 'Delete Course',
-              cssClass: 'btn-danger',
-              action: function( dialog ) {
-                Courses.update( { _id: idx },
-                                { $pull: { company_id: Meteor.user().profile.company_id }});
-                //maybe some logic to remove this course from students currently taking it?
-                Bert.alert('The course is successfully removed', 'success' );
-                dialog.close();
-              }
-        },
-        {
-            label: 'Cancel Delete',
-            cssClass: 'btn-primary',
-            action: function( dialog ) {
-              dialog.close();
-            }
-        }]
-    });
-*/
+
 //-------------------------------------------------------------------
   },
 

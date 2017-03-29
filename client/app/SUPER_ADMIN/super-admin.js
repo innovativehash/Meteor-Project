@@ -1,6 +1,14 @@
-
+/*
+ * @module superAdmin
+ *
+ * @programmer Nick Sardo <nsardo@aol.com>
+ * @copyright  2016-2017 Collective Innovation
+ */
 import { Students }   from '../../../both/collections/api/students.js';
 import { Newsfeeds }  from '../../../both/collections/api/newsfeeds.js';
+
+import './super-admin.html';
+
 
 Template.superAdmin.helpers({
   

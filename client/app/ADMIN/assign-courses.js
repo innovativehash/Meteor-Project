@@ -319,7 +319,7 @@ Template.assignCourses.events({
       abd = true;
     }
     
-    type    = type.slice( 0, type.length - 1 );
+    type    = type.slice( 0 );
  
       let o   = { id: idx, 
                   name: nm, 
