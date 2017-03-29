@@ -111,7 +111,7 @@ P.print();
       $( '#cb-text-toolbar' ).show();
       $( '#cb-title-toolbar' ).hide();
       
-      P.remove( `txt-${master_num}` );
+      P.removeAt( idx );
       P.insert( idx, { 
       page_no:        page_no,
       type:           'text',

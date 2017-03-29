@@ -212,7 +212,7 @@ export class PageObject {
   dump(){
       return this.toString();
   }
-
+  
   dumpPage( p ) {
     try {
       let current = this.head

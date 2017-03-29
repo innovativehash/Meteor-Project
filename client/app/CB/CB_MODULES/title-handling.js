@@ -17,8 +17,6 @@
                                   ) {
     e.preventDefault();
 
-console.log( 'page no ' + page_no );
-
     if ( t.$( '#added-title' ).val() == undefined || t.$( '#added-title' ).val() == '' ) {
       try {
         $( '#added-title' ).remove();
@@ -59,12 +57,13 @@ console.log( 'page no ' + page_no );
                     textDecoration:   $( `#tit-${master_num}` ).css('text-decoration'),
                     opacity:          $( `#tit-${master_num}` ).css('opacity')
               });
+/*              
     Meteor.setTimeout(function(){
       
       //$( `#tit-${master_num}` ).attr( 'data-pid', `${my_id}` );
 
     }, 500);
-    
+*/  
     //-------------------------------
     // TITLE OBJECT CLICK EVENT
     //-------------------------------
@@ -92,8 +91,11 @@ console.log( 'page no ' + page_no );
         //SHOW RELATED EDITING TOOLBAR
         $( '#cb-title-toolbar' ).show();
         $( '#cb-text-toolbar' ).hide();
-
-        P.remove( `tit-${master_num}` );
+        $( '#cb-media-toolbar').hide();
+        $( '#cb-video-toolbar').hide();
+        
+        //P.remove( `tit-${master_num}` );
+        P.removeAt( idx );
         P.insert( idx, { 
                       page_no:  page_no,
                       id:       id,
@@ -111,7 +113,7 @@ console.log( 'page no ' + page_no );
       });//onmouseup
 
     })( master_num, my_id );//anon function
-    
+P.print();    
 //---------------------------------------------------------------------------
   };
 

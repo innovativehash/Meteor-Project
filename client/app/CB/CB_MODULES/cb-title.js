@@ -46,7 +46,7 @@
       let idx = P.indexOf( `${cur}` )
         , pos = t.$( `#${cur}` ).offset();
         
-      P.remove( `${cur}` );
+      P.removeAt( idx );
       P.insert( idx, { 
                         page_no:  t.page.get(),
                         id:       `${cur}`,
@@ -77,13 +77,13 @@
     let cur = t.$( '#cb-current' ).val()
       , idx = P.indexOf(`${cur}`);
     
+    P.removeAt( idx );
+    
     pp.update( { _id: Session.get('my_id') },
           { $pull: { objects:{ id:{$eq: cur} } }});
         
     t.$( `#${cur}` ).remove();
     t.$( '#cb-current' ).val('');
-    
-    P.removeAt( idx );
     
     t.$( '#cb-title-toolbar' ).hide(); 
     
@@ -115,7 +115,7 @@
       //          {$set:{ "objects.$.fontStyle": 'normal' }});
     }
     
-    P.remove( `${cur}` );
+    P.removeAt( idx );
     P.insert( idx, { 
                       page_no:  t.page.get(),
                       id:       `${cur}`,
@@ -156,7 +156,7 @@
       //          {$set:{ "objects.$.fontWeight": '' }});
     }
     
-    P.remove( `${cur}` );
+    P.removeAt( idx );
     P.insert( idx, { 
                       page_no:  t.page.get(),
                       id:       `${cur}`,
@@ -198,7 +198,7 @@
       //          {$set:{ "objects.$.textDecoration": ''}});
     }
     
-    P.remove( `${cur}` );
+    P.removeAt( idx );
     P.insert( idx, { 
                       page_no:  t.page.get(),
                       id:       `${cur}`,
@@ -227,7 +227,6 @@
     e.preventDefault();
     
     let cur = t.$( '#cb-current' ).val()
-      //, id  = $( `#${cur}` ).data('pid')
       , fsz = t.$(e.currentTarget).val()
       , pg  = t.$( `#${cur}` ).data('page')
       , pos = t.$( `#${cur}` ).offset();
@@ -251,7 +250,7 @@
       , idx = P.indexOf(`${cur}`)
       , pos = t.$( `#${cur}` ).offset();
     
-    P.remove( `${cur}` );
+    P.removeAt( idx );
     P.insert( idx, { 
                       page_no:  t.page.get(),
                       id:       `${cur}`,
@@ -304,7 +303,7 @@
       , idx = P.indexOf(`${cur}`)
       , pos = t.$( `#${cur}` ).offset();
     
-    P.remove( `${cur}` );
+    P.removeAt( idx );
     P.insert( idx, { 
                       page_no:  t.page.get(),
                       id:       `${cur}`,

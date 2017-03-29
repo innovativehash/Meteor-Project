@@ -661,8 +661,9 @@ Template.courseBuilderPage.onRendered( function() {
 
   $('#test_v').hide();
   
-  $('#cb-text-toolbar').hide();
   $('#cb-media-toolbar').hide();
+  $('#cb-text-toolbar').hide();
+  $('#cb-bar').hide();
   $('#cb-title-toolbar').hide();
   $('#cb-video-toolbar').hide();
   
@@ -1408,7 +1409,7 @@ let pobj = P.dump();
     let idx = P.indexOf( `${cur}` )
       , pos = $( `#${cur}` ).offset();
     
-    P.remove( `${cur}` );
+    P.removeAt( idx );
     
     P.insert( idx, { 
       page_no:        t.page.get(),
@@ -1476,18 +1477,19 @@ let pobj = P.dump();
  
     //I.E. txt-0
     let cur = $( '#cb-current' ).val()
-      , page_no = t.page.get();
-		
-		P.remove( `${cur}` );
+      , page_no = t.page.get()
+      , idx     = P.indexOf( cur );
+
+ 		P.removeAt( idx );
+ 		
     $( `#${cur}` ).remove();
     $( '#cb-current' ).val('');
-
+    
+     pp.update( { _id: Session.get('my_id') },
+              { $pull: { pages:{ id: cur} } });
     
     $('#cb-text-toolbar').hide()
 
-    pp.update( { _id: Session.get('my_id') },
-              { $pull: { pages:{ id: cur} } }); 
-    
     console.log( pp.find({}).fetch() );
     P.print();
     //editor1.destroy();
@@ -1508,13 +1510,16 @@ let pobj = P.dump();
     e.preventDefault();
     
     let cur = $( '#cb-current' ).val()
-      , page_no = t.page.get();
-    
- 		P.remove( `${cur}` );
+      , page_no = t.page.get()
+      , idx     = P.indexOf( cur );
+
+ 		P.removeAt( idx );
+ 		
     $( `#${cur}` ).remove();
     $( '#cb-current' ).val('');
+    
      pp.update( { _id: Session.get('my_id') },
-              { $pull: { pages:{ id: cur} } }); 
+              { $pull: { pages:{ id: cur} } });     
     
     console.log( pp.find({}).fetch() );
     P.print();
@@ -1541,9 +1546,10 @@ let pobj = P.dump();
     e.preventDefault();  
     
     let cur     = $( '#cb-current' ).val()
-      , page_no = t.page.get();
-    
- 		P.remove( `${cur}` );
+      , page_no = t.page.get()
+      , idx     = P.indexOf( cur );
+
+ 		P.removeAt( idx );
  		
     $( `#${cur}` ).remove();
     $( '#cb-current' ).val('');
@@ -1553,9 +1559,6 @@ let pobj = P.dump();
     
     console.log( pp.find({}).fetch() );
     P.print();
-    
-    //P.update( { _id: Session.get('my_id') },
-              //{ $pull: { objects:{ id:{$eq: cur} } }});
     
     $( '#cb-media-toolbar' ).hide();
     
@@ -1575,13 +1578,43 @@ let pobj = P.dump();
     
     $( `#${cur}` ).css( 'opacity', opm );
     
-    $( '#opm' ).val( op );
+    $( '#opm' ).val( opm );
     //P.update( { _id: id, "objects.page_no":pg }, 
     //          {$set:{"objects.$.opacity": op }});
 //---------------------------------------------------------
   },
  
+ 
 
+/**********************************************************
+ * .JS-MEDIA-OPACITY  ::(MOUSEUP)::
+ *********************************************************/
+'mouseup .js-media-opacity'( e, t ) {
+  
+  let cur = t.$( '#cb-current' ).val()
+    , idx = P.indexOf( cur )
+    , pos = t.$( `#${cur}` ).offset()
+    , obj;
+    
+  obj = P.removeAt( idx );
+
+  P.insert( idx, {
+          page_no:          t.page.get(),
+          type:             'image',
+          id:               `${obj.id}`,
+          iid:              `${obj.iid}`,
+          img_lnk:          `${obj.a_img_id}`,
+          offset:           pos,
+          iwidth:           `${obj.iwidth}`,
+          iheight:          `${obj.iheight}`,
+          opacity:          $(`#${cur}`).css('opacity'),
+          dwidth:           `${obj.dwidth}`,
+          dheight:          `${obj.dheight}`,
+          src:              `${obj.src}`         
+
+  });
+
+},
 //-------------------------------------END MEDIA TOOLBAR---
 
 
@@ -1589,10 +1622,10 @@ let pobj = P.dump();
   /********************************************************
    * #COURSE-BUILDER-IMAGE ::(CHANGE)::
    *******************************************************/
-  'change #course-builder-image'( e, t ) {
+  //'change #course-builder-image'( e, t ) {
 
-    CBImage.cbImageChange( e, t /*, Images */ );
-  },
+    //CBImage.cbImageChange( e, t /*, Images */ );
+  //},
 //---------------------------------------------------------
 
 

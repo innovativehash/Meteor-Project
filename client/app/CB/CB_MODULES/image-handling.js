@@ -4,46 +4,40 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovations
  */
-
-
-
-  let a_img_id  = ''
-    , img_id    = ''
-    , iwidth    = ''
-    , iheight   = ''
-    , ig        = ''
-    , itype     = '';
-
-
-  /**
-   * RESET
-   */
-  export function cbImageReset() {
-
-    a_img_id  = ''
-    ig        = '';
-    itype     = '';
-  }
-
-
-
-  /********************************************************
-   * #COURSE-BUILDER-IMAGE ::(CHANGE)::
+ 
+   /********************************************************
+   * #CB-IMAGE-SAVE  ::(CLICK)::
    *******************************************************/
-  export function cbImageChange( e, t /*,Images*/ ) {
-    
+  export function cbImageSave( e, t, page_no, master_num, P, Images ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
-    
+
     if ( e.currentTarget.files === 'undefined' ) {
       console.log('aborted');
       return;
     }
 
-    itype = e.currentTarget.files[0].type;
+    let ext   = t.$( '#course-builder-image' )[0].files[0].name
+      , itype = t.$( '#course-builder-image' )[0].files[0].type;
+      
+    ext = String(ext);
     
-    if ( itype != 'image/png' && itype != 'image/jpeg' ) {
-      Bert.alert( 'Incompatible Image Format: must be either a jpg or png file', 'danger' );
+    try {
+      ext = ext.slice(ext.lastIndexOf('.'));
+    } catch (e) {
+      ;
+    }
+    
+    if  (  
+          itype != 'image/png'  && 
+          itype != 'image/jpeg' && 
+          itype != 'image/gif'  &&
+          ext   != '.gif'       &&
+          ext   != '.jpg'       &&
+          ext   != '.jpeg'      &&
+          ext   != '.png'
+        ) 
+    {
+      Bert.alert( 'Incompatible Image Format: must be either a jpg, png, or gif file', 'danger' );
 
       e.currentTarget.files         = undefined;
       e.currentTarget.files[0]      = undefined;
@@ -52,61 +46,6 @@
       t.$( '#course-builder-image' ).val('');
       return;
     }
-
- 
-    let fil = t.$( '#course-builder-image' ).get(0).files[0];
-    
-    let fr  = new FileReader();
-
-    let myimage = new Image();
-
-    fr.onload   = function() {
-
-      ig        = this.result;
-
-      //orig
-      myimage.src = ig;
-
-      //DEBUG INFO:
-      console.log( 'img.width   = ' + myimage.width );
-      console.log( 'img.height  = ' + myimage.height );
-      iwidth = myimage.width;
-      iheight = myimage.height;
-      let b                     = new Buffer( ig, 'base64' ).length
-      console.log( 'img.size ' + b );
-      myimage = null;
-    };
-
-    // READS AN IMAGE, CALLS BACK fr.ONLOAD
-    fr.readAsDataURL( fil );
-
-    Meteor.setTimeout( function() {
-      if ( ig ) {
-        let img = $( '#preview-image' );
-
-        img.attr( "src", ig ); // ig
-        img.appendTo( '.image-preview' );
-      } else {
-          img = null;
-      }
-    }, 200);
-    
-    e.currentTarget.files         = undefined;
-    e.currentTarget.files[0]      = undefined;
-    e.currentTarget.files[0].name = undefined;
-    
-    itype = '';
-//---------------------------------------------------------
-  }
-
-
-
-  /********************************************************
-   * #CB-IMAGE-SAVE  ::(CLICK)::
-   *******************************************************/
-  export function cbImageSave( e, t, page_no, master_num, P, Images ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
 
     let fil   = t.$( '#course-builder-image' )[0].files
 	    , sf    = t.$( '#course-builder-image' ).data('subfolder')
@@ -118,7 +57,7 @@ console.log(sf);
   	  Bert.alert('You must upload an image before you can save', 'danger');
   	  return;
   	}
-	
+
 	  Bert.alert( 'Please standby...', 'success' );	  
 
 	  
@@ -149,32 +88,15 @@ console.log(img_id);
                         				          created_at:       moment().format()
 				                                });
 console.log( result.file );
-/*
-<div id="ig-${master_num}" 
-                            data-img_lnk="${a_img_id}" 
-                            data-pid="0" 
-                            style=" top:'100px';
-                                    left:'200px';
-                                    text-align: center; 
-                                    border: 4px solid #eee;
-                                    width:${iwidth + 10}px;
-                                    height:${iheight + 10}px;
-                                    float: left;
-                                    margin: 0 auto;
-                                    box-shadow:5px 5px 5px #888;
-                                    position:relative;
-                                    overflow:hidden;
-                                    cursor:move;">
-                            </div>
-*/
+
                 obj = `<div id="ig-${master_num}" 
                             style="cursor:move;max-width:40%;max-height:40%">
                         <img  id="im-${master_num}" 
                               src="${img_id}"
                               style="margin:0 auto;
                               z-index:10;
-                              width:${iwidth}px;
-                              height:${iheight}px; 
+                              width:200px;
+                              height:200px; 
                               max-width:100%;
                               max-height:100%;
                               position:relative; 
@@ -214,7 +136,7 @@ console.log( result.file );
                             src:              img_id         
                   });
                   
-/*
+
                   
                   (function( master_num ){
               
@@ -224,6 +146,7 @@ console.log( result.file );
                       e.preventDefault();
                     
                     //SHOW MEDIA TOOLBAR
+                    $( '#cb-video-toolbar').hide();
                     $( '#cb-title-toolbar' ).hide();
                     $( '#cb-text-toolbar' ).hide();
                     $( '#cb-media-toolbar' ).show();
@@ -235,8 +158,8 @@ console.log( result.file );
                       , id  = `ig-${master_num}`
                       , idx = P.indexOf( `ig-${master_num}` );
                       
-                    P.remove( `ig-${master_num}` );
-                    
+                    //P.remove( `ig-${master_num}` );
+                    P.removeAt( idx );
                     P.insert( idx, {
                                   page_no:          page_no,
                                   type:             'image',
@@ -255,7 +178,7 @@ console.log( result.file );
                   }); //onmouseup
             
                 })( master_num );
-*/             
+            
                   ig  = null;
                   ext = null;
                   $( '#preview-image' ).attr( 'src', null );
@@ -268,11 +191,6 @@ P.print();
     //$(`#im-${master_num}`).attr('src') 
 
 //---------------------------------------------------------
-  };
+	}
   
-//BYTE ARRAY TO BASE64 ENCODE
-function byteArrayToBase64Encode(data)
-{
-    var str = data.reduce(function(a,b){ return a+String.fromCharCode(b) },'');
-    return btoa(str).replace(/.{76}(?=.)/g,'$&\n');
-}
+ 
