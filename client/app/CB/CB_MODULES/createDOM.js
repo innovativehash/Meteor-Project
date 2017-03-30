@@ -20,17 +20,16 @@ export class CreateDOM {
     this.titles.push(`<span id="${obj.id}" style="cursor:move;position:relative;font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
     this.markup.push( 
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
-                      `$('#${obj.id}').draggable();`
+                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
                     );
                       
   }
 
   makeText( obj ){
-
     this.texts.push(`<span id="${obj.id}" style="cursor:move;position:relative;font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
     this.markup.push( 
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
-                      `$('#${obj.id}').draggable();`
+                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
                     );
   }
 
@@ -39,8 +38,9 @@ export class CreateDOM {
     this.images.push( `<div id="${obj.id}" data-img_lnk="${obj.img_lnk}" class="ui-widget" style="position:relative;cursor:move;text-align: center; width:${obj.dwidth}px;height:${obj.dheight}px;border: 4px solid #eeepadding 10px; float: left; margin: 0 auto;box-shadow:5px 5px 5px #888;opacity:${obj.opacity}"><img id="${obj.iid}" src="${obj.src}" style="position:relative;width:${obj.iwidth}px;height:${obj.iheight}px;"></div>`);
     this.markup.push( 
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
-                      `$('#${obj.id}').draggable();`,
-                      `$('#${obj.id}').resizable({ handles: "all", autoHide: false, aspectRatio: true, alsoResize: "#${obj.iid}" });`
+                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
+                      `$('#${obj.id}').resizable({ handles: "all", autoHide: false, aspectRatio: true, alsoResize: "#${obj.iid}", containment: "#fb-template" });`,
+                      `$('#${obj.iid}').resizable();`
                     );
     
   }
@@ -95,7 +95,6 @@ export class CreateDOM {
     for ( let n = 0, nlen = this.videos.length; n < nlen; n++ ) {
       ret_str += this.videos[n];
     }
-    
     return [ret_str, this.markup];
   }
 }

@@ -16,7 +16,6 @@ import { Newsfeeds }      from '../../../both/collections/api/newsfeeds.js';
 import './test-view.html';
 
 let id;
-//let Scratch = new Mongo.Collection(null)
 
 
 Template.testView.onCreated(function(){
@@ -59,7 +58,7 @@ Template.testView.events({
       , credits         = Number(c.credits)
       , passing_percent = Number(c.passing_percent)
       , name            = c.name;
-    
+      
     /*
       LEGEND:
       |----------------------------------------------------------------------|
@@ -82,43 +81,36 @@ Template.testView.events({
     }
   //console.log( 'total_score= ' + total_score );
   
-    let percent = Number( total_score / total_questions ) * 100;
+    let percent = Math.ceil(Number( total_score / total_questions ) * 100);
     $( '#yosco' ).show();
   //console.log( 'percent = ' + percent );
   
-//TODO:  GET CORRECT ANS PERCENTAGE FOR THIS TEST AND USE IT
-
     if ( percent >= passing_percent || passing_percent == 1001 ) {
       $( '#score' ).addClass( 'label-success' );
       $( '#score' ).text( percent + '%' );
       
-      Meteor.setTimeout(function(){
-
-        Meteor.call( 'courseCompletionUpdate', name, cid, percent, credits );
-        
-        Newsfeeds.insert({ 
-              owner_id:       Meteor.userId(),
-              poster:         uname,
-              poster_avatar:  Meteor.user().profile.avatar,
-              type:           "passed-course",
-              private:        false,
-              news:           `${uname} has just passed the course: ${name}!`,
-              comment_limit:  3,
-              company_id:     Meteor.user().profile.company_id,
-              likes:          0,
-              date:           new Date()  
-        });
-      }, 300);
+      if ( ! Meteor.user().roles.admin ) {
+        Meteor.setTimeout(function() {
+  
+          Meteor.call( 'courseCompletionUpdate', name, cid, percent, credits );
+          
+          Newsfeeds.insert({ 
+                owner_id:       Meteor.userId(),
+                poster:         uname,
+                poster_avatar:  Meteor.user().profile.avatar,
+                type:           "passed-course",
+                private:        false,
+                news:           `${uname} has just passed the course: ${name}!`,
+                comment_limit:  3,
+                company_id:     Meteor.user().profile.company_id,
+                likes:          0,
+                date:           new Date()  
+          });
+        }, 300);
       
+      }
       
-      /*
-       *
-       * ADD COURSES CREDITS TO STUDENT!!!!!!
-       *
-       */
-       
-       
-      Bert.alert( 'Congradulations!! You passed the test.', 
+      Bert.alert( 'Congratulations!! You passed the test!', 
                   'success', 
                   'fixed-top' );
       
@@ -127,7 +119,7 @@ Template.testView.events({
       $( '#score' ).addClass( 'label-danger' );
       $( '#score' ).text( percent + '%' );
       
-      Bert.alert( 'Sorry, you failed to earn the minimum score to pass', 
+      Bert.alert( 'Sorry, you failed to achieve the minimum score to pass', 
                   'danger', 
                   'fixed-top' );
     }

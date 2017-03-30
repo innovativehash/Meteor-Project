@@ -8,14 +8,11 @@ import async              from 'async';
 import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
 
-import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
-import { Pages }          from '../../../both/collections/api/pages.js';
 import { Courses }        from '../../../both/collections/api/courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
 import { Images }         from '../../../both/collections/api/images.js';
 import { Pdfs }           from '../../../both/collections/api/pdfs.js';
 import { PowerPoints }    from '../../../both/collections/api/powerpoints.js';
-import { Newsfeeds }      from '../../../both/collections/api/newsfeeds.js';
 
 import './course-builder-page.html';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.css';
@@ -24,27 +21,28 @@ import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.css';
 /*
  * IMPORT BROKEN-OUT EVENT HANDLERS
  */
-import * as CBCreateDOM from './createDOM.js';
-import * as CBImage from './image-handling.js';
-import * as CBTitle from './title-handling.js';
-import * as CBTexts from './texts-handling.js';
-import * as CBVideo from './video-handling.js';
-import * as CBPDF   from './pdf-handling.js';
-import * as CBPP    from './power-point-handling.js';
-import * as CBSCORM from './scorm-handling.js';
+import * as CBCreateDOM from './CB_MODULES/createDOM.js';
+import * as CBImage     from './CB_MODULES/image-handling.js';
+import * as CBTitle     from './CB_MODULES/title-handling.js';
+import * as CBTexts     from './CB_MODULES/texts-handling.js';
+import * as CBVideo     from './CB_MODULES/video-handling.js';
+import * as CBPDF       from './CB_MODULES/pdf-handling.js';
+import * as CBPP        from './CB_MODULES/power-point-handling.js';
+import * as CBSCORM     from './CB_MODULES/scorm-handling.js';
+import * as TTL         from './CB_MODULES/cb-title.js';
+import * as Render      from './CB_MODULES/render.js';
 
-//import {CreateDOM}  from './CB/createDOM.js';
+import { PageObject }   from './CB_MODULES/cb-page-object.js';
 
-let contentTracker 
-  , counter         = 1
-  , master_num      = 0
-  , P               = new Mongo.Collection(null)
-  , db_id           = ''
-  , editor1
-  , page      //this
-  , total     //this
-  , rtn;
-    
+
+let P           = new PageObject()
+  , pp          = new Mongo.Collection(null)
+  , master_num  = 0
+  , page
+  , total
+  , rtn
+  , return_page
+  , editor1;
 
 
 /*=========================================================
@@ -59,16 +57,15 @@ Template.courseBuilderPage.onCreated( function() {
 
   $( '#cover' ).show();
 
-  this.rtn    = new ReactiveVar( FlowRouter.getQueryParam('rtn') );
-  this.page   = new ReactiveVar(1)
-  this.total  = new ReactiveVar(1);
+  this.rtn          = new ReactiveVar( FlowRouter.getQueryParam('rtn') );
+  this.return_page  = new ReactiveVar(this.rtn.get());
+  this.page         = new ReactiveVar(1)
+  this.total        = new ReactiveVar(1);
 
   this.page.set(1);
   this.total.set(1);
   
   $('#p').attr('data-p', 1);
-  
-  Session.set('tbo', {});
   
   let that = this;
 
@@ -100,149 +97,415 @@ Template.courseBuilderPage.onCreated( function() {
       
       drop: function( evt, ui ) {
         $( '.notice' ).remove();
-        $( '#fb-template' ).css( 'background-color', 'white' );
+        $( '#fb-template' ).css({ 'background-color': 'white', 'border': '1px dashed #d3d3d3' });
 
-        let draggedType = ui.draggable.data( 'type' )
-          , p = $('#p').attr('data-p')
-          , t = $('#p').attr('data-t');
+        let draggedType = ui.draggable.data( 'type' );
+          //, p = $('#p').attr('data-p')
+          //, t = $('#p').attr('data-t');
           
         switch ( draggedType ) {
-          
+/*
+ * TITLE
+ */
           case 'title':
-            // that.contentTracker
-            if ( ! testForVideoOrPdfOnPage( 
-                                        Session.get('contentTracker'), p  ) ) {
+             try {
+
+              let arr = P.dumpPage( that.page.get() );
+
+              if ( arr.length > 0 ) {
+                for( let titi = 0, titlen = arr.length; titi < titlen; titi++ ) {
+                  if ( arr[titi].type == 'test' ) {
+                    Bert.alert( 
+                              'A Test must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                    return;                   
+                  } else 
+                      if ( arr[titi].type == 'pdf' ) {
+                        Bert.alert( 
+                              'A PDF must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                        return;                                          
+                  } else
+                      if ( arr[titi].type == 'video' ) {
+                         Bert.alert( 
+                              'A Video must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                          return;                                                                 
+                  }
+                }//for
+              }//if
+            } catch ( e ) {
+                ;
+            }           
               $( '#cb-media-toolbar' ).hide();
-              $( '#cb-toolbar-video' ).hide();
+              $( '#cb-video-toolbar' ).hide();
+              $( '#cb-text-toolbar'  ).hide();
               
               addTitle( evt.pageX, evt.pageY );
-            } else {
-              Bert.alert( 'Video, Pdf, PowerPoint, Scorm must be alone on page', 
-                          'danger' );
-            }
             break;
             
           case 'text':
-            
-            if ( ! testForVideoOrPdfOnPage( Session.get('contentTracker'), 
-                                            p ) ) {
+/*
+ * TEXT
+ */
+              try {
+
+              let arr = P.dumpPage( that.page.get() );
+
+              if ( arr.length > 0 ) {
+                for( let txt = 0, txtlen = arr.length; txt < txtlen; txt++ ) {
+                  if ( arr[txt].type == 'test' ) {
+                    Bert.alert( 
+                              'A Test must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                    return;                   
+                  } else 
+                      if ( arr[txt].type == 'pdf' ) {
+                        Bert.alert( 
+                              'A PDF must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                        return;                                          
+                  } else
+                      if ( arr[txt].type == 'video' ) {
+                         Bert.alert( 
+                              'A Video must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                          return;                                                                 
+                  }
+                }//for
+              }//if
+            } catch ( e ) {
+                ;
+            }                      
+              $( '#cb-title-toolbar' ).hide()
               $( '#cb-media-toolbar' ).hide();
-              $( '#cb-toolbar-video' ).hide();
+              $( '#cb-video-toolbar' ).hide();
               
               //CREATE A NEW EDITOR INSTANCE INSIDE THE <div id="editor">
               //ELEMENT, SETTING ITS VALUE TO HTML. 
 			        let config  = {}
 			          , html    = "";
 			          
-              $('#cb-text-toolbar').show()
-
+			        $( '.js-cb-text-edit' ).hide();
+			        $( '.js-cb-text-delete' ).hide();
+			        $( '#cb-editor-save-text' ).show();
+              $( '#cb-text-toolbar' ).show();
+              
+              $( '#fb-template' ).hide();
+              $( '#cb-next-btn' ).prop('disabled', true );
+              $( '#cb-prev-btn' ).prop('disabled', true );
+              
 			       editor1 = CKEDITOR.appendTo( 'editor1', config, html );
 			          
-              addText( evt.pageX, evt.pageY );
-            } else {
-              Bert.alert( 'Video, Pdf, PowerPoint, Scorm must be alone on page', 
-                          'danger' );
-            }
-
-            /*
-            $( '#add-text' ).modal( 'show' );
-            Meteor.setTimeout( function() {
-              AceEditor.instance( "editor",
-                                  null,
-                                  function(e) { e.setValue(""); }
-                                );
-            }, 300);
-            */
-            break;
-            
+              //addText( evt.pageX, evt.pageY );
+              break;
+              
           case 'g-image':
-            
+/*
+ * IMAGE
+ */
+               try {
+
+              let arr = P.dumpPage( that.page.get() );
+
+              if ( arr.length > 0 ) {
+                for( let img = 0, imglen = arr.length; img < imglen; img++ ) {
+                  if ( arr[img].type == 'test' ) {
+                    Bert.alert( 
+                              'A Test must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                    return;                   
+                  } else 
+                      if ( arr[img].type == 'pdf' ) {
+                        Bert.alert( 
+                              'A PDF must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                        return;                                          
+                  } else
+                      if ( arr[img].type == 'video' ) {
+                         Bert.alert( 
+                              'A Video must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                          return;                                                                 
+                  }
+                }//for
+              }//if
+            } catch ( e ) {
+                ;
+            }                                 
             if( S3.collection.findOne() ) {
               let id = S3.collection.findOne()._id;
               S3.collection.remove({ _id: id });
             }
 
-            if ( ! testForVideoOrPdfOnPage( Session.get('contentTracker') ) ) {
-              $( '#cb-toolbar-title' ).hide();
-              $( '#cb-toolbar-video' ).hide();
-              
-              $( '#add-image' ).modal( 'show' );
-            } else {
-              Bert.alert( 'Video, Pdf, PowerPoint, Scorm must be alone on page', 
-                          'danger' );
-            }
+              $( '#cb-title-toolbar' ).hide();
+              $( '#cb-media-toolbar' ).hide();
+              $( '#cb-video-toolbar' ).hide();
+              $( '#cb-text-toolbar'  ).hide();
+            
+            $( '#add-image' ).modal( 'show' );
+
             break;
             
           case 'video':
-            
-            if ( testForItemsOnPage( Session.get('contentTracker'), p ))
-            {
-              
-             Bert.alert(  
-                        'Video must be the only item on the page!', 
-                        'danger', 
-                        'fixed-top', 
-                        'fa-frown-o' 
-                       );
-             return;
-             
-            } else {
-              $( '#cb-toolbar-title' ).hide();
-              $( '#cb-media-toolbar' ).hide();
+/*
+ * VIDEO
+ */
+                try {
 
-              addVideo();
-            }
-            break;
-            
-          case 'pdf':
-            
-            if ( testForItemsOnPage( Session.get('contentTracker'), p ) )
-            {
-                  Bert.alert( 
-                              'PDF must be the only item on the page!', 
+              let arr = P.dumpPage( that.page.get() );
+
+              if ( arr.length > 0 ) {
+                for( let vid = 0, vidlen = arr.length; vid < vidlen; vid++ ) {
+                  if ( arr[vid].type == 'test' ) {
+                    Bert.alert( 
+                              'A Test must be the only item on the page!', 
                               'danger', 
                               'fixed-top', 
                               'fa-frown-o' 
                             );
-                  return;
-                  
-            } else {
-              
-              $( '#cb-toolbar-title' ).hide();
-              $( '#cb-media-toolbar' ).hide();
-              
-              $( '#add-pdf' ).modal( 'show' );
-              
+                    return;                   
+                  } else 
+                      if ( arr[vid].type == 'pdf' ) {
+                        Bert.alert( 
+                              'A PDF must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                        return;                                          
+                  } else
+                      if ( arr[vid].type == 'video' ) {
+                         Bert.alert( 
+                              'A Video must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                          return;                                                                 
+                  }
+                }//for
+              }//if
+            } catch ( e ) {
+                ;
+            }                                            
+            try{
+              let arr = P.dumpPage( that.page.get() );
+              if ( arr.length > 0 ) {
+                Bert.alert('Video must be on a page by itself', 'danger');
+                return;
+              }
+            } catch (e) {
+              ;
             }
+            
+              $( '#cb-title-toolbar' ).hide();
+              $( '#cb-media-toolbar' ).hide();
+              $( '#cb-video-toolbar' ).hide();
+              $( '#cb-text-toolbar'  ).hide();
+
+            addVideo();
+            break;
+            
+          case 'pdf':
+/*
+ * PDF
+ */
+                 try {
+
+              let arr = P.dumpPage( that.page.get() );
+
+              if ( arr.length > 0 ) {
+                for( let pdf = 0, pdflen = arr.length; pdf < pdflen; pdf++ ) {
+                  if ( arr[pdf].type == 'test' ) {
+                    Bert.alert( 
+                              'A Test must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                    return;                   
+                  } else 
+                      if ( arr[pdf].type == 'pdf' ) {
+                        Bert.alert( 
+                              'A PDF must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                        return;                                          
+                  } else
+                      if ( arr[pdf].type == 'video' ) {
+                         Bert.alert( 
+                              'A Video must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                          return;                                                                 
+                  }
+                }//for
+              }//if
+            } catch ( e ) {
+                ;
+            }                                                       
+            try {
+              let arr = P.dumpPage( that.page.get() );
+              if ( arr.length > 0 ) {
+                Bert.alert('Pdf must be on a page by itself', 'danger' );
+                return;
+              }
+            } catch ( e ) {
+              ;
+            }
+              
+              $( '#cb-title-toolbar' ).hide();
+              $( '#cb-media-toolbar' ).hide();
+              $( '#cb-video-toolbar' ).hide();
+              $( '#cb-text-toolbar'  ).hide();
+              
+            $( '#add-pdf' ).modal( 'show' );
+          
             break;
             
           case 'powerpoint':
-            
-            if ( testForItemsOnPage( Session.get('contentTracker'), p ) )
-            {
-                  Bert.alert( 
+/*
+ * PPT
+ */
+                 try {
+
+              let arr = P.dumpPage( that.page.get() );
+
+              if ( arr.length > 0 ) {
+                for( let ppt = 0, pptlen = arr.length; ppd < pptlen; ppt++ ) {
+                  if ( arr[ppt].type == 'test' ) {
+                    Bert.alert( 
+                              'A Test must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                    return;                   
+                  } else 
+                      if ( arr[ppt].type == 'pdf' ) {
+                        Bert.alert( 
+                              'A PDF must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                        return;                                          
+                  } else
+                      if ( arr[ppt].type == 'video' ) {
+                         Bert.alert( 
+                              'A Video must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                          return;                                                                 
+                  }
+                }//for
+              }//if
+            } catch ( e ) {
+                ;
+            }                                                       
+            try {
+              let arr = P.dumpPage( that.page.get() );
+              if ( arr.length > 0 ) {
+                Bert.alert( 
                               'PowerPoint must be the only item on the page!', 
                               'danger', 
                               'fixed-top', 
                               'fa-frown-o' 
                             );
-                  return;
+                return;
+              }
+            } catch ( e ) {
+              ;
+            } 
                   
-            } else {
+            $( '#cb-title-toolbar' ).hide();
+            $( '#cb-media-toolbar' ).hide();
+            $( '#cb-video-toolbar' ).hide();
+            $( '#cb-text-toolbar'  ).hide();
               
-              $( '#cb-toolbar-title' ).hide();
-              $( '#cb-media-toolbar' ).hide();
-              $( '#cb-toolbar-video' ).hide();
+            $( '#add-powerpoint' ).modal( 'show' );
               
-              $( '#add-powerpoint' ).modal( 'show' );
-              
-            }
             break;
             
           case 'scorm':
-            
-            if ( testForItemsOnPage( Session.get('contentTracker'), p ) )
-            {
+/*
+ * SCORM
+ */
+                 try {
+
+              let arr = P.dumpPage( that.page.get() );
+
+              if ( arr.length > 0 ) {
+                for( let scm = 0, scmlen = arr.length; scm < scmlen; scm++ ) {
+                  if ( arr[scm].type == 'test' ) {
+                    Bert.alert( 
+                              'A Test must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                    return;                   
+                  } else 
+                      if ( arr[scm].type == 'pdf' ) {
+                        Bert.alert( 
+                              'A PDF must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                        return;                                          
+                  } else
+                      if ( arr[scm].type == 'video' ) {
+                         Bert.alert( 
+                              'A Video must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                          return;                                                                 
+                  }
+                }//for
+              }//if
+            } catch ( e ) {
+                ;
+            }                                                       
+            try {
+              let arr = P.dumpPage( that.page.get() );
+              if ( arr.length > 0 ) {
                   Bert.alert( 
                               'SCORM must be the only item on the page!', 
                               'danger', 
@@ -250,21 +513,65 @@ Template.courseBuilderPage.onCreated( function() {
                               'fa-frown-o' 
                             );
                   return;
-                  
-            } else {
+              }
+            } catch ( e ) {
+                ;
+            }      
+            
+            $( '#cb-title-toolbar' ).hide();
+            $( '#cb-media-toolbar' ).hide();
+            $( '#cb-video-toolbar' ).hide();
+            $( '#cb-text-toolbar'  ).hide();
               
-              $( '#cb-toolbar-title' ).hide();
-              $( '#cb-media-toolbar' ).hide();
-              $( '#cb-toolbar-video' ).hide();
+            $( '#add-scorm' ).modal( 'show' );
               
-              $( '#add-scorm' ).modal( 'show' );
-              
-            }
             break;
             
           case 'test':
+/*
+ * TEST
+ */
+                 try {
 
-            if ( testForItemsOnPage( Session.get('contentTracker'), p ) ) {
+              let arr = P.dumpPage( that.page.get() );
+
+              if ( arr.length > 0 ) {
+                for( let tst = 0, tstlen = arr.length; tst < tstlen; tst++ ) {
+                  if ( arr[tst].type == 'test' ) {
+                    Bert.alert( 
+                              'A Test must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                    return;                   
+                  } else 
+                      if ( arr[tst].type == 'pdf' ) {
+                        Bert.alert( 
+                              'A PDF must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                        return;                                          
+                  } else
+                      if ( arr[tst].type == 'video' ) {
+                         Bert.alert( 
+                              'A Video must be the only item on the page!', 
+                              'danger', 
+                              'fixed-top', 
+                              'fa-frown-o' 
+                            );
+                          return;                                                                 
+                  }
+                }//for
+              }//if
+            } catch ( e ) {
+                ;
+            }                                                       
+            try {
+              let arr = P.dumpPage( that.page.get() );
+              if ( arr.length > 0 ) {
                   Bert.alert( 
                               'A Test must be the only item on the page!', 
                               'danger', 
@@ -272,30 +579,29 @@ Template.courseBuilderPage.onCreated( function() {
                               'fa-frown-o' 
                             );
                   return;
+              }
+            } catch ( e ) {
+                ;
             }
             
-            if ( counter == 1 ) {
-              Bert.alert( "A Course can't start with a test!", 'danger' );
-              return;
-            }
-          
-            $( '#cb-toolbar-title'  ).hide();
-            $( '#cb-media-toolbar' ).hide();
-            $( '#cb-toolbar-video' ).hide();
+            $( '#cb-title-toolbar'  ).hide();
+            $( '#cb-text-toolbar'   ).hide()
+            $( '#cb-media-toolbar'  ).hide();
+            $( '#cb-video-toolbar'  ).hide();
             
-            let tb = Session.get( 'tbo' );
-            tb.page = p;
-            tb.total = t;
-            tb.name = 'foo';
-            Session.set('tbo', tb );
-            Session.set( 'obj', tb );
-
+            let test_session_bak      = {}; 
+            test_session_bak.page     = that.page.get();
+            test_session_bak.total    = that.total.get();
+            test_session_bak.name     = Session.get('cinfo').cname;
+            test_session_bak.rtn_page = that.return_page.get();
+            Session.set( 'obj', test_session_bak );
+            
             if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
               FlowRouter.go( '/teacher/dashboard/test-maker/' 
-                + Meteor.userId() + `?${tb.name}` );
+                + Meteor.userId() + `?${test_session_bak.name}` );
             } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
               FlowRouter.go( '/admin/dashboard/test-maker/'   + Meteor.userId() 
-                + `?${tb.name}` );
+                + `?${test_session_bak.name}` );
             }
   
             break;
@@ -312,22 +618,6 @@ Template.courseBuilderPage.onCreated( function() {
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'CourseBuilder:: load jquery-ui.min.js fail' );
   });
-//-------------------------------------------------------------------
-
-  /*************************
-   * ACE EDITOR INSTANTIATE
-   ************************/
-/*
-  let ace = AceEditor.instance( "editor",
-                                {
-                                  theme:"ambiance",
-                                  mode:"ace/mode/text",
-                                  setHighlightActiveLine:true,
-                                  setShowPrintMargin:false,
-                                  scrollToRow:0
-                                }
-  );
-*/
 //-------------------------------------------------------------------
 
 
@@ -349,19 +639,7 @@ Template.courseBuilderPage.onCreated( function() {
   });
 //-------------------------------------------------------------------
 
-
-
-  /*******************
-   * HTML2CANVAS
-   ******************/
-  //$.getScript( '/js/html2canvas.js', function() {
-    //console.log('CB:: chosen,jquery.min.js loaded...');
-  //}).fail( function( jqxhr, settings, exception ) {
-    //console.log( 'CB:: load html2canvas.js fail' );
-  //});
-//-------------------------------------------------------------------
-
-}); //END ONCREATED
+});  //END ONCREATED
 
 
 
@@ -383,55 +661,72 @@ Template.courseBuilderPage.onRendered( function() {
 
   $('#test_v').hide();
   
-  $('#cb-text-toolbar').hide();
   $('#cb-media-toolbar').hide();
+  $('#cb-text-toolbar').hide();
+  $('#cb-bar').hide();
   $('#cb-title-toolbar').hide();
   $('#cb-video-toolbar').hide();
   
+/*
+ * SUCCESSFUL RETURN FROM TEST CREATION
+ */
+ 
   if (  FlowRouter.getQueryParam( "rtn" ) &&
         FlowRouter.getQueryParam( "id"  )
      )
   {
     
     //RESTORE THE SESSION
-    let tb = Session.get( 'obj' );
+    let test_session_bak = Session.get( 'obj' );
     Session.set( 'obj', null );
-    Session.set( 'tbo', tb );
     
-    let ct = Session.get( 'contentTracker' );
-    if ( tb && tb.page ) {
-      ct.page_no[Number(tb.page)].tests++;
-    }
-    Session.set('contentTracker', ct);
     Session.set( 'test_id', FlowRouter.getQueryParam("id") );
-    Session.set( 'Scratch', FlowRouter.getQueryParam('id') );
+    Session.set( 'Scratch', FlowRouter.getQueryParam("id") );
     
-    //Save the test
-    $( '#cb-next-btn' ).click();
-      
+    //SAVE THE TEST
+    P.append({
+      page_no:  test_session_bak.page,
+      type:     'test',
+      id:       Session.get('test_id'),
+    });
+    
+    //SHOW THE TEST
+    $('#fb-template').empty();
+    $('#fb-template').hide();
+    $('#test_v').show();
+    
+    this.page.set( test_session_bak.page );
+    this.total.set( test_session_bak.total );
+    this.return_page.set(test_session_bak.rtn_page);
+    
+    P.print()
     return;
   }
   
+/*
+ * CANCELED TEST RETURN
+ */
+ 
   if (  FlowRouter.getQueryParam( "rtn" ) &&
         FlowRouter.getQueryParam( "cancel" )
      )
   {
-    //console.log( FlowRouter.getQueryParam('rtn'));
-    //console.log( FlowRouter.getQueryParam('cancel'));
-    //console.log( Session.get('tbo'));
-    //console.log( Session.get('obj'));
-  
-    tb = Session.get( 'obj' );
-    if ( tb && tb.page && tb.total ) {
-      this.page.set( tb.page );
-      this.total.set( tb.total );
+    let test_session_bak = Session.get( 'obj' );
+    if ( test_session_bak && test_session_bak.page && test_session_bak.total ) {
+      this.page.set( test_session_bak.page );
+      this.total.set( test_session_bak.total );
     } else {
       console.log('fail');
     }
-    Session.set('tbo', tb);
+    if ( test_session_bak && test_session_bak.rtn_page ) {
+      this.return_page.set( test_session_bak.rtn_page);
+      this.rtn.set( test_session_bak.rtn_page );
+    }
+console.log( Session.get('obj'));
+console.log( Session.get('Scratch'));    
     Session.set('obj', null);
-    tb = null;
-    return
+    test_session_bak = null;
+    return;
   }
   
 
@@ -440,7 +735,6 @@ Template.courseBuilderPage.onRendered( function() {
 
     //IF WE'RE RELOADING TO CLEAR URL AFTER RETURNING FROM TEST BUILDING
     if ( _.isNull( returnFromTest ) || _.isUndefined( returnFromTest ) ) {
-      console.log('show modal');
       $( '#intro-modal' ).modal( 'show' );
       
     //OTHERWISE, WE'RE HERE FRESH
@@ -462,17 +756,15 @@ Template.courseBuilderPage.onRendered( function() {
 
 
 
-
 /*=========================================================
  * HELPERS
  *=======================================================*/
 Template.courseBuilderPage.helpers({
 
   cbNavBack: () => {
-    if ( Template.instance().rtn.get() == 'library' ) {
-      console.log( Template.instance().rtn.get() );
+    if ( Template.instance().return_page.get() == 'library' ) {
       return 'Back To Library';
-    } else if ( Template.instance().rtn.get() == 'courses' ) {
+    } else if ( Template.instance().return_page.get() == 'courses' ) {
       return 'Back To Courses';
     }
   },
@@ -503,492 +795,75 @@ Template.courseBuilderPage.helpers({
 
 
 
-
-
 /*=========================================================
  * EVENTS
  *=======================================================*/
 Template.courseBuilderPage.events({
 
-/**********************************************************
- * #CB-EDITOR-SAVE-TEXT  ::(CLICK)::
- *********************************************************/
- 'click #cb-editor-save-text'( e, t ) {
-   e.preventDefault();
-   
-   	let txt = editor1.getData(); //CKEDITOR.instances.editor1.getData();
-		
-		Bert.alert('Saving Text...', 'success');
-    
-    //CKEDITOR.instances.editor1.setData('');
-    
-	  editor1.destroy();
-		editor1 = null;
-		
-    $('#cb-text-toolbar').hide()
-	  
-    CBTexts.cbAddedTextBlur(  e,
-                              t, 
-                              txt,
-                              t.page.get(),
-                              master_num++,
-                              P
-                            );
- },
-//---------------------------------------------------------
 
-
-
-/**********************************************************
- * .JS-CB-TEXT-EDIT  ::(CLICK)::
- *********************************************************/
- 'click .js-cb-text-edit'( e, t ) {
+/********************************************************
+ * CB-NEXT  ::(CLICK)::    [NEXT BUTTON CLICK]
+ *******************************************************/
+  'click #cb-next-btn'( e, t ) {
     e.preventDefault();
 
-      //IE #txt-0
-      let currentItem = $( '#cb-current' ).val()
-        , text        = $( `${currentItem}` ).text()
-        , config      = {};
-        
-      editor1 = CKEDITOR.appendTo( 'editor1', config, text ); 
-        
-      $( `#${currentItem}` ).hide();
-      
-      //CKEDITOR.instances.editor1.setData(text);
-      
-      
-      //$('#cb-text-toolbar').show()
-      
-      currentItem = null;
-      
-     
-              
-        //$( `${currentItem}` ).text( txt );
-        //$( `${currentItem}` ).show();
- },
-//---------------------------------------------------------
-
-
-
-/**********************************************************
- * .JS-CB-TEXT-DELETE  ::(CLICK)::
- *********************************************************/
- 'click .js-cb-text-delete'( e, t ) {
-    e.preventDefault();
- 
-    //IE txt-0
-    let cur = $( '#cb-current' ).val()
-      , ct = Session.get('contentTracker')
-      , page_no = t.page.get();
-		
-    $( `#${cur}` ).remove();
-    $( '#cb-current' ).val('');
-
-    if ( Number(ct.page_no[page_no].texts) > 0 ) ct.page_no[page_no].texts--;
-    Session.set('contentTracker', ct);
-    
-    $('#cb-text-toolbar').hide()
-
-    P.update( { _id: Session.get('my_id') },
-              { $pull: { objects:{ id: cur} } }); 
-    
-    console.log( P.find({}).fetch() );
-    if (
-        ct.page_no[page_no].titles == 0 &&
-        ct.page_no[page_no].texts  == 0 &&
-        ct.page_no[page_no].images == 0 &&
-        ct.page_no[page_no].pdfs   == 0 &&
-        ct.page_no[page_no].videos == 0 &&
-        ct.page_no[page_no].ppts   == 0 &&
-        ct.page_no[page_no].scorms == 0
-        )
-    {
-      t.page.set( t.page.get() - 1 );
-    }
-    //editor1.destroy();
-		editor1 = null;
-//---------------------------------------------------------
-},
-
-
-  /********************************************************
-   * .JS-TITLE-DELETE-BUTTON
-   *******************************************************/
-  'click .js-title-delete-button'( e, t ) {
-    e.preventDefault();
-    
-    let cur = $( '#cb-current' ).val()
-      , ct  = Session.get('contentTracker')
-      , page_no = t.page.get();
-    
-    P.update( { _id: Session.get('my_id') },
-          { $pull: { objects:{ id:{$eq: cur} } }});
-          
-    $( `#${cur}` ).remove();
-    $( '#cb-current' ).val('');
-    
-    if ( Number(ct.page_no[page_no].titles) > 0 ) ct.page_no[page_no].titles--;
-    Session.set('contentTracker', ct);
-    if (
-        ct.page_no[page_no].titles == 0 &&
-        ct.page_no[page_no].texts  == 0 &&
-        ct.page_no[page_no].images == 0 &&
-        ct.page_no[page_no].pdfs   == 0 &&
-        ct.page_no[page_no].videos == 0 &&
-        ct.page_no[page_no].ppts   == 0 &&
-        ct.page_no[page_no].scorms == 0
-        )
-    {
-      t.page.set( t.page.get() - 1 );
-      t.total.set( t.total.get() - 1 );
-    }
-    $( '#cb-title-toolbar' ).hide(); 
-//----------------------------------------------------------
-  },
-  
-  
-  /********************************************************
-   * .JS-MEDIA-DELETE-BUTTON
-   *******************************************************/
-  'click .js-media-delete-button'( e, t ) {
-    e.preventDefault();  
-    
-    let cur = $( '#cb-current' ).val()
-      , ct  = Session.get('contentTracker')
-      , page_no = t.page.get();
-    
-    P.update( { _id: Session.get('my_id') },
-              { $pull: { objects:{ id:{$eq: cur} } }});
-    
-    if ( Number(ct.page_no[page_no].images) > 0 ) ct.page_no[page_no].images--;
-    Session.set('contentTracker', ct)
-    $( `#${cur}` ).remove();
-    $( '#cb-current' ).val('');        
-    
+    //HIDE EDITING TOOLBARS
+    $( '#cb-text-toolbar'  ).hide();
     $( '#cb-media-toolbar' ).hide();
-    
-    if (
-        ct && ct.page_no && ct.page_no[page_no].titles == 0 &&
-        ct && ct.page_no && ct.page_no[page_no].texts  == 0 &&
-        ct && ct.page_no && ct.page_no[page_no].images == 0 &&
-        ct && ct.page_no && ct.page_no[page_no].pdfs   == 0 &&
-        ct && ct.page_no && ct.page_no[page_no].videos == 0 &&
-        ct && ct.page_no && ct.page_no[page_no].ppts   == 0 &&
-        ct && ct.page_no && ct.page_no[page_no].scorms == 0
-        )
-    {
-      t.page.set( t.page.get() - 1 );
-    }
-    
-  },
-  
-  
-/**********************************************************
- * .JS-MEDIA-OPACITY  ::(INPUT)::
- *********************************************************/
-  'input .js-media-opacity'( e, t ) {
-    e.preventDefault();
-    
-    let cur = $( '#cb-current' ).val()
-      , id  = $( `#${cur}` ).data('pid')
-      , opm = $(e.currentTarget).val()
-      , pg  = $( `#${cur}` ).data('page');
-    
-    $( `#${cur}` ).css( 'opacity', opm );
-    
-    $( '#opm' ).val( op );
-    //P.update( { _id: id, "objects.page_no":pg }, 
-    //          {$set:{"objects.$.opacity": op }});
-//---------------------------------------------------------
-  },
-  
-  
+    $( '#cb-title-toolbar' ).hide();
+    $( '#cb-video-toolbar' ).hide();
  
- /**********************************************************
- * .JS-TITLE-EDIT-BUTTON
- *********************************************************/
- 'click .js-title-edit-button'( e, t ) {
-    e.preventDefault();
+    let p   = t.page.get()
+      , tt  = t.total.get()
+      , chk = P.dumpPage(p);
       
-    //GET THE CURRENTLY SELECTED ELEMENT
-    currentItem = $( '#cb-current' ).val();
+    if ( chk == undefined ) return;
+       
     
-    //PULL OUT IT'S ACTUAL TEXT
-    text = $( `#${currentItem}` ).text();
+    $('#fb-template').empty().show();
+    $('#test_v').hide();
+    
+    if ( p < tt ) {
+      p++;
+      t.page.set( p );
       
-    //HIDE THE CURRENT ELEMENT
-    $( `#${currentItem}` ).hide();
-    
-    //let pos = $( `${currentItem}` ).position();
-    
-    //CREATE A NEW ELEMENT, ATTACH IT TO THE CANVAS, INJECT IT WITH THE TEXT
-    $( '#fb-template' ).append( `<textarea  id="toolb-added-title" 
-                                            rows="3" 
-                                            style="font-size:18px;
-                                            font-weight:bold;z-index:2;
-                                            border-radius:5px;
-                                            background-color:white;
-                                            cursor:move;
-                                            border:1px dashed !important;">
-                                            ${text}
-                                  </textarea>` 
-                              ).css({ 'color': 'grey', 
-                                      'position': `element(${currentItem})`, 
-                                      'right': 0, 'bottom': 0 
-                                    });
-    
-    //$( '#toolb-added-title' )
-    $( '#toolb-added-title' ).effect( "highlight", {}, 2000 ).focus();
-    
-    $( '#toolb-added-title' ).blur(function(){
-      let txt = $( '#toolb-added-title' ).val();
-
-      $( '#toolb-added-title' ).remove();
-  
-      $( `#${currentItem}` ).text( txt );
-      $( `#${currentItem}` ).show();  
+      let arr = P.dumpPage(p);
+      Render.render( e, t, arr, P );
       
-    });
-//---------------------------------------------------------   
- },   
-
-  
-  
-  
-/**********************************************************
- * .JS-TITLE-ITALIC-BUTTON  ::(CLICK)::
- *********************************************************/
-  'click .js-title-italic-button'( e, t ) {
-    e.preventDefault();
-    let cur = $( '#cb-current' ).val()
-      , id  = $( `#${cur}` ).data('pid')
-      , pg  = $( `#${cur}` ).data('page');
-    
-    if ( $( `#${cur}` ).css('fontStyle') != 'italic' ) {
-      $( `#${cur}` ).css('fontStyle', 'italic');
-      //P.update( { _id: id, "objects.page_no": pg }, 
-      //          {$set:{"objects.$.fontStyle": 'italic' }});
+      return;
+      
     } else {
-      $( `#${cur}` ).css('fontStyle', 'normal');
-      //P.update( { _id: id, "objects.page_no": pg }, 
-      //          {$set:{ "objects.$.fontStyle": 'normal' }});
-    }
-//---------------------------------------------------------
-  }, 
-  
-  
- /**********************************************************
- * .JS-TITLE-BOLD-BUTTON ::(CLICK)::
- *********************************************************/
-  'click .js-title-bold-button'( e, t ) {
-    e.preventDefault();
-    let cur = $( '#cb-current' ).val()
-      , id  = $( `${cur}` ).data('pid')
-      , pg  = $( `${cur}` ).data('page');
-    
-    if ( $( `#${cur}` ).css('fontWeight') != 'bold' ) {
-      $( `#${cur}` ).css('fontWeight', 'bold');
-      //P.update( { _id: id, "objects.page_no": pg }, 
-      //          {$set:{ "objects.$.fontWeidht": 'bold'}});
-    } else {
-      $( `#${cur}` ).css('fontWeight', 'normal' );
-      //P.update( { _id: id, "objects.page_no": pg }, 
-      //          {$set:{ "objects.$.fontWeight": '' }});
-    }
-//---------------------------------------------------------
-  },
-  
- 
- /**********************************************************
- * .JS-TITLE-UNDERLINE-BUTTON  ::(CLICK)::
- *********************************************************/
-  'click .js-title-underline-button'( e, t ) {
-    e.preventDefault();
-    
-    let cur = $( '#cb-current' ).val()
-      , id  = $( `#${cur}` ).data('pid')
-      , pg  = $( `#${cur}` ).data('page');
-
-    
-    if ( $( `#${cur}` ).css( 'textDecoration' ) != 'underline' ) {
-      $( `#${cur}` ).css( 'textDecoration', 'underline' );
-      //P.update( { _id: id, "objects.page_no": pg }, 
-      //          {$set:{ "objects.$.textDecoration": 'underline' }});
-    } else {
-      $( `#${cur}` ).css('textDecoration', '');
-      //P.update( { _id: id, "objects.page_no": pg }, 
-      //          {$set:{ "objects.$.textDecoration": ''}});
-    }
-//---------------------------------------------------------
-  },
-  
- 
- /**********************************************************
- * .JS-TITLE-FONT-SIZE  ::(INPUT)::
- *********************************************************/
-  'input .js-title-font-size'( e, t ) {
-    e.preventDefault();
-    
-    let cur = $( '#cb-current' ).val()
-      , id  = $( `#${cur}` ).data('pid')
-      , fsz = $(e.currentTarget).val()
-      , pg  = $( `#${cur}` ).data('page');
-
-    $( `#${cur}` ).css( 'font-size',`${fsz}px` );
-    
-    $( '#fnt' ).val( fsz );
-    //P.update( { _id: id, "objects.page_no": pg }, 
-    //          {$set:{"objects.$.fontSize": fsz }});
-    //console.log( P.find({ _id: id }).fetch() );
-//---------------------------------------------------------
-  },
-  
-  
-  
-/**********************************************************
- * .JS-TITLE-OPACITY  ::(INPUT)::
- *********************************************************/
-  'input .js-title-opacity'( e, t ) {
-    e.preventDefault();
-    
-    let cur = $( '#cb-current' ).val()
-      , id  = $( `#${cur}` ).data('pid')
-      , top = $(e.currentTarget).val()
-      , pg  = $( `#${cur}` ).data('page');
-    
-    $( `#${cur}` ).css( 'opacity', top );
-    
-    $( '#opm' ).val( top );
-    //P.update( { _id: id, "objects.page_no":pg }, 
-    //          {$set:{"objects.$.opacity": op }});
-//---------------------------------------------------------
-  }, 
-  
-  
-  /********************************************************
-   * .JS-VIDEO-DELETE-BUTTON
-   *******************************************************/
-  'click .js-video-delete-button'( e, t ){
-    e.preventDefault();
-    
-    let cur = $( '#cb-current' ).val()
-      , ct = Session.get('contentTracker')
-      , page_no = t.page.get();
-    
- console.log( cur );   
- 
-    if ( cur.slice(0,3) == 'pdf' ) {
-      if ( Number(ct.pdfs) > 0 ) ct.pdfs--;
-      P.update( { _id: Session.get('my_id') },
-                { $unset:{ objects:1 } });
-      $(`#${cur}`).remove();
-    } else if ( cur.slice(0,3) == 'vid' ) {
-      if ( Number(ct.videos) > 0 ) ct.videos--;
-      P.update( { _id: Session.get('my_id') },
-                { $pull: { objects:{ id:{$eq: cur } } }
-              });
-              
-      $('#fb-template').css( 'border', '' ); 
-    }
-console.log( P.find({}).fetch() );
-    $( '#fb-template iframe' ).remove();
-    $( '#cb-current' ).val('');
-    
-    if ( Number( ct.page_no[page_no].videos) > 0 ) {
-      ct.page_no[page_no].videos--;
-    }
-    
-    Session.set('contentTracker', ct);
-    $( '#cb-video-toolbar' ).hide();    
-//---------------------------------------------------------  
-  },
-  
-  
-  
-  /********************************************************
-   * .JS-BACK-TO-HOME  ::(CLICK)::
-   *******************************************************/
-  'click #course-builder-page-back'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
       
-    
-    t.$( '#cb-leave-confirm' ).modal('show');
-    return;
-//-------------------------------------------------------------------
-  },
-
-
-
-  /********************************************************
-   * CB-LEAVE-NO  ::(CLICK)::
-   ********************************************************/
-  'click #cb-leave-no'( e, t ) {
-    e.preventDefault();
-    
-    t.$( '#cb-leave-confirm' ).modal('hide');
-  },
-  
-  
-  
-  /********************************************************
-   * CB-LEAVE-YES  ::(CLICK)::    [LEAVE COURSE BUILDER]
-   *******************************************************/
-  'click #cb-leave-yes'( e, t ) {
-    e.preventDefault();
-    
-    let ct;
-    
-      // CLEAR THE CONTENT TRACKER
-    if ( ! _.isUndefined( Session.get('contentTracker') ) ) {
-        let ct = Session.get('contentTracker');
-        ct && (ct.titles = 0);
-        ct && (ct.texts  = 0);
-        ct && (ct.images = 0);
-        ct && (ct.videos = 0);
-        ct && (ct.pdfs   = 0);
-        ct && (ct.ppts   = 0);
-        ct && (ct.scorms = 0);
-        ct && (ct.tests  = 0);
-        Session.set('contentTracker', ct);
-      }  
-      // ADVANCE PAGE COUNTS
-      t.page.set( 1 );
-      t.total.set( 1 );
-      
-      counter     = 1;
-    
-      Session.set( 'tbo',     null );
-      Session.set( 'Scratch', null );
-      Session.set( 'cinfo',   null );
-      Session.set( 'my_id',   null );
-      Session.set( 'test_id', null );
-      
-    t.$( '#cb-leave-confirm' ).modal('hide');
-    
-    //NECESSARY DELAY OR DIALOG CAUSES DISPLAY ISSUES ON DESTINATION
-    Meteor.setTimeout(function(){
+      //let key = `page_${p}`
+        //, insertion = {};
+      //insertion[key] = P.dumpPage(p);
+      /*
+      pp.update({ _id: Session.get('my_id') }, 
+                {$push:
+                  { pages: P.dumpPage(p) } 
+                });
+      */
       try {
-        if ( t.rtn.get() == 'courses' ) {
-          if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
-            FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-          } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
-            FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
-          }
-        } else if ( t.rtn.get() == 'library' ) {
-          if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
-            FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-          } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
-            FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
-          }         
+        let arr = P.dumpPage( p );
+     
+        if ( p == tt && arr.length == 0 ){
+          return;
+          
+        } else {
+          
+          t.page.set( p + 1 );
+          t.total.set( p + 1 );
+            return;
         }
-      } catch(e) {
-        console.log(e);
-        console.log( 'cb lineno: 983' );
+      } catch (e) {
+          ;
       }
-    }, 500);
-//---------------------------------------------------------  
+      
+      return;
+    }
+    
   },
+//---------------------------------------------------------
 
 
 
@@ -997,640 +872,47 @@ console.log( P.find({}).fetch() );
  *******************************************************/
   'click #cb-prev-btn'( e, t ) {
     e.preventDefault(); 
-  
-    if ( t.page.get() <= 1 ) {
-      return;
-    } else {
-    
-      //DECREMENT PAGE NUMBER
-      t.page.set(   t.page.get()  - 1 );
-      
-      $('#p').attr('data-p', t.page.get() - 1 );
-      
-    //}
-    let rtn_arr
-      , pp 
-      , page_no = t.page.get()
-      , my_id   = Session.get('my_id')
-      , o       = [];
-
-    try {
-      pp = P.find({ _id: my_id }).fetch();
-
-      if ( pp[0].objects.length != undefined ) {
-        for( let i = 0, ilen = pp[0].objects.length; i < ilen; i++ ) {
-          if ( pp[0].objects[i].page_no == page_no ){
-            if ( pp[0].objects[i].type == 'test' ) {
-              //DISPLAY TEST
-              $( '#fb-template' ).hide();
-console.log('prev test');              
-              $( '#fb-template' ).empty();
-              
-              $( '#test_v' ).show(); 
-            } else {
-                $( '#test_v' ).hide(); 
-                
-                //CLEAR THE CANVAS
-                $('#fb-template').empty();
-                $( '#fb-template' ).show();
-            }
-          o.push( pp[0].objects[i] );
-          }
-        }
-      } else {
-          o.push(pp[0].objects );
-      }
-      rtn_arr = handlePrevious( o );   
-
-      let funcs = rtn_arr[1];
-
-      //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
-      $('#fb-template').append( rtn_arr[0] ); 
-      
-      //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
-      for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
-        eval( funcs[i] );
-      } 
-
-      /***********************************************************
-       * ATTACH MOUSE EVENTS TO NEWLY PLACED TITLE & TEXT ELEMENTS
-       **********************************************************/
-      for( let i = 0, ilen = pp[0].objects.length; i < ilen; i++ ) {
-  //TITLES
-        if (  pp[0].objects[i].type == 'title' ) {
-  
-          for ( let j = 0, jlen = o.length; j < jlen; j++ ) {
-    
-            eval(
-                  $( `#${o[j].id}` ).on( "mouseup", function(){
-                    e.preventDefault();
-  
-                    //SHOW RELATED EDITING TOOLBAR
-                    $( '.js-title-edit-button'  ).show();
-                    $( '#cb-title-toolbar' ).show();
-                    
-                    // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR 
-                    //R/O HIDDEN FIELD
-                    t.$( '#cb-current' ).val( `${o[j].id}` );
-            
-                  })          
-              );
-            }//for
-        } else
-  //TEXT
-            if ( pp[0].objects[i].type == 'text' ) {
-             for ( let j = 0, jlen = o.length; j < jlen; j++ ) {
-      
-                eval(
-                      $( `#${o[j].id}` ).on( "mouseup", function(){
-                        e.preventDefault();
-      
-                        //SHOW RELATED EDITING TOOLBAR
-                        $('#cb-text-toolbar').show();
-                        
-                        // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR 
-                        //R/O HIDDEN FIELD
-                        t.$( '#cb-current' ).val( `${o[j].id}` );
-                
-                      })          
-                  );
-                }//for           
-        } else 
-  //IMAGES
-            if ( pp[0].objects[i].type == 'image' ) {
-        
-              if ( o.length === undefined ) console.log('it sure is, nick');
-  
-               for ( let j = 0, jlen = o.length; j < jlen; j++ ) {
-                  if ( o[j].dwidth == null ) {
-                    P.update( { _id: my_id },
-                              { $pull: { objects:{ dwidth:{ $eq: null} } }});
-                    continue;
-                  }
-                  eval(
-                        $( `#${o[j].id}` ).on( "mouseup", function(){
-                          e.preventDefault();
-        
-                          //SHOW RELATED EDITING TOOLBAR
-                          $( '#cb-media-toolbar' ).show();
-                          
-                          // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR 
-                          //R/O HIDDEN FIELD
-                          t.$( '#cb-current' ).val( `${o[j].id}` );
-                  
-                        })          
-                    );
-                  //console.log( o.id );
-                }//for 
-        }//else if
-      }//outer for
-    } catch(ReferenceError) {
-      console.log( 'no record line:650' );
-      return;
-    }
-  }
-//---------------------------------------------------------  
-  },
-  
-  
-  
-/********************************************************
- * CB-NEXT  ::(CLICK)::    [NEXT BUTTON CLICK]
- *******************************************************/
-  'click #cb-next-btn'( e, t ) {
-    e.preventDefault();
-      
-    //SHOW RELATED EDITING TOOLBAR
+ 
+    //HIDE EDITING TOOLBARS
     $( '#cb-text-toolbar'  ).hide();
     $( '#cb-media-toolbar' ).hide();
     $( '#cb-title-toolbar' ).hide();
-    $( '#cb-video-toolbar' ).hide();
-    let plen;
+    $( '#cb-video-toolbar' ).hide();  
     
-console.log('in next');
-  let ct      = Session.get('contentTracker')
-    , total   = t.total.get()
-    , page_no = t.page.get();
-
-  try{
-    let pp = P.find({ _id: Session.get('my_id') }).fetch();
-
-    if ( pp[0].objects && pp[0].objects.length == undefined ) {
-      if ( pp[0].objects.page_no == t.page.get() ) {
-        plen = 1
-      }
+    let p = t.page.get();
+    
+    if ( p <= 1 ) {
+      p = 1;
     } else {
-      for( let i = 0, ilen = pp[0].objects.length; i < ilen; i++ ) {
-        if (  pp[0].objects[i].page_no == t.page.get() ){
-          plen = 1;
-        } else {
-          plen = 0;
-        }
-      }
+      p -= 1;
     }
-  } catch(e) {
-   // console.log( e );
-  }
-  
     
-//---------------------------------------------------------------
-//SAVE TEST (IT'S OUTSIDE MAIN FLOW SO NEEDS TO BE CHECKED FIRST)
-//---------------------------------------------------------------
-    if ( Session.get( 'test_id' ) ) {
-console.log('in next test');
-  let tb  = Session.get('tbo')
-    , p    
-    , ct  = Session.get('contentTracker');
+    t.page.set( p );
     
-    if ( tb && tb.page ) {
-      p = Number(tb.page) //the page the test is on 
-    }
-      P.update( { _id: Session.get('my_id') },
-                { $push:
-                    {
-                      objects:
-                        {
-                          page_no:    p,
-                          id:         `t-${master_num++}`, 
-                          type:       "test", 
-                          t_id:       Session.get('test_id')
-                        }
-                    }
-                });
-      
-      Session.set( 'test_id', null );
-      
-      //ADVANCE TO NEXT PAGE
-console.log( t.page.get() );
-      t.page.set(   p  + 1 );
-console.log( t.page.get() );      
-      t.total.set(  p  + 1 );
-console.log( t.total.get() );
-      counter   = p + 1;
-      
-//SET UP CONTENT TRACKER FOR NEW PAGE     
-if ( ! ct.page_no[counter] ) {
-      ct.page_no[counter] = {};
-      ct.page_no[counter].titles = 0;
-      ct.page_no[counter].texts  = 0;
-      ct.page_no[counter].images = 0;
-      ct.page_no[counter].videos = 0;
-      ct.page_no[counter].pdfs   = 0;
-      ct.page_no[counter].ppts   = 0;
-      ct.page_no[counter].scorms = 0;
-      ct.page_no[counter].tests  = 0;
-}
-      Session.set('contentTracker', ct);
-      
-      //SQUIRREL AWAY CURRENT PAGE NUMBER
-      $('#p').attr('data-p', counter );
-      
-      Bert.alert( 
-                  'Test successfully added.', 
-                  'success', 
-                  'growl-top-right' 
-                );
-                
-      $('#fb-template').empty();
-      return;
-    }
-//-----------------------------------------------/TESTS----------  
-
-
-/* -----------------------------------------------------------
- * SAVE / UPDATE: TITLES, TEXT, IMAGES, PDF, VIDEO. TEST VIEW
-/* -------------------------------------------------------- */ 
-console.log('next save t, t, i, p, v')
-      if ( 
-        (ct.page_no[page_no] && ct.page_no[page_no].titles) > 0 ||
-        (ct.page_no[page_no] && ct.page_no[page_no].texts)  > 0 ||
-        (ct.page_no[page_no] && ct.page_no[page_no].images) > 0 ||
-        (ct.page_no[page_no] && ct.page_no[page_no].pdfs)   > 0 ||
-        (ct.page_no[page_no] && ct.page_no[page_no].ppts)   > 0 ||
-        (ct.page_no[page_no] && ct.page_no[page_no].videos) > 0 ||
-        (ct.page_no[page_no] && ct.page_no[page_no].scorms) > 0 ||
-        (ct.page_no[page_no] && ct.page_no[page_no].tests)  > 0 ||
-        plen > 0
-       ) 
-    {
-
-      Bert.alert( 'Adding...', 'success', 'growl-top-right' );
-  
-          let rtn_arr
-          , pp
-          , pos
-          , str
-          , page_no = t.page.get()
-          , my_id   = Session.get('my_id')
-          , o       = [];
-        
-        pp = P.find({ _id: my_id }).fetch();
-
-        //ARE THERE RECORDS FOR THIS PAGE?
-        for( let i = 0, ilen= pp[0].objects.length; i < ilen; i++ ) {
-          if ( pp[0].objects[i].page_no == page_no ){
-            o.push( pp[0].objects[i] );
-          }
-        }
-
-        for ( let j = 0, jlen = o.length; j < jlen; j++ ) {
-
-          if ( o[j].type == 'title' ) {
-
-            P.update( { _id: my_id },
-                      { $pull: { objects:{ id:{$eq: o[j].id} } }});
-                      
-console.log('next titles');
-            P.update( { _id: my_id },
-                      { $push:
-                        { objects:
-                          {
-                    page_no:          page_no,
-                    type:             'title',
-                    id:               o[j].id,
-                    text:             $( `#${o[j].id}` ).text(),
-                    offset:           $( `#${o[j].id}` ).offset(),
-                    zIndex:           $( `#${o[j].id}` ).css('z-index'),
-                    fontSize:         $( `#${o[j].id}` ).css('font-size'),
-                    border:           $( `#${o[j].id}` ).css('border'),
-                    fontWeight:       $( `#${o[j].id}` ).css('font-weight'),
-                    fontStyle:        $( `#${o[j].id}` ).css('font-style'),
-                    textDecoration:   $( `#${o[j].id}` ).css('text-decoration'),
-                    opacity:          $( `#${o[j].id}` ).css('opacity')
-                          }    
-                        }
-                      });
-
-          } else
-            if ( o[j].type == 'text' ) {
-              P.update( { _id: my_id },
-                        {$pull: { objects:{ id:{$eq: o[j].id} } }});
-                        
-console.log( 'next text' );
-            P.update( { _id: my_id },
-                      { $push:
-                        { objects:
-                          {
-                    page_no:          page_no,
-                    type:             'text',
-                    id:               o[j].id,
-                    text:             $( `#${o[j].id}` ).html().trim(),
-                    offset:           $( `#${o[j].id}` ).offset(),
-                    zIndex:           $( `#${o[j].id}` ).css('z-index'),
-                    fontSize:         $( `#${o[j].id}` ).css('font-size'),
-                    border:           $( `#${o[j].id}` ).css('border'),
-                    fontWeight:       $( `#${o[j].id}` ).css('font-weight'),
-                    fontStyle:        $( `#${o[j].id}` ).css('font-style'),
-                    textDecoration:   $( `#${o[j].id}` ).css('text-decoration'),
-                    opacity:          $( `#${o[j].id}` ).css('opacity')
-                          }    
-                        }
-                      });              
-            } else
-              if ( o[j].type == 'image' ) {
-console.log('next image');
-                P.update( { _id: my_id },
-                          { $pull: { objects:{ id:{$eq: o[j].id} } }});
-                          
-                P.update({ _id: my_id },
-                         { $push:
-                            { objects:
-                              {
-                        page_no:    page_no,
-                        type:       'image',
-                        id:         `${o[j].id}`,
-                        iid:        `${o[j].iid}`,
-                        img_lnk:    `${o[j].img_lnk}`,
-                        offset:     $( `#${o[j].id}` ).offset(),
-                        iwidth:     $( `#${o[j].iid}` ).width(),
-                        iheight:    $( `#${o[j].iid}` ).height(),
-                        opacity:    $( `#${o[j].id}` ).css('opacity'),
-                        dwidth:     $( `#${o[j].id}` ).width(),
-                        dheight:    $( `#${o[j].id}` ).height(),
-                        src:        `${o[j].src}`                  
-                              }
-                            }
-                         });                
-            } else 
-              if ( o[j].type == 'video' ) {
- console.log('next video');
-                P.update( { _id: my_id },
-                          { $pull: { objects:{ id:{$eq: o[j].id} } }});
-                          
-                P.update( { _id: my_id },
-                          { $push: 
-                            { objects:
-                              {
-                                page_no:  page_no,
-                                type:     'video',
-                                url:      o[j].url
-                              }
-                            }
-                          });
-            } else
-              if ( o[j].type == 'pdf' ) {
-console.log('next pdf');
-                P.update( { _id: my_id },{ $pull: { objects:{ id:{$eq: o[j].id} } }});
-                P.update( { _id: my_id },
-                          { $push: 
-                            { objects: 
-                              {
-                                page_no:  page_no,
-                                type:     'pdf',
-                                url:      o[j].url,
-                                s3:       o[j].s3,
-                                pdf_lnk:  o[j].pdf_lnk
-                              }
-                            }
-                          });
-            }// else if
-        }//for
-      
-      $( '.js-edit-button'  ).hide();
-      $( '#cb-toolbar-title' ).hide();
-      $( '#cb-toolbar-media').hide();
-      $( '#cb-toolbar-video' ).hide();
-      
-      //CONDITIONALLY ADVANCE TOTAL  
-      if ( plen >= 1 && t.page.get() >= t.total.get() ) {
-        t.total.set( t.total.get() + 1 );
-      }
-        //ADVANCE TO NEXT PAGE
-        t.page.set(   page_no  + 1 );
-      
-        
-      counter = t.page.get();
-      $('#p').attr('data-p', counter );
-      
-if ( ! ct.page_no[counter] ) {
-      ct.page_no[counter] = {};
-      ct.page_no[counter].titles = 0;
-      ct.page_no[counter].texts  = 0;
-      ct.page_no[counter].images = 0;
-      ct.page_no[counter].videos = 0;
-      ct.page_no[counter].pdfs   = 0;
-      ct.page_no[counter].ppts   = 0;
-      ct.page_no[counter].scorms = 0;
-      ct.page_no[counter].tests  = 0;
-}
-      Session.set('contentTracker', ct);
-
-      // CLEAR THE DIV
-      $( '#fb-template' ).empty();
-      $( '#fb-template' ).css('border','');
-      
-      //pp = P.find({ _id: my_id }).fetch();
-      //console.log( pp[0].objects );
-      //return;
-    //}
-
-//----------------SHOW CURRENT CONTENT IF THERE IS ANY------------------------
-
-  (function(){
-      
-      let rtn_arr
-        , pp 
-        , page_no = t.page.get()
-        , my_id   = Session.get('my_id')
-        , o       = [];
-      
-      try {
-        pp = P.find({ _id: my_id }).fetch();
-  
-        if ( pp[0].objects.length != undefined ) {
-          for( let i = 0, ilen = pp[0].objects.length; i < ilen; i++ ) {
-            if ( pp[0].objects[i].page_no == page_no ){
-              if ( pp[0].objects[i].type == 'test' ) {
-console.log('next test');                
-                $( '#fb-template' ).hide();
-                $( '#fb-template' ).empty();
-                
-                $( '#test_v' ).show(); 
-                
-              } else {
-                $( '#test_v' ).hide(); 
-                
-                //CLEAR THE CANVAS
-                $('#fb-template').empty();
-                $( '#fb-template' ).show();
-            }
-              o.push( pp[0].objects[i] );
-            }
-          }
-        } else {
-            o.push(pp[0].objects );
-        }
-        
-        //
-        
-        rtn_arr = handlePrevious( o );   
-  
-        let funcs = rtn_arr[1];
-  
-        //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
-        $('#fb-template').append( rtn_arr[0] ); 
-        
-        //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
-        for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
-          eval( funcs[i] );
-        } 
-  
-        /***********************************************************
-         * ATTACH MOUSE EVENTS TO NEWLY PLACED TITLE & TEXT ELEMENTS
-         **********************************************************/
-        for( let i = 0, ilen = pp[0].objects.length; i < ilen; i++ ) {
-    //TITLES
-          if (  pp[0].objects[i].type == 'title' ) {
+    $( '#fb-template' ).empty();
     
-            for ( let j = 0, jlen = o.length; j < jlen; j++ ) {
-      
-              eval(
-                    $( `#${o[j].id}` ).on( "mouseup", function(){
-                      e.preventDefault();
+    let arr = P.dumpPage(p);
     
-                      //SHOW RELATED EDITING TOOLBAR
-                      $( '.js-title-edit-button'  ).show();
-                      $( '#cb-title-toolbar' ).show();
-                      
-                      // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR 
-                      //R/O HIDDEN FIELD
-                      t.$( '#cb-current' ).val( `${o[j].id}` );
-              
-                    })          
-                );
-              }//for
-          } else
-    //TEXT
-              if ( pp[0].objects[i].type == 'text' ) {
-               for ( let j = 0, jlen = o.length; j < jlen; j++ ) {
-        
-                  eval(
-                        $( `#${o[j].id}` ).on( "mouseup", function(){
-                          e.preventDefault();
-        
-                          //SHOW RELATED EDITING TOOLBAR
-                          $('#cb-text-toolbar').show();
-                          
-                          // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR 
-                          //R/O HIDDEN FIELD
-                          t.$( '#cb-current' ).val( `${o[j].id}` );
-                  
-                        })          
-                    );
-                  }//for           
-          } else 
-    //IMAGES
-              if ( pp[0].objects[i].type == 'image' ) {
-          
-                if ( o.length === undefined ) console.log('it sure is, nick');
+    Render.render( e, t, arr, P );
     
-                 for ( let j = 0, jlen = o.length; j < jlen; j++ ) {
-                    if ( o[j].dwidth == null ) {
-                      P.update( { _id: my_id },
-                                { $pull: { objects:{ dwidth:{ $eq: null} } }});
-                      continue;
-                    }
-                    eval(
-                          $( `#${o[j].id}` ).on( "mouseup", function(){
-                            e.preventDefault();
-          
-                            //SHOW RELATED EDITING TOOLBAR
-                            $( '#cb-media-toolbar' ).show();
-                            
-                            // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR 
-                            //R/O HIDDEN FIELD
-                            t.$( '#cb-current' ).val( `${o[j].id}` );
-                    
-                          })          
-                      );
-                    //console.log( o.id );
-                  }//for 
-          }//else if
-        }//outer for
-      } catch(ReferenceError) {
-        console.log( 'no record line:650' );
-      }
-  })();
-} else {
-conaole.log('IN ELSE');
-  let p = t.page.get() + 1;
-  
-  if (  
-        (ct.page_no[p] && ct.page_no[p].titles) == 0 &&
-        (ct.page_no[p] && ct.page_no[p].texts)  == 0 &&
-        (ct.page_no[p] && ct.page_no[p].images) == 0 &&
-        (ct.page_no[p] && ct.page_no[p].pdfs)   == 0 &&
-        (ct.page_no[p] && ct.page_no[p].ppts)   == 0 &&
-        (ct.page_no[p] && ct.page_no[p].videos) == 0 &&
-        (ct.page_no[p] && ct.page_no[p].scorms) == 0 
-      )
-  {
-  t.page.set( t.page.get() + 1 );
-  t.total.set( t.total.get() + 1 );
-  counter = t.page.get();    
-  $('#fb-template').empty();
-  return;
-  }
-  
-
-  console.log('shouldn\'t get here');
-if ( ! ct.page_no[counter] ) {
-      ct.page_no[counter] = {};
-      ct.page_no[counter].titles = 0;
-      ct.page_no[counter].texts  = 0;
-      ct.page_no[counter].images = 0;
-      ct.page_no[counter].videos = 0;
-      ct.page_no[counter].pdfs   = 0;
-      ct.page_no[counter].ppts   = 0;
-      ct.page_no[counter].scorms = 0;
-      ct.page_no[counter].tests  = 0;
-}
-      Session.set('contentTracker', ct);
-  //t.page.set( t.total.get() );
-  $('#p').attr('data-p', t.page.get() );
-}
-
-//------------------------------------------/SAVE TITLES, TEXTS, IMAGES-------
-
-  
-  return;
-//----------------------------------/NEXT-----------------
+    
   },
-
-
+  
+  
 
 /********************************************************
- * #NEW-COURSE-SAVE  ::(CLICK)::  [INITIAL DIALOG]
+ * #CB-INITIAL-DIALOG  ::(CLICK)::  [INITIAL DIALOG]
  *******************************************************/
-  'click #new-course-save'( e, t ) {
+  'click #cb-initial-dialog'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
 
-    //////////////////////////////////////////////////////////
-    // HANDLE/HARDER ERROR CHECKING, NO ALLOW EMPTY FIELDS  //
-    //////////////////////////////////////////////////////////
-
-      
-      let ct = {};
-      ct.page_no = [];
-      ct.page_no[1] = {};
-      ct.page_no[1].titles  = 0;
-      ct.page_no[1].texts   = 0;
-      ct.page_no[1].images  = 0;
-      ct.page_no[1].pdfs    = 0;
-      ct.page_no[1].videos  = 0;
-      ct.page_no[1].ppts    = 0;
-      ct.page_no[1].scorms  = 0;
-      Session.set('contentTracker', ct);
-  
       // ADVANCE PAGE COUNTS
       t.page.set( 1 );
       t.total.set( 1 );
       
-      counter   = t.page.get(); 
-      
-    let credits = t.$( '#course-builder-credits' ).val()
+      let credits = t.$( '#course-builder-credits' ).val()
 
       , name    = t.$( '#course-builder-name'    ).val()
 
@@ -1638,15 +920,15 @@ if ( ! ct.page_no[counter] ) {
 
       , keys    = t.$( '#tags' ).val()
       , role
-      , creator_id = Meteor.userId()
-      , cid   = Meteor.user().profile.company_id;
+      , creator_id  = Meteor.userId()
+      , cid         = Meteor.user() && Meteor.user().profile && Meteor.user().profile.company_id;
 
-      if ( percent == '' ) percent = 1001; //completion is passing
+      if ( percent  == '' ) percent = 1001; //completion is passing
       
-      if ( name == '' || credits == '' || keys == '' ) {
+      if ( name     == '' || credits == '' ) {
       
         Bert.alert( 
-                    'All fields must be filled out!', 
+                    'BOTH Course Name AND Credits MUST be filled out!', 
                     'danger', 
                     'fixed-top', 
                     'fa-frown-o' 
@@ -1654,7 +936,7 @@ if ( ! ct.page_no[counter] ) {
         return;
       }
       
-      if ( BuiltCourses.findOne({ name: name }) != undefined )
+      if ( Courses.findOne({ name: name }) != undefined )
       {
         Bert.alert( 
                     'There is already a course with that name!', 
@@ -1685,7 +967,7 @@ if ( ! ct.page_no[counter] ) {
                             creator_id: creator_id
       });
       
-      let my_id = P.insert({ });
+      let my_id = pp.insert({ pages: [] });
                            
       Session.set( 'my_id', my_id );
     
@@ -1694,6 +976,107 @@ if ( ! ct.page_no[counter] ) {
   },
 
 
+  /********************************************************
+   * CB-INTRO-MODAL-CANCEL
+   *******************************************************/
+   'click #cb-intro-modal-cancel'( e, t ) {
+      e.preventDefault();
+      
+      let ret_route = FlowRouter.getQueryParam("rtn");
+      
+      t.$( '#intro-modal' ).modal( 'hide' );
+      
+      Meteor.setTimeout(function(){
+        if (  Meteor.user() && 
+              Meteor.user().roles && 
+              Meteor.user().roles.admin ) 
+        {
+          if ( ret_route == 'courses' ) {
+            FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+            return;
+          } else if ( ret_route == 'library' ) {
+            FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
+          }
+          
+        } else if ( Meteor.user() && 
+                    Meteor.user().roles && 
+                    Meteor.user().roles.teacher ) {
+          FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+          return;
+        }
+      }, 500);
+   },
+ //--------------------------------------------------------- 
+
+
+
+  /********************************************************
+   * .JS-BACK-TO-HOME  ::(CLICK)::
+   *******************************************************/
+  'click #course-builder-page-back'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+      
+    
+    t.$( '#cb-leave-confirm' ).modal('show');
+    return;
+//-------------------------------------------------------------------
+  },
+
+
+
+  /********************************************************
+   * CB-LEAVE-NO  ::(CLICK)::
+   ********************************************************/
+  'click #cb-leave-no'( e, t ) {
+    e.preventDefault();
+    
+    t.$( '#cb-leave-confirm' ).modal('hide');
+  },
+  
+  
+  /********************************************************
+   * CB-LEAVE-YES  ::(CLICK)::    [LEAVE COURSE BUILDER]
+   *******************************************************/
+  'click #cb-leave-yes'( e, t ) {
+    e.preventDefault();
+    
+    // ADVANCE PAGE COUNTS
+    t.page.set( 1 );
+    t.total.set( 1 );
+      
+    Session.set( 'my_id',           null );
+    Session.set( 'cinfo',           null );
+    Session.set( 'test_id',         null );
+    Session.set( 'Scratch',         null );
+      
+    t.$( '#cb-leave-confirm' ).modal('hide');
+    
+    //NECESSARY DELAY OR DIALOG CAUSES DISPLAY ISSUES ON DESTINATION
+    Meteor.setTimeout(function(){
+      try {
+        if ( t.return_page.get() == 'courses' ) {
+          if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+            FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+          } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+            FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+          }
+        } else if ( t.return_page.get() == 'library' ) {
+          if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+            FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+          } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+            FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
+          }         
+        }
+      } catch( e ) {
+        console.log( e );
+        console.log( 'cb lineno: 983' );
+      }
+    }, 500);
+//---------------------------------------------------------  
+  },
+  
+  
 
   /********************************************************
    * #EXIT-CB  ::(CLICK)::
@@ -1701,31 +1084,14 @@ if ( ! ct.page_no[counter] ) {
   'click #exit-cb'( e, t ) {
     t.$( '#intro-modal' ).modal( 'hide' );
     
-      // CLEAR THE CONTENT TRACKER
-      if ( Session.get('contentTracker') != null ) {
-        let ct    = Session.get('contentTracker');
-        ct.titles = 0;
-        ct.texts  = 0;
-        ct.images = 0;
-        ct.videos = 0;
-        ct.pdfs   = 0;
-        ct.ppts   = 0;
-        ct.scorms = 0;
-        ct.tests  = 0;
-        Session.set('contentTracker', ct);
-      }
-      
       // ADVANCE PAGE COUNTS
       t.page.set(  1 );
       t.total.set( 1 );
       
-      counter     = t.page.get();
-      
-      Session.set( 'tbo',     null );
-      Session.set( 'Scratch', null );
       Session.set( 'cinfo',   null );
       Session.set( 'my_id',   null );
       Session.set( 'test_id', null );
+      Session.set( 'Scratch', null );
       
     if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
@@ -1744,22 +1110,10 @@ if ( ! ct.page_no[counter] ) {
   'click #cb-save'( e, t ) {
     e.preventDefault();
     
-    Session.set( 'Scratch', '' );
-    
-    let id      = Session.get('my_id')
-      , pages   = P.findOne({ _id: id }).objects;
-
-    delete pages._id; 
-//    { objects: d.objects }
-//DEBUG: Pages.insert({ objects: d.objects });
-
-    //HANDLE CASE WHERE USER CLICKS SAVE WITHOUT SAVING CURRENT PAGE:
-    //if ( end == null ) {    
-    //Pages.insert({ page: rec, objs: d.objects });
-    //}
-    
     t.$( '#intro-modal' ).modal( 'hide' );
-    
+
+//NEED A BETTER CHECK THAT THERE'S CONTENT
+/*
     if (
         t.page.get() === 1
        )
@@ -1772,7 +1126,7 @@ if ( ! ct.page_no[counter] ) {
                     );
           return;
     }
-
+*/
     let uname = Students.findOne( { _id: Meteor.userId() },
                                   { fullName:1 } ).fullName
       //, uid   = Meteor.userId()
@@ -1781,6 +1135,8 @@ if ( ! ct.page_no[counter] ) {
                                       //passing_percent: Number(percent),
                                       //keywords: keys,
                                       //icon: "/img/icon-4.png" }
+P.print();
+let pobj = P.dump();
     Meteor.setTimeout(function(){
 
       Meteor.call('saveBuiltCourse',  cinfo.cname,
@@ -1790,13 +1146,13 @@ if ( ! ct.page_no[counter] ) {
                                       cinfo.keywords,
                                       cinfo.passing_percent,
                                       cinfo.icon,
-                                      pages,
+                                      pobj,
                                       uname,
-                                      function(error, result)
+                                      function( error, result )
       {
-          if(error){
-            alert('Error');
-          }else{
+          if( error ) {
+            alert( 'Error' );
+          } else {
             console.log( 'result is ' + result );
             //Session.set("data", result)
         
@@ -1833,35 +1189,18 @@ if ( ! ct.page_no[counter] ) {
        }
       //-----------------------------------------------
 
-      // CLEAR THE CONTENT TRACKER
-      if ( Session.get('contentTracker') != null ) {
-        let ct = Session.get('contentTracker');
-        ct.titles = 0;
-        ct.texts  = 0;
-        ct.images = 0;
-        ct.videos = 0;
-        ct.pdfs   = 0;
-        ct.ppts   = 0;
-        ct.scorms = 0;
-        ct.tests  = 0;
-        Session.set('contentTracker', ct);
-      }
-      
       // SET PAGE COUNTS
       t.page.set( 1 );
       t.total.set( 1 );
       
-      counter     = 1;
-      
     }, 300);
 
-    P.remove({ _id: id });
+    P = null;
     
-    Session.set( 'tbo',             null );
     Session.set( 'my_id',           null );
     Session.set( 'cinfo',           null );
     Session.set( 'test_id',         null );
-    Session.set( 'contentTracker',  null );
+    Session.set( 'Scratch',         null );
     
     Meteor.setTimeout(function(){
       Bert.alert( 
@@ -1890,19 +1229,495 @@ if ( ! ct.page_no[counter] ) {
   
   
   /********************************************************
-   * #CB-TEST-SAVE  ::(CLICK)::
+   * #ADDED-TITLE  ::(BLUR)::
    *******************************************************/
-  'click #cb-test-save'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+  'blur #added-title'( e, t ) {
+    
+    CBTitle.cbAddedTitleBlur( e, 
+                              t, 
+                              t.page.get(),
+                              master_num++,
+                              P
+                            );
+  },
+//---------------------------------------------------------
 
-    Template.instance().page.set(   Template.instance().page.get()  + 1 );
-    Template.instance().total.set(  Template.instance().total.get() + 1 );
-    t.$( '#add-test' ).modal( 'hide' );
-//-----------------------------------------------------------------------------
+
+
+//--------------TOOLBAR HANDLERS---------------------------
+
+
+//--BEGIN TITLES TOOLBAR-----------------------------------
+
+ /**********************************************************
+ * .JS-TITLE-EDIT-BUTTON
+ *********************************************************/
+ 'click .js-title-edit-button'( e, t ) {
+    e.preventDefault();
+      
+    TTL.titleEditText( e, t, P );
+//---------------------------------------------------------   
+ },   
+
+ 
+   /********************************************************
+   * .JS-TITLE-DELETE-BUTTON
+   *******************************************************/
+  'click .js-title-delete-button'( e, t ) {
+    e.preventDefault();
+    
+    TTL.titleDelete( e, t, P, pp );
+//----------------------------------------------------------
+  },
+ 
+  
+/**********************************************************
+ * .JS-TITLE-ITALIC-BUTTON  ::(CLICK)::
+ *********************************************************/
+  'click .js-title-italic-button'( e, t ) {
+    e.preventDefault();
+
+    TTL.titleItalic( e, t, P );
+//---------------------------------------------------------
+  }, 
+  
+  
+ /**********************************************************
+ * .JS-TITLE-BOLD-BUTTON ::(CLICK)::
+ *********************************************************/
+  'click .js-title-bold-button'( e, t ) {
+    e.preventDefault();
+
+    TTL.titleBold( e, t, P );
+//---------------------------------------------------------
+  },
+  
+ 
+ /**********************************************************
+ * .JS-TITLE-UNDERLINE-BUTTON  ::(CLICK)::
+ *********************************************************/
+  'click .js-title-underline-button'( e, t ) {
+    e.preventDefault();
+    
+    TTL.titleUnderline( e, t, P );
+//---------------------------------------------------------
+  },
+  
+ 
+ /**********************************************************
+ * .JS-TITLE-FONT-SIZE  ::(INPUT)::
+ *********************************************************/
+  'input .js-title-font-size'( e, t ) {
+    e.preventDefault();
+    
+    TTL.titleFontSizeInput( e, t );
+  },
+//---------------------------------------------------------
+
+
+
+ /**********************************************************
+ * .JS-TITLE-FONT-SIZE  ::(MOUSEUP)::
+ *********************************************************/
+  'mouseup .js-title-font-size'( e, t ) {
+    //e.preventDefault();
+
+    TTL.titleFontSizeMU( e, t, P );
+    return;
+  },
+//---------------------------------------------------------  
+  
+  
+  
+/**********************************************************
+ * .JS-TITLE-OPACITY  ::(INPUT)::
+ *********************************************************/
+  'input .js-title-opacity'( e, t ) {
+    e.preventDefault();
+    
+    TTL.titleOpacityInput( e, t );
+  }, 
+//---------------------------------------------------------
+
+
+
+ /**********************************************************
+ * .JS-TITLE-OPACITY  ::(MOUSEUP)::
+ *********************************************************/
+  'mouseup .js-title-opacity'( e, t ) {
+    //e.preventDefault();
+
+    TTL.titleOpacityMU( e, t, P );
+    return;
+  },
+ //--------------------------------------------------------- 
+  
+//---------------------------------------END TITLES TOOLBAR-
+
+
+//---BEGIN TEXT TOOLBAR------------------------------------
+
+/**********************************************************
+ * .JS-CB-TEXT-EDIT  ::(CLICK)::
+ *********************************************************/
+ 'click .js-cb-text-edit'( e, t ) {
+    e.preventDefault();
+
+      $( '#cb-editor-save-text' ).show();
+      $( '.js-cb-text-edit' ).hide();
+      $( '.js-cb-text-delete' ).hide();
+      
+      //IE #txt-0
+      let currentItem = $( '#cb-current' ).val()
+        , text        = $( `#${currentItem}` ).text().trim()
+        , config      = {};
+      
+      $( `#${currentItem}` ).attr('data-editing', true);
+      $( `#${currentItem}` ).hide();
+      
+      editor1 = CKEDITOR.appendTo( 'editor1', config, text ); 
+        
+      //CKEDITOR.instances.editor1.setData(text);
+      
+      
+      //$('#cb-text-toolbar').show()
+      
+      currentItem = null;
+      
+    //TXT.textEdit( e, t, editor1 );
+ },
+//---------------------------------------------------------
+
+
+
+/**********************************************************
+ * #CB-EDITOR-SAVE-TEXT  ::(CLICK)::
+ *********************************************************/
+ 'click #cb-editor-save-text'( e, t ) {
+   e.preventDefault();
+   
+   let cur = $('#cb-current').val()
+    , txt = editor1 && editor1.getData(); //CKEDITOR.instances.editor1.getData();
+	  
+	 //DON'T ACCEPT EMPTY INPUT
+	 if ( txt == '' || txt == undefined || txt == null || (! txt.replace(/\s/g, '').length) ) {
+	   Bert.alert('You must enter text to be saved', 'danger');
+	   return;
+	 }
+	 
+   if ( $( `#${cur}` ).attr('data-editing') ) {
+    let idx = P.indexOf( `${cur}` )
+      , pos = $( `#${cur}` ).offset();
+    
+    P.removeAt( idx );
+    
+    P.insert( idx, { 
+      page_no:        t.page.get(),
+      type:           'text',
+      id:             cur,
+      text:           txt.trim(),
+      offset:         pos,
+      zIndex:         $( `#${cur}` ).css('z-index'),
+      fontSize:       $( `#${cur}` ).css('font-size'),
+      border:         $( `#${cur}` ).css('border'),
+      fontWeidht:     $( `#${cur}` ).css('font-weight'),
+      fontStyle:      $( `#${cur}` ).css('font-style'),
+      textDecoration: $( `#${cur}` ).css('text-decoration'),
+      opacity:        $( `#${cur}` ).css('opacity')
+    });
+    P.print();
+    
+	  editor1 && editor1.destroy();
+		editor1 = null;
+		
+		$('#cb-text-toolbar').hide();
+
+    $( `#${cur}` ).attr('data-editing', false);
+    $( `#${cur} p` ).remove();
+    $( `#${cur}` ).append( txt );
+    $( `#${cur}` ).show();
+		return;
+   } else {
+    
+     
+    editor1 && editor1.destroy();
+		editor1 = null;
+		
+		$('#cb-text-toolbar').hide();
+	
+    CBTexts.cbAddedTextBlur(  e,
+                              t, 
+                              txt,
+                              t.page.get(),
+                              master_num++,
+                              P
+                            );
+   }
+   
+   //SHOW CANVAS AS IT WAS HIDDEN WHEN TEXT EDITOR WAS DISPLAYED
+   $( '#fb-template' ).show();
+   
+   //ALLOW PAGE ADVANCE / DECREMENT
+   $( '#cb-next-btn' ).prop('disabled', false );
+   $( '#cb-prev-btn' ).prop('disabled', false );
+		//Bert.alert('Saving Text...', 'success');
+    
+    //CKEDITOR.instances.editor1.setData('');
+    
+ },
+//---------------------------------------------------------
+
+
+
+/**********************************************************
+ * .JS-CB-TEXT-DELETE  ::(CLICK)::
+ *********************************************************/
+ 'click .js-cb-text-delete'( e, t ) {
+    e.preventDefault();
+ 
+    //I.E. txt-0
+    let cur = $( '#cb-current' ).val()
+      , page_no = t.page.get()
+      , idx     = P.indexOf( cur );
+
+ 		P.removeAt( idx );
+ 		
+    $( `#${cur}` ).remove();
+    $( '#cb-current' ).val('');
+    
+     pp.update( { _id: Session.get('my_id') },
+              { $pull: { pages:{ id: cur} } });
+    
+    $('#cb-text-toolbar').hide()
+
+    console.log( pp.find({}).fetch() );
+    P.print();
+    //editor1.destroy();
+		//editor1 = null;
+//---------------------------------------------------------
+},
+
+
+//---------------------------------------END TEXT TOOLBAR-
+
+
+//------BEGIN VIDEO TOOLBAR--------------------------------
+
+  /********************************************************
+   * .JS-VIDEO-DELETE-BUTTON
+   *******************************************************/
+  'click .js-video-delete-button'( e, t ){
+    e.preventDefault();
+    
+    let cur = $( '#cb-current' ).val()
+      , page_no = t.page.get()
+      , idx     = P.indexOf( cur );
+
+ 		P.removeAt( idx );
+ 		
+    $( `#${cur}` ).remove();
+    $( '#cb-current' ).val('');
+    
+     pp.update( { _id: Session.get('my_id') },
+              { $pull: { pages:{ id: cur} } });     
+    
+    console.log( pp.find({}).fetch() );
+    P.print();
+   
+    $('#fb-template').css( 'border', '' ); 
+    
+    $( '#fb-template iframe' ).remove();
+    $( '#cb-current' ).val('');
+    
+    $( '#cb-video-toolbar' ).hide();    
+//---------------------------------------------------------  
   },
 
 
+//--------------------------------------END VIDEO TOOLBAR--
+
+
+//--------BEGIN MEDIA TOOLBAR------------------------------
+
+  /********************************************************
+   * .JS-MEDIA-DELETE-BUTTON
+   *******************************************************/
+  'click .js-media-delete-button'( e, t ) {
+    e.preventDefault();  
+    
+    let cur     = $( '#cb-current' ).val()
+      , page_no = t.page.get()
+      , idx     = P.indexOf( cur );
+
+ 		P.removeAt( idx );
+ 		
+    $( `#${cur}` ).remove();
+    $( '#cb-current' ).val('');
+    
+     pp.update( { _id: Session.get('my_id') },
+              { $pull: { pages:{ id: cur} } }); 
+    
+    console.log( pp.find({}).fetch() );
+    P.print();
+    
+    $( '#cb-media-toolbar' ).hide();
+    
+  },
+  
+  
+/**********************************************************
+ * .JS-MEDIA-OPACITY  ::(INPUT)::
+ *********************************************************/
+  'input .js-media-opacity'( e, t ) {
+    e.preventDefault();
+    
+    let cur = $( '#cb-current' ).val()
+      , id  = $( `#${cur}` ).data('pid')
+      , opm = $(e.currentTarget).val()
+      , pg  = $( `#${cur}` ).data('page');
+    
+    $( `#${cur}` ).css( 'opacity', opm );
+    
+    $( '#opm' ).val( opm );
+    //P.update( { _id: id, "objects.page_no":pg }, 
+    //          {$set:{"objects.$.opacity": op }});
+//---------------------------------------------------------
+  },
+ 
+ 
+
+/**********************************************************
+ * .JS-MEDIA-OPACITY  ::(MOUSEUP)::
+ *********************************************************/
+'mouseup .js-media-opacity'( e, t ) {
+  
+  let cur = t.$( '#cb-current' ).val()
+    , idx = P.indexOf( cur )
+    , pos = t.$( `#${cur}` ).offset()
+    , obj;
+    
+  obj = P.removeAt( idx );
+
+  P.insert( idx, {
+          page_no:          t.page.get(),
+          type:             'image',
+          id:               `${obj.id}`,
+          iid:              `${obj.iid}`,
+          img_lnk:          `${obj.a_img_id}`,
+          offset:           pos,
+          iwidth:           `${obj.iwidth}`,
+          iheight:          `${obj.iheight}`,
+          opacity:          $(`#${cur}`).css('opacity'),
+          dwidth:           `${obj.dwidth}`,
+          dheight:          `${obj.dheight}`,
+          src:              `${obj.src}`         
+
+  });
+
+},
+//-------------------------------------END MEDIA TOOLBAR---
+
+
+
+  /********************************************************
+   * #COURSE-BUILDER-IMAGE ::(CHANGE)::
+   *******************************************************/
+  //'change #course-builder-image'( e, t ) {
+
+    //CBImage.cbImageChange( e, t /*, Images */ );
+  //},
+//---------------------------------------------------------
+
+
+  /********************************************************
+   * #CB-IMAGE-SAVE  ::(CLICK)::
+   *******************************************************/
+  'click #cb-image-save'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    CBImage.cbImageSave(  e, 
+                          t,
+                          t.page.get(), 
+                          master_num++,
+                          P,
+                          Images
+                        );
+  },
+//---------------------------------------------------------
+
+
+
+  /********************************************************
+   * #ADDED-VIDEO  ::(CHANGE)::
+   *******************************************************/
+  'change #added-video'( e, t ) {
+
+    CBVideo.addedVideoURL(  e, 
+                            t, 
+                            t.page.get(), 
+                            P,
+                            master_num
+                          );
+  },
+//---------------------------------------------------------  
+
+
+  /********************************************************
+   * #COURSE-BUILDER-PDF  ::(CHANGE)::
+   *******************************************************/
+  'change #course-builder-pdf'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    CBPDF.cbPDFChange( e, t );
+//---------------------------------------------------------
+  },
+
+
+
+  /********************************************************
+   * #CB-PDF-SAVE  ::(CLICK)::
+   *******************************************************/
+  'click #cb-pdf-save'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    
+    CBPDF.cbPDFSave(  e, 
+                      t, 
+                      t.page.get(),
+                      Pdfs,
+                      P,
+                      master_num++
+                    );
+  },
+//---------------------------------------------------------
+
+
+  /********************************************************
+   * #COURSE-BUILDER-POWERPOINT  ::(CHANGE)::
+   *******************************************************/
+   'change #course-builder-powerpoint'( e, t ) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      
+      CBPP.cbPowerPointChange( e, t, PowerPoints );
+//---------------------------------------------------------
+   },
+   
+   
+
+  /********************************************************
+   * #CB-POWERPOINT-SAVE  ::(CLICK)::
+   *******************************************************/
+  'click #cb-powerpoint-save'( e, t ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    CBPP.cbPowerPointSave( e, t, Session.get('contentTracker') );
+    t.$( '#add-powerpoint' ).modal( 'hide' );
+//---------------------------------------------------------
+  },
 
 
   /********************************************************
@@ -1973,166 +1788,9 @@ if ( ! ct.page_no[counter] ) {
     CBSCORM.cbScormChange( e, t, Session.get('contentTracker') );
 //---------------------------------------------------------
   },
-  
-  
-
-  /********************************************************
-   * #COURSE-BUILDER-POWERPOINT  ::(CHANGE)::
-   *******************************************************/
-   'change #course-builder-powerpoint'( e, t ) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      
-      CBPP.cbPowerPointChange( e, t, PowerPoints );
-//---------------------------------------------------------
-   },
-   
-   
-
-  /********************************************************
-   * #CB-POWERPOINT-SAVE  ::(CLICK)::
-   *******************************************************/
-  'click #cb-powerpoint-save'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    CBPP.cbPowerPointSave( e, t, Session.get('contentTracker') );
-    t.$( '#add-powerpoint' ).modal( 'hide' );
-//---------------------------------------------------------
-  },
 
 
 
-  /********************************************************
-   * #COURSE-BUILDER-PDF  ::(CHANGE)::
-   *******************************************************/
-  'change #course-builder-pdf'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    CBPDF.cbPDFChange( e, t, Pdfs );
-//---------------------------------------------------------
-  },
-
-
-
-  /********************************************************
-   * #CB-PDF-SAVE  ::(CLICK)::
-   *******************************************************/
-  'click #cb-pdf-save'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    
-    CBPDF.cbPDFSave(  e, 
-                      t, 
-                      t.page.get(),
-                      Pdfs,
-                      P,
-                      master_num++
-                    );
-  },
-//---------------------------------------------------------
-
-
-  /********************************************************
-   * #COURSE-BUILDER-IMAGE ::(CHANGE)::
-   *******************************************************/
-  'change #course-builder-image'( e, t ) {
-
-    CBImage.cbImageChange( e, t /*, Images */ );
-  },
-//---------------------------------------------------------
-
-
-  /********************************************************
-   * #CB-IMAGE-SAVE  ::(CLICK)::
-   *******************************************************/
-  'click #cb-image-save'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    CBImage.cbImageSave(  e, 
-                          t,
-                          t.page.get(), 
-                          master_num++,
-                          P 
-                        );
-  },
-//---------------------------------------------------------
-
-
-  /********************************************************
-   * #ADDED-TITLE  ::(BLUR)::
-   *******************************************************/
-  'blur #added-title'( e, t ) {
-    
-    CBTitle.cbAddedTitleBlur( e, 
-                              t, 
-                              t.page.get(),
-                              master_num++,
-                              P
-                            );
-  },
-//---------------------------------------------------------
-
-
-  /********************************************************
-   * #ADDED-TEXT  ::(BLUR)::
-   *******************************************************/
-/*
-  'blur #added-text'( e, t ) {
-    
-    CBTexts.cbAddedTextBlur(  e, 
-                              t, 
-                              t.page.get(),
-                              master_num++,
-                              P
-                            );
-  },
-*/
-//---------------------------------------------------------
-
-
-  /********************************************************
-   * #ADDED-VIDEO  ::(CHANGE)::
-   *******************************************************/
-  'change #added-video'( e, t ) {
-
-    CBVideo.addedVideoURL(  e, 
-                            t, 
-                            t.page.get(), 
-                            P,
-                            master_num
-                          );
-  },
-//---------------------------------------------------------  
-  
-  
-  /********************************************************
-   * CB-INTRO-MODAL-CANCEL
-   *******************************************************/
-   'click #cb-intro-modal-cancel'( e, t ) {
-      e.preventDefault();
-      
-      t.$( '#intro-modal' ).modal( 'hide' );
-      Meteor.setTimeout(function(){
-        if (  Meteor.user() && 
-              Meteor.user().roles && 
-              Meteor.user().roles.admin ) {
-          FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
-          return;
-          
-        } else if ( Meteor.user() && 
-                    Meteor.user().roles && 
-                    Meteor.user().roles.teacher ) {
-          FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-          return;
-        }
-      }, 500);
-   },
- //---------------------------------------------------------  
-   
-   
   /********************************************************
    * KEEP VALUES CONSTRAINED
    *******************************************************/
@@ -2376,7 +2034,11 @@ if ( ! ct.page_no[counter] ) {
     $( '.cb-img-video' ).prop( 'src', '/img/videos.png' );
   },
 //---------------------------------------------------------
+
 });
+//---------------------------------------------------------
+
+
 
 
 /**********************************************************
@@ -2424,9 +2086,9 @@ function addText( x, y ) {
   $( '#added-text' ).effect( "highlight", {}, 2000 );
 */
 }
-
-
-/**********************************************************
+ 
+ 
+ /**********************************************************
  * ADD VIDEO
  *********************************************************/
 function addVideo() {
@@ -2435,79 +2097,9 @@ function addVideo() {
                                       'type="text" ' +
                                       'style="border-radius:5px;width:75%;' +
                                       'margin-left:12%;margin-right:12%;" ' +
-                                      'placeholder="Add YouTube URL here" ' +
-                                      'autofocus/>' 
-                    ).css( 'border', '1px dashed grey' ); 
+                                      'placeholder="Add YouTube OR Vimeo URL here" ' +
+                                      'autofocus>' 
+                    );
                     //.effect( "highlight", {}, 2000 );
+                    //.css( 'border', '1px dashed grey' );
 }
-
-
-/**********************************************************
- * ADD TEST FOR ITEMS ON PAGE
- *********************************************************/
-function testForItemsOnPage( ct, p ) {
-if (
-        ct && ct.page_no[p] && ct.page_no[p].titles != 0 ||
-        ct && ct.page_no[p] && ct.page_no[p].texts  != 0 ||
-        ct && ct.page_no[p] && ct.page_no[p].images != 0 ||
-        ct && ct.page_no[p] && ct.page_no[p].videos != 0 ||
-        ct && ct.page_no[p] && ct.page_no[p].pdfs   != 0 ||
-        ct && ct.page_no[p] && ct.page_no[p].ppts   != 0 ||
-        ct && ct.page_no[p] && ct.page_no[p].scorms != 0 ||
-        ct && ct.page_no[p] && ct.page_no[p].tests  != 0
-      )
-  {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-
-/**********************************************************
- * TEST FOR VIDEO OR PDF ON PAGE
- *********************************************************/
-function testForVideoOrPdfOnPage( ct, p ) {
-  
-  if ( (ct && 
-        ct.page_no[p] && 
-        ct.page_no[p].videos != 0) || 
-        (ct && 
-        ct.page_no[p] && 
-        ct.page_no[p].pdfs != 0) ) 
-  {
-    return true;
-  } else {
-    return false;
-  }
-}   
-
-/**********************************************************
- * HANDLE PREVIOUS
- *********************************************************/
- function handlePrevious( o ) {
-
-
-    let funcs   = ''                  //FUNCS FROM CLASS TO POSITION ELEMENTS
-      , content = ''                  //RENDERED MARKUP (AND FUNCS) RETURNED
-      , cd                            //RENDERING CLASS INSTANCE
-      , mark_up = '';                 //RENDERED MARKUP RETURN VARIABLE
-
-
-    //if ( p.length == 0 ) return;
-    
-    //CREATE INSTANCE OF CBCreateDOM CLASS
-    cd        = new CBCreateDOM.CreateDOM( o );
-    
-    //RETRIEVE RESULT OF PROCESSING RETURNED DATABASE ELEMENTS
-    content   = cd.buildDOM();
- 
-    //PULL OUT THE MARKUP RETURNED FROM CLASS
-    mark_up   = content[0];
-    
-    //PULL OUT THE JQUERY FUNCTIONS RETURNED FROM CLASS
-    funcs     = content[1];
-    
-    return [ mark_up, funcs ];
- 
- }

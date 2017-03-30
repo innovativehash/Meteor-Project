@@ -212,7 +212,7 @@ Template.studentCourseListing.events = {
     e.stopImmediatePropagation();
 
     if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
-      FlowRouter.go( '/teacher/dashboard/course-builder/' + Meteor.userId() );
+      FlowRouter.go( `/teacher/dashboard/course-builder/${Meteor.userId()}/?rtn=courses` );
     }
   },
   

@@ -10,7 +10,8 @@ import { ReactiveVar }    from 'meteor/reactive-var';
 import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
 
-import * as CBCreateDOM from '../CB/createDOM.js';
+import * as CBCreateDOM from '../CB/CB_MODULES/createDOM.js';
+import * as Render      from '../CB/CB_MODULES/render.js';
 
 import './course-view.html';
 
@@ -90,7 +91,8 @@ Template.courseView.onRendered( function() {
               $( '#fb-template' ).show();
               
               if ( bc[0].pages[i].type == 'test' ) {
-                Session.set('test', bc[0].pages[i].t_id );
+console.log('in test');
+                Session.set('test', bc[0].pages[i].id );
                 $( '#fb-template' ).hide();
                 $( '#fb-template' ).empty();
                 $( '#test_v' ).show(); 
@@ -130,16 +132,20 @@ Template.courseView.onRendered( function() {
         } else {
             o.push(bc[0].pages );
         }
-        
+console.log('--o------');
+console.log(o);
+console.log('----o----');
+        $('#fb-template').empty();
         rtn_arr = handlePrevious( o );   
         
         let funcs = rtn_arr[1];
-  
+console.log( rtn_arr[0] );  
         //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
         $('#fb-template').append( rtn_arr[0] ); 
         
         //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
         for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
+console.log( funcs[i] );
           eval( funcs[i] );
         } 
   
