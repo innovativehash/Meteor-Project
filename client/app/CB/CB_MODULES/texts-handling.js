@@ -25,10 +25,10 @@
                                     page_no,
                                     master_num,
                                     P
-                                  ) 
+                                  )
   {
     e.preventDefault();
-    
+
     let pos   = {left:'600px', top:'400px'}; //= t.$( `#added-text` ).offset()
 
     t.$( '#fb-template' ).append( `<span  style="font-size:18px;cursor:move;
@@ -45,7 +45,7 @@
 
     t.$( `#txt-${master_num}` ).offset({ left: pos.left, top: pos.top });
     t.$( `#txt-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
-    
+
     P.append({
       page_no:        page_no,
       type:           'text',
@@ -80,18 +80,18 @@ P.print();
                 }
               }
             });
-*/                      
+*/
     Meteor.setTimeout(function(){
       //console.log( my_id );
       $( `#txt-${master_num}` ).attr( 'data-pid', `${Session.get('my_id')}` );
       //console.log( $( `#txt-${txt_id}` ).data('pid'));
     }, 500);
-    
+
   //--------------------------
   // TEXT OBJECT CLICK EVENT
   //--------------------------
   (function( master_num, txt ) {
-    
+
     //document.getElementById( `span_text-${txt_id}` ).onmouseup =  (e) => {
 
     $( `#txt-${master_num}` ).on("mouseup", function(){
@@ -103,16 +103,17 @@ P.print();
         , id  = `txt-${master_num}`
         , str = $( `#txt-${master_num}` ).text().trim()
         , idx = P.indexOf( `txt-${master_num}` );
-        
+
       //SHOW RELATED EDITING TOOLBAR
       $( '.js-cb-text-edit' ).show();
       $( '.js-cb-text-delete' ).show();
       $( '#cb-editor-save-text' ).hide();
       $( '#cb-text-toolbar' ).show();
       $( '#cb-title-toolbar' ).hide();
-      
+      $( '#cb-media-toolbar' ).hide();
+
       P.removeAt( idx );
-      P.insert( idx, { 
+      P.insert( idx, {
       page_no:        page_no,
       type:           'text',
       id:             id,
@@ -124,10 +125,10 @@ P.print();
       fontWeidht:     $( `#txt-${master_num}` ).css('font-weight'),
       fontStyle:      $( `#txt-${master_num}` ).css('font-style'),
       textDecoration: $( `#txt-${master_num}` ).css('text-decoration'),
-      opacity:        $( `#txt-${master_num}` ).css('opacity')        
+      opacity:        $( `#txt-${master_num}` ).css('opacity')
     });
 P.print();
-/*      
+/*
       P.update( { _id: my_id, "objects.id": id },
                 { $set: {
 "objects.$.page_no":  page_no,
@@ -158,4 +159,4 @@ function escapeHtml(str) {
          .replace(/>/g, "&gt;")
          .replace(/"/g, "&quot;")
          .replace(/'/g, "&#039;");
-} 
+}
