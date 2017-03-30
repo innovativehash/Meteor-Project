@@ -1357,7 +1357,10 @@ let pobj = P.dump();
 
 //---BEGIN TEXT TOOLBAR------------------------------------
 
-    'click #cke_editor2'( e, t ) {
+/**********************************************
+ * KLUDGE TO BRING UP SAVE BUTTON IF FOCUS LOST
+**********************************************/
+    'click #editor1'( e, t ) {
       e.preventDefault();
 
       $( '#cb-title-toolbar' ).hide();
