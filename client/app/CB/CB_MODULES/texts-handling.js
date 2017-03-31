@@ -29,8 +29,7 @@
   {
     e.preventDefault();
 
-    //let pos   = {left:'600px', top:'400px'}; //= t.$( `#added-text` ).offset()
-	let pos   = {left:'200px', top:'200px'}
+    let pos   = {left:600, top:400}; //= t.$( `#added-text` ).offset()
 
     t.$( '#fb-template' ).append( `<span  style="font-size:18px;cursor:move;
                                                  z-index:1;border-radius:5px;
@@ -106,11 +105,12 @@ P.print();
         , str = $( `#txt-${master_num}` ).text().trim()
         , idx = P.indexOf( `txt-${master_num}` );
 
+
       //SHOW RELATED EDITING TOOLBAR
       $( '.js-cb-text-edit' ).show();
       $( '.js-cb-text-delete' ).show();
-      $( '#cb-editor-save-text' ).hide();
       $( '#cb-text-toolbar' ).show();
+      $( '#cb-editor-save-text' ).hide();
       $( '#cb-title-toolbar' ).hide();
       $( '#cb-media-toolbar' ).hide();
 

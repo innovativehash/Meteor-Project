@@ -86,7 +86,7 @@ Template.courses.helpers({
       return;
     }
   },
-  
+
   uid: () =>
     Meteor.userId()
 
@@ -111,7 +111,7 @@ Template.courses.events({
 //-------------------------------------------------------------------
   },
 
- 
+
   /********************************************************
    * #SEARCH-COURSES  ::(CHANGE)::
    * scroll to selected course
@@ -123,23 +123,22 @@ Template.courses.events({
     let idx = $( e.currentTarget ).val();
     $( 'tr').css( 'border', '' );
     $( 'tr' ).css( 'background-color', '' );
-    
-    $( 'tr#' + idx ).css( 'border', 
-                          '1px solid' ).css(  'background-color', 
+
+    $( 'tr#' + idx ).css( 'border',
+                          '1px solid' ).css(  'background-color',
                                               'PaleTurquoise' );
-                                              
+
     $( 'html, body' ).animate({
       scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
 //-------------------------------------------------------------------
   },
-  
+
   /********************************************************
    * .JS-CLICK-COURSE  ::(CLICK)::
    *******************************************************/
   'click .js-click-course'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
       let href = $( e.currentTarget ).data( 'href' );
 
@@ -152,13 +151,16 @@ Template.courses.events({
    *******************************************************/
   'click .js-edit-course'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
-      let idx = $( e.currentTarget ).data( 'id' );
+      let idx = $( e.currentTarget ).data( 'id' )
+        , nm  = $( e.currentTarget ).data( 'name' )
+        , href;
+        
+      //idx = String( idx );
+      //let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
+      href = `/admin/dashboard/course-builder/${Meteor.userId()}/?id=${idx}&name=${nm}&edit=1`;
 
-      idx = String( idx );
-      let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
-
+      window.location = href;
       //navigate to course builder for editing.
 //-------------------------------------------------------------------
   },
@@ -169,31 +171,29 @@ Template.courses.events({
    *******************************************************/
   'click .js-unarchive-course'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     let idx = $( e.currentTarget ).data( 'id' );
     let nm  = $( e.currentTarget ).data( 'name' );
-    
+
     Bert.alert(`Course ${nm} has been un-archived`, 'success');
-    
+
     Courses.update({ _id: idx },
                     { $set: { isArchived: false }});
   },
-  
-  
-  
+
+
+
   /********************************************************
    * .JS-ARCHIVE-COURSE  ::(CLICK)::
    *******************************************************/
   'click .js-archive-course'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     let idx = $( e.currentTarget ).data( 'id' );
     let nm  = $( e.currentTarget ).data( 'name' );
-    
+
     Bert.alert(`Course ${nm} has been archived`, 'success');
-    
+
     Courses.update({ _id: idx },
                     { $set: { isArchived: true }});
 
@@ -223,7 +223,6 @@ Template.courses.events({
    *******************************************************/
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
@@ -235,7 +234,6 @@ Template.courses.events({
    ******************************************************/
   'click .js-course-builder'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     //t.currentScreen.set('courseBuilder');
     FlowRouter.go( `/admin/dashboard/course-builder/${Meteor.userId()}/?rtn=courses` );

@@ -4,7 +4,7 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
- 
+
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 
@@ -23,7 +23,7 @@ let course_list = []
  * CREATED
  */
 Template.degrees.onCreated(function() {
-  
+
 
   $( "#degree-cover" ).show();
 
@@ -31,25 +31,25 @@ Template.degrees.onCreated(function() {
    * JQUERY-UI SORTABLE
    */
   $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function(){
-    
+
       $( '#degree-drop-zone' ).sortable({
         connectWith: "#dojo",
         receive( event, ui ) {
-          
+
           let nm = $( '#enter-degree-name' ).val();
           if ( nm != '' ) $('#dName').text( nm );
-          
+
           course_list.push( $( `#${ui.item[0].id}` ).data('di') );
         },
       });
-    
+
       $( '#dojo' ).sortable({
         connectWith: "#degree-drop-zone",
         receive( event, ui ) {
-          
+
           let nm = $( '#enter-degree-name' ).val();
           if (nm!='') $('#dName').text( nm );
-          
+
           course_list = _.reject(course_list, function(item){
             return item === $( `#${ui.item[0].id}` ).data('di');
           });
@@ -79,17 +79,17 @@ Template.degrees.onRendered(function(){
    * SEARCH
    */
     Tracker.autorun(function(){
-      
+
       d = document.getElementById( 'dojo' );
 
       try {
         //CLEAR OUT THE LIST
         while ( d.hasChildNodes() ) {
-          
+
      	    d.removeChild( d.lastChild );
         }
-        
-        let c   = Courses.find( { company_id: Meteor.user().profile.company_id }, 
+
+        let c   = Courses.find( { company_id: Meteor.user().profile.company_id },
                                 {limit: 7}).fetch();
         return initC( d, c );
       } catch (e) {
@@ -129,19 +129,19 @@ Template.degrees.events({
    * #ENTER-CERTIFICATE-NAME ::(KEYDOWN)::
    */
   'keydown #enter-degree-name'( e, t ) {
-    
-    // keyCode 65-90 lowercase, 
+
+    // keyCode 65-90 lowercase,
     $('#deg-taken-name-error').text('');
     let ec = $( '#enter-degree-name' )
       , cn = $( '#dName')
       , str = ec.val();
-     
+
     if ( e.originalEvent.altKey || e.originalEvent.ctrlKey || e.originalEvent.shiftKey ||e.originalEvent.metaKey ) {
       return;
     }
-    
+
     //console.log( e.originalEvent.code );
-    
+
     if ( e.key == 'Backspace' ) {
       str = str.slice(0,str.length-1);
     } else if ( e.keyCode >= 65 && e.keyCode <= 90 ) {
@@ -149,10 +149,10 @@ Template.degrees.events({
     } else {
       ;
     }
-    
+
     ec.css({'color':'blue','text-decoration':''});
     cn.css({'color':'blue','text-decoration':''});
-  
+
     cn.text(str);
   },
 //-------------------------------------------------------------------
@@ -164,53 +164,53 @@ Template.degrees.events({
   'blur #enter-degree-name'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-    
+
     $( '#deg-taken-name-error' ).text('');
     $( '#enter-degree-name' ).css({'color':'blue','text-decoration':''});
     $( '#dName' ).css({'color':'blue', 'text-decoration':''});
-    
+
     let dname = $( '#enter-degree-name' ).val()
       , d_id;
-      
-    $( '#dName' ).text( dname ); 
-    
+
+    $( '#dName' ).text( dname );
+
     d_id = Diplomas.findOne({ name: dname });
 
     if ( d_id && d_id._id ) {
       $('#deg-taken-name-error').text('That name is already being used');
-      
+
       $( '#enter-degree-name' ).css({'color':'red','text-decoration':'line-through'});
       $( '#dName' ).css({'color':'red','text-decoration':'line-through'});
       Bert.alert('Sorry, but there is already a Degree with that name', 'danger');
       return;
     }
-    
+
 //-------------------------------------------------------------------
   },
-  
-  
-  
+
+
+
   /*
    * #DEGREE-SEARCH  ::(KEYUP)::
    *
    */
   'keyup #degree-search'( e, t ) {
-    
+
     // SEARCH TERM
     let nm = $( '#enter-degree-name' ).val();
     if (nm != '') $('#dName').text(nm);
-    
+
     let tf 	= document.getElementById( 'degree-search' ).value;
     //let d		= document.getElementById( 'dojo' );
      while ( d.hasChildNodes() ) {
-       
+
      	d.removeChild( d.lastChild );
-     	
+
      }
-     
+
     let patt1 = `/^${tf}/i`;
 
-    let items = Courses.find({ 
+    let items = Courses.find({
                               company_id: Meteor.user().profile.company_id,
                               name: { $regex: eval(patt1) },
                               _id: { $nin: course_list }
@@ -218,7 +218,7 @@ Template.degrees.events({
                               { limit: 7 }).fetch();
 
      for( let i = 0, len = items.length; i < len; i++ ) {
-  
+
      	let child 			= document.createElement( 'div' );
      	//let sp          = document.createElement( 'span' );
      	//let im          = document.createElement( 'img' );
@@ -228,7 +228,7 @@ Template.degrees.events({
      	im.id         = `deg-img-${i}`;
      	im.dataset.dc = `${items[i].credits}`;
      	im.dataset.di = `${items[i]._id}`;
-     	
+
      	sp.appendChild( im );
      	*/
       child.className   = "sortable d-cur ui-widget-content degree-drop";
@@ -241,9 +241,9 @@ Template.degrees.events({
       d.appendChild( child );
 
       $( `#deg-holder-${i}` ).css({'width':'260px','min-height':'49px','font-size':'20px','text-align':'center','border':'1px dotted #767676','margin-bottom':'10px','padding':'5px','border-radius':'4px'});
- 
+
      }
-     
+
   },
 
 
@@ -269,13 +269,13 @@ Template.degrees.events({
       Bert.alert('Sorry, but a Dergree with that name already exists', 'danger');
       return;
     }
-    
+
     try {
       c_id = Meteor.user().profile.company_id;
     } catch(e) {
       return;
     }
-    
+
     if ( !course_list || course_list.length <= 0) {
       Bert.alert( 'No Courses have been added!', 'danger' );
       return;
@@ -285,10 +285,10 @@ Template.degrees.events({
       Bert.alert( 'You Must Give the Degree a Name!', 'danger' );
       return;
     }
-    
+
     //END SANITY CHECKS
     order = $( '#degree-drop-zone' ).sortable('toArray');
-    
+
     for ( let i = 0, len = order.length; i < len; i++ ){
       if ( order[i] ) {
         let cur = $( `#${order[i]}` );
@@ -312,7 +312,7 @@ Template.degrees.events({
     });
 
     Bert.alert( 'Degree Created!', 'success', 'growl-top-right' );
-    
+
       Newsfeeds.insert({
                  owner_id:       Meteor.userId(),
                   poster:         Meteor.user().username,
@@ -323,13 +323,30 @@ Template.degrees.events({
                   comment_limit:  3,
                   company_id:     c_id,
                   likes:          0,
-                  date:           new Date()       
-    });    
+                  date:           new Date()
+    });
 
     Meteor.setTimeout(function(){
-      FlowRouter.go(  'admin-degrees-and-certifications', 
-                      { _id: Meteor.userId() }
-      );
+      if   (
+            Meteor.user() &&
+            Meteor.user().roles &&
+            Meteor.user().roles.admin
+           )
+      {
+        FlowRouter.go(  'admin-degrees-and-certifications',
+                      { _id: Meteor.userId() });
+        return;
+      } else
+          if (
+              Meteor.user() &&
+              Meteor.user().roles &&
+              Meteor.user().roles.SuperAdmin
+             )
+      {
+        FlowRouter.go( 'super-admin-degrees-and-certs',
+                      { _id: Meteor.userId() });
+        return;
+      }
     }, 500);
 //-------------------------------------------------------------------
   },
@@ -351,9 +368,25 @@ Template.degrees.events({
    */
   'click #degree-certificate-page'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
-    FlowRouter.go( 'admin-degrees-and-certifications', { _id: Meteor.userId() } );
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.admin
+       )
+    {
+      FlowRouter.go( 'admin-degrees-and-certifications', { _id: Meteor.userId() });
+      return;
+    } else
+        if (
+            Meteor.user() &&
+            Meteor.user().roles &&
+            Meteor.user().roles.SuperAdmin
+           )
+    {
+      FlowRouter.go( 'super-admin-degrees-and-certs', { _id: Meteor.userId() });
+      return;
+    }
 //-------------------------------------------------------------------
   },
 
@@ -363,9 +396,25 @@ Template.degrees.events({
    */
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
-    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.admin
+       )
+    {
+      FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+      return;
+    } else
+        if (
+            Meteor.user() &&
+            Meteor.user().roles &&
+            Meteor.user().roles.SuperAdmin
+           )
+    {
+      FlowRouter.go( 'super-admin-dashboard', { _id: Meteor.userId() });
+      return;
+    }
 //-------------------------------------------------------------------
   },
 });
@@ -385,7 +434,7 @@ function initC( d, c ) {
      	im.id         = `deg-img-${i}`;
      	im.dataset.dc = `${c[i].credits}`;
      	im.dataset.di = `${c[i]._id}`;
-     	
+
      	sp.appendChild( im );
      	*/
       child.id          = `deg-holder-${i}`;
@@ -398,9 +447,9 @@ function initC( d, c ) {
       d.appendChild( child );
 
       $( `#deg-holder-${i}` ).css({'width':'260px','min-height':'49px','font-size':'20px','text-align':'center','border':'1px dotted #767676','margin-bottom':'10px','padding':'5px','border-radius':'4px'});
-   	                                 
+
       $( '#degree-search' ).prop( 'selectionStart', 0 )
                            .prop( 'selectionEnd', 0 );
-    
+
   }
 }

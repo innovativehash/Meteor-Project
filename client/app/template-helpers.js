@@ -16,6 +16,11 @@ Template.registerHelper( 'or', ( a, b  ) => {
 });
 
 
+Template.registerHelper( 'orr', ( a, b, c ) => {
+  return a || b || c;
+});
+
+
 Template.registerHelper('eq', ( a, b ) => {
   return a === b;
 });
@@ -36,7 +41,7 @@ Template.registerHelper('isCurrentUser', (id) => {
     return Meteor.userId() == id;
   } catch(e) {
     return new Error(e);
-  } 
+  }
 });
 
 

@@ -104,9 +104,9 @@ Template.courseBuilderPage.onCreated( function() {
           //, t = $('#p').attr('data-t');
 
         switch ( draggedType ) {
-/*
+/*******
  * TITLE
- */
+ ******/
           case 'title':
              try {
 
@@ -154,9 +154,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
 
           case 'text':
-/*
+/******
  * TEXT
- */
+ *****/
               try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -219,9 +219,9 @@ Template.courseBuilderPage.onCreated( function() {
               break;
 
           case 'g-image':
-/*
+/*******
  * IMAGE
- */
+ ******/
                try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -275,9 +275,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
 
           case 'video':
-/*
+/*******
  * VIDEO
- */
+ ******/
                 try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -335,9 +335,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
 
           case 'pdf':
-/*
+/*****
  * PDF
- */
+ ****/
                  try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -396,9 +396,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
 
           case 'powerpoint':
-/*
+/*****
  * PPT
- */
+ ****/
                  try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -462,9 +462,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
 
           case 'scorm':
-/*
+/*******
  * SCORM
- */
+ ******/
                  try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -528,9 +528,9 @@ Template.courseBuilderPage.onCreated( function() {
             break;
 
           case 'test':
-/*
+/******
  * TEST
- */
+ *****/
                  try {
 
               let arr = P.dumpPage( that.page.get() );
@@ -648,8 +648,6 @@ Template.courseBuilderPage.onCreated( function() {
  *========================================================*/
 Template.courseBuilderPage.onRendered( function() {
 
-
-
   $( '#cover' )
     .delay( 1000 )
     .fadeOut( 'slow',
@@ -670,12 +668,22 @@ Template.courseBuilderPage.onRendered( function() {
 /*
  * SUCCESSFUL RETURN FROM TEST CREATION
  */
-
-  if (  FlowRouter.getQueryParam( "rtn" ) &&
-        FlowRouter.getQueryParam( "id"  )
+  if (
+      FlowRouter.getQueryParam('rtn') &&
+      FlowRouter.getQueryParam('id')  &&
+      FlowRouter.getQueryParam('edit') &&
+      FlowRouter.getQueryParam('name')
      )
   {
+    console.log('4');
+  }
 
+  if (
+      FlowRouter.getQueryParam( "rtn" ) &&
+      FlowRouter.getQueryParam( "id"  )
+     )
+  {
+    console.log('2');
     //RESTORE THE SESSION
     let test_session_bak = Session.get( 'obj' );
     Session.set( 'obj', null );
@@ -707,8 +715,9 @@ Template.courseBuilderPage.onRendered( function() {
  * CANCELED TEST RETURN
  */
 
-  if (  FlowRouter.getQueryParam( "rtn" ) &&
-        FlowRouter.getQueryParam( "cancel" )
+  if (
+      FlowRouter.getQueryParam( "rtn" ) &&
+      FlowRouter.getQueryParam( "cancel" )
      )
   {
     let test_session_bak = Session.get( 'obj' );
@@ -722,8 +731,6 @@ Template.courseBuilderPage.onRendered( function() {
       this.return_page.set( test_session_bak.rtn_page);
       this.rtn.set( test_session_bak.rtn_page );
     }
-console.log( Session.get('obj'));
-console.log( Session.get('Scratch'));
     Session.set('obj', null);
     test_session_bak = null;
     return;
@@ -736,14 +743,15 @@ console.log( Session.get('Scratch'));
     //IF WE'RE RELOADING TO CLEAR URL AFTER RETURNING FROM TEST BUILDING
     if ( _.isNull( returnFromTest ) || _.isUndefined( returnFromTest ) ) {
       $( '#intro-modal' ).modal( 'show' );
-
     //OTHERWISE, WE'RE HERE FRESH
     } else {
       console.log('----------------------');
       console.log('RETURN');
       return;
     }
+
   }, 0);
+
 /*
   window.addEventListener( "beforeunload", function() {
     console.log( "Close web socket" );
@@ -905,10 +913,8 @@ Template.courseBuilderPage.events({
  *******************************************************/
   'click #cb-initial-dialog'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
-
-      // ADVANCE PAGE COUNTS
+      // SET PAGE COUNTS
       t.page.set( 1 );
       t.total.set( 1 );
 
@@ -921,7 +927,9 @@ Template.courseBuilderPage.events({
       , keys    = t.$( '#tags' ).val()
       , role
       , creator_id  = Meteor.userId()
-      , cid         = Meteor.user() && Meteor.user().profile && Meteor.user().profile.company_id;
+      , cid         = Meteor.user() &&
+                      Meteor.user().profile &&
+                      Meteor.user().profile.company_id;
 
       if ( percent  == '' ) percent = 1001; //completion is passing
 
@@ -947,15 +955,22 @@ Template.courseBuilderPage.events({
         return;
       }
 
-      if (  Meteor.user() &&
+      if (
+            Meteor.user() &&
             Meteor.user().roles &&
             Meteor.user().roles.teacher )  role = 'teacher';
 
-      if (  Meteor.user() &&
+      if (
+            Meteor.user() &&
             Meteor.user().roles &&
             Meteor.user().roles.admin )    role = 'admin';
+      if (
+            Meteor.user() &&
+            Meteor.user().roles &&
+            Meteor.user().roles.SuperAdmin ) role = 'SuperAdmin';
 
       if ( keys == null ) keys = [""];
+
       Session.set('cinfo', {
                             cname: name,
                             credits: Number(credits),
@@ -986,21 +1001,34 @@ Template.courseBuilderPage.events({
 
       t.$( '#intro-modal' ).modal( 'hide' );
 
-      Meteor.setTimeout(function(){
-        if (  Meteor.user() &&
+      Meteor.setTimeout(function() {
+        if (
+              Meteor.user() &&
               Meteor.user().roles &&
               Meteor.user().roles.admin )
         {
           if ( ret_route == 'courses' ) {
-            FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
-            return;
+              FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+              return;
           } else if ( ret_route == 'library' ) {
-            FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
+              FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
           }
-
-        } else if ( Meteor.user() &&
+        }
+        else if (
+                    Meteor.user() &&
                     Meteor.user().roles &&
-                    Meteor.user().roles.teacher ) {
+                    Meteor.user().roles.SuperAdmin
+                )
+        {
+          FlowRouter.go( 'super-admin-library', { _id: Meteor.userId() });
+          return;
+        }
+        else if (
+                    Meteor.user() &&
+                    Meteor.user().roles &&
+                    Meteor.user().roles.teacher
+                )
+        {
           FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
           return;
         }
@@ -1015,8 +1043,6 @@ Template.courseBuilderPage.events({
    *******************************************************/
   'click #course-builder-page-back'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
-
 
     t.$( '#cb-leave-confirm' ).modal('show');
     return;
@@ -1055,17 +1081,53 @@ Template.courseBuilderPage.events({
     //NECESSARY DELAY OR DIALOG CAUSES DISPLAY ISSUES ON DESTINATION
     Meteor.setTimeout(function(){
       try {
-        if ( t.return_page.get() == 'courses' ) {
-          if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+        if ( t.return_page.get() == 'courses' )
+        {
+          if (
+              Meteor.user() &&
+              Meteor.user().roles &&
+              Meteor.user().roles.teacher )
+          {
             FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-          } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+            return;
+
+          } else if (
+                      Meteor.user() &&
+                      Meteor.user().roles &&
+                      Meteor.user().roles.admin )
+          {
             FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+            return;
           }
+
         } else if ( t.return_page.get() == 'library' ) {
-          if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+
+          if (
+              Meteor.user() &&
+              Meteor.user().roles &&
+              Meteor.user().roles.teacher )
+          {
+
             FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-          } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+            return;
+
+          } else if (
+                      Meteor.user() &&
+                      Meteor.user().roles &&
+                      Meteor.user().roles.admin )
+          {
+
             FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
+            return;
+
+          } else if (
+                      Meteor.user() &&
+                      Meteor.user().roles &&
+                      Meteor.user().roles.SuperAdmin
+                    )
+          {
+            FlowRouter.go( 'super-admin-library', { _id: Meteor.userId() });
+            return;
           }
         }
       } catch( e ) {
@@ -1093,10 +1155,32 @@ Template.courseBuilderPage.events({
       Session.set( 'test_id', null );
       Session.set( 'Scratch', null );
 
-    if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.teacher
+       )
+    {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
-    } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+      return;
+
+    } else if (
+                Meteor.user() &&
+                Meteor.user().roles &&
+                Meteor.user().roles.admin
+              )
+    {
       FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+      return;
+
+    } else if (
+                Meteor.user() &&
+                Meteor.user().roles &&
+                Meteor.user().roles.SuperAdmin
+              )
+    {
+      FlowRouter.go( 'super-admin-dashboard', { _id: Meteor.userId() });
+      return;
     }
 
   },
@@ -1112,7 +1196,7 @@ Template.courseBuilderPage.events({
 
     t.$( '#intro-modal' ).modal( 'hide' );
 
-//NEED A BETTER CHECK THAT THERE'S CONTENT
+// CHECK THAT THERE'S CONTENT
 /*
     if (
         t.page.get() === 1
@@ -1217,10 +1301,33 @@ let pobj = P.dump();
       FlowRouter.go( path );
 */
 
-    if ( Meteor.user().roles && Meteor.user().roles.admin )
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.admin
+       )
+    {
       FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-    if ( Meteor.user().roles && Meteor.user().roles.teacher )
+      return;
+    }
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.teacher
+       )
+    {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
+      return;
+    }
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.SuperAdmin
+       )
+    {
+      FlowRouter.go( 'super-admin-dashboard', { _id: Meteor.userId() });
+      return;
+    }
     //Template.instance().page.set( 1 );
     //Template.instance().total.set( 1 );
 //---------------------------------------------/SAVE COURSE-------
@@ -1383,11 +1490,10 @@ let pobj = P.dump();
       $( '.js-cb-text-delete' ).hide();
 
       //IE #txt-0
-      let currentItem = $( '#cb-current' ).val()
-        , text        = $( `#${currentItem}` ).text().trim()
+      let currentItem = t.$( '#cb-current' ).val()
+        , text        = t.$( `#${currentItem}` ).text().trim()
         , config      = {};
 
-      $( `#${currentItem}` ).attr('data-editing', true);
       $( `#${currentItem}` ).hide();
 
       editor = CKEDITOR.appendTo( 'editor1', config, text );
@@ -1397,7 +1503,7 @@ let pobj = P.dump();
 
       //$('#cb-text-toolbar').show()
 
-      currentItem = null;
+      //currentItem = null;
 
  },
 //---------------------------------------------------------
@@ -1413,18 +1519,21 @@ let pobj = P.dump();
    let cur = $('#cb-current').val()
     , txt = editor && editor.getData(); //CKEDITOR.instances.editor.getData();
 
+    txt = $(txt).text();
+
 	 //DON'T ACCEPT EMPTY INPUT
 	 if ( txt == '' || txt == undefined || txt == null || (! txt.replace(/\s/g, '').length) ) {
 	   Bert.alert('You must enter text to be saved', 'danger');
 	   return;
 	 }
 
-   if ( $( `#${cur}` ).attr('data-editing') ) {
+   if ( cur != '' ) {
     let idx = P.indexOf( `${cur}` )
-      , pos = $( `#${cur}` ).offset();
+      , tp = $( `#${cur}` ).css('top')
+      , l = $( `#${cur}` ).css('left')
+      , pos = { top: tp, left: l } ;
 
     P.removeAt( idx );
-
     P.insert( idx, {
       page_no:        t.page.get(),
       type:           'text',
@@ -1441,15 +1550,20 @@ let pobj = P.dump();
     });
     P.print();
 
-	  editor && editor.destroy();
-		editor = null;
+	  //editor && editor.destroy();
+		//editor = null;
 
 		$('#cb-text-toolbar').hide();
 
-    $( `#${cur}` ).attr('data-editing', false);
-    $( `#${cur} p` ).remove();
-    $( `#${cur}` ).append( txt );
+    //$( `#${cur}` ).remove();
+    //$( `#${cur}` ).append( txt );
+    $( `#${cur}` ).text('');
+    $( `#${cur}` ).text(txt.trim());
     $( `#${cur}` ).show();
+
+    editor && editor.destroy();
+		editor = null;
+
 		return;
    } else {
 
@@ -2116,4 +2230,13 @@ function addVideo() {
                     );
                     //.effect( "highlight", {}, 2000 );
                     //.css( 'border', '1px dashed grey' );
+}
+
+function escapeHtml(str) {
+    return str
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
 }
