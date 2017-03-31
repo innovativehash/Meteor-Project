@@ -667,7 +667,7 @@ Template.courseBuilderPage.onRendered( function() {
   $('#cb-video-toolbar').hide();
 
 /*
- * WE'RE HERE TO EDIT?
+ * ARE WE HERE TO EDIT?
  */
   if (
       FlowRouter.getQueryParam('rtn') &&

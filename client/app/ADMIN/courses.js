@@ -139,6 +139,7 @@ Template.courses.events({
    *******************************************************/
   'click .js-click-course'( e, t ) {
     e.preventDefault();
+    e.stopImmediatePropagation();
 
       let href = $( e.currentTarget ).data( 'href' );
 
@@ -151,6 +152,7 @@ Template.courses.events({
    *******************************************************/
   'click .js-edit-course'( e, t ) {
     e.preventDefault();
+    e.stopImmediatePropagation();
 
       let idx = $( e.currentTarget ).data( 'id' )
         , nm  = $( e.currentTarget ).data( 'name' )
@@ -160,7 +162,10 @@ Template.courses.events({
       //let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
       href = `/admin/dashboard/course-builder/${Meteor.userId()}/?rtn=courses&id=${idx}&name=${nm}&edit=1`;
 
-      window.location = href;
+      //let idx = $( e.currentTarget ).data( 'id' );
+      //idx = String( idx );
+      //let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
+
       //navigate to course builder for editing.
 //-------------------------------------------------------------------
   },
@@ -171,6 +176,7 @@ Template.courses.events({
    *******************************************************/
   'click .js-unarchive-course'( e, t ) {
     e.preventDefault();
+    e.stopImmediatePropagation();
 
     let idx = $( e.currentTarget ).data( 'id' );
     let nm  = $( e.currentTarget ).data( 'name' );
@@ -188,6 +194,7 @@ Template.courses.events({
    *******************************************************/
   'click .js-archive-course'( e, t ) {
     e.preventDefault();
+    e.stopImmediatePropagation();
 
     let idx = $( e.currentTarget ).data( 'id' );
     let nm  = $( e.currentTarget ).data( 'name' );
@@ -223,6 +230,7 @@ Template.courses.events({
    *******************************************************/
   'click #dashboard-page'( e, t ) {
     e.preventDefault();
+    e.stopImmediatePropagation();
 
     FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 //-------------------------------------------------------------------
@@ -234,6 +242,7 @@ Template.courses.events({
    ******************************************************/
   'click .js-course-builder'( e, t ) {
     e.preventDefault();
+    e.stopImmediatePropagation();
 
     //t.currentScreen.set('courseBuilder');
     FlowRouter.go( `/admin/dashboard/course-builder/${Meteor.userId()}/?rtn=courses` );
