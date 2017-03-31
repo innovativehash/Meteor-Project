@@ -7,18 +7,13 @@
 import async              from 'async';
 import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
-
 import { Courses }        from '../../../both/collections/api/courses.js';
-import { BuiltCourses }   from '../../../both/collections/api/built-courses.js'
 import { Students }       from '../../../both/collections/api/students.js';
 import { Images }         from '../../../both/collections/api/images.js';
 import { Pdfs }           from '../../../both/collections/api/pdfs.js';
 import { PowerPoints }    from '../../../both/collections/api/powerpoints.js';
-
 import './course-builder-page.html';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.css';
-
-
 /*
  * IMPORT BROKEN-OUT EVENT HANDLERS
  */
@@ -32,10 +27,7 @@ import * as CBPP        from './CB_MODULES/power-point-handling.js';
 import * as CBSCORM     from './CB_MODULES/scorm-handling.js';
 import * as TTL         from './CB_MODULES/cb-title.js';
 import * as Render      from './CB_MODULES/render.js';
-
 import { PageObject }   from './CB_MODULES/cb-page-object.js';
-
-
 let P           = new PageObject()
   , pp          = new Mongo.Collection(null)
   , master_num  = 0
@@ -44,75 +36,55 @@ let P           = new PageObject()
   , rtn
   , return_page
   , editor;
-
-
 /*=========================================================
  *  CREATED
  *=======================================================*/
 Template.courseBuilderPage.onCreated( function() {
   //p  = FlowRouter.current().path;
-
   $( '#prompt' ).hide();
-
   Blaze._allowJavascriptUrls();
-
   $( '#cover' ).show();
-
   this.rtn          = new ReactiveVar( FlowRouter.getQueryParam('rtn') );
   this.return_page  = new ReactiveVar(this.rtn.get());
   this.page         = new ReactiveVar(1)
   this.total        = new ReactiveVar(1);
-
   this.page.set(1);
   this.total.set(1);
-
   $('#p').attr('data-p', 1);
-
   let that = this;
-
   /**************
    * JQUERY-UI
    *************/
   $.getScript( '/jquery-ui-1.12.0.custom/jquery-ui.min.js', function() {
-
     //---------------------------
     //        DRAGGABLE
     //---------------------------
     $( ".draggable" ).draggable({
       start: function( event, ui ) {
-
       },
       cursor: "move",
       helper: "clone",
       snap:   true,
       /*handle: "img"*/
     });
-
-
     //-----------------------------
     //        DROPPABLE
     //-----------------------------
     $( '#fb-template' ).droppable({
-
       accept: '.draggable',
-
       drop: function( evt, ui ) {
         $( '.notice' ).remove();
         $( '#fb-template' ).css({ 'background-color': 'white', 'border': '1px dashed #d3d3d3' });
-
         let draggedType = ui.draggable.data( 'type' );
           //, p = $('#p').attr('data-p')
           //, t = $('#p').attr('data-t');
-
         switch ( draggedType ) {
 /*******
  * TITLE
  ******/
           case 'title':
              try {
-
               let arr = P.dumpPage( that.page.get() );
-
               if ( arr.length > 0 ) {
                 for( let titi = 0, titlen = arr.length; titi < titlen; titi++ ) {
                   if ( arr[titi].type == 'test' ) {
@@ -150,18 +122,14 @@ Template.courseBuilderPage.onCreated( function() {
               $( '#cb-media-toolbar' ).hide();
               $( '#cb-video-toolbar' ).hide();
               $( '#cb-text-toolbar'  ).hide();
-
               addTitle( evt.pageX, evt.pageY );
             break;
-
           case 'text':
 /******
  * TEXT
  *****/
               try {
-
               let arr = P.dumpPage( that.page.get() );
-
               if ( arr.length > 0 ) {
                 for( let txt = 0, txtlen = arr.length; txt < txtlen; txt++ ) {
                   if ( arr[txt].type == 'test' ) {
@@ -199,34 +167,26 @@ Template.courseBuilderPage.onCreated( function() {
               $( '#cb-title-toolbar' ).hide()
               $( '#cb-media-toolbar' ).hide();
               $( '#cb-video-toolbar' ).hide();
-
               //CREATE A NEW EDITOR INSTANCE INSIDE THE <div id="editor">
               //ELEMENT, SETTING ITS VALUE TO HTML.
 			        let config  = {}
 			          , html    = "";
-
 			        $( '.js-cb-text-edit' ).hide();
 			        $( '.js-cb-text-delete' ).hide();
 			        $( '#cb-editor-save-text' ).show();
               $( '#cb-text-toolbar' ).show();
-
               $( '#fb-template' ).hide();
               $( '#cb-next-btn' ).prop('disabled', true );
               $( '#cb-prev-btn' ).prop('disabled', true );
-
 			       editor = CKEDITOR.appendTo( 'editor1', config, html );
-
               //addText( evt.pageX, evt.pageY );
               break;
-
           case 'g-image':
 /*******
  * IMAGE
  ******/
                try {
-
               let arr = P.dumpPage( that.page.get() );
-
               if ( arr.length > 0 ) {
                 for( let img = 0, imglen = arr.length; img < imglen; img++ ) {
                   if ( arr[img].type == 'test' ) {
@@ -265,24 +225,18 @@ Template.courseBuilderPage.onCreated( function() {
               let id = S3.collection.findOne()._id;
               S3.collection.remove({ _id: id });
             }
-
               $( '#cb-title-toolbar' ).hide();
               $( '#cb-media-toolbar' ).hide();
               $( '#cb-video-toolbar' ).hide();
               $( '#cb-text-toolbar'  ).hide();
-
             $( '#add-image' ).modal( 'show' );
-
             break;
-
           case 'video':
 /*******
  * VIDEO
  ******/
                 try {
-
               let arr = P.dumpPage( that.page.get() );
-
               if ( arr.length > 0 ) {
                 for( let vid = 0, vidlen = arr.length; vid < vidlen; vid++ ) {
                   if ( arr[vid].type == 'test' ) {
@@ -326,23 +280,18 @@ Template.courseBuilderPage.onCreated( function() {
             } catch (e) {
               ;
             }
-
               $( '#cb-title-toolbar' ).hide();
               $( '#cb-media-toolbar' ).hide();
               $( '#cb-video-toolbar' ).hide();
               $( '#cb-text-toolbar'  ).hide();
-
             addVideo();
             break;
-
           case 'pdf':
 /*****
  * PDF
  ****/
                  try {
-
               let arr = P.dumpPage( that.page.get() );
-
               if ( arr.length > 0 ) {
                 for( let pdf = 0, pdflen = arr.length; pdf < pdflen; pdf++ ) {
                   if ( arr[pdf].type == 'test' ) {
@@ -386,24 +335,18 @@ Template.courseBuilderPage.onCreated( function() {
             } catch ( e ) {
               ;
             }
-
               $( '#cb-title-toolbar' ).hide();
               $( '#cb-media-toolbar' ).hide();
               $( '#cb-video-toolbar' ).hide();
               $( '#cb-text-toolbar'  ).hide();
-
             $( '#add-pdf' ).modal( 'show' );
-
             break;
-
           case 'powerpoint':
 /*****
  * PPT
  ****/
                  try {
-
               let arr = P.dumpPage( that.page.get() );
-
               if ( arr.length > 0 ) {
                 for( let ppt = 0, pptlen = arr.length; ppd < pptlen; ppt++ ) {
                   if ( arr[ppt].type == 'test' ) {
@@ -452,24 +395,18 @@ Template.courseBuilderPage.onCreated( function() {
             } catch ( e ) {
               ;
             }
-
             $( '#cb-title-toolbar' ).hide();
             $( '#cb-media-toolbar' ).hide();
             $( '#cb-video-toolbar' ).hide();
             $( '#cb-text-toolbar'  ).hide();
-
             $( '#add-powerpoint' ).modal( 'show' );
-
             break;
-
           case 'scorm':
 /*******
  * SCORM
  ******/
                  try {
-
               let arr = P.dumpPage( that.page.get() );
-
               if ( arr.length > 0 ) {
                 for( let scm = 0, scmlen = arr.length; scm < scmlen; scm++ ) {
                   if ( arr[scm].type == 'test' ) {
@@ -518,24 +455,18 @@ Template.courseBuilderPage.onCreated( function() {
             } catch ( e ) {
                 ;
             }
-
             $( '#cb-title-toolbar' ).hide();
             $( '#cb-media-toolbar' ).hide();
             $( '#cb-video-toolbar' ).hide();
             $( '#cb-text-toolbar'  ).hide();
-
             $( '#add-scorm' ).modal( 'show' );
-
             break;
-
           case 'test':
 /******
  * TEST
  *****/
                  try {
-
               let arr = P.dumpPage( that.page.get() );
-
               if ( arr.length > 0 ) {
                 for( let tst = 0, tstlen = arr.length; tst < tstlen; tst++ ) {
                   if ( arr[tst].type == 'test' ) {
@@ -584,19 +515,16 @@ Template.courseBuilderPage.onCreated( function() {
             } catch ( e ) {
                 ;
             }
-
             $( '#cb-title-toolbar'  ).hide();
             $( '#cb-text-toolbar'   ).hide()
             $( '#cb-media-toolbar'  ).hide();
             $( '#cb-video-toolbar'  ).hide();
-
             let test_session_bak      = {};
             test_session_bak.page     = that.page.get();
             test_session_bak.total    = that.total.get();
             test_session_bak.name     = Session.get('cinfo').cname;
             test_session_bak.rtn_page = that.return_page.get();
             Session.set( 'obj', test_session_bak );
-
             if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
               FlowRouter.go( '/teacher/dashboard/test-maker/'
                 + Meteor.userId() + `?${test_session_bak.name}` );
@@ -604,25 +532,17 @@ Template.courseBuilderPage.onCreated( function() {
               FlowRouter.go( '/admin/dashboard/test-maker/'   + Meteor.userId()
                 + `?${test_session_bak.name}` );
             }
-
             break;
-
           default:
             return;
         }
-
       }
-
     });
-
   //console.log('CourseBuilder:: jquery-ui.min.js loaded...');
   }).fail( function( jqxhr, settings, exception ) {
     console.log( 'CourseBuilder:: load jquery-ui.min.js fail' );
   });
 //-------------------------------------------------------------------
-
-
-
   /*********************
    * SELECT2 INSTANTIATE
    ********************/
@@ -639,16 +559,11 @@ Template.courseBuilderPage.onCreated( function() {
     console.log( 'CB:: load select2.js fail' );
   });
 //-------------------------------------------------------------------
-
 });  //END ONCREATED
-
-
-
 /*=========================================================
  * RENDERED
  *========================================================*/
 Template.courseBuilderPage.onRendered( function() {
-
   $( '#cover' )
     .delay( 1000 )
     .fadeOut( 'slow',
@@ -657,17 +572,14 @@ Template.courseBuilderPage.onRendered( function() {
                 $( ".dashboard-header-area" ).fadeIn( 'slow' );
               }
   );
-
   $('#test_v').hide();
-
   $('#cb-media-toolbar').hide();
   $('#cb-text-toolbar').hide();
   $('#cb-bar').hide();
   $('#cb-title-toolbar').hide();
   $('#cb-video-toolbar').hide();
-
 /*
- * ARE WE HERE TO EDIT?
+ * SUCCESSFUL RETURN FROM TEST CREATION
  */
   if (
       FlowRouter.getQueryParam('rtn') &&
@@ -676,75 +588,38 @@ Template.courseBuilderPage.onRendered( function() {
       FlowRouter.getQueryParam('name')
      )
   {
-    let ed = FlowRouter.getQueryParam('edit')
-      , nm = FlowRouter.getQueryParam('name')
-      , id = FlowRouter.getQueryParam('id')
-      , bc;
-
-    Session.set('my_id', id);
-
-    if ( Number(ed) == 1 ) { //WE'RE HERE TO EDIT
-    this.autorun(function() {
-      try {
-          bc = BuiltCourses.find({ _id: id }).fetch()[0];
-        console.log( bc );
-        console.log( bc.pages );
-          Session.set('cinfo', {
-                            cname: bc.cname,
-                            credits: Number(bc.credits),
-                            passing_percent: Number(bc.passing_percent),
-                            keywords: bc.keywords,
-                            icon: "/img/icon-4.png",
-                            company_id: bc.company_id,
-                            creator_type: bc.creator_type,
-                            creator_id: bc.creator_id
-          });
-      } catch (e) {
-        ;
-      }
-
-    });
+    console.log('4');
   }
-  } else
-/*
- * SUCCESSFUL RETURN FROM TEST CREATION
- */
-      if (
-          FlowRouter.getQueryParam( "rtn" ) &&
-          FlowRouter.getQueryParam( "id"  )
-         )
+  if (
+      FlowRouter.getQueryParam( "rtn" ) &&
+      FlowRouter.getQueryParam( "id"  )
+     )
   {
+    console.log('2');
     //RESTORE THE SESSION
     let test_session_bak = Session.get( 'obj' );
     Session.set( 'obj', null );
-
     Session.set( 'test_id', FlowRouter.getQueryParam("id") );
     Session.set( 'Scratch', FlowRouter.getQueryParam("id") );
-
     //SAVE THE TEST
     P.append({
       page_no:  test_session_bak.page,
       type:     'test',
       id:       Session.get('test_id'),
     });
-
     //SHOW THE TEST
     $('#fb-template').empty();
     $('#fb-template').hide();
     $('#test_v').show();
-
     this.page.set( test_session_bak.page );
     this.total.set( test_session_bak.total );
     this.return_page.set(test_session_bak.rtn_page);
-
     P.print()
     return;
   }
-
 /*
  * CANCELED TEST RETURN
  */
-
   if (
       FlowRouter.getQueryParam( "rtn" ) &&
       FlowRouter.getQueryParam( "cancel" )
@@ -765,11 +640,8 @@ Template.courseBuilderPage.onRendered( function() {
     test_session_bak = null;
     return;
   }
-
-
   Meteor.setTimeout(function(){
     let returnFromTest = Session.get('test_id');
-
     //IF WE'RE RELOADING TO CLEAR URL AFTER RETURNING FROM TEST BUILDING
     if ( _.isNull( returnFromTest ) || _.isUndefined( returnFromTest ) ) {
       $( '#intro-modal' ).modal( 'show' );
@@ -779,26 +651,19 @@ Template.courseBuilderPage.onRendered( function() {
       console.log('RETURN');
       return;
     }
-
   }, 0);
-
 /*
   window.addEventListener( "beforeunload", function() {
     console.log( "Close web socket" );
     socket.close();
   });
 */
-
 //-------------------------------------------------------------------
 }); //END ONRENDERED
-
-
-
 /*=========================================================
  * HELPERS
  *=======================================================*/
 Template.courseBuilderPage.helpers({
-
   cbNavBack: () => {
     if ( Template.instance().return_page.get() == 'library' ) {
       return 'Back To Library';
@@ -806,7 +671,6 @@ Template.courseBuilderPage.helpers({
       return 'Back To Courses';
     }
   },
-
   fname: () => {
     try {
       return Students.findOne({ _id: Meteor.userId() }).fname;
@@ -815,63 +679,42 @@ Template.courseBuilderPage.helpers({
       return;
     }
   },
-
 	"files": function(){
-
 		return S3.collection.find();
-
 	},
-
   page: () =>
     Template.instance().page.get(),
-
   total: () =>
     Template.instance().total.get()
 });
 //-------------------------------------------------------------------
-
-
-
-
 /*=========================================================
  * EVENTS
  *=======================================================*/
 Template.courseBuilderPage.events({
-
-
 /********************************************************
  * CB-NEXT  ::(CLICK)::    [NEXT BUTTON CLICK]
  *******************************************************/
   'click #cb-next-btn'( e, t ) {
     e.preventDefault();
-
     //HIDE EDITING TOOLBARS
     $( '#cb-text-toolbar'  ).hide();
     $( '#cb-media-toolbar' ).hide();
     $( '#cb-title-toolbar' ).hide();
     $( '#cb-video-toolbar' ).hide();
-
     let p   = t.page.get()
       , tt  = t.total.get()
       , chk = P.dumpPage(p);
-
     if ( chk == undefined ) return;
-
-
     $('#fb-template').empty().show();
     $('#test_v').hide();
-
     if ( p < tt ) {
       p++;
       t.page.set( p );
-
       let arr = P.dumpPage(p);
       Render.render( e, t, arr, P );
-
       return;
-
     } else {
-
       //let key = `page_${p}`
         //, insertion = {};
       //insertion[key] = P.dumpPage(p);
@@ -883,12 +726,9 @@ Template.courseBuilderPage.events({
       */
       try {
         let arr = P.dumpPage( p );
-
         if ( p == tt && arr.length == 0 ){
           return;
-
         } else {
-
           t.page.set( p + 1 );
           t.total.set( p + 1 );
             return;
@@ -896,75 +736,50 @@ Template.courseBuilderPage.events({
       } catch (e) {
           ;
       }
-
       return;
     }
-
   },
 //---------------------------------------------------------
-
-
-
 /********************************************************
  * CB-PREV  ::(CLICK)::    [PREVIOUS BUTTON CLICK]
  *******************************************************/
   'click #cb-prev-btn'( e, t ) {
     e.preventDefault();
-
     //HIDE EDITING TOOLBARS
     $( '#cb-text-toolbar'  ).hide();
     $( '#cb-media-toolbar' ).hide();
     $( '#cb-title-toolbar' ).hide();
     $( '#cb-video-toolbar' ).hide();
-
     let p = t.page.get();
-
     if ( p <= 1 ) {
       p = 1;
     } else {
       p -= 1;
     }
-
     t.page.set( p );
-
     $( '#fb-template' ).empty();
-
     let arr = P.dumpPage(p);
-
     Render.render( e, t, arr, P );
-
-
   },
-
-
-
 /********************************************************
  * #CB-INITIAL-DIALOG  ::(CLICK)::  [INITIAL DIALOG]
  *******************************************************/
   'click #cb-initial-dialog'( e, t ) {
     e.preventDefault();
-
       // SET PAGE COUNTS
       t.page.set( 1 );
       t.total.set( 1 );
-
       let credits = t.$( '#course-builder-credits' ).val()
-
       , name    = t.$( '#course-builder-name'    ).val()
-
       , percent = t.$( '#course-builder-percent' ).val()
-
       , keys    = t.$( '#tags' ).val()
       , role
       , creator_id  = Meteor.userId()
       , cid         = Meteor.user() &&
                       Meteor.user().profile &&
                       Meteor.user().profile.company_id;
-
       if ( percent  == '' ) percent = 1001; //completion is passing
-
       if ( name     == '' || credits == '' ) {
-
         Bert.alert(
                     'BOTH Course Name AND Credits MUST be filled out!',
                     'danger',
@@ -973,7 +788,6 @@ Template.courseBuilderPage.events({
                   );
         return;
       }
-
       if ( Courses.findOne({ name: name }) != undefined )
       {
         Bert.alert(
@@ -984,12 +798,10 @@ Template.courseBuilderPage.events({
                   );
         return;
       }
-
       if (
             Meteor.user() &&
             Meteor.user().roles &&
             Meteor.user().roles.teacher )  role = 'teacher';
-
       if (
             Meteor.user() &&
             Meteor.user().roles &&
@@ -998,9 +810,7 @@ Template.courseBuilderPage.events({
             Meteor.user() &&
             Meteor.user().roles &&
             Meteor.user().roles.SuperAdmin ) role = 'SuperAdmin';
-
       if ( keys == null ) keys = [""];
-
       Session.set('cinfo', {
                             cname: name,
                             credits: Number(credits),
@@ -1011,26 +821,18 @@ Template.courseBuilderPage.events({
                             creator_type: role,
                             creator_id: creator_id
       });
-
       let my_id = pp.insert({ pages: [] });
-
       Session.set( 'my_id', my_id );
-
       t.$( '#intro-modal' ).modal( 'hide' );
 //-----------------------------------------------/INITIAL DIALOG------
   },
-
-
   /********************************************************
    * CB-INTRO-MODAL-CANCEL
    *******************************************************/
    'click #cb-intro-modal-cancel'( e, t ) {
       e.preventDefault();
-
       let ret_route = FlowRouter.getQueryParam("rtn");
-
       t.$( '#intro-modal' ).modal( 'hide' );
-
       Meteor.setTimeout(function() {
         if (
               Meteor.user() &&
@@ -1065,49 +867,35 @@ Template.courseBuilderPage.events({
       }, 500);
    },
  //---------------------------------------------------------
-
-
-
   /********************************************************
    * .JS-BACK-TO-HOME  ::(CLICK)::
    *******************************************************/
   'click #course-builder-page-back'( e, t ) {
     e.preventDefault();
-
     t.$( '#cb-leave-confirm' ).modal('show');
     return;
 //-------------------------------------------------------------------
   },
-
-
-
   /********************************************************
    * CB-LEAVE-NO  ::(CLICK)::
    ********************************************************/
   'click #cb-leave-no'( e, t ) {
     e.preventDefault();
-
     t.$( '#cb-leave-confirm' ).modal('hide');
   },
-
-
   /********************************************************
    * CB-LEAVE-YES  ::(CLICK)::    [LEAVE COURSE BUILDER]
    *******************************************************/
   'click #cb-leave-yes'( e, t ) {
     e.preventDefault();
-
     // ADVANCE PAGE COUNTS
     t.page.set( 1 );
     t.total.set( 1 );
-
     Session.set( 'my_id',           null );
     Session.set( 'cinfo',           null );
     Session.set( 'test_id',         null );
     Session.set( 'Scratch',         null );
-
     t.$( '#cb-leave-confirm' ).modal('hide');
-
     //NECESSARY DELAY OR DIALOG CAUSES DISPLAY ISSUES ON DESTINATION
     Meteor.setTimeout(function(){
       try {
@@ -1120,7 +908,6 @@ Template.courseBuilderPage.events({
           {
             FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
             return;
-
           } else if (
                       Meteor.user() &&
                       Meteor.user().roles &&
@@ -1129,27 +916,21 @@ Template.courseBuilderPage.events({
             FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
             return;
           }
-
         } else if ( t.return_page.get() == 'library' ) {
-
           if (
               Meteor.user() &&
               Meteor.user().roles &&
               Meteor.user().roles.teacher )
           {
-
             FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
             return;
-
           } else if (
                       Meteor.user() &&
                       Meteor.user().roles &&
                       Meteor.user().roles.admin )
           {
-
             FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
             return;
-
           } else if (
                       Meteor.user() &&
                       Meteor.user().roles &&
@@ -1167,24 +948,18 @@ Template.courseBuilderPage.events({
     }, 500);
 //---------------------------------------------------------
   },
-
-
-
   /********************************************************
    * #EXIT-CB  ::(CLICK)::
    *******************************************************/
   'click #exit-cb'( e, t ) {
     t.$( '#intro-modal' ).modal( 'hide' );
-
       // ADVANCE PAGE COUNTS
       t.page.set(  1 );
       t.total.set( 1 );
-
       Session.set( 'cinfo',   null );
       Session.set( 'my_id',   null );
       Session.set( 'test_id', null );
       Session.set( 'Scratch', null );
-
     if (
         Meteor.user() &&
         Meteor.user().roles &&
@@ -1193,7 +968,6 @@ Template.courseBuilderPage.events({
     {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
       return;
-
     } else if (
                 Meteor.user() &&
                 Meteor.user().roles &&
@@ -1202,7 +976,6 @@ Template.courseBuilderPage.events({
     {
       FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
       return;
-
     } else if (
                 Meteor.user() &&
                 Meteor.user().roles &&
@@ -1212,20 +985,13 @@ Template.courseBuilderPage.events({
       FlowRouter.go( 'super-admin-dashboard', { _id: Meteor.userId() });
       return;
     }
-
   },
-
-
-
-
 /********************************************************
  * #CB-SAVE  ::(CLICK)::  [SAVE COURSE]
  *******************************************************/
   'click #cb-save'( e, t ) {
     e.preventDefault();
-
     t.$( '#intro-modal' ).modal( 'hide' );
-
 // CHECK THAT THERE'S CONTENT
 /*
     if (
@@ -1252,7 +1018,6 @@ Template.courseBuilderPage.events({
 P.print();
 let pobj = P.dump();
     Meteor.setTimeout(function(){
-
       Meteor.call('saveBuiltCourse',  cinfo.cname,
                                       cinfo.company_id,
                                       cinfo.creator_type,
@@ -1269,7 +1034,6 @@ let pobj = P.dump();
           } else {
             console.log( 'result is ' + result );
             //Session.set("data", result)
-
             Courses.insert({
               _id:              result,
               credits:          cinfo.credits,
@@ -1294,28 +1058,21 @@ let pobj = P.dump();
        * ASSIGN TEACHER A FIXED 2 CREDITS
        *--------------------------------------------- */
        if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
-
          Students.update({ _id: Meteor.userId() },
                          {
                            $inc: { current_credits: 2 }
                          });
-
        }
       //-----------------------------------------------
-
       // SET PAGE COUNTS
       t.page.set( 1 );
       t.total.set( 1 );
-
     }, 300);
-
     P = null;
-
     Session.set( 'my_id',           null );
     Session.set( 'cinfo',           null );
     Session.set( 'test_id',         null );
     Session.set( 'Scratch',         null );
-
     Meteor.setTimeout(function(){
       Bert.alert(
                   'Your Course was saved!',
@@ -1323,14 +1080,12 @@ let pobj = P.dump();
                   'growl-top-right'
                 );
     }, 500);
-
 /*
       let params      = { _id: Meteor.userId() };
       let routeName   = "teacher-dashboard";
       let path        = FlowRouter.path( routeName, params );
       FlowRouter.go( path );
 */
-
     if (
         Meteor.user() &&
         Meteor.user().roles &&
@@ -1362,14 +1117,10 @@ let pobj = P.dump();
     //Template.instance().total.set( 1 );
 //---------------------------------------------/SAVE COURSE-------
   },
-
-
-
   /********************************************************
    * #ADDED-TITLE  ::(BLUR)::
    *******************************************************/
   'blur #added-title'( e, t ) {
-
     CBTitle.cbAddedTitleBlur( e,
                               t,
                               t.page.get(),
@@ -1378,191 +1129,133 @@ let pobj = P.dump();
                             );
   },
 //---------------------------------------------------------
-
-
-
 //--------------TOOLBAR HANDLERS---------------------------
-
-
 //--BEGIN TITLES TOOLBAR-----------------------------------
-
  /**********************************************************
  * .JS-TITLE-EDIT-BUTTON
  *********************************************************/
  'click .js-title-edit-button'( e, t ) {
     e.preventDefault();
-
     TTL.titleEditText( e, t, P );
 //---------------------------------------------------------
  },
-
-
    /********************************************************
    * .JS-TITLE-DELETE-BUTTON
    *******************************************************/
   'click .js-title-delete-button'( e, t ) {
     e.preventDefault();
-
     TTL.titleDelete( e, t, P, pp );
 //----------------------------------------------------------
   },
-
-
 /**********************************************************
  * .JS-TITLE-ITALIC-BUTTON  ::(CLICK)::
  *********************************************************/
   'click .js-title-italic-button'( e, t ) {
     e.preventDefault();
-
     TTL.titleItalic( e, t, P );
 //---------------------------------------------------------
   },
-
-
  /**********************************************************
  * .JS-TITLE-BOLD-BUTTON ::(CLICK)::
  *********************************************************/
   'click .js-title-bold-button'( e, t ) {
     e.preventDefault();
-
     TTL.titleBold( e, t, P );
 //---------------------------------------------------------
   },
-
-
  /**********************************************************
  * .JS-TITLE-UNDERLINE-BUTTON  ::(CLICK)::
  *********************************************************/
   'click .js-title-underline-button'( e, t ) {
     e.preventDefault();
-
     TTL.titleUnderline( e, t, P );
 //---------------------------------------------------------
   },
-
-
  /**********************************************************
  * .JS-TITLE-FONT-SIZE  ::(INPUT)::
  *********************************************************/
   'input .js-title-font-size'( e, t ) {
     e.preventDefault();
-
     TTL.titleFontSizeInput( e, t );
   },
 //---------------------------------------------------------
-
-
-
  /**********************************************************
  * .JS-TITLE-FONT-SIZE  ::(MOUSEUP)::
  *********************************************************/
   'mouseup .js-title-font-size'( e, t ) {
     //e.preventDefault();
-
     TTL.titleFontSizeMU( e, t, P );
     return;
   },
 //---------------------------------------------------------
-
-
-
 /**********************************************************
  * .JS-TITLE-OPACITY  ::(INPUT)::
  *********************************************************/
   'input .js-title-opacity'( e, t ) {
     e.preventDefault();
-
     TTL.titleOpacityInput( e, t );
   },
 //---------------------------------------------------------
-
-
-
  /**********************************************************
  * .JS-TITLE-OPACITY  ::(MOUSEUP)::
  *********************************************************/
   'mouseup .js-title-opacity'( e, t ) {
     //e.preventDefault();
-
     TTL.titleOpacityMU( e, t, P );
     return;
   },
  //---------------------------------------------------------
-
 //---------------------------------------END TITLES TOOLBAR-
-
-
 //---BEGIN TEXT TOOLBAR------------------------------------
-
 /**********************************************
  * KLUDGE TO BRING UP SAVE BUTTON IF FOCUS LOST
 **********************************************/
     'click #editor1'( e, t ) {
       e.preventDefault();
-
       $( '#cb-title-toolbar' ).hide();
       $( '#cb-media-toolbar' ).hide();
       $( '#cb-text-toolbar' ).show();
       $( '.js-cb-text-edit' ).hide();
       $( '.js-cb-text-delete' ).hide();
       $( '#cb-editor-save-text' ).show();
-
     },
-
 /**********************************************************
  * .JS-CB-TEXT-EDIT  ::(CLICK)::
  *********************************************************/
  'click .js-cb-text-edit'( e, t ) {
     e.preventDefault();
-
       $( '#cb-editor-save-text' ).show();
       $( '.js-cb-text-edit' ).hide();
       $( '.js-cb-text-delete' ).hide();
-
       //IE #txt-0
       let currentItem = t.$( '#cb-current' ).val()
         , text        = t.$( `#${currentItem}` ).text().trim()
         , config      = {};
-
       $( `#${currentItem}` ).hide();
-
       editor = CKEDITOR.appendTo( 'editor1', config, text );
-
       //CKEDITOR.instances.editor.setData(text);
-
-
       //$('#cb-text-toolbar').show()
-
       //currentItem = null;
-
  },
 //---------------------------------------------------------
-
-
-
 /**********************************************************
  * #CB-EDITOR-SAVE-TEXT  ::(CLICK)::
  *********************************************************/
  'click #cb-editor-save-text'( e, t ) {
    e.preventDefault();
-
    let cur = $('#cb-current').val()
     , txt = editor && editor.getData(); //CKEDITOR.instances.editor.getData();
-
     txt = $(txt).text();
-
 	 //DON'T ACCEPT EMPTY INPUT
 	 if ( txt == '' || txt == undefined || txt == null || (! txt.replace(/\s/g, '').length) ) {
 	   Bert.alert('You must enter text to be saved', 'danger');
 	   return;
 	 }
-
    if ( cur != '' ) {
     let idx = P.indexOf( `${cur}` )
       , tp = $( `#${cur}` ).css('top')
       , l = $( `#${cur}` ).css('left')
       , pos = { top: tp, left: l } ;
-
     P.removeAt( idx );
     P.insert( idx, {
       page_no:        t.page.get(),
@@ -1579,31 +1272,21 @@ let pobj = P.dump();
       opacity:        $( `#${cur}` ).css('opacity')
     });
     P.print();
-
 	  //editor && editor.destroy();
 		//editor = null;
-
 		$('#cb-text-toolbar').hide();
-
     //$( `#${cur}` ).remove();
     //$( `#${cur}` ).append( txt );
     $( `#${cur}` ).text('');
     $( `#${cur}` ).text(txt.trim());
     $( `#${cur}` ).show();
-
-    editor.focusManager.blur()
     editor && editor.destroy();
 		editor = null;
-
 		return;
    } else {
-
-
     editor && editor.destroy();
 		editor = null;
-
 		$('#cb-text-toolbar').hide();
-
     CBTexts.cbAddedTextBlur(  e,
                               t,
                               txt,
@@ -1612,151 +1295,102 @@ let pobj = P.dump();
                               P
                             );
    }
-
    //SHOW CANVAS AS IT WAS HIDDEN WHEN TEXT EDITOR WAS DISPLAYED
    $( '#fb-template' ).show();
-
    //ALLOW PAGE ADVANCE / DECREMENT
    $( '#cb-next-btn' ).prop('disabled', false );
    $( '#cb-prev-btn' ).prop('disabled', false );
 		//Bert.alert('Saving Text...', 'success');
-
     //CKEDITOR.instances.editor.setData('');
-
  },
 //---------------------------------------------------------
-
-
-
 /**********************************************************
  * .JS-CB-TEXT-DELETE  ::(CLICK)::
  *********************************************************/
  'click .js-cb-text-delete'( e, t ) {
     e.preventDefault();
-
     //I.E. txt-0
     let cur = $( '#cb-current' ).val()
       , page_no = t.page.get()
       , idx     = P.indexOf( cur );
-
  		P.removeAt( idx );
-
     $( `#${cur}` ).remove();
     $( '#cb-current' ).val('');
-
      pp.update( { _id: Session.get('my_id') },
               { $pull: { pages:{ id: cur} } });
-
     $('#cb-text-toolbar').hide()
-
     console.log( pp.find({}).fetch() );
     P.print();
     //editor.destroy();
 		//editor = null;
 //---------------------------------------------------------
 },
-
-
 //---------------------------------------END TEXT TOOLBAR-
-
-
 //------BEGIN VIDEO TOOLBAR--------------------------------
-
   /********************************************************
    * .JS-VIDEO-DELETE-BUTTON
    *******************************************************/
   'click .js-video-delete-button'( e, t ){
     e.preventDefault();
-
     let cur = $( '#cb-current' ).val()
       , page_no = t.page.get()
       , idx     = P.indexOf( cur );
-
  		P.removeAt( idx );
-
     $( `#${cur}` ).remove();
     $( '#cb-current' ).val('');
-
      pp.update( { _id: Session.get('my_id') },
               { $pull: { pages:{ id: cur} } });
-
     console.log( pp.find({}).fetch() );
     P.print();
-
     $('#fb-template').css( 'border', '' );
-
     $( '#fb-template iframe' ).remove();
     $( '#cb-current' ).val('');
-
     $( '#cb-video-toolbar' ).hide();
 //---------------------------------------------------------
   },
-
-
 //--------------------------------------END VIDEO TOOLBAR--
-
-
 //--------BEGIN MEDIA TOOLBAR------------------------------
-
   /********************************************************
    * .JS-MEDIA-DELETE-BUTTON
    *******************************************************/
   'click .js-media-delete-button'( e, t ) {
     e.preventDefault();
-
     let cur     = $( '#cb-current' ).val()
       , page_no = t.page.get()
       , idx     = P.indexOf( cur );
-
  		P.removeAt( idx );
-
     $( `#${cur}` ).remove();
     $( '#cb-current' ).val('');
-
      pp.update( { _id: Session.get('my_id') },
               { $pull: { pages:{ id: cur} } });
-
     console.log( pp.find({}).fetch() );
     P.print();
-
     $( '#cb-media-toolbar' ).hide();
-
   },
-
-
 /**********************************************************
  * .JS-MEDIA-OPACITY  ::(INPUT)::
  *********************************************************/
   'input .js-media-opacity'( e, t ) {
     e.preventDefault();
-
     let cur = $( '#cb-current' ).val()
       , id  = $( `#${cur}` ).data('pid')
       , opm = $(e.currentTarget).val()
       , pg  = $( `#${cur}` ).data('page');
-
     $( `#${cur}` ).css( 'opacity', opm );
-
     $( '#opm' ).val( opm );
     //P.update( { _id: id, "objects.page_no":pg },
     //          {$set:{"objects.$.opacity": op }});
 //---------------------------------------------------------
   },
-
-
-
 /**********************************************************
  * .JS-MEDIA-OPACITY  ::(MOUSEUP)::
  *********************************************************/
 'mouseup .js-media-opacity'( e, t ) {
-
   let cur = t.$( '#cb-current' ).val()
     , idx = P.indexOf( cur )
     , pos = t.$( `#${cur}` ).offset()
     , obj;
-
   obj = P.removeAt( idx );
-
   P.insert( idx, {
           page_no:          t.page.get(),
           type:             'image',
@@ -1770,31 +1404,22 @@ let pobj = P.dump();
           dwidth:           `${obj.dwidth}`,
           dheight:          `${obj.dheight}`,
           src:              `${obj.src}`
-
   });
-
 },
 //-------------------------------------END MEDIA TOOLBAR---
-
-
-
   /********************************************************
    * #COURSE-BUILDER-IMAGE ::(CHANGE)::
    *******************************************************/
   //'change #course-builder-image'( e, t ) {
-
     //CBImage.cbImageChange( e, t /*, Images */ );
   //},
 //---------------------------------------------------------
-
-
   /********************************************************
    * #CB-IMAGE-SAVE  ::(CLICK)::
    *******************************************************/
   'click #cb-image-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
     CBImage.cbImageSave(  e,
                           t,
                           t.page.get(),
@@ -1804,14 +1429,10 @@ let pobj = P.dump();
                         );
   },
 //---------------------------------------------------------
-
-
-
   /********************************************************
    * #ADDED-VIDEO  ::(CHANGE)::
    *******************************************************/
   'change #added-video'( e, t ) {
-
     CBVideo.addedVideoURL(  e,
                             t,
                             t.page.get(),
@@ -1820,28 +1441,21 @@ let pobj = P.dump();
                           );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * #COURSE-BUILDER-PDF  ::(CHANGE)::
    *******************************************************/
   'change #course-builder-pdf'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
     CBPDF.cbPDFChange( e, t );
 //---------------------------------------------------------
   },
-
-
-
   /********************************************************
    * #CB-PDF-SAVE  ::(CLICK)::
    *******************************************************/
   'click #cb-pdf-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
     CBPDF.cbPDFSave(  e,
                       t,
                       t.page.get(),
@@ -1851,40 +1465,30 @@ let pobj = P.dump();
                     );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * #COURSE-BUILDER-POWERPOINT  ::(CHANGE)::
    *******************************************************/
    'change #course-builder-powerpoint'( e, t ) {
       e.preventDefault();
       e.stopImmediatePropagation();
-
       CBPP.cbPowerPointChange( e, t, PowerPoints );
 //---------------------------------------------------------
    },
-
-
-
   /********************************************************
    * #CB-POWERPOINT-SAVE  ::(CLICK)::
    *******************************************************/
   'click #cb-powerpoint-save'( e, t ) {
     e.preventDefault();
     e.stopImmediatePropagation();
-
     CBPP.cbPowerPointSave( e, t, Session.get('contentTracker') );
     t.$( '#add-powerpoint' ).modal( 'hide' );
 //---------------------------------------------------------
   },
-
-
   /********************************************************
    * #CB-SCORM-SAVE  ::(CLICK)::
    *******************************************************/
   'click #cb-scorm-save'( e, t ) {
     e.preventDefault();
-
     //Meteor.call(  'scormStudentCourseStatus', 1,
     //              '68ac728a3a9686020674a6e614e2d7e3', 1 );
     //Meteor.call( 'scormListAllCourses' );
@@ -1896,8 +1500,6 @@ let pobj = P.dump();
     //Meteor.call(  'scormListStudentStartedCourses', 1,
     //              '68ac728a3a9686020674a6e614e2d7e3' );
     //Meteor.call( 'scormCreateUser', '123', 'pass', 1 );
-
-
     /*
     let r = Meteor.call(  'scormGetCoursePlayURL',
                           'demo_user',
@@ -1919,37 +1521,27 @@ let pobj = P.dump();
       }
     })
     */
-
     /*
     let patt = new RegExp( "no url" )
       , rslt = patt.test( r );
     console.log( 'pattern test = ' + rslt );
     Session.set( 'resp', rslt )
     */
-
     return;
-
     CBSCORM.cbScormSave( e, t, contentTracker );
-
     Template.instance().page.set(   Template.instance().page.get()  + 1 );
     Template.instance().total.set(  Template.instance().total.get() + 1 );
     t.$( '#add-scorm' ).modal( 'hide' );
 //---------------------------------------------------------
   },
-
-
   /********************************************************
    * #COURSE-BUILDER-SCORM  ::(CHANGE)::
    *******************************************************/
   'change #course-builder-scorm'( e, t ) {
     e.preventDefault();
-
     CBSCORM.cbScormChange( e, t, Session.get('contentTracker') );
 //---------------------------------------------------------
   },
-
-
-
   /********************************************************
    * KEEP VALUES CONSTRAINED
    *******************************************************/
@@ -1959,8 +1551,6 @@ let pobj = P.dump();
     if ( v < 0   )  t.$( '#course-builder-credits' ).val(  0  );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * KEEP VALUES CONSTRAINED
    *******************************************************/
@@ -1970,15 +1560,11 @@ let pobj = P.dump();
     if ( v < 0   )  t.$( '#course-builder-percent' ).val(  0  );
   },
  //---------------------------------------------------------
-
-
   /* ******************************************************
    *
    * MOUSE OVER'S AND HOVER'S FOR CB DRAG AND DROP
    *
    *******************************************************/
-
-
    /*
     * MOUSEOVER TITLE
     */
@@ -1986,8 +1572,6 @@ let pobj = P.dump();
     $( '.cb-img-title' ).prop( 'src', '/img/title-dark.png' );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOUT TITLE
    *******************************************************/
@@ -1995,8 +1579,6 @@ let pobj = P.dump();
     $( '.cb-img-title' ).prop( 'src', '/img/title.png' );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * MOUSEUP TITLE
    *******************************************************/
@@ -2004,8 +1586,6 @@ let pobj = P.dump();
     $( '.cb-img-title' ).prop( 'src', '/img/title.png' );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOVER TEXT
    *******************************************************/
@@ -2013,8 +1593,6 @@ let pobj = P.dump();
     $( '.cb-img-text' ).prop( 'src', '/img/text-dark.png' );
   },
 //----------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOUT TEXT
    *******************************************************/
@@ -2022,8 +1600,6 @@ let pobj = P.dump();
     $( '.cb-img-text' ).prop( 'src', '/img/text.png' );
   },
 //-----------------------------------------------------------
-
-
   /********************************************************
    * MOUSEUP TEXT
    *******************************************************/
@@ -2031,8 +1607,6 @@ let pobj = P.dump();
     $( '.cb-img-text' ).prop( 'src', '/img/text.png' );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOVER IMAGE
    *******************************************************/
@@ -2040,8 +1614,6 @@ let pobj = P.dump();
      $( '.cb-img-image' ).prop( 'src', '/img/images-dark.png' );
    },
 //------------------------------------------------------------
-
-
    /*******************************************************
     * MOUSEOUT IMAGE
     ******************************************************/
@@ -2049,8 +1621,6 @@ let pobj = P.dump();
     $( '.cb-img-image' ).prop( 'src', '/img/images.png' );
   },
 //-------------------------------------------------------------
-
-
   /********************************************************
    * MOUSEUP IMAGE
    *******************************************************/
@@ -2058,8 +1628,6 @@ let pobj = P.dump();
     $( '.cb-img-image' ).prop( 'src', '/img/images.png' );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOVER PDF
    *******************************************************/
@@ -2067,8 +1635,6 @@ let pobj = P.dump();
     $( '.cb-img-pdf' ).prop( 'src', '/img/pdf-dark.png' );
   },
 //-------------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOUT PDF
    *******************************************************/
@@ -2076,8 +1642,6 @@ let pobj = P.dump();
     $( '.cb-img-pdf' ).prop( 'src', '/img/pdf.png' );
   },
 //--------------------------------------------------------------
-
-
   /*
    * MOUSEUP PDF
    */
@@ -2085,8 +1649,6 @@ let pobj = P.dump();
     $( '.cb-img-pdf' ).prop( 'src', '/img/pdf.png' );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOVER PPT
    *******************************************************/
@@ -2094,8 +1656,6 @@ let pobj = P.dump();
     $( '.cb-img-ppt' ).prop( 'src', '/img/ppt-dark.png' );
   },
 //--------------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOUT PPT
    *******************************************************/
@@ -2103,8 +1663,6 @@ let pobj = P.dump();
     $( '.cb-img-ppt' ).prop( 'src', '/img/ppt.png' );
   },
 //--------------------------------------------------------------
-
-
   /********************************************************
    * MOUSEUP PPT
    *******************************************************/
@@ -2112,8 +1670,6 @@ let pobj = P.dump();
     $( '.cb-img-ppt' ).prop( 'src', '/img/ppt.png' );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOVER SCORM
    *******************************************************/
@@ -2121,8 +1677,6 @@ let pobj = P.dump();
     $( '.cb-img-scorm' ).prop( 'src', '/img/scorm-dark.png' );
   },
 //---------------------------------------------------------------
-
-
   /********************************************************
   * MOUSEOUT SCORM
   ********************************************************/
@@ -2130,8 +1684,6 @@ let pobj = P.dump();
     $( '.cb-img-scorm' ).prop( 'src', '/img/scorm.png' );
   },
 //----------------------------------------------------------------
-
-
   /********************************************************
    * MOUSEUP SCORM
    *******************************************************/
@@ -2139,8 +1691,6 @@ let pobj = P.dump();
     $( '.cb-img-scorm' ).prop( 'src', '/img/scorm.png' );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOVER TEST
    *******************************************************/
@@ -2148,8 +1698,6 @@ let pobj = P.dump();
     $( '.cb-img-test' ).prop( 'src', '/img/test-dark.png' );
   },
 //-----------------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOUT TEST
    *******************************************************/
@@ -2157,8 +1705,6 @@ let pobj = P.dump();
     $( '.cb-img-test' ).prop( 'src', '/img/test.png' );
   },
 //-----------------------------------------------------------------
-
-
   /********************************************************
    * MOUSEUP TEST
    *******************************************************/
@@ -2166,8 +1712,6 @@ let pobj = P.dump();
     $( '.cb-img-test' ).prop( 'src', '/img/test.png' );
   },
 //---------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOVER VIDEO
    *******************************************************/
@@ -2175,8 +1719,6 @@ let pobj = P.dump();
     $( '.cb-img-video' ).prop( 'src', '/img/videos-dark.png' );
   },
 //------------------------------------------------------------------
-
-
   /********************************************************
    * MOUSEOUT VIDEO
    *******************************************************/
@@ -2184,8 +1726,6 @@ let pobj = P.dump();
     $( '.cb-img-video' ).prop( 'src', '/img/videos.png' );
   },
 //------------------------------------------------------------------
-
-
   /********************************************************
    * MOUSEUP VIDEO
    *******************************************************/
@@ -2193,18 +1733,12 @@ let pobj = P.dump();
     $( '.cb-img-video' ).prop( 'src', '/img/videos.png' );
   },
 //---------------------------------------------------------
-
 });
 //---------------------------------------------------------
-
-
-
-
 /**********************************************************
  * ADD TITLE
  *********************************************************/
 function addTitle( x, y ) {
-
   let holder = $( `<input id="added-title"
                           type="text"
                           style="fdborder-radius:5px;z-index:2;
@@ -2212,16 +1746,12 @@ function addTitle( x, y ) {
                                  margin-right:12%" autofocus/>`
                 ).css( 'color', 'grey' );
   $( '#fb-template' ).append(holder);
-
   let pos = $('#added-title').position();
   let x1  = pos.left;
   let y1  = pos.top;
-
   $( '#added-title').offset({ left: x - x1, top: y - y1 });
   $(holder).effect( "highlight", {}, 2000 );
 }
-
-
 /**********************************************************
  * ADD TEXT
  *********************************************************/
@@ -2236,22 +1766,17 @@ function addText( x, y ) {
                               'margin-right:10%;' +
                                 'width:73%;" autofocus></textarea>'
                             ).css( 'color', 'grey' );
-
   let pos = $('#added-text').position();
   let x1  = pos.left;
   let y1  = pos.top;
-
   $( '#added-text' ).offset({ left: x - x1, top:  y - y1 });
   $( '#added-text' ).effect( "highlight", {}, 2000 );
 */
 }
-
-
  /**********************************************************
  * ADD VIDEO
  *********************************************************/
 function addVideo() {
-
   $( '#fb-template' ).append( '<input id="added-video" ' +
                                       'type="text" ' +
                                       'style="border-radius:5px;width:75%;' +
@@ -2262,7 +1787,6 @@ function addVideo() {
                     //.effect( "highlight", {}, 2000 );
                     //.css( 'border', '1px dashed grey' );
 }
-
 function escapeHtml(str) {
     return str
          .replace(/&/g, "&amp;")

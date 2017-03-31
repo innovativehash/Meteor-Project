@@ -39,7 +39,7 @@
       }
     }
 
-    t.$( '#fb-template' ).append( `<span id="tit-${master_num}" data-pid="0" data-page="${page_no}" style="font-size:18px;font-weight:bold;z-index:2;border-radius:5px;background-color:white;position:absolute;cursor:move;border:none !important;">` + escapeHtml( str ) + '</span>');
+    t.$( '#fb-template' ).append( `<span id="tit-${master_num}" data-pid="0" data-page="${page_no}" style="font-size:18px;font-weight:bold;z-index:2;border-radius:5px;background-color:white;position:relative;top: 0;cursor:move;border:none !important;">` + escapeHtml( str ) + '</span>');
     t.$( `#tit-${master_num}` ).offset({ left: pos.left, top: pos.top });
     t.$( `#tit-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
     

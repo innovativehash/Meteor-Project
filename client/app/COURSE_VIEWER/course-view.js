@@ -1,183 +1,322 @@
 /*
- * @module courses
+ * @module courseView
  *
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-import { Courses }      from '../../../both/collections/api/courses.js';
-import { BuiltCourses } from '../../../both/collections/api/built-courses.js';
-import { Tests }        from '../../../both/collections/api/tests.js';
-import '../../templates/admin/courses.html';
+import { Template }       from 'meteor/templating';
+import { ReactiveVar }    from 'meteor/reactive-var';
+import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
+import { Students }       from '../../../both/collections/api/students.js';
+import * as CBCreateDOM from '../CB/CB_MODULES/createDOM.js';
+import * as Render      from '../CB/CB_MODULES/render.js';
+import './course-view.html';
+let b, c, len, page, total;
 /*=========================================================
  * CREATED
- *========================================================*/
-Template.courses.onCreated(function(){
-  //$("#courses-cover").show();
-  /********************************************************
-   * BOOTSTRAP3-DIALOG
-   *******************************************************/
-  $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function(){
-      //console.log('Course:: bootstrap-dialog loaded...');
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'Courses:: load bootstrap-dialog.min.js fail' );
-  });
-//-------------------------------------------------------------------
-/**********************************************************
- * SELECT2
- * multi-select combo box
- *********************************************************/
-  $.getScript( '/js/select2.min.js', function(){
-    $( document ).ready(function(){
-      $('#search-courses').select2({
-        allowClear: true,
-        placeholder: 'Search Courses...'
-      });
-    });
-    //console.log('Courses:: chosen,jquery.min.js loaded...');
-  }).fail( function(jqxhr, settings, exception ) {
-    console.log( 'Courses:: load select2.js fail' );
-  });
+ *=======================================================*/
+Template.courseView.onCreated( function() {
+  //$( '#cover' ).show();
+  this.page       = new ReactiveVar(1);
+  this.total      = new ReactiveVar(1);
+  this.render;
 //-------------------------------------------------------------------
 });
-/**********************************************************
+/*=========================================================
  * RENDERED
- *********************************************************/
-Template.courses.onRendered(function(){
+ *=======================================================*/
+Template.courseView.onRendered( function() {
+  $('#yosco').hide();
 /*
-  $( '#courses-cover' ).delay( 100 ).fadeOut( 'slow', function() {
-    $("#courses-cover").hide();
-    $( ".filter-buttons" ).fadeIn( 'slow' );
-  });
+  $( '#cover' ).delay( 1000 ).fadeOut( 'slow',
+                                      function() {
+                                        $( "#cover" ).hide();
+                                        $( ".dashboard-header-area" )
+                                            .fadeIn( 'slow' );
+                                      }
+  );
 */
+    //let self = this;
+    //self.subscribe("name", function() {
+    //console.log( FlowRouter.getQueryParam("builder"))
+    this.autorun(function() { //self
+      try {
+       let bc = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" )}).fetch();
+       let pg_num  = Template.instance().page.get();
+       Template.instance().total.set( bc[0] && bc[0].pages && bc[0].pages.length );
+        //IS THE DATABASE PRESENT?
+        if ( bc && bc[0] && bc[0].pages ) {
+          render( bc );
+        }
+      } catch(e) {
+        console.log( e );
+        return;
+      }
+    }); //autorun
+//-----------------------ON RENDERED------------AUTORUN----------------------
+  /*****************
+   * RENDER FUNCTION
+   ****************/
+  render =
+    (function( bc ){
+      let rtn_arr
+        , o       = [];
+      try {
+       if ( (bc && bc[0] && bc[0].pages && bc[0].pages.length) != undefined ) {
+          for( let i = 0, ilen = bc[0].pages.length; i < ilen; i++ ) {
+            if ( bc[0].pages[i].page_no == Template.instance().page.get() ){
+              $( '#test_v' ).hide();
+              $( '#fb-template' ).show();
+              if ( bc[0].pages[i].type == 'test' ) {
+                Session.set('test', bc[0].pages[i].id );
+                $( '#fb-template' ).hide();
+                $( '#fb-template' ).empty();
+                $( '#test_v' ).show();
+                break;
+              } else
+                  if ( bc[0].pages[i].type == 'pdf') {
+                    Bert.alert({
+                        title:    'Loading PDF',
+                        message:  'Give it a few seconds to load...',
+                        type:     'success',
+                        style:    'growl-top-right',
+                        icon:     'fa-youtube'
+                  });
+              } else
+                  if ( bc[0].pages[i].type == 'video' ) {
+                    Bert.alert({
+                        title:    'Loading Video',
+                        message:  'Give it a few seconds to load...',
+                        type:     'success',
+                        style:    'growl-top-right',
+                        icon:     'fa-youtube'
+                    });
+              } else
+                  if ( bc[0].pages[i].type == 'scorm' ) {
+                    Bert.alert({
+                        title:    'Loading SCORM',
+                        message:  'Give it a few seconds of load...',
+                        type:     'success',
+                        style:    'growl-top-right',
+                    });
+              }
+              o.push( bc[0].pages[i] );
+            }
+          }
+        } else {
+            o.push(bc[0].pages );
+        }
+        $('#fb-template').empty();
+        rtn_arr = handlePrevious( o );
+        let funcs = rtn_arr[1];
+        //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
+        $('#fb-template').append( rtn_arr[0] );
+        //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
+        for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
+          eval( funcs[i] );
+        }
+     } catch(ReferenceError) {
+        console.log( 'no record line:650' );
+      }
+  });
+//------------------------------------------------------ON RENDERED-------------
 });
-/**********************************************************
- * DESTROYED
- *********************************************************/
-Template.courses.onDestroyed(function(){
-  Session.set( 'searchTerm', null );
-});
-//Courses.find({ $or: [ {company_id:Meteor.user().profile.company_id}, {public:true}] }).fetch()
-/**********************************************************
+/*=========================================================
  * HELPERS
- *********************************************************/
-Template.courses.helpers({
-  courses: () => {
+ *=======================================================*/
+Template.courseView.helpers({
+  avatar() {
     try {
-      return Courses.find({ company_id: Meteor.user().profile.company_id }).fetch();
+      return Students.findOne({_id: Meteor.userId()}).avatar;
     } catch(e) {
       return;
     }
   },
-  uid: () =>
-    Meteor.userId()
+  course: () => {
+    //
+    //  THIS IS JUST HERE TO "CALL" THE ONRENDERED AUTORUN FUNCTION
+    return;
+  },
+  cname: () => {
+    let cid = FlowRouter.getQueryParam( "course" );
+    try {
+      return BuiltCourses.find({ _id: cid }).fetch()[0].cname;
+    } catch(e) {
+      return;
+      //console.log(e);
+    }
+  },
+  fname: () => {
+    try {
+      return Students.findOne({ _id: Meteor.userId() }).fname;
+    } catch(e) {
+      return;
+      //console.log(e);
+    }
+  },
+  page: () =>
+   Template.instance().page.get(),
+  total: () =>
+   Template.instance().total.get()
+//-------------------------------------------------------------------
 });
 /*=========================================================
  * EVENTS
  *=======================================================*/
-Template.courses.events({
+Template.courseView.events({
   /********************************************************
-   * .JS-ADD-COURSE-FROM-LIBRARY  ::(CLICK)::
+   * #LOGOUT  ::(CLICK)::
    *******************************************************/
-  'click .js-add-course-from-library'( e, t ) {
+  'click #cv-logout': function( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
-    FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
+    Session.set('Scratch', null);
+    Meteor.logout();
+    FlowRouter.go( '/login' );
 //-------------------------------------------------------------------
   },
   /********************************************************
-   * #SEARCH-COURSES  ::(CHANGE)::
-   * scroll to selected course
+   * .JS-BACK-TO-HOME  ::(CLICK)::
    *******************************************************/
-  'change #search-courses'( e, t ) {
+  'click #course-view-page-back'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
-    let idx = $( e.currentTarget ).val();
-    $( 'tr').css( 'border', '' );
-    $( 'tr' ).css( 'background-color', '' );
-    $( 'tr#' + idx ).css( 'border',
-                          '1px solid' ).css(  'background-color',
-                                              'PaleTurquoise' );
-    $( 'html, body' ).animate({
-      scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
-      }, 'fast');
+    Session.set('Scratch', null);
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.teacher
+       )
+    {
+      FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+      return;
+    } else if (
+                Meteor.user() &&
+                Meteor.user().roles &&
+                Meteor.user().roles.admin
+              )
+    {
+      FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+      return;
+    } else if (
+                Meteor.user() &&
+                Meteor.user().roles &&
+                Meteor.user().roles.student
+              )
+    {
+      FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
+      return;
+    }
+    return;
 //-------------------------------------------------------------------
   },
   /********************************************************
-   * .JS-CLICK-COURSE  ::(CLICK)::
+   * CV-DASHBOARD-LINK
    *******************************************************/
-  'click .js-click-course'( e, t ) {
-    e.preventDefault();
-      let href = $( e.currentTarget ).data( 'href' );
-      href = String( href );
-      window.location = href;
-  },
-  /********************************************************
-   * .JS-EDIT-COURSE  ::(CLICK)::
-   *******************************************************/
-  'click .js-edit-course'( e, t ) {
-    e.preventDefault();
-      let idx = $( e.currentTarget ).data( 'id' )
-        , nm  = $( e.currentTarget ).data( 'name' )
-        , href;
-
-      //idx = String( idx );
-      //let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
-      href = `/admin/dashboard/course-builder/${Meteor.userId()}/?id=${idx}&name=${nm}&edit=1`;
-      window.location = href;
-      //navigate to course builder for editing.
+  'click #cv-dashboard-link'( e, t ) {
+      e.preventDefault();
+      Session.set('Scratch', null);
+      if (
+          Meteor.user() &&
+          Meteor.user().roles &&
+          Meteor.user().roles.teacher
+         )
+      {
+        FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
+        return;
+      } else if (
+                  Meteor.user() &&
+                  Meteor.user().roles &&
+                  Meteor.user().roles.admin
+                )
+      {
+        FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+        return;
+      } else if (
+                  Meteor.user() &&
+                  Meteor.user().roles &&
+                  Meteor.user().roles.student
+                )
+      {
+        FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
+        return;
+      }
+      //$( '#course-view-page-back' ).click();
+      return;
 //-------------------------------------------------------------------
   },
-/********************************************************
-   * .JS-UN ARCHIVE-COURSE  ::(CLICK)::
-   *******************************************************/
-  'click .js-unarchive-course'( e, t ) {
+   /*******************************************************
+    * CV-COURSES-LINK
+    ******************************************************/
+  'click #cv-courses-link'( e, t ) {
     e.preventDefault();
-    let idx = $( e.currentTarget ).data( 'id' );
-    let nm  = $( e.currentTarget ).data( 'name' );
-    Bert.alert(`Course ${nm} has been un-archived`, 'success');
-    Courses.update({ _id: idx },
-                    { $set: { isArchived: false }});
-  },
-  /********************************************************
-   * .JS-ARCHIVE-COURSE  ::(CLICK)::
-   *******************************************************/
-  'click .js-archive-course'( e, t ) {
-    e.preventDefault();
-    let idx = $( e.currentTarget ).data( 'id' );
-    let nm  = $( e.currentTarget ).data( 'name' );
-    Bert.alert(`Course ${nm} has been archived`, 'success');
-    Courses.update({ _id: idx },
-                    { $set: { isArchived: true }});
-//-------------------------------------------------------------------
-  },
-  /********************************************************
-   * #SEARCH-COURSES  ::(KEYPRESS)::
-   *******************************************************/
-  'keypress #search-courses': function(event){
-    if ( event.which == 13){
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      let idx   = $ ("#search-courses" ).val(),
-          item  = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
-      return item;
+    Session.set('Scratch', null);
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.teacher
+       )
+    {
+      FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+      return;
+    } else if (
+                Meteor.user() &&
+                Meteor.user().roles &&
+                Meteor.user().roles.admin
+              )
+    {
+      FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+      return;
+    } else if (
+                Meteor.user() &&
+                Meteor.user().roles &&
+                Meteor.user().roles.student
+              )
+    {
+      FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
+      return;
     }
 //-------------------------------------------------------------------
   },
   /********************************************************
-   * #DASHBOARD-PAGE  ::(CLICK)::
+   * CV_PREV_BUTTON ::(CLICK)::
    *******************************************************/
-  'click #dashboard-page'( e, t ) {
+  'click #cv-prev-btn'( e, t ) {
     e.preventDefault();
-    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+    if ( t.page.get() > 1 ) {
+      t.page.set( t.page.get() -1);
+    } else {
+      return;
+    }
 //-------------------------------------------------------------------
   },
   /********************************************************
-   * .JS-COURSE-BUILDER  ::(CLICK)::
-   ******************************************************/
-  'click .js-course-builder'( e, t ) {
+   * CV-NEXT-BUTTON ::(CLICK)::
+   *******************************************************/
+  'click #cv-next-btn'( e, t ) {
     e.preventDefault();
-    //t.currentScreen.set('courseBuilder');
-    FlowRouter.go( `/admin/dashboard/course-builder/${Meteor.userId()}/?rtn=courses` );
-  }
+    if ( t.page.get() < t.total.get() ) {
+      t.page.set( t.page.get() + 1);
+    } else {
+      return;
+    }
 //-------------------------------------------------------------------
+  }
 });
+/**********************************************************
+ * HANDLE PREVIOUS
+ *********************************************************/
+ function handlePrevious( o ) {
+    let funcs   = ''                    //FUNCS FROM CLASS TO POSITION ELEMENTS
+      , content = ''                    //RENDERED MARKUP (AND FUNCS) RETURNED
+      , cd                              //RENDERING CLASS INSTANCE
+      , mark_up = '';                   //RENDERED MARKUP RETURN VARIABLE
+    //if ( p.length == 0 ) return;
+    //CREATE INSTANCE OF CBCreateDOM CLASS
+    cd        = new CBCreateDOM.CreateDOM( o );
+    //RETRIEVE RESULT OF PROCESSING RETURNED DATABASE ELEMENTS
+    content   = cd.buildDOM();
+    //PULL OUT THE MARKUP RETURNED FROM CLASS
+    mark_up   = content[0];
+    //PULL OUT THE JQUERY FUNCTIONS RETURNED FROM CLASS
+    funcs     = content[1];
+    return [ mark_up, funcs ];
+ }

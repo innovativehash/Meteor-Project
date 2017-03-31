@@ -1,251 +1,115 @@
 /*
- * @module courses
+ * @module titleHandling
  *
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovation
  */
-import { Courses }      from '../../../both/collections/api/courses.js';
-import { BuiltCourses } from '../../../both/collections/api/built-courses.js';
-import { Tests }        from '../../../both/collections/api/tests.js';
-
-import '../../templates/admin/courses.html';
-
-
-/*=========================================================
- * CREATED
- *========================================================*/
-Template.courses.onCreated(function(){
-
-  //$("#courses-cover").show();
-
-
-  /********************************************************
-   * BOOTSTRAP3-DIALOG
-   *******************************************************/
-  $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function(){
-      //console.log('Course:: bootstrap-dialog loaded...');
-  }).fail( function( jqxhr, settings, exception ) {
-    console.log( 'Courses:: load bootstrap-dialog.min.js fail' );
-  });
-//-------------------------------------------------------------------
-
-
 /**********************************************************
- * SELECT2
- * multi-select combo box
+ * #ADDED-TITLE  ::(BLUR)::
  *********************************************************/
-  $.getScript( '/js/select2.min.js', function(){
-    $( document ).ready(function(){
-      $('#search-courses').select2({
-        allowClear: true,
-        placeholder: 'Search Courses...'
-      });
-    });
-    //console.log('Courses:: chosen,jquery.min.js loaded...');
-  }).fail( function(jqxhr, settings, exception ) {
-    console.log( 'Courses:: load select2.js fail' );
-  });
-//-------------------------------------------------------------------
-});
-
-
-/**********************************************************
- * RENDERED
- *********************************************************/
-Template.courses.onRendered(function(){
-/*
-  $( '#courses-cover' ).delay( 100 ).fadeOut( 'slow', function() {
-    $("#courses-cover").hide();
-    $( ".filter-buttons" ).fadeIn( 'slow' );
-  });
-*/
-});
-
-
-/**********************************************************
- * DESTROYED
- *********************************************************/
-Template.courses.onDestroyed(function(){
-
-  Session.set( 'searchTerm', null );
-
-});
-
-//Courses.find({ $or: [ {company_id:Meteor.user().profile.company_id}, {public:true}] }).fetch()
-
-
-/**********************************************************
- * HELPERS
- *********************************************************/
-Template.courses.helpers({
-
-  courses: () => {
-    try {
-      return Courses.find({ company_id: Meteor.user().profile.company_id }).fetch();
-    } catch(e) {
+  export function cbAddedTitleBlur( e,
+                                    t,
+                                    page_no,
+                                    master_num,
+                                    P
+                                  ) {
+    e.preventDefault();
+    if ( t.$( '#added-title' ).val() == undefined || t.$( '#added-title' ).val() == '' ) {
+      try {
+        $( '#added-title' ).remove();
+      } catch( DOMException ) {
+        ;
+      }
       return;
     }
-  },
-
-  uid: () =>
-    Meteor.userId()
-
-});
-
-
-
-/*=========================================================
- * EVENTS
- *=======================================================*/
-Template.courses.events({
-
-
-  /********************************************************
-   * .JS-ADD-COURSE-FROM-LIBRARY  ::(CLICK)::
-   *******************************************************/
-  'click .js-add-course-from-library'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
-//-------------------------------------------------------------------
-  },
-
-
-  /********************************************************
-   * #SEARCH-COURSES  ::(CHANGE)::
-   * scroll to selected course
-   *******************************************************/
-  'change #search-courses'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    let idx = $( e.currentTarget ).val();
-    $( 'tr').css( 'border', '' );
-    $( 'tr' ).css( 'background-color', '' );
-
-    $( 'tr#' + idx ).css( 'border',
-                          '1px solid' ).css(  'background-color',
-                                              'PaleTurquoise' );
-
-    $( 'html, body' ).animate({
-      scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
-      }, 'fast');
-//-------------------------------------------------------------------
-  },
-
-  /********************************************************
-   * .JS-CLICK-COURSE  ::(CLICK)::
-   *******************************************************/
-  'click .js-click-course'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-      let href = $( e.currentTarget ).data( 'href' );
-
-      href = String( href );
-      window.location = href;
-  },
-
-  /********************************************************
-   * .JS-EDIT-COURSE  ::(CLICK)::
-   *******************************************************/
-  'click .js-edit-course'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-      let idx = $( e.currentTarget ).data( 'id' )
-        , nm  = $( e.currentTarget ).data( 'name' )
-        , href;
-
-      //idx = String( idx );
-      //let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
-      href = `/admin/dashboard/course-builder/${Meteor.userId()}/?rtn=courses&id=${idx}&name=${nm}&edit=1`;
-
-      //let idx = $( e.currentTarget ).data( 'id' );
-      //idx = String( idx );
-      //let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
-
-      //navigate to course builder for editing.
-//-------------------------------------------------------------------
-  },
-
-
-/********************************************************
-   * .JS-UN ARCHIVE-COURSE  ::(CLICK)::
-   *******************************************************/
-  'click .js-unarchive-course'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    let idx = $( e.currentTarget ).data( 'id' );
-    let nm  = $( e.currentTarget ).data( 'name' );
-
-    Bert.alert(`Course ${nm} has been un-archived`, 'success');
-
-    Courses.update({ _id: idx },
-                    { $set: { isArchived: false }});
-  },
-
-
-
-  /********************************************************
-   * .JS-ARCHIVE-COURSE  ::(CLICK)::
-   *******************************************************/
-  'click .js-archive-course'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    let idx = $( e.currentTarget ).data( 'id' );
-    let nm  = $( e.currentTarget ).data( 'name' );
-
-    Bert.alert(`Course ${nm} has been archived`, 'success');
-
-    Courses.update({ _id: idx },
-                    { $set: { isArchived: true }});
-
-//-------------------------------------------------------------------
-  },
-
-
-  /********************************************************
-   * #SEARCH-COURSES  ::(KEYPRESS)::
-   *******************************************************/
-  'keypress #search-courses': function(event){
-    if ( event.which == 13){
-      event.preventDefault();
-      event.stopImmediatePropagation();
-
-      let idx   = $ ("#search-courses" ).val(),
-          item  = Courses.find({ _id: idx  }, { limit:1 }).fetch()[0];
-
-      return item;
+    let str   = t.$( '#added-title' ).val().trim()
+      , pos   = t.$( '#added-title' ).offset()
+      , my_id = Session.get('my_id');
+    if ( t.$( '#added-title' ).length ) {
+      try {
+        $( '#added-title' ).remove();
+      } catch( DOMException ) {
+        ;
+      }
     }
-//-------------------------------------------------------------------
-  },
+    t.$( '#fb-template' ).append( `<span id="tit-${master_num}" data-pid="0" data-page="${page_no}" style="font-size:18px;font-weight:bold;z-index:2;border-radius:5px;background-color:white;position:absolute;cursor:move;border:none !important;">` + escapeHtml( str ) + '</span>');
+    t.$( `#tit-${master_num}` ).offset({ left: pos.left, top: pos.top });
+    t.$( `#tit-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
 
+    P.append({
+                    page_no:  page_no,
+                    type:     'title',
+                    id:       `tit-${master_num}`,
+                    text:     escapeHtml(str),
+                    offset:   pos,
+                    zIndex:           $( `#tit-${master_num}` ).css('z-index'),
+                    fontSize:         $( `#tit-${master_num}` ).css('font-size'),
+                    border:           $( `#tit-${master_num}` ).css('border'),
+                    fontWeight:       $( `#tit-${master_num}` ).css('font-weight'),
+                    fontStyle:        $( `#tit-${master_num}` ).css('font-style'),
+                    textDecoration:   $( `#tit-${master_num}` ).css('text-decoration'),
+                    opacity:          $( `#tit-${master_num}` ).css('opacity')
+              });
+/*
+    Meteor.setTimeout(function(){
 
-  /********************************************************
-   * #DASHBOARD-PAGE  ::(CLICK)::
-   *******************************************************/
-  'click #dashboard-page'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+      //$( `#tit-${master_num}` ).attr( 'data-pid', `${my_id}` );
+    }, 500);
+*/
+    //-------------------------------
+    // TITLE OBJECT CLICK EVENT
+    //-------------------------------
+    (function( master_num, my_id ){
+      $( `#tit-${master_num}` ).on( "mouseup", function(){
+        e.preventDefault();
 
-    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-//-------------------------------------------------------------------
-  },
+        // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR R/O HIDDEN FIELD
+        t.$( '#cb-current' ).val( `tit-${master_num}` );
 
+        let pos = $( `#tit-${master_num}` ).offset()
+          , str = $( `#tit-${master_num}` ).text().trim()
+          , id  = `tit-${master_num}`
+          , idx = P.indexOf( `tit-${master_num}` )
+          , sz  = $( `#tit-${master_num}` ).css('fontSize')
+          , op  = $( `#tit-${master_num}` ).css('opacity');
 
-  /********************************************************
-   * .JS-COURSE-BUILDER  ::(CLICK)::
-   ******************************************************/
-  'click .js-course-builder'( e, t ) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+        //SET TOOLBAR SLIDERS
+        $('#fnt').val( Number( sz.slice( 0, 2 ) ) );
+        $('.js-title-font-size').val( Number( sz.slice( 0, 2 ) ) );
+        $('#top').val( op );
+        $('.js-title-opacity').val( op );
+        //SHOW RELATED EDITING TOOLBAR
+        $( '#cb-title-toolbar' ).show();
+        $( '#cb-text-toolbar' ).hide();
+        $( '#cb-media-toolbar').hide();
+        $( '#cb-video-toolbar').hide();
 
-    //t.currentScreen.set('courseBuilder');
-    FlowRouter.go( `/admin/dashboard/course-builder/${Meteor.userId()}/?rtn=courses` );
-  }
-//-------------------------------------------------------------------
-});
+        //P.remove( `tit-${master_num}` );
+        P.removeAt( idx );
+        P.insert( idx, {
+                      page_no:  page_no,
+                      id:       id,
+                      type:     'title',
+                      text:     escapeHtml(str),
+                      offset:   pos,
+                      zIndex:           $( `#tit-${master_num}` ).css('z-index'),
+                      fontSize:         $( `#tit-${master_num}` ).css('font-size'),
+                      border:           $( `#tit-${master_num}` ).css('border'),
+                      fontWeight:       $( `#tit-${master_num}` ).css('font-weight'),
+                      fontStyle:        $( `#tit-${master_num}` ).css('font-style'),
+                      textDecoration:   $( `#tit-${master_num}` ).css('text-decoration'),
+                      opacity:          $( `#tit-${master_num}` ).css('opacity')
+                  });
+      });//onmouseup
+    })( master_num, my_id );//anon function
+P.print();
+//---------------------------------------------------------------------------
+  };
+function escapeHtml(str) {
+    return str
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}  

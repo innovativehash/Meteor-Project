@@ -94,8 +94,9 @@
 
   </div><!-- sidebar-menu-area course-builder-sidebar -->
 
-
-  <div class="container">
+<div class="container mob-container">
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
     {{> userProfile }}
 
 <!-- CB-TITLE-TOOLBAR -->
@@ -259,7 +260,8 @@
 
   </div>
 <!-- CB-TOOLBAR-VIDEO -->
-
+</div>
+</div>
     {{> cbCanvas }}
 
 <div class="row">
@@ -273,6 +275,53 @@
   </div><!-- container -->
 
 
+<div class="row">
+<div class="dashboard-body-area footer-page" style="position:relative;bottom:0;">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3 col-md-3 col-lg-3 col-xs-4">
+        <div class="footer-filter cu-fo">
+          <h2>Page {{page}}/{{total}}
+<!--
+            <button class = "up">
+              <i class = "fa fa-arrow-up"></i>
+            </button>
+            <button class = "down">
+              <i class = "fa fa-arrow-down"></i>
+            </button>
+-->
+          </h2>
+
+        </div><!-- footer-filter -->
+      </div><!-- col-sm-3 -->
+
+      <div class="col-sm-3 col-md-3 col-lg-3 col-xs-4">
+        <div class="save-button">
+          <button id="cb-prev-btn" class="cu-fo-btn">
+           <i class="fa fa-backward" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Prev
+          </button>
+        </div>
+      </div>
+      
+      <div class= "col-sm-3 col-md-3 col-lg-3 col-xs-4">
+        <div class="save-button">
+          <button id="cb-next-btn" class="cu-fo-btn">
+            Next&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-forward" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class = "col-sm-3 col-md-3 col-lg-3 col-xs-12">
+        <div class = "save-button cu-fo-btn">
+          <button id = "cb-save">
+            Save Course
+          </button>
+        </div>
+      </div>
+
+    </div><!-- row -->
+  </div><!-- container -->
+</div><!-- dashboard-body-areaa footer-page -->
+ </div><!-- row -->
 
 <!-- IMAGE MODAL -->
 <div  class="modal fade left"
@@ -646,51 +695,5 @@
 
 
 </div><!-- dashboard-body-area -->
-
-<div class="dashboard-body-area footer-page" style="position:fixed;bottom:0;">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-3">
-        <div class="footer-filter">
-          <h2>Page {{page}}/{{total}}
-<!--
-            <button class = "up">
-              <i class = "fa fa-arrow-up"></i>
-            </button>
-            <button class = "down">
-              <i class = "fa fa-arrow-down"></i>
-            </button>
--->
-          </h2>
-
-        </div><!-- footer-filter -->
-      </div><!-- col-sm-3 -->
-
-      <div class="col-sm-3">
-        <div class="save-button">
-          <button id="cb-prev-btn">
-           <i class="fa fa-backward" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Prev
-          </button>
-        </div>
-      </div>
-
-      <div class= "col-sm-3">
-        <div class="save-button">
-          <button id="cb-next-btn">
-            Next&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-forward" aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
-      <div class = "col-sm-3">
-        <div class = "save-button">
-          <button id = "cb-save">
-            Save Course
-          </button>
-        </div>
-      </div>
-
-    </div><!-- row -->
-  </div><!-- container -->
-</div><!-- dashboard-body-areaa footer-page -->
 
 </template>
