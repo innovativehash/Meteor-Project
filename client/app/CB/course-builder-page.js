@@ -668,22 +668,13 @@ Template.courseBuilderPage.onRendered( function() {
 /*
  * SUCCESSFUL RETURN FROM TEST CREATION
  */
-  if (
-      FlowRouter.getQueryParam('rtn') &&
-      FlowRouter.getQueryParam('id')  &&
-      FlowRouter.getQueryParam('edit') &&
-      FlowRouter.getQueryParam('name')
-     )
-  {
-    console.log('4');
-  }
 
   if (
       FlowRouter.getQueryParam( "rtn" ) &&
       FlowRouter.getQueryParam( "id"  )
      )
   {
-    console.log('2');
+
     //RESTORE THE SESSION
     let test_session_bak = Session.get( 'obj' );
     Session.set( 'obj', null );

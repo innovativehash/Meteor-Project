@@ -28,9 +28,9 @@
               <div class="filter-buttons">
                 <div class="col-sm-8">
                   <button class="js-course-builder">Build Course</button>
-
+                
                   <button class="js-add-course-from-library">Add From Library</button>
-
+              
                   <button class       = "js-load-scorm"
                           type        = "button"
                           id          = "import-button"
@@ -39,11 +39,11 @@
                     Import Course
                   </button>
                 </div>
-
+                
                 <div class="col-sm-4">
-                    <select id    = "search-courses"
+                    <select id    = "search-courses" 
                             style = "width:25%;">
-
+                      
                         <option></option>
                         {{#with courses}}
                           {{#each this}}
@@ -54,43 +54,43 @@
                         {{/with}}
                     </select>
                   </div>
-
+                  
               </div><!-- filter buttons -->
 
 
-                <div  class           = "modal fade left"
-                      id              = "myModal"
-                      tabindex        = "-1"
-                      role            = "dialog"
+                <div  class           = "modal fade left" 
+                      id              = "myModal" 
+                      tabindex        = "-1" 
+                      role            = "dialog" 
                       aria-labelledby = "myModalLabel">
-
+                  
                   <div class = "modal-dialog">
                     <div class = "pop-up-area">
-
-                      <button type          = "button"
-                              id            = "popup-close"
-                              data-dismiss  = "modal"
+                      
+                      <button type          = "button" 
+                              id            = "popup-close" 
+                              data-dismiss  = "modal" 
                               aria-label    = "Close">x</button>
-
+                      
                       <div class = "popup-body">
                         <form action = "">
                           <div class = "row">
                             <div class = "col-sm-4">
-
+                              
                               <label for = "fileup">Import Scorm Course</label>
                             </div>
                             <div class = "col-sm-7">
-
+                              
                               <input class = "hidden" id = "fileup" type = "file">
                               <span id = "filename">No File Chosen</span>
-
+                              
                             </div>
                           </div>
                           <div class = "row">
                             <div class = "col-sm-12 text-right">
-
+                              
                               <input type = "submit" value = "SUBMIT">
-
+                              
                             </div>
                           </div>
                         </form>
@@ -104,14 +104,14 @@
                       tabindex        = "-1"
                       role            = "dialog"
                       aria-labelledby = "myModalLabel">
-
+                  
                   <div class = "modal-dialog">
                     <div class = "pop-up-area">
                       <button type          = "button"
                               id            = "popup-close"
                               data-dismiss  = "modal"
                               aria-label    = "Close">x</button>
-
+                              
                       <div class = "popup-body">
                         <form action = "">
                           <div class = "row">
@@ -123,10 +123,10 @@
                               </span>
                             </div>
                             <div class = "col-sm-7">
-
-                              <input  type        = "text"
-                                      id          = "course-name"
-                                      placeholder = "Course Name"
+                              
+                              <input  type        = "text" 
+                                      id          = "course-name" 
+                                      placeholder = "Course Name" 
                                       value       = "{{name}}" />
                             </div>
                           </div>
@@ -140,19 +140,19 @@
                               </span>
                             </div>
                             <div class="col-sm-7">
-
-                              <input  type        = "text"
-                                      id          = "course-credits"
-                                      placeholder = "Number of Credits"
+                              
+                              <input  type        = "text" 
+                                      id          = "course-credits" 
+                                      placeholder = "Number of Credits" 
                                       value       = "{{credits}}" />
                             </div>
                           </div>
 
                           <div class="row">
                             <div class="col-sm-12 text-right">
-
+                              
                               <input type="submit" value="SUBMIT">
-
+                              
                             </div>
                           </div>
                         </form>
@@ -188,17 +188,18 @@
                     </tr>
                   </thead>
                   <tbody>
-
+                    
                     {{#with courses}}
                     {{#each this}}
-
-                      <tr>
-                        <th class = "name js-click-course"
-                            id = "{{_id}}"
-                            style = "cursor: pointer"
-                            data-href = "/admin/dashboard/course-viewer/{{uid}}/?course={{_id}}">
+                    
+                      <tr class="js-click-course" 
+                          id = "{{_id}}"
+                          style="cursor: pointer" 
+                          data-href="/admin/dashboard/course-viewer/{{uid}}/?course={{_id}}">
+                        
+                        <th class = "name">
                           <img src = "{{icon}}" alt="">
-                          <a  id = "{{course_id}}">
+                          <a  id = "{{course_id}}">                              
                             {{#if isArchived}}
                               <del>{{name}}</del>
                               <span class="label label-primary">
@@ -209,15 +210,15 @@
                             {{/if}}
                           </a>
                         </th>
-
+                        
                         <td>1 course</td>
                         <td>{{credits}}</td>
                         <td>{{times_completed}}</td>
                         <td>
-
-                          <button id        = "edit"
-                                  class     = "js-edit-course"
-                                  data-id   = "{{_id}}"
+                          
+                          <button id        = "edit" 
+                                  class     = "js-edit-course" 
+                                  data-id   = "{{_id}}" 
                                   data-name = "{{name}}">
                             <img src="/img/edit.png" alt="">
                           </button>
@@ -229,9 +230,9 @@
                               <img src = "/img/Unarchive.png" alt = "">
                             </button>
                           {{else}}
-                            <button id        = "delete"
-                                    class     = "js-archive-course"
-                                    data-id   = "{{_id}}"
+                            <button id        = "delete" 
+                                    class     = "js-archive-course" 
+                                    data-id   = "{{_id}}" 
                                     data-name = "{{name}}">
                               <img src = "/img/Archive.png" alt="">
                             </button>
@@ -242,14 +243,14 @@
                  {{/with}}
                   </tbody>
                 </table>
-
+                
                 <!-- test condition for MORE -->
                 <!-- <div class="more">
-
+                  
                   <button>
                     <img src="/img/more.png" alt="">
                   </button>
-
+                  
                 </div> -->
               </div>
             </div>
