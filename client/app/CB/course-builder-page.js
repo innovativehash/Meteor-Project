@@ -9,6 +9,7 @@ import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
 
 import { Courses }        from '../../../both/collections/api/courses.js';
+import { BuiltCourses }   from '../../../both/collections/api/built-courses.js'
 import { Students }       from '../../../both/collections/api/students.js';
 import { Images }         from '../../../both/collections/api/images.js';
 import { Pdfs }           from '../../../both/collections/api/pdfs.js';
@@ -666,7 +667,7 @@ Template.courseBuilderPage.onRendered( function() {
   $('#cb-video-toolbar').hide();
 
 /*
- * SUCCESSFUL RETURN FROM TEST CREATION
+ * WE'RE HERE TO EDIT?
  */
   if (
       FlowRouter.getQueryParam('rtn') &&
@@ -675,15 +676,44 @@ Template.courseBuilderPage.onRendered( function() {
       FlowRouter.getQueryParam('name')
      )
   {
-    console.log('4');
-  }
+    let ed = FlowRouter.getQueryParam('edit')
+      , nm = FlowRouter.getQueryParam('name')
+      , id = FlowRouter.getQueryParam('id')
+      , bc;
 
-  if (
-      FlowRouter.getQueryParam( "rtn" ) &&
-      FlowRouter.getQueryParam( "id"  )
-     )
+    Session.set('my_id', id);
+
+    if ( Number(ed) == 1 ) { //WE'RE HERE TO EDIT
+    this.autorun(function() {
+      try {
+          bc = BuiltCourses.find({ _id: id }).fetch()[0];
+        console.log( bc );
+        console.log( bc.pages );
+          Session.set('cinfo', {
+                            cname: bc.cname,
+                            credits: Number(bc.credits),
+                            passing_percent: Number(bc.passing_percent),
+                            keywords: bc.keywords,
+                            icon: "/img/icon-4.png",
+                            company_id: bc.company_id,
+                            creator_type: bc.creator_type,
+                            creator_id: bc.creator_id
+          });
+      } catch (e) {
+        ;
+      }
+
+    });
+  }
+  } else
+/*
+ * SUCCESSFUL RETURN FROM TEST CREATION
+ */
+      if (
+          FlowRouter.getQueryParam( "rtn" ) &&
+          FlowRouter.getQueryParam( "id"  )
+         )
   {
-    console.log('2');
     //RESTORE THE SESSION
     let test_session_bak = Session.get( 'obj' );
     Session.set( 'obj', null );
@@ -1561,6 +1591,7 @@ let pobj = P.dump();
     $( `#${cur}` ).text(txt.trim());
     $( `#${cur}` ).show();
 
+    editor.focusManager.blur()
     editor && editor.destroy();
 		editor = null;
 

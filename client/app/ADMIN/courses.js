@@ -155,10 +155,10 @@ Template.courses.events({
       let idx = $( e.currentTarget ).data( 'id' )
         , nm  = $( e.currentTarget ).data( 'name' )
         , href;
-        
+
       //idx = String( idx );
       //let c = Courses.findOne({ _id:idx },{ "name":1, "credits":1 } );
-      href = `/admin/dashboard/course-builder/${Meteor.userId()}/?id=${idx}&name=${nm}&edit=1`;
+      href = `/admin/dashboard/course-builder/${Meteor.userId()}/?rtn=courses&id=${idx}&name=${nm}&edit=1`;
 
       window.location = href;
       //navigate to course builder for editing.

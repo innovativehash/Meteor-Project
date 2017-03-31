@@ -29,12 +29,13 @@
   {
     e.preventDefault();
 
-    let pos   = {left:600, top:400}; //= t.$( `#added-text` ).offset()
+    let pos   = {left:400, top:200}; //= t.$( `#added-text` ).offset()
 
     t.$( '#fb-template' ).append( `<span  style="font-size:18px;cursor:move;
                                                  z-index:1;border-radius:5px;
                                                  background-color:white;
-                                                 position:absolute;
+                                                 position:relative;
+												     display: block;
                                                  border:none !important;"
                                           id="txt-${master_num}"
                                           data-pid="0"
