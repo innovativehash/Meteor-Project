@@ -2969,9 +2969,6 @@ body.login {
     min-height: 625px; 
     /*max-height: 425px; */
     position: relative;
-    overflow:scroll; /*added by nfs*/
-    overflow-x: auto;
-    overflow-y: auto;
 }
 
 .curse-builder-box .notice {
@@ -2997,10 +2994,11 @@ body.login {
   background: #37ACE9;
   border-top: 1px solid #181818;
   padding: 20px 0;
-  position: relative;
   width: 100%;
   left: 0;
-  bottom: 0;
+ position: relative;
+top: 100px;
+bottom: 0px;
 }
 
 /*
@@ -4336,4 +4334,27 @@ html .ui-button.ui-state-disabled:active {
     height: auto;
     float: left;
     padding: 10px;
+}
+
+#cb-title-toolbar{
+	margin-bottom:17px;
+}
+#cb-media-toolbar{
+	margin-bottom:17px;
+}
+#cb-text-toolbar{
+	margin-bottom:17px;
+}
+#cb-video-toolbar{
+	margin-bottom:17px;	
+}
+
+#course-builder-page-back{
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid #fff;
+    padding: 5px 5px;
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #fff;
 }

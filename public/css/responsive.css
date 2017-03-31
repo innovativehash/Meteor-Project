@@ -371,7 +371,7 @@ body.main .container {width: 970px;}
 .filter-buttons.studentpage button {text-align: center;}
 .curse-builder-box .notice h2 {font-size: 14px;padding: 10px 35px;}
 .curse-builder-box .notice {margin-left: -165px;margin-top: -20px;}
-.curse-builder-box {min-height: 285px;}
+/*.curse-builder-box {min-height: 285px;}*/
 .dash-post-single-list .comment-text a,.dash-post-single-list .comment-text p {font-size: 20px;line-height: 25px;}
 .admin-dashbord .logo a img,.admin-dashbord .footer-logo a img,.admin .logo a img,.admin .footer-logo a img {width: auto;}
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover, html .ui-button.ui-state-disabled:active,.ui-state-highlight,.ui-widget-content .ui-state-highlight,.ui-widget-header .ui-state-highlight,.ui-state-hover,.ui-state-default,.ui-widget-content .ui-state-default,.ui-widget-header .ui-state-default,.ui-button,html .ui-button.ui-state-disabled:hover,html .ui-button.ui-state-disabled:active {width: 25px;height: 25px;}
@@ -624,8 +624,9 @@ body.main .logo a img, .footer-logo a img {width: 55px;}
 .pop-up-area.students .popup-body {margin-top: -280px;}
 .pop-up-area.students {min-height: 665px;}
 .curse-builder-box .notice h2 {font-size: 14px;padding: 10px 35px;}
-.curse-builder-box {min-height: 285px;margin-top: 0;padding: 20px;}
-.curse-builder-box {min-height: 285px;}
+.curse-builder-box {margin-top: 0;padding: 20px;}
+/*.curse-builder-box {min-height: 285px;}
+*/
 .curse-builder-box .notice {margin-left: 0;margin-top: -25px;left: 0;}
 .footer-page {padding: 20px 0;position: relative;text-align: center;}
 .save-button {text-align: center;margin-top: 20px;}
@@ -701,9 +702,8 @@ Mahabub media query started from here ..
 
 /* Portrait and Landscape */
 @media only screen 
-  and (min-device-width: 320px) 
-  and (max-device-width: 480px)
-  and (-webkit-min-device-pixel-ratio: 2) {
+  and (min-width: 320px) 
+  and (max-width: 480px) {
       #fb-template{
     font-size: 15px;
 }
@@ -726,16 +726,50 @@ margin-top:10px;
 	margin-top:0px;
 }
 
+.ui-widget-content{
+    width: 75%;	
+}
 
+.ui-widget-content{
+    width: 79%;	
+}
+
+
+.save-button .cu-fo-btn  {
+    color: #5f5f5f;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+    border: 1px solid #fff;
+    padding: 6px 4px;
+    background: url(/img/bg-7.png) repeat-x scroll 0 0 / auto 100%;
+    font-size: 16px;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.cu-fo h2 {
+    color: #fff;
+    margin: 0;
+    font-size: 16px;
+    margin-top: 21px;
+    padding: 5px 4px;
+    border: 1px solid #fff;
+    display: inline-block;
+}    
+
+.dropdown-toggle .cub-diamonds {
+    left: 50%;
+    top: 30px;
+    margin-left: -61px;
+}
   }
   
   /* ----------- iPhone 5 and 5S ----------- */
 
 /* Portrait and Landscape */
 @media only screen 
-  and (min-device-width: 320px) 
-  and (max-device-width: 568px)
-  and (-webkit-min-device-pixel-ratio: 2) {
+  and (min-width: 320px) 
+  and (max-width: 568px) {
 	  
 #create-training-event-button{
 margin-top:10px;
@@ -788,6 +822,7 @@ margin-top:10px;
     -webkit-transition: 0.4s;
     transition: 0.4s;
 }
+
 .padding-top-75{
     padding-top: 10px;
 }
@@ -807,4 +842,49 @@ margin-top:10px;
 .dash-post-single-list .comment-avatar {
 	top:0px;
 }
+
+.ui-widget-content{
+    width: 79%;	
+}
+
+
+.save-button .cu-fo-btn  {
+    color: #5f5f5f;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+    border: 1px solid #fff;
+    padding: 6px 4px;
+    background: url(/img/bg-7.png) repeat-x scroll 0 0 / auto 100%;
+    font-size: 16px;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.cu-fo h2 {
+    color: #fff;
+    margin: 0;
+    font-size: 16px;
+    margin-top: 21px;
+    padding: 5px 4px;
+    border: 1px solid #fff;
+    display: inline-block;
+}    
+
+.dropdown-toggle .cub-diamonds {
+    left: 50%;
+    top: 30px;
+    margin-left: -61px;
+}
+
+.curse-builder-box .notice h2 {
+    font-size: 14px;
+    padding: 10px 49px;
+}
+
+.mob-container{
+	position:relative;
+	
+	top:70px;
+}
+
 }
