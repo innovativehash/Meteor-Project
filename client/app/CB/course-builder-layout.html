@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="msapplication-config" content="/img/favicons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
-    
+
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <link rel="apple-touch-icon" sizes="180x180" href="/img/favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="/img/favicons/favicon-32x32.png" sizes="32x32">
@@ -27,19 +27,19 @@
 	<!-- <link rel="stylesheet" type="text/css" media="screen" href="https://formbuilder.online/assets/css/form-builder.min.css"> -->
 
 	<script src="/js/vendor/modernizr-2.8.3.min.js"></script>
-	
+
 <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
 <!--
 <script type="text/javascript">
 
 	window.onload = function()
 	{
-	  
+
 		CKEDITOR.replace( 'editor1',
 		  {
-		    
+
 		  }).focus();
-	
+
 	}
 </script>
 -->
@@ -65,16 +65,16 @@
         <div>
           <ul style="margin: 0;padding: 0;list-style: none;">
             <li style="display: inline-block;color: white;font-size: 18px;position: relative;">
-              <a  style="color: white;" 
-                  href="javascript:void(0)" 
+              <a  style="color: white;"
+                  href="javascript:void(0)"
                   id="cb-dashboard-page">
                 <i class="fa fa-home"></i>
                 &nbsp;&nbsp;Dashboard/
               </a>
             </li>
             <li style="display: inline-block;color: white;font-size: 18px;position: relative;">
-              <a  style="color: white;" 
-                  href="javascript:void(0)" 
+              <a  style="color: white;"
+                  href="javascript:void(0)"
                   id="cb-courses-page">
                 Courses/
               </a>
@@ -84,7 +84,7 @@
             </li>
           </ul>
         </div>
-      
+
       </div><!-- col-sm-6 -->
 
       <div class="col-sm-6">
@@ -142,7 +142,7 @@
 
   <div class="modal-dialog">
     <div class="pop-up-area students">
-      
+
       <!-- <button type          = "button"
               id            = "popup-close"
               data-dismiss  = "modal"
@@ -151,7 +151,7 @@
       <div class = "popup-body">
         <br>
         <h2>CONFIRM ACTION:</h2>
-        
+
         <form action="">
           <div class="row">
             <div class="col-sm-12" > <!-- col-sm-offset-1 -->
@@ -165,10 +165,10 @@
               <input  id    = "cb-leave-btn"
                       type  = "submit"
                       value = "Leave" />
-              
+
               <input  id    = "cb-stay-btn"
                       type  = "submit"
-                      value = "Stay" />        
+                      value = "Stay" />
             </div>
           </div>
         </form>
@@ -180,10 +180,10 @@
 <!-- /CONFIRM modal -->
 
 
-{{#if or isTeacher isAdmin}}
+{{#if orr isTeacher isAdmin isSuperAdmin }}
 
       {{> Template.dynamic template=main  }}
-     
+
 {{/if}}
 
 

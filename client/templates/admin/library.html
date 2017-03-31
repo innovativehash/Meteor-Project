@@ -16,7 +16,19 @@
             <div class="col-md-12">
 
               <div class="import-navigation">
-                  <ul>
+                    <ul>
+                    {{#if isSuperAdmin}}
+                      <li>
+                        <a href="#" id ="dashboard-page"><i class="fa fa-home"></i>
+                          dashboard
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" id= " library-page">
+                          Library
+                        </a>
+                      </li>
+                      {{else}}
                       <li>
                         <a href="#" id = "dashboard-page"><i class="fa fa-home"></i>
                           Dashboard
@@ -30,7 +42,8 @@
                       <li style = "color:blue;text-decoration:undeline;">
                         Add From Library
                       </li>
-                  </ul>
+                      {{/if}}
+                    </ul>
               </div>
               <br />
 
@@ -51,35 +64,35 @@
                 </button>
 
                 <div class = "col-sm-4 col-sm-offset-8">
-                  <select id = "search-courses" 
-                          data-placeholder="Search Courses" 
+                  <select id = "search-courses"
+                          data-placeholder="Search Courses"
                           style = "width:auto;">
                     <option></option>
-                    
+
                     {{#with courses}}
                       {{#each this}}
-                      
+
                         <option value="{{_id}}">{{name}}</option>
-                        
+
                       {{/each}}
                     {{/with}}
-                    
+
                   </select>
                 </div>
-              
+
               <!-- modal -->
               <div class="search-list assign">
-                <div  class           = "modal fade left" 
-                      id              = "myModal" 
-                      tabindex        = "-1" 
-                      role            = "dialog" 
+                <div  class           = "modal fade left"
+                      id              = "myModal"
+                      tabindex        = "-1"
+                      role            = "dialog"
                       aria-labelledby = "myModalLabel">
-                  
+
                   <div class="modal-dialog">
                     <div class="pop-up-area students">
-                      <button type          = "button" 
-                              id            = "popup-close" 
-                              data-dismiss  = "modal" 
+                      <button type          = "button"
+                              id            = "popup-close"
+                              data-dismiss  = "modal"
                               aria-label    = "Close">x</button>
                       <div class="popup-body">
                         <br>
@@ -88,17 +101,17 @@
                         <form action = "">
                           <div class = "row">
                             <div class = "col-sm-8 col-sm-offset-2">
-                            
+
                               <input  id    = ""
                                       type  = "file">
-                        
+
                             </div>
                           </div><!-- row -->
                           <br><br><br>
                           <div class = "row">
                             <div class = "col-sm-12 text-right">
-                              
-                              <input  type  = "submit" 
+
+                              <input  type  = "submit"
                                       value = "SUBMIT">
                             </div>
                           </div>
@@ -134,9 +147,9 @@
           <div class = "row">
             <div class = "col-sm-12">
 
-                <span class = "js-add-course-text" 
+                <span class = "js-add-course-text"
                       style = "margin-top:0px; color:white;font-size:36px;">
-                  
+
                 </span>
 
             </div>
@@ -148,11 +161,11 @@
               <input  class = "js-lib-cancel"
                       type  = "submit"
                       value = "CANCEL">
-                      
+
               <input  class   = "js-lib-add"
                       type    = "submit"
                       value   = "SUBMIT">
-                      
+
             </div>
           </div>
         </form>
@@ -186,7 +199,7 @@
                     <tr id = "{{_id}}">
                       <th class = "name">
                         <img src = "{{icon}}" alt="">
-                        <a  id = "{{course_id}}" 
+                        <a  id = "{{course_id}}"
                               href = "/admin/dashboard/course-viewer/{{uid}}/?course={{_id}}">
                             {{name}}
                           </a>
@@ -198,10 +211,10 @@
                         {{credits}}
                       </td>
                       <td>
-                        <button id        = "add" 
-                                data-id   = "{{_id}}" 
+                        <button id        = "add"
+                                data-id   = "{{_id}}"
                                 data-name = "{{name}}">
-                          
+
                           <img src = "/img/add.png" alt="">
                         </button>
                       </td>

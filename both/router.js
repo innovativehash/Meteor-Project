@@ -53,7 +53,7 @@ FlowRouter.route( '/post-signup', {
 FlowRouter.route( '/account-expired/', {
   name: "account-expired",
   action() {
-    BlazeLayout.render( 'plain', {main: "accountExpired"})  
+    BlazeLayout.render( 'plain', {main: "accountExpired"})
   }
 });
 
@@ -184,7 +184,7 @@ teacherRoutes.route('/dashboard/:_id', {
         FlowRouter.go( route.path );
       } else {
         FlowRouter.go( '/login' );
-      }  
+      }
   }]
 });
 
@@ -375,7 +375,6 @@ adminRoutes.route('/dashboard/degree-cert-edit/:_id', {
 });
 
 
-
 /**
  * ADMIN ASSIGN COURSES
  */
@@ -451,15 +450,138 @@ adminRoutes.route('/dashboard/students/import-csv/:_id', {
     BlazeLayout.render('adminDashboardLayout', {main: "importCV"})
 });
 
-/**
- * SUPER ADMIN
- */
-adminRoutes.route( '/dashboard/super-admin/:_id', {
+
+
+
+/**************************************
+ * SUPER ADMIN ROUTES
+ **************************************/
+
+/* SUPER ADMIN ROUTE GROUP */
+let superAdminRoutes = FlowRouter.group({
+  prefix: '/super-admin',
   name: 'super-admin',
-  action: () => {
-    BlazeLayout.render( 'adminDashboardLayout', {main: "superAdmin"});
+  triggersEnter: [function( context, redirect ) {
+
+  }]
+});
+
+/* SUPER ADMIN DASHBOARD */
+superAdminRoutes.route( '/dashboard/:_id', {
+  name: 'super-admin-dashboard',
+  action: () =>
+    BlazeLayout.render( 'superAdminLayout', {main: "superAdminDashboard"} ),
+  triggersEnter: [function( context, redirect ) {
+      let route = FlowRouter.current();
+      if ( Meteor.userId() ) {
+        FlowRouter.go( route.path );
+      } else {
+        FlowRouter.go( '/login' );
+      }
+  }]
+});
+
+/* SUPER ADMIN CUSTOMERS */
+superAdminRoutes.route('/dashboard/customers/:_id', {
+  name: "super-admin-customers",
+  action: ( params, queryParams ) =>
+    BlazeLayout.render( 'superAdminLayout', {main: "superAdminCustomers"})
+});
+
+
+/* SUPDER ADMIN LIBRARY */
+superAdminRoutes.route('/dashboard/library/:_id', {
+  name: 'super-admin-library',
+  action: () =>
+    BlazeLayout.render('superAdminLayout', {main: "library"})
+});
+
+
+/**
+ * SUPER ADMIN ANALYTICS
+ */
+superAdminRoutes.route('/dashboard/analytics/:_id', {
+   name: 'super-admin-analytics',
+   action: () =>
+    BlazeLayout.render( 'superAdminLayout', {main: 'analytics'})
+ });
+
+/*
+ * SUPER ADMIN MENU
+ */
+superAdminRoutes.route('/dashboard/super-admin-menu/:_id', {
+    name: 'super-admin-menu',
+    action: () =>
+      BlazeLayout.render( 'superAdminLayout', {main: 'superAdmin' })
+});
+
+
+/* SUPER ADMIN COURSE-BUILDER */
+superAdminRoutes.route('/dashboard/course-builder/:_id', {
+  name: 'super-admin-course-builder',
+  action: () =>
+    BlazeLayout.render( 'courseBuilderLayout', {main:"courseBuilderPage"})
+});
+
+
+/*
+ * SUPER ADMIN COURSE-VIEWER
+ */
+superAdminRoutes.route('/dashboard/course-viewer/:_id', {
+  name: 'super-admin-course-viewer',
+  action: (params, queryParams) => {
+        console.log("Params:", params);
+        console.log("Query Params:", queryParams);
+    BlazeLayout.render( 'courseViewerLayout', {main:"courseView"});
   }
 });
+
+/* SUPER ADMIN TEST-CREATOR */
+
+superAdminRoutes.route('/dashboard/test-creator/:_id', {
+  name: 'super-admin-test-creator',
+  action: () =>
+    BlazeLayout.render( 'courseBuilderLayout', {main:"adminTestCreator"})
+});
+
+
+/**
+ * SUPER ADMIN DEGREES & CERTS GROUP
+ */
+
+/* SUPER ADMIN DEGREES & CERTIFICATIONS */
+superAdminRoutes.route('/dashboard/degrees-and-certifications/:_id', {
+  name: 'super-admin-degrees-and-certs',
+  action: () =>
+    BlazeLayout.render( 'superAdminLayout', {main: "degreeCertificate"})
+});
+
+/* SUPER ADMIN DEGREES */
+superAdminRoutes.route('/dashboard/degrees-and-certifications/degrees/:_id', {
+  name: 'super-admin-degrees',
+  action: () =>
+    BlazeLayout.render( 'superAdminLayout', {main: "degrees"})
+});
+
+/* SUPER ADMIN CERTIFICATIONS */
+superAdminRoutes.route('/dashboard/degrees-and-certifications/certifications/:_id', {
+  name: 'super-admin-certifications',
+  action: () =>
+    BlazeLayout.render( 'superAdminLayout', {main: "certs"})
+});
+
+/* SUPER ADMIN DEEGREE CERT EDIT */
+superAdminRoutes.route('/dashboard/degree-cert-edit/:_id', {
+  name: 'super-admin-degree-cert-edit',
+  action: (params, queryParams) => {
+    //console.log("Params:", params);
+    //console.log("Query Params:", queryParams);
+    BlazeLayout.render( 'superAdminLayout', {main: "degreeCertEdit"})
+  }
+});
+
+
+
 
 
 /**
@@ -474,15 +596,15 @@ FlowRouter.route( '/verify-email/:token', {
         console.log( error.message );
         console.log( error );
       } else {
-        
+
         //console.log( params.token );
         //console.log(Meteor.user().emails[0].verified)
         //console.log( Meteor.userId() );
 
         Bert.alert( 'Email verified! Thanks!', 'success' );
-      
+
         FlowRouter.go( 'admin-dashboard',   { _id: Meteor.userId() });
-      
+
       }
     });
   }

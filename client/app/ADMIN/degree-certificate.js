@@ -93,11 +93,28 @@ Template.degreeCertificate.events({
    */
   'click .js-degree'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     //console.log( UI._parentData() );
     //t.currentScreen.set("degree");
-    FlowRouter.go( 'admin-degrees', { _id: Meteor.userId() });
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.admin
+       )
+    {
+      FlowRouter.go( 'admin-degrees', { _id: Meteor.userId() });
+      return;
+
+    } else
+      if (
+          Meteor.user() &&
+          Meteor.user().roles &&
+          Meteor.user().roles.SuperAdmin
+         )
+    {
+      FlowRouter.go( 'super-admin-degrees', { _id: Meteor.userId() });
+      return;
+    }
 //-------------------------------------------------------------------
   },
 
@@ -107,9 +124,25 @@ Template.degreeCertificate.events({
    */
   'click .js-certificate'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
-    FlowRouter.go( 'admin-certifications', { _id: Meteor.userId() });
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.admin
+       )
+    {
+      FlowRouter.go( 'admin-certifications', { _id: Meteor.userId() });
+      return;
+    } else
+      if (
+          Meteor.user() &&
+          Meteor.user().roles &&
+          Meteor.user().roles.SuperAdmin
+         )
+    {
+      FlowRouter.go( 'super-admin-certifications', { _id: Meteor.userId() });
+      return;
+    }
 //-------------------------------------------------------------------
   },
 
@@ -119,7 +152,6 @@ Template.degreeCertificate.events({
    */
   'change #search-cert-deg'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     let idx = $( e.currentTarget ).val();
     $( 'tr' ).css( 'border', '' );
@@ -136,16 +168,15 @@ Template.degreeCertificate.events({
    */
   'click .js-edit'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     //$( '#edit-degree-cert' ).modal();
-    
+
      /* OPEN EDIT DIALOG */
       let idx   = $( e.currentTarget ).data( 'id' )
         , type  = $( e.currentTarget ).data( 'type' );
           //db    = undefined;
-          
-/*      
+
+/*
       switch( type ) {
         case "certificate":
           db = Certifications.findOne({ _id:idx },{ "name":1, "credits":1 } );
@@ -155,7 +186,7 @@ Template.degreeCertificate.events({
           break;
       }
 */
-  
+
   let params = {_id: Meteor.userId() };
   let queryParams = {dorc: type, id: idx};
   FlowRouter.go( 'degree-cert-edit', params,  queryParams );
@@ -169,21 +200,20 @@ Template.degreeCertificate.events({
    */
   'click .js-delete'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     /* ARE YOU SURE YOU WANT TO DELETE... */
     let idx = $( e.currentTarget ).data( 'id' )
       , nm  = $( e.currentTarget ).data( 'name' )
       , type = this.type;
-    
+
     $( '#delete-dta' ).data('id', idx); //attr('data-id', idx );
     $( '#delete-dta' ).data('type', type); //attr('data-type', type );
     $( '#degree-cert-delete-type' ).text( `${type}` );
 
     $( '#delete-degree-cert' ).modal();
-    
+
     $( '#degree-cert-delete-text' ).text( `${nm}` );
-    
+
     //maybe some logic to remove this course from students currently taking it?
 
 //-------------------------------------------------------------------
@@ -195,11 +225,11 @@ Template.degreeCertificate.events({
    */
   'click #degree-cert-delete-cancel'( e, t ) {
     e.preventDefault();
-    
+
     $( '#delete-degree-cert' ).modal('hide');
   },
-  
-  
+
+
   /*
    * #DEGREE-CERT-DELETE-SUBMIT
    */
@@ -220,20 +250,36 @@ Template.degreeCertificate.events({
     }
     let str = type.slice(0,type.length-1);
     Bert.alert(`${str} has successfully been deleted`, 'success');
-    
+
     $( '#delete-degree-cert' ).modal('hide');
   },
-  
-  
-  
+
+
+
   /*
    * #DASHBOARD-PAGE  ::(CLICK)::
    */
   'click #dashboard-page'( e, t ) {
     e.preventDefault()
-    e.stopImmediatePropagation();
 
-    FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+    if (
+        Meteor.user() &&
+        Meteor.user().roles &&
+        Meteor.user().roles.admin
+       )
+    {
+      FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+      return;
+    } else
+        if (
+            Meteor.user() &&
+            Meteor.user().roles &&
+            Meteor.user().roles.SuperAdmin
+           )
+    {
+      FlowRouter.go( 'super-admin-dashboard', { _id: Meteor.userId() });
+      return;
+    }
 //-------------------------------------------------------------------
   },
 });
