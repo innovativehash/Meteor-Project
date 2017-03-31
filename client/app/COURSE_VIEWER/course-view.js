@@ -57,7 +57,7 @@ Template.courseView.onRendered( function() {
 
     this.autorun(function() { //self
       try {
-       let bc = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" )}).fetch();
+       let bc= BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" )}).fetch();
        let pg_num  = Template.instance().page.get();
 
        Template.instance().total.set( bc[0] && bc[0].pages && bc[0].pages.length );
@@ -91,9 +91,8 @@ Template.courseView.onRendered( function() {
               $( '#fb-template' ).show();
 
               if ( bc[0].pages[i].type == 'test' ) {
-
+console.log('in test');
                 Session.set('test', bc[0].pages[i].id );
-
                 $( '#fb-template' ).hide();
                 $( '#fb-template' ).empty();
                 $( '#test_v' ).show();
@@ -133,16 +132,20 @@ Template.courseView.onRendered( function() {
         } else {
             o.push(bc[0].pages );
         }
+console.log('--o------');
+console.log(o);
+console.log('----o----');
         $('#fb-template').empty();
         rtn_arr = handlePrevious( o );
 
         let funcs = rtn_arr[1];
-
+console.log( rtn_arr[0] );
         //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
         $('#fb-template').append( rtn_arr[0] );
 
         //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
         for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
+console.log( funcs[i] );
           eval( funcs[i] );
         }
 
@@ -170,7 +173,7 @@ Template.courseView.helpers({
       return;
     }
   },
-
+  
   course: () => {
     //
     //  THIS IS JUST HERE TO "CALL" THE ONRENDERED AUTORUN FUNCTION
@@ -218,7 +221,7 @@ Template.courseView.events({
   'click #cv-logout': function( e, t ) {
     e.preventDefault();
 
-    Session.set('Scratch', null);
+    Session.set('Scratch', '');
 
     Meteor.logout();
     FlowRouter.go( '/login' );
@@ -232,37 +235,16 @@ Template.courseView.events({
   'click #course-view-page-back'( e, t ) {
     e.preventDefault();
 
-    Session.set('Scratch', null);
+    Session.set('Scratch', '');
 
-    if (
-        Meteor.user() &&
-        Meteor.user().roles &&
-        Meteor.user().roles.teacher
-       )
-    {
+    if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-      return;
-
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.admin
-              )
-    {
+    } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin ) {
       FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
-      return;
-
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.student
-              )
-    {
-
+      console.log('in admin');
+    } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
-      return;
     }
-
     return;
 //-------------------------------------------------------------------
   },
@@ -274,34 +256,14 @@ Template.courseView.events({
   'click #cv-dashboard-link'( e, t ) {
       e.preventDefault();
 
-      Session.set('Scratch', null);
+      Session.set('Scratch', '');
 
-      if (
-          Meteor.user() &&
-          Meteor.user().roles &&
-          Meteor.user().roles.teacher
-         )
-      {
+      if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
         FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
-        return;
-
-      } else if (
-                  Meteor.user() &&
-                  Meteor.user().roles &&
-                  Meteor.user().roles.admin
-                )
-      {
+      } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
         FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
-        return;
-
-      } else if (
-                  Meteor.user() &&
-                  Meteor.user().roles &&
-                  Meteor.user().roles.student
-                )
-      {
+      } else if ( Meteor.user().roles && Meteor.user().roles.student ) {
         FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
-        return;
       }
       //$( '#course-view-page-back' ).click();
       return;
@@ -315,34 +277,14 @@ Template.courseView.events({
   'click #cv-courses-link'( e, t ) {
     e.preventDefault();
 
-    Session.set('Scratch', null);
+    Session.set('Scratch', '');
 
-    if (
-        Meteor.user() &&
-        Meteor.user().roles &&
-        Meteor.user().roles.teacher
-       )
-    {
+    if ( Meteor.user().roles.teacher ) {
       FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
-      return;
-
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.admin
-              )
-    {
+    } else if ( Meteor.user().roles.admin ) {
       FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
-      return;
-
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.student
-              )
-    {
+    } else if ( Meteor.user().roles.student ) {
       FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
-      return;
     }
 //-------------------------------------------------------------------
   },
