@@ -742,7 +742,7 @@ Template.courseBuilderPage.onRendered( function() {
     }
 
   }, 0);
-  
+
 /*
   window.addEventListener( "beforeunload", function() {
     console.log( "Close web socket" );
@@ -1481,11 +1481,10 @@ let pobj = P.dump();
       $( '.js-cb-text-delete' ).hide();
 
       //IE #txt-0
-      let currentItem = $( '#cb-current' ).val()
-        , text        = $( `#${currentItem}` ).text().trim()
+      let currentItem = t.$( '#cb-current' ).val()
+        , text        = t.$( `#${currentItem}` ).text().trim()
         , config      = {};
 
-      $( `#${currentItem}` ).attr('data-editing', true);
       $( `#${currentItem}` ).hide();
 
       editor = CKEDITOR.appendTo( 'editor1', config, text );
@@ -1495,7 +1494,7 @@ let pobj = P.dump();
 
       //$('#cb-text-toolbar').show()
 
-      currentItem = null;
+      //currentItem = null;
 
  },
 //---------------------------------------------------------
@@ -1511,18 +1510,21 @@ let pobj = P.dump();
    let cur = $('#cb-current').val()
     , txt = editor && editor.getData(); //CKEDITOR.instances.editor.getData();
 
+    txt = $(txt).text();
+
 	 //DON'T ACCEPT EMPTY INPUT
 	 if ( txt == '' || txt == undefined || txt == null || (! txt.replace(/\s/g, '').length) ) {
 	   Bert.alert('You must enter text to be saved', 'danger');
 	   return;
 	 }
 
-   if ( $( `#${cur}` ).attr('data-editing') ) {
+   if ( cur != '' ) {
     let idx = P.indexOf( `${cur}` )
-      , pos = $( `#${cur}` ).offset();
+      , tp = $( `#${cur}` ).css('top')
+      , l = $( `#${cur}` ).css('left')
+      , pos = { top: tp, left: l } ;
 
     P.removeAt( idx );
-
     P.insert( idx, {
       page_no:        t.page.get(),
       type:           'text',
@@ -1539,15 +1541,20 @@ let pobj = P.dump();
     });
     P.print();
 
-	  editor && editor.destroy();
-		editor = null;
+	  //editor && editor.destroy();
+		//editor = null;
 
 		$('#cb-text-toolbar').hide();
 
-    $( `#${cur}` ).attr('data-editing', false);
-    $( `#${cur} p` ).remove();
-    $( `#${cur}` ).append( txt );
+    //$( `#${cur}` ).remove();
+    //$( `#${cur}` ).append( txt );
+    $( `#${cur}` ).text('');
+    $( `#${cur}` ).text(txt.trim());
     $( `#${cur}` ).show();
+
+    editor && editor.destroy();
+		editor = null;
+
 		return;
    } else {
 
@@ -2214,4 +2221,13 @@ function addVideo() {
                     );
                     //.effect( "highlight", {}, 2000 );
                     //.css( 'border', '1px dashed grey' );
+}
+
+function escapeHtml(str) {
+    return str
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
 }

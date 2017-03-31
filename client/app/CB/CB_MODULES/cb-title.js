@@ -50,7 +50,7 @@
       P.removeAt( idx );
       P.insert( idx, {
                         page_no:  t.page.get(),
-                        id:       `${cur}`,
+                        id:       cur,
                         type:     'title',
                         text:     t.$(`#${cur}`).text().trim(),
                         offset:   pos,
