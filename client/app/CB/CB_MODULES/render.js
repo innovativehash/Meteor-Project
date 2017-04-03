@@ -18,6 +18,7 @@ export function render( e, t, arr, P ) {
       }  else {
         $('#test_v').hide();
         $('#fb-template').show();
+        Session.set('Scratch', null);
       }
     }
 
@@ -26,6 +27,7 @@ export function render( e, t, arr, P ) {
 
     //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
     $('#fb-template').append( rtn_arr[0] );
+    
 
     //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
     for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
@@ -67,20 +69,19 @@ export function render( e, t, arr, P ) {
                                   type:     'title',
                                   text:     $( `#${arr[i].id}` ).text().trim(),
                                   offset:   $( `#${arr[i].id}` ).offset(),
-                                  zIndex:           $( `#${arr[i].id}` ).css('z-index'),
-                                  fontSize:         $( `#${arr[i].id}` ).css('font-size'),
-                                  border:           $( `#${arr[i].id}` ).css('border'),
-                                  fontWeight:       $( `#${arr[i].id}` ).css('font-weight'),
-                                  fontStyle:        $( `#${arr[i].id}` ).css('font-style'),
-                                  textDecoration:   $( `#${arr[i].id}` ).css('text-decoration'),
-                                  opacity:          $( `#${arr[i].id}` ).css('opacity')
+                                  zIndex:           $( `#${arr[i].id}` ).css('z-index') || 0,
+                                  fontSize:         $( `#${arr[i].id}` ).css('font-size') || 16,
+                                  border:           $( `#${arr[i].id}` ).css('border') || '',
+                                  fontWeight:       $( `#${arr[i].id}` ).css('font-weight') || '',
+                                  fontStyle:        $( `#${arr[i].id}` ).css('font-style') || '',
+                                  textDecoration:   $( `#${arr[i].id}` ).css('text-decoration') || '',
+                                  opacity:          $( `#${arr[i].id}` ).css('opacity') || 1
                               });
                   })
               );
         } else
   //TEXT
             if ( arr[i].type == 'text' ) {
-             //for ( let j = 0, jlen = o.length; j < jlen; j++ ) {
 
                 eval(
                       $( `#${arr[i].id}` ).on( "mouseup", function(){
@@ -103,7 +104,7 @@ export function render( e, t, arr, P ) {
                 eval(
                       $( `#${arr[i].id}` ).on( "dragstop", function( event, ui ) {
                         let idx = P.indexOf( `${arr[i].id}` );
-
+                        
                         P.removeAt( idx );
                         P.insert( idx, {
                                       page_no:  t.page.get(),
@@ -111,27 +112,25 @@ export function render( e, t, arr, P ) {
                                       type:     'text',
                                       text:     $( `#${arr[i].id}` ).text().trim(),
                                       offset:   $( `#${arr[i].id}` ).offset(),
-                                      zIndex:           $( `#${arr[i].id}` ).css('z-index'),
-                                      fontSize:         $( `#${arr[i].id}` ).css('font-size'),
-                                      border:           $( `#${arr[i].id}` ).css('border'),
-                                      fontWeight:       $( `#${arr[i].id}` ).css('font-weight'),
-                                      fontStyle:        $( `#${arr[i].id}` ).css('font-style'),
-                                      textDecoration:   $( `#${arr[i].id}` ).css('text-decoration'),
-                                      opacity:          $( `#${arr[i].id}` ).css('opacity')
+                                      zIndex:           $( `#${arr[i].id}` ).css('z-index') || 0,
+                                      fontSize:         $( `#${arr[i].id}` ).css('font-size') || 16,
+                                      border:           $( `#${arr[i].id}` ).css('border') || '',
+                                      fontWeight:       $( `#${arr[i].id}` ).css('font-weight') || '',
+                                      fontStyle:        $( `#${arr[i].id}` ).css('font-style') || '',
+                                      textDecoration:   $( `#${arr[i].id}` ).css('text-decoration') || '',
+                                      opacity:          $( `#${arr[i].id}` ).css('opacity') || ''
                                   });
                       })
                   );
         } else
   //IMAGES
             if ( arr[i].type == 'image' ) {
-
-                  if ( arr[i].dwidth == null ) {
+                  if ( arr[i].width == null ) {
                     continue;
                   }
                   eval(
                         $( `#${arr[i].id}` ).on( "mouseup", function(){
                           e.preventDefault();
-
                           //SHOW RELATED EDITING TOOLBAR
                           $( '#cb-text-toolbar'  ).hide();
                           $( '#cb-title-toolbar' ).hide();
@@ -141,25 +140,22 @@ export function render( e, t, arr, P ) {
                           // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR
                           //R/O HIDDEN FIELD
                           t.$( '#cb-current' ).val( `${arr[i].id}` );
-
                         })
                     );
                   eval(
                         $( `#${arr[i].id}` ).on( "dragstop", function( event, ui ) {
-                          let idx = P.indexOf( `${arr[i].id}` );
+                          let idx = P.indexOf( `${arr[i].id}` )
+                            , src = t.$( `#${arr[i].id}` ).css('background-image');
                           P.removeAt( idx );
                           P.insert( idx, {
                                         page_no:  t.page.get(),
                                         id:       `${arr[i].id}`,
                                         type:     'image',
-                                        iid:      `${arr[i].iid}`,
                                         offset:   $( `#${arr[i].id}` ).offset(),
                                         zIndex:   $( `#${arr[i].id}` ).css('z-index'),
-                                        iwidth:   $( `#${arr[i].iid}` ).width(),
-                                        iheight:  $( `#${arr[i].iid}` ).height(),
-                                        dwidth:   $( `#${arr[i].id}` ).width(),
-                                        dheight:  $( `#${arr[i].id}` ).height(),
-                                        src:      `${arr[i].src}`,
+                                        width:    $( `#${arr[i].id}` ).width(),
+                                        height:   $( `#${arr[i].id}` ).height(),
+                                        src:      rmvQuotes( src ),
                                         opacity:  $( `#${arr[i].id}` ).css('opacity')
                                     });
                         })
@@ -179,9 +175,6 @@ export function render( e, t, arr, P ) {
       , cd                            //RENDERING CLASS INSTANCE
       , mark_up = '';                 //RENDERED MARKUP RETURN VARIABLE
 
-
-    //if ( p.length == 0 ) return;
-
     //CREATE INSTANCE OF CBCreateDOM CLASS
     cd        = new CBCreateDOM.CreateDOM( o );
 
@@ -195,3 +188,8 @@ export function render( e, t, arr, P ) {
     return [ mark_up, funcs ];
 
  }
+
+function rmvQuotes( str ) {
+  return str
+      .replace(/"/g, '');
+}

@@ -80,16 +80,16 @@
 
     P.removeAt( idx );
 
-    pp.update( { _id: Session.get('my_id') },
-          { $pull: { objects:{ id:{$eq: cur} } }});
-
     t.$( `#${cur}` ).remove();
     t.$( '#cb-current' ).val('');
 
     t.$( '#cb-title-toolbar' ).hide();
 
+    pp.update( { _id: Session.get('my_id') },
+          { $pull: { objects:{ id:{$eq: cur} } }});
+          
     P.print();
-    pp.find({}).fetch();
+    console.log( pp.find({}).fetch() );
 //----------------------------------------------------------
   }
 

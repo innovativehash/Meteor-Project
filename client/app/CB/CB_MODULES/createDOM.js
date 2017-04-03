@@ -15,7 +15,7 @@ export class CreateDOM {
     this.markup = [];
   }
   makeTitle( obj ){
-    this.titles.push(`<span id="${obj.id}" style="cursor:move;position:relative;font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
+    this.titles.push(`<span id="${obj.id}" style="cursor:move;position:relative;top:${obj.offset.top};left:${obj.offset.left};font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
@@ -23,19 +23,36 @@ export class CreateDOM {
 
   }
   makeText( obj ){
-    this.texts.push(`<span id="${obj.id}" style="cursor:move;position:relative;font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
+    try {
+      if ( obj && obj.offset == undefined ) {
+        obj.offset = $(`#${obj.id}`).offset()
+      }
+    } catch (e) {
+        obj.offset = $(`#${obj.id}`).offset();
+    }
+    this.texts.push(`<span id="${obj.id}" style="cursor:move;position:relative;top:${obj.offset.top};left:${obj.offset.left};font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
                     );
   }
+
   makeImage( obj ) {
-    this.images.push( `<div id="${obj.id}" data-img_lnk="${obj.img_lnk}" class="ui-widget" style="position:relative;cursor:move;text-align: center; width:${obj.dwidth}px;height:${obj.dheight}px;border: 4px solid #eeepadding 10px; float: left; margin: 0 auto;box-shadow:5px 5px 5px #888;opacity:${obj.opacity}"><img id="${obj.iid}" src="${obj.src}" style="position:relative;width:${obj.iwidth}px;height:${obj.iheight}px;"></div>`);
+    this.images.push( `<div id="frameBorder" style="position:absolute;">
+                        <div id="draggableHelper" style="display:inline-block;">
+                       <div id="${obj.id}" style="width: ${obj.width}px;
+                                                  height: ${obj.height}px;
+                                                  border: 1px solid #d3d3d3;
+                                                  background-size: 100% 100%;
+                                                  background-image: ${obj.src};
+                                                  zIndex: ${obj.zIndex}">
+                            </div>
+                          </div>
+                       </div>`);
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
-                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
-                      `$('#${obj.id}').resizable({ handles: "all", autoHide: false, aspectRatio: true, alsoResize: "#${obj.iid}", containment: "#fb-template" });`,
-                      `$('#${obj.iid}').resizable();`
+                      `$('#draggableHelper').draggable({ containment: "#fb-template", scroll: false });`,
+                      `$('#${obj.id}').resizable({ autoHide: false, aspectRatio: true, containment: "#fb-template" });`
                     );
 
   }

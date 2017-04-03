@@ -4,7 +4,7 @@
  * @programmer Nick Sardo <nsardo@aol.com>
  * @copyright  2016-2017 Collective Innovations
  */
- 
+
    /********************************************************
    * #CB-IMAGE-SAVE  ::(CLICK)::
    *******************************************************/
@@ -49,9 +49,15 @@
 
     let fil   = t.$( '#course-builder-image' )[0].files
 	    , sf    = t.$( '#course-builder-image' ).data('subfolder')
-	    , obj;
-
-console.log(sf);
+	    , obj
+      , img_id
+			, ref_img = document.getElementById('ref_img')
+      , id
+      , idx
+      , src
+      , pos
+      , files
+      , path;
 
   	if ( fil.length == 0 ) {
   	  Bert.alert('You must upload an image before you can save', 'danger');
@@ -64,17 +70,13 @@ console.log(sf);
 		S3.upload(
 		          {
         				files:  fil,      //files,
-        				path:   sf  //"subfolder"
+        				path:   sf        //"subfolder"
 			        },
 			        
 			        function( error, result ){
-console.log('enter callback');
 
-				        let img_id = result.secure_url;
-				        
                 if ( error ) throw error;
 
-console.log(img_id);
 				        a_img_id = Images.insert({
                         				          loaded:           result.loaded,
                         				          percent_uploaded: result.percent_uploaded,
@@ -87,64 +89,50 @@ console.log(img_id);
                         				          file:             result.file,
                         				          created_at:       moment().format()
 				                                });
-console.log( result.file );
 
-                obj = `<div id="ig-${master_num}" 
-                            style="cursor:move;max-width:40%;max-height:40%">
-                        <img  id="im-${master_num}" 
-                              src="${img_id}"
-                              style="margin:0 auto;
-                              z-index:10;
-                              width:200px;
-                              height:200px; 
-                              max-width:100%;
-                              max-height:100%;
-                              position:relative; 
-                              display:block;">
-                      </div>`;
-                     
-                  t.$( '#fb-template' ).append( obj );
+                img_id = result.secure_url;
+                //style="width:400px;height:400px;"
+                  $('#fb-template').append( `<div id="frameBorder" style="position: absolute;
+                                                                          z-index: 0;">
+                      <div id="draggableHelper" style="display:inline-block;">
+                        <div id="ig-${master_num}"
+                             style="width: 100px;
+                                    height: 100px;
+                                    border: 1px solid #d3d3d3;
+                                    background-size: 100% 100%;
+                                    background-image: url(${img_id});">
+                          </div>
+                        </div>
+                      </div>` );
 
-                  $( `#ig-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
-                  
+                  $( '#draggableHelper' ).draggable({ containment: "#fb-template", scroll: false });
                   $( `#ig-${master_num}` ).resizable({ 
-                    handles: "all", 
                     autoHide: false,
                     aspectRatio: true,
-                    alsoResize: `#im-${master_num}`,
                     containment: "#fb-template"
                   });
-                  
-                  $( `#im-${master_num}` ).resizable();
-                  
-              
-                  //$( `#ig-${master_num}` ).attr( 'data-pid', `${Session.get('my_id')}` );
-                    //console.log( $( `#ig-${master_num}` ).data('pid'));
 
                   P.append({
-                            page_no:          page_no,
-                            type:             'image',
-                            id:               `ig-${master_num}`,
-                            iid:              `im-${master_num}`,
-                            img_lnk:          a_img_id,
-                            offset:           $(`#ig-${master_num}`).offset(),
-                            iwidth:           $(`#im-${master_num}`).width(),
-                            iheight:          $(`#im-${master_num}`).height(),
-                            opacity:          $(`#ig-${master_num}`).css('opacity'),
-                            dwidth:           $(`#ig-${master_num}`).width(),
-                            dheight:          $(`#ig-${master_num}`).height(),
-                            src:              img_id         
+                            page_no:         page_no,
+                            type:            'image',
+                            id:              `ig-${master_num}`,
+                            img_lnk:         a_img_id,
+                            offset:          $( `#ig-${master_num}` ).offset(),
+                            width:           $( `#ig-${master_num}` ).width(),
+                            height:          $( `#ig-${master_num}` ).height(),
+                            opacity:         $( `#ig-${master_num}` ).css('opacity'),
+                            zIndex:          $( `#ig-${master_num}` ).css('z-index'),
+                            src:             rmvQuotes( img_id )         
                   });
-                  
 
-                  
+                  //$( '#ref_img' ).attr('src', null );
+                 
                   (function( master_num ){
-              
-                    //document.getElementById( `ig-${master_num}` ).onmouseup =  (e) => {
+            
                     $( `#ig-${master_num}` ).on("mouseup", function(){
-                      
                       e.preventDefault();
-                    
+                  
+    console.log('clk');
                     //SHOW MEDIA TOOLBAR
                     $( '#cb-video-toolbar').hide();
                     $( '#cb-title-toolbar' ).hide();
@@ -153,44 +141,38 @@ console.log( result.file );
                     
                     t.$( '#cb-current' ).val( `ig-${master_num}` );
                     
-                    let pos = $( `#ig-${master_num}` ).offset()
-                      , src = $( `#im-${master_num}` ).attr('src')
-                      , id  = `ig-${master_num}`
-                      , idx = P.indexOf( `ig-${master_num}` );
+                    pos = t.$( `#ig-${master_num}` ).offset()
+                  , src = t.$( `#ig-${master_num}` ).css('background-image')
+                  , id  = `ig-${master_num}`
+                  , idx = P.indexOf( `ig-${master_num}` );
                       
                     //P.remove( `ig-${master_num}` );
                     P.removeAt( idx );
                     P.insert( idx, {
-                                  page_no:          page_no,
-                                  type:             'image',
-                                  id:               `ig-${master_num}`,
-                                  iid:              `im-${master_num}`,
-                                  img_lnk:          a_img_id,
-                                  offset:           $(`#ig-${master_num}`).offset(),
-                                  iwidth:           $(`#im-${master_num}`).width(),
-                                  iheight:          $(`#im-${master_num}`).height(),
-                                  opacity:          $(`#ig-${master_num}`).css('opacity'),
-                                  dwidth:           $(`#ig-${master_num}`).width(),
-                                  dheight:          $(`#ig-${master_num}`).height(),
-                                  src:              $(`#im-${master_num}`).attr('src') 
+                                  page_no:         page_no,
+                                  type:            'image',
+                                  id:              `ig-${master_num}`,
+                                  img_lnk:         a_img_id,
+                                  offset:          $(`#ig-${master_num}`).offset(),
+                                  opacity:         $(`#ig-${master_num}`).css('opacity'),
+                                  width:           $(`#ig-${master_num}`).width(),
+                                  height:          $(`#ig-${master_num}`).height(),
+                                  zIndex:          $( `#ig-${master_num}` ).css('z-index'),
+                                  src:             rmvQuotes( src )
                     });
-              
                   }); //onmouseup
+                })( master_num );//anon func
             
-                })( master_num );
-            
-                  ig  = null;
+                  itype = null;
                   ext = null;
                   $( '#preview-image' ).attr( 'src', null );
                   t.$( '#add-image' ).modal( 'hide' );
-P.print();
                   t.$( '#course-builder-image' ).val('');
-		         }
-		);
-		
-    //$(`#im-${master_num}`).attr('src') 
-
+		});//s3
 //---------------------------------------------------------
-	}
-  
- 
+}
+
+function rmvQuotes( str ) {
+  return str
+      .replace(/"/g, '');
+}

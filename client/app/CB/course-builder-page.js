@@ -179,6 +179,7 @@ Template.courseBuilderPage.onCreated( function() {
               $( '#fb-template' ).hide();
               $( '#cb-next-btn' ).prop('disabled', true );
               $( '#cb-prev-btn' ).prop('disabled', true );
+
 			       editor = CKEDITOR.appendTo( 'editor1', config, html );
               //addText( evt.pageX, evt.pageY );
               break;
@@ -730,12 +731,16 @@ Template.courseBuilderPage.events({
     $( '#cb-media-toolbar' ).hide();
     $( '#cb-title-toolbar' ).hide();
     $( '#cb-video-toolbar' ).hide();
+
+    $('#cb-current').val(null);
+
     let p   = t.page.get()
       , tt  = t.total.get()
       , chk = P.dumpPage(p);
     if ( chk == undefined ) return;
-    $('#fb-template').empty().show();
-    $('#test_v').hide();
+    $('#fb-template').empty();
+    $('#test_v').empty().hide();
+
     if ( p < tt ) {
       p++;
       t.page.set( p );
@@ -743,20 +748,12 @@ Template.courseBuilderPage.events({
       Render.render( e, t, arr, P );
       return;
     } else {
-      //let key = `page_${p}`
-        //, insertion = {};
-      //insertion[key] = P.dumpPage(p);
-      /*
-      pp.update({ _id: Session.get('my_id') },
-                {$push:
-                  { pages: P.dumpPage(p) }
-                });
-      */
       try {
         let arr = P.dumpPage( p );
         if ( p == tt && arr.length == 0 ){
           return;
         } else {
+          $('#fb-template').empty();
           t.page.set( p + 1 );
           t.total.set( p + 1 );
             return;
@@ -778,6 +775,11 @@ Template.courseBuilderPage.events({
     $( '#cb-media-toolbar' ).hide();
     $( '#cb-title-toolbar' ).hide();
     $( '#cb-video-toolbar' ).hide();
+
+    $('#cb-current').val(null);
+    $( '#fb-template' ).empty();
+    $( '#frameBorder' ).remove();
+    
     let p = t.page.get();
     if ( p <= 1 ) {
       p = 1;
@@ -785,7 +787,6 @@ Template.courseBuilderPage.events({
       p -= 1;
     }
     t.page.set( p );
-    $( '#fb-template' ).empty();
     let arr = P.dumpPage(p);
     Render.render( e, t, arr, P );
   },
@@ -971,7 +972,7 @@ Template.courseBuilderPage.events({
         }
       } catch( e ) {
         console.log( e );
-        console.log( 'cb lineno: 983' );
+        console.log( 'cb lineno: 974' );
       }
     }, 500);
 //---------------------------------------------------------
@@ -1020,21 +1021,10 @@ Template.courseBuilderPage.events({
   'click #cb-save'( e, t ) {
     e.preventDefault();
     t.$( '#intro-modal' ).modal( 'hide' );
-// CHECK THAT THERE'S CONTENT
-/*
-    if (
-        t.page.get() === 1
-       )
-    {
-          Bert.alert(
-                      'There is no content!',
-                      'danger',
-                      'fixed-top',
-                      'fa-frown-o'
-                    );
-          return;
-    }
-*/
+
+    // CHECK THAT THERE'S CONTENT
+
+
     let uname = Students.findOne( { _id: Meteor.userId() },
                                   { fullName:1 } ).fullName
       //, uid   = Meteor.userId()
@@ -1141,10 +1131,10 @@ let pobj = P.dump();
       FlowRouter.go( 'super-admin-dashboard', { _id: Meteor.userId() });
       return;
     }
-    //Template.instance().page.set( 1 );
-    //Template.instance().total.set( 1 );
 //---------------------------------------------/SAVE COURSE-------
   },
+
+
   /********************************************************
    * #ADDED-TITLE  ::(BLUR)::
    *******************************************************/
@@ -1157,7 +1147,11 @@ let pobj = P.dump();
                             );
   },
 //---------------------------------------------------------
-//--------------TOOLBAR HANDLERS---------------------------
+
+
+//--------------TOOLBAR HANDLERS-------------------------//
+
+
 //--BEGIN TITLES TOOLBAR-----------------------------------
  /**********************************************************
  * .JS-TITLE-EDIT-BUTTON
@@ -1255,14 +1249,20 @@ let pobj = P.dump();
       $( '#cb-editor-save-text' ).show();
       $( '.js-cb-text-edit' ).hide();
       $( '.js-cb-text-delete' ).hide();
+
       //IE #txt-0
       let currentItem = t.$( '#cb-current' ).val()
         , text        = t.$( `#${currentItem}` ).text().trim()
         , config      = {};
+
       $( `#${currentItem}` ).hide();
+
+      // Creates a new editor instance
       editor = CKEDITOR.appendTo( 'editor1', config, text );
+
       //CKEDITOR.instances.editor.setData(text);
-      //$('#cb-text-toolbar').show()
+      $('#cb-text-toolbar').show()
+
       //currentItem = null;
  },
 //---------------------------------------------------------
@@ -1271,26 +1271,38 @@ let pobj = P.dump();
  *********************************************************/
  'click #cb-editor-save-text'( e, t ) {
    e.preventDefault();
+
    let cur = $('#cb-current').val()
     , txt = editor && editor.getData(); //CKEDITOR.instances.editor.getData();
-    txt = $(txt).text();
+
+    //TEXT COMES FORM CKEDITOR IN HTML FORMAT. CONVERT TO TEXT
+    txt = $(txt).text().trim();
+
 	 //DON'T ACCEPT EMPTY INPUT
-	 if ( txt == '' || txt == undefined || txt == null || (! txt.replace(/\s/g, '').length) ) {
+	 if ( txt == ''         || 
+        txt == undefined  || 
+        txt == null       || 
+        (! txt.replace(/\s/g, '').length) 
+      ) 
+   {
 	   Bert.alert('You must enter text to be saved', 'danger');
 	   return;
 	 }
-   if ( cur != '' ) {
-    let idx = P.indexOf( `${cur}` )
-      , tp = $( `#${cur}` ).css('top')
-      , l = $( `#${cur}` ).css('left')
-      , pos = { top: tp, left: l } ;
+
+   if ( cur != '' ) { //WE'RE EDITING
+    $( `#${cur}` ).show();
+    $( `#${cur}` ).text( txt );
+
+    let idx = P.indexOf( `${cur}` );
+
     P.removeAt( idx );
+
     P.insert( idx, {
       page_no:        t.page.get(),
       type:           'text',
       id:             cur,
-      text:           txt.trim(),
-      offset:         pos,
+      text:           txt,
+      offset:         $( `#${cur}` ).offset(),
       zIndex:         $( `#${cur}` ).css('z-index'),
       fontSize:       $( `#${cur}` ).css('font-size'),
       border:         $( `#${cur}` ).css('border'),
@@ -1300,22 +1312,23 @@ let pobj = P.dump();
       opacity:        $( `#${cur}` ).css('opacity')
     });
     P.print();
-	  //editor && editor.destroy();
-		//editor = null;
+
 		$('#cb-text-toolbar').hide();
-    //$( `#${cur}` ).remove();
-    //$( `#${cur}` ).append( txt );
-    $( `#${cur}` ).text('');
-    $( `#${cur}` ).text(txt.trim());
-    $( `#${cur}` ).show();
-    editor.focusManager.blur()
+
+    
+    $('#cb-current').val(null);
+
     editor && editor.destroy();
 		editor = null;
 		return;
-   } else {
+
+   } else {   
+                         //WE'RE CREATING A NEW TEST ELEMENT
     editor && editor.destroy();
 		editor = null;
+
 		$('#cb-text-toolbar').hide();
+
     CBTexts.cbAddedTextBlur(  e,
                               t,
                               txt,
@@ -1324,14 +1337,19 @@ let pobj = P.dump();
                               P
                             );
    }
+
    //SHOW CANVAS AS IT WAS HIDDEN WHEN TEXT EDITOR WAS DISPLAYED
    $( '#fb-template' ).show();
+
    //ALLOW PAGE ADVANCE / DECREMENT
    $( '#cb-next-btn' ).prop('disabled', false );
    $( '#cb-prev-btn' ).prop('disabled', false );
-		//Bert.alert('Saving Text...', 'success');
+
+   $('#cb-current').val(null);
     //CKEDITOR.instances.editor.setData('');
  },
+
+
 //---------------------------------------------------------
 /**********************************************************
  * .JS-CB-TEXT-DELETE  ::(CLICK)::
@@ -1340,16 +1358,20 @@ let pobj = P.dump();
     e.preventDefault();
     //I.E. txt-0
     let cur = $( '#cb-current' ).val()
-      , page_no = t.page.get()
       , idx     = P.indexOf( cur );
+
  		P.removeAt( idx );
     $( `#${cur}` ).remove();
     $( '#cb-current' ).val('');
+
+    $('#cb-text-toolbar').hide();
+
      pp.update( { _id: Session.get('my_id') },
               { $pull: { pages:{ id: cur} } });
-    $('#cb-text-toolbar').hide()
-    console.log( pp.find({}).fetch() );
+
+
     P.print();
+    console.log( pp.find({}).fetch() );
     //editor.destroy();
 		//editor = null;
 //---------------------------------------------------------
@@ -1369,7 +1391,7 @@ let pobj = P.dump();
     $( '#cb-current' ).val('');
      pp.update( { _id: Session.get('my_id') },
               { $pull: { pages:{ id: cur} } });
-    console.log( pp.find({}).fetch() );
+console.log( pp.find({}).fetch() );
     P.print();
     $('#fb-template').css( 'border', '' );
     $( '#fb-template iframe' ).remove();
@@ -1384,17 +1406,19 @@ let pobj = P.dump();
    *******************************************************/
   'click .js-media-delete-button'( e, t ) {
     e.preventDefault();
+
     let cur     = $( '#cb-current' ).val()
-      , page_no = t.page.get()
-      , idx     = P.indexOf( cur );
+      , idx     = P.indexOf( `${cur}` );
+
  		P.removeAt( idx );
     $( `#${cur}` ).remove();
     $( '#cb-current' ).val('');
+    $( '#cb-media-toolbar' ).hide();
+    $('#frameBorder').remove();
      pp.update( { _id: Session.get('my_id') },
               { $pull: { pages:{ id: cur} } });
-    console.log( pp.find({}).fetch() );
-    P.print();
-    $( '#cb-media-toolbar' ).hide();
+
+    //console.log( pp.find({}).fetch() );
   },
 /**********************************************************
  * .JS-MEDIA-OPACITY  ::(INPUT)::
@@ -1466,7 +1490,7 @@ let pobj = P.dump();
                             t,
                             t.page.get(),
                             P,
-                            master_num
+                            master_num++
                           );
   },
 //---------------------------------------------------------
@@ -1557,7 +1581,7 @@ let pobj = P.dump();
     Session.set( 'resp', rslt )
     */
     return;
-    CBSCORM.cbScormSave( e, t, contentTracker );
+    CBSCORM.cbScormSave( e, t );
     Template.instance().page.set(   Template.instance().page.get()  + 1 );
     Template.instance().total.set(  Template.instance().total.get() + 1 );
     t.$( '#add-scorm' ).modal( 'hide' );
@@ -1568,7 +1592,7 @@ let pobj = P.dump();
    *******************************************************/
   'change #course-builder-scorm'( e, t ) {
     e.preventDefault();
-    CBSCORM.cbScormChange( e, t, Session.get('contentTracker') );
+    CBSCORM.cbScormChange( e, t );
 //---------------------------------------------------------
   },
   /********************************************************
