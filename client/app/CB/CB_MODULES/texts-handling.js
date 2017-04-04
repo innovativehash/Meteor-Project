@@ -91,7 +91,7 @@ P.print();
      t.$( '#cb-current' ).val( `txt-${master_num}` );
 
       let id  = `txt-${master_num}`
-        , str = $( `#txt-${master_num}` ).text().trim()
+        , str = $( `#txt-${master_num}` ).html()
         , idx = P.indexOf( `txt-${master_num}` )
         , pos = t.$( `#txt-${master_num}` ).offset();
 
@@ -107,7 +107,7 @@ P.print();
       page_no:        page_no,
       id:             id,
       type:           'text',
-      text:           escapeHtml(str),
+      text:           str,
       offset:         pos,
       zIndex:         $( `#txt-${master_num}` ).css('z-index')        || 0,
       fontSize:       $( `#txt-${master_num}` ).css('font-size')      || 16,

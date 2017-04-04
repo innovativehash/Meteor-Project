@@ -15,7 +15,18 @@ export class CreateDOM {
     this.markup = [];
   }
   makeTitle( obj ){
-    this.titles.push(`<span id="${obj.id}" style="cursor:move;position:relative;top:${obj.offset.top};left:${obj.offset.left};font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
+    this.titles.push(`<span id="${obj.id}" style="cursor:move;
+                                                  position:relative;
+                                                  top:${obj.offset.top};
+                                                  left:${obj.offset.left};
+                                                  font-size:${obj.fontSize};
+                                                  font-style:${obj.fontStyle};
+                                                  font-weight:${obj.fontWeight};
+                                                  opacity:${obj.opacity};
+                                                  text-decoration:${obj.textDecoration};">
+                          ${obj.text}
+                      </span>`);
+                      
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
@@ -30,7 +41,18 @@ export class CreateDOM {
     } catch (e) {
         obj.offset = $(`#${obj.id}`).offset();
     }
-    this.texts.push(`<span id="${obj.id}" style="cursor:move;position:relative;top:${obj.offset.top};left:${obj.offset.left};font-size:${obj.fontSize};font-style:${obj.fontStyle};font-weight:${obj.fontWeight};opacity:${obj.opacity};text-decoration:${obj.textDecoration};">${obj.text}</span>`);
+    this.texts.push(`<span id="${obj.id}" style="cursor:move;
+                                                  position:relative;
+                                                  top:${obj.offset.top};
+                                                  left:${obj.offset.left};
+                                                  font-size:${obj.fontSize};
+                                                  font-style:${obj.fontStyle};
+                                                  font-weight:${obj.fontWeight};
+                                                  opacity:${obj.opacity};
+                                                  text-decoration:${obj.textDecoration};">
+                          ${obj.text}
+                      </span>`);
+                      
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`

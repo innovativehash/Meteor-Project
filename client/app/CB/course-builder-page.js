@@ -276,7 +276,8 @@ Template.courseBuilderPage.onCreated( function() {
             } catch ( e ) {
                 ;
             }
-            try{
+            
+            try {
               let arr = P.dumpPage( that.page.get() );
               if ( arr.length > 0 ) {
                 Bert.alert('Video must be on a page by itself', 'danger');
@@ -285,10 +286,16 @@ Template.courseBuilderPage.onCreated( function() {
             } catch (e) {
               ;
             }
+            
+            if ( $('#added-video').length > 0 ) {
+              Bert.alert( 'Only ONE video may exist on a page!', 'danger');
+              return;
+            }
               $( '#cb-title-toolbar' ).hide();
               $( '#cb-media-toolbar' ).hide();
               $( '#cb-video-toolbar' ).hide();
               $( '#cb-text-toolbar'  ).hide();
+              
             addVideo();
             break;
           case 'pdf':
@@ -740,7 +747,12 @@ Template.courseBuilderPage.events({
     let p   = t.page.get()
       , tt  = t.total.get()
       , chk = P.dumpPage(p);
-    if ( chk == undefined ) return;
+      
+    if ( chk == undefined ) {
+      console.log('here');
+      return;
+    }
+    
     $('#fb-template').empty();
     $('#test_v').empty().hide();
 
@@ -780,15 +792,24 @@ Template.courseBuilderPage.events({
     $( '#cb-video-toolbar' ).hide();
 
     $('#cb-current').val(null);
-    $( '#fb-template' ).empty();
+    
 
-    let p = t.page.get();
+    let p = t.page.get()
+      , chk = P.dumpPage(p);
+      
     if ( p <= 1 ) {
       p = 1;
     } else {
       p -= 1;
     }
     t.page.set( p );
+    
+    if ( chk == undefined ) {
+      return;
+    }
+    
+    $( '#fb-template' ).empty();
+    
     let arr = P.dumpPage(p);
     Render.render( e, t, arr, P );
   },
@@ -1276,9 +1297,8 @@ let pobj = P.dump();
 
    let cur = $('#cb-current').val()
     , txt = editor && editor.getData(); //CKEDITOR.instances.editor.getData();
-
     //TEXT COMES FORM CKEDITOR IN HTML FORMAT. CONVERT TO TEXT
-    txt = $(txt).text().trim();
+    //txt = $(txt).text().trim();
 
 	 //DON'T ACCEPT EMPTY INPUT
 	 if ( txt == ''         || 

@@ -106,13 +106,15 @@ export function render( e, t, arr, P ) {
                 eval(
                       $( `#${arr[i].id}` ).on( "dragstop", function( event, ui ) {
                         let idx = P.indexOf( `${arr[i].id}` );
-                        
+console.log('------');                        
+console.log( `${arr[i].text}` );                        
+console.log( '--------');
                         P.removeAt( idx );
                         P.insert( idx, {
                                       page_no:  t.page.get(),
                                       id:       `${arr[i].id}`,
                                       type:     'text',
-                                      text:     $( `#${arr[i].id}` ).text().trim(),
+                                      text:     `${arr[i].text}`,
                                       offset:   $( `#${arr[i].id}` ).offset(),
                                       zIndex:           $( `#${arr[i].id}` ).css('z-index') || 0,
                                       fontSize:         $( `#${arr[i].id}` ).css('font-size') || 16,
