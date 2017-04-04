@@ -38,20 +38,18 @@ export class CreateDOM {
   }
 
   makeImage( obj ) {
-    this.images.push( `<div id="frameBorder" style="position:absolute;">
-                        <div id="draggableHelper" style="display:inline-block;">
-                       <div id="${obj.id}" style="width: ${obj.width}px;
-                                                  height: ${obj.height}px;
-                                                  border: 1px solid #d3d3d3;
-                                                  background-size: 100% 100%;
-                                                  background-image: ${obj.src};
-                                                  zIndex: ${obj.zIndex}">
-                            </div>
-                          </div>
+    this.images.push( `
+                       <div id="${obj.id}" style="position:relative;
+                                                  top:${obj.offset.top}px;
+                                                  left:${obj.offset.left}px;
+                                                  background-image:${obj.src};
+                                                  width:${obj.width}px;
+                                                  height:${obj.height}px;
+                                                  background-size:cover;">
                        </div>`);
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
-                      `$('#draggableHelper').draggable({ containment: "#fb-template", scroll: false });`,
+                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
                       `$('#${obj.id}').resizable({ autoHide: false, aspectRatio: true, containment: "#fb-template" });`
                     );
 

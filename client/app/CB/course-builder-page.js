@@ -15,6 +15,7 @@ import { Pdfs }           from '../../../both/collections/api/pdfs.js';
 import { PowerPoints }    from '../../../both/collections/api/powerpoints.js';
 import './course-builder-page.html';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.css';
+
 /*
  * IMPORT BROKEN-OUT EVENT HANDLERS
  */
@@ -29,6 +30,7 @@ import * as CBSCORM     from './CB_MODULES/scorm-handling.js';
 import * as TTL         from './CB_MODULES/cb-title.js';
 import * as Render      from './CB_MODULES/render.js';
 import { PageObject }   from './CB_MODULES/cb-page-object.js';
+
 let P           = new PageObject()
   , pp          = new Mongo.Collection(null)
   , master_num  = 0
@@ -37,6 +39,7 @@ let P           = new PageObject()
   , rtn
   , return_page
   , editor;
+
 /*=========================================================
  *  CREATED
  *=======================================================*/
@@ -778,8 +781,7 @@ Template.courseBuilderPage.events({
 
     $('#cb-current').val(null);
     $( '#fb-template' ).empty();
-    $( '#frameBorder' ).remove();
-    
+
     let p = t.page.get();
     if ( p <= 1 ) {
       p = 1;

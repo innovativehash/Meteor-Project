@@ -21,6 +21,8 @@ export function render( e, t, arr, P ) {
         Session.set('Scratch', null);
       }
     }
+    
+    $('#fb-template').empty();
 
     let rtn_arr = handlePrevious(arr);
     let funcs   = rtn_arr[1];

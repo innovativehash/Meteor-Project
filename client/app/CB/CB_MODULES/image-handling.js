@@ -92,25 +92,22 @@
 
                 img_id = result.secure_url;
                 //style="width:400px;height:400px;"
-                  $('#fb-template').append( `<div id="frameBorder" style="position: absolute;
-                                                                          z-index: 0;">
-                      <div id="draggableHelper" style="display:inline-block;">
-                        <div id="ig-${master_num}"
-                             style="width: 100px;
-                                    height: 100px;
-                                    border: 1px solid #d3d3d3;
-                                    background-size: 100% 100%;
-                                    background-image: url(${img_id});">
-                          </div>
-                        </div>
-                      </div>` );
 
-                  $( '#draggableHelper' ).draggable({ containment: "#fb-template", scroll: false });
-                  $( `#ig-${master_num}` ).resizable({ 
-                    autoHide: false,
-                    aspectRatio: true,
-                    containment: "#fb-template"
-                  });
+                  $('#fb-template').append( `
+                      
+                        <div id="ig-${master_num}" 
+                             style="background-image:url(${img_id});
+                                    width:200px;
+                                    height:200px;
+                                    background-size:cover;">
+                        </div>
+                  ` );
+
+$(`#ig-${master_num}`).draggable({
+    containment: "#fb-template",
+	scroll: false
+});
+$(`#ig-${master_num}`).resizable({ containment: "#fb-template" });
 
                   P.append({
                             page_no:         page_no,
@@ -122,7 +119,7 @@
                             height:          $( `#ig-${master_num}` ).height(),
                             opacity:         $( `#ig-${master_num}` ).css('opacity'),
                             zIndex:          $( `#ig-${master_num}` ).css('z-index'),
-                            src:             rmvQuotes( img_id )         
+                            src:             img_id         
                   });
 
                   //$( '#ref_img' ).attr('src', null );
@@ -168,6 +165,7 @@
                   $( '#preview-image' ).attr( 'src', null );
                   t.$( '#add-image' ).modal( 'hide' );
                   t.$( '#course-builder-image' ).val('');
+
 		});//s3
 //---------------------------------------------------------
 }
