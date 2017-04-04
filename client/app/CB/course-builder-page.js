@@ -1056,8 +1056,12 @@ Template.courseBuilderPage.events({
                                       //passing_percent: Number(percent),
                                       //keywords: keys,
                                       //icon: "/img/icon-4.png" }
-P.print();
-let pobj = P.dump();
+    let pobj = P.dump();
+    if ( pobj.length <= 0 ) {
+      Bert.alert("You can't save an EMPTY course!!", 'danger');
+      return;
+    }
+
     Meteor.setTimeout(function(){
       Meteor.call('saveBuiltCourse',  cinfo.cname,
                                       cinfo.company_id,
