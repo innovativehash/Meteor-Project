@@ -1,12 +1,20 @@
 # collective-university
 
 **REQUIRED**
+
 Install Git for target system:      https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+
 Install Node.js for target system:  https://nodejs.org/en/download/
+
 Install Meteor for target system:   https://www.meteor.com/install
+
 Install MongoDB for target system:  https://docs.mongodb.com/manual/installation/
+
 Pull Repo from GitLab:              ```git pull git@gitlab.com:nsardo/collective-university-master.git```
+
     OR:                             ```git pull https://nsardo@gitlab.com/nsardo/collective-university-master.git```
+    
+    OR:                             download zip file of repo from GitLab
     
 <hr>
 Unzip the project cd into it:
