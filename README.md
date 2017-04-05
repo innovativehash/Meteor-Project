@@ -16,16 +16,13 @@ Pull Repo from GitLab:
 git pull git@gitlab.com:nsardo/collective-university-master.git
 ```
 
+OR:                             
 
-    OR:                             
-
-  
 ```bash
 git pull https://nsardo@gitlab.com/nsardo/collective-university-master.git
 ```
-  
     
-    OR:                             download zip file of repo from GitLab
+OR:                             download zip file of repo from GitLab
     
 <hr>
 Unzip the project cd into it:
@@ -48,11 +45,9 @@ $ mongorestore -h localhost:PORT --db meteor dump/meteor/
 **Current Package Versions (Meteor)**:
 |Package                    |Version    |Description                                                                                      |
 |---------------------------|:---------:|:-----------------------------------------------------------------------------------------------:|
-|accounts-base              | 1.2.15    |A user account system
-
-|accounts-password          | 1.3.4     |Password support for accounts
-
-|aldeed:collection2         | 2.10.0    |Automatic validation of insert and update operations on the client and server.
+accounts-base              | 1.2.15    |A user account system
+accounts-password          | 1.3.4     |Password support for accounts
+aldeed:collection2         | 2.10.0    |Automatic validation of insert and update operations on the client and server.
 
 autopublish                 1.0.7  (For prototyping only) Publish the entire database to all clients
 
