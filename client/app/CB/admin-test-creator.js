@@ -487,20 +487,15 @@ Template.adminTestCreator.events({
       return;
     } 
     
-    if ( A == '' || (!A.replace(/\s/g, '').length)) {
-      Bert.alert("Answer box 'A' MUST have an answer entered!", 'danger');
-      return;
-    } else if ( B == '' || (!B.replace(/\s/g, '').length) ) {
-      Bert.alert("Answer box 'B' MUST have an answer entered!", 'danger');
-      return;
-    } else if ( C == '' || (!C.replace(/\s/g, '').length) ) {
-      Bert.alert("Answer box 'C' MUST have an answer entered!", 'danger' );
-      return;
-    } else if ( correct_a == "Please Select" ) {
-      Bert.alert("Correct Answer Dropdown must have an answer selected!", 'danger');
+    if (
+        ( A == '' || (!A.replace(/\s/g, '').length) ) ||
+        ( B == '' || (!B.replace(/\s/g, '').length) ) ||
+        ( correct_a == "Please Select" ) 
+       )
+    {
+      Bert.alert("Please ensure you've entered atleast two alternative answers and the correct answer before saving.", 'danger');
       return;
     }
-
     
     //id of last multiple choice answer
     let lastId      = t.$( 'div#ans-mc input:last' ).attr( 'id' );
