@@ -382,8 +382,8 @@ Template.adminTestCreator.events({
             Bert.alert('At a minimum, two answers are needed: BOTH A and B','danger');
             return;
           }
-          if ( j < correctAscii && ( t.$( `#${String.fromCharCode(j)}` ).val() == '' || (!t.$( `#${String.fromCharCode(j)}` ).val().replace(/\s/g, '').length)) ) {
-            Bert.alert( `Contigious values from A TO ${String.fromCharCode(lastIdAscii)}`, 'danger');//correctAscii
+          if ( j < lastIdAscii && ( t.$( `#${String.fromCharCode(j)}` ).val() == '' || (!t.$( `#${String.fromCharCode(j)}` ).val().replace(/\s/g, '').length)) ) {
+            Bert.alert( `No blank answers! You must supply contigious answers from A TO ${String.fromCharCode(lastIdAscii)}`, 'danger');//correctAscii
             return;
           }
         }
