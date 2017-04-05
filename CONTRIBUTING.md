@@ -1,6 +1,6 @@
-#Contributing to CollectiveUniversity
+# Contributing to CollectiveUniversity
 
-##Working on GitLab Issues, Features
+## Working on GitLab Issues, Features
 **Start each new item worked on by doing a git pull from master**
 
 If working on an ISSUE, use the gitlab button located on the issue's page, 
@@ -35,7 +35,7 @@ This places you in the new branch, ready to do your work.
 git push
 ```
 
-##Working on a Bug or Feature **not** in the Issue Tracker
+## Working on a Bug or Feature **not** in the Issue Tracker
 If you are working on something for which there is **not** a GitLab issue:
 ```bash
 git pull
@@ -43,8 +43,8 @@ git checkout -b <descriptive branch name>
 ```
 where <descriptive branch name> is a **descriptive** name for what you are doing.
 
-##**ALWAYS**
-**Start with:
+## **ALWAYS**
+**Start with**:
 ```
 git pull
 ```
