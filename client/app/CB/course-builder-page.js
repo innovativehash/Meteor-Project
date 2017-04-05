@@ -527,21 +527,37 @@ Template.courseBuilderPage.onCreated( function() {
             } catch ( e ) {
                 ;
             }
+            
             $( '#cb-title-toolbar'  ).hide();
             $( '#cb-text-toolbar'   ).hide()
             $( '#cb-media-toolbar'  ).hide();
             $( '#cb-video-toolbar'  ).hide();
+            
             let test_session_bak      = {};
             test_session_bak.page     = that.page.get();
             test_session_bak.total    = that.total.get();
             test_session_bak.name     = Session.get('cinfo').cname;
             test_session_bak.rtn_page = that.return_page.get();
+            
             Session.set( 'obj', test_session_bak );
-            if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
+            
+            if ( 
+                Meteor.user() && 
+                Meteor.user().roles && 
+                Meteor.user().roles.teacher 
+               ) 
+            {
               FlowRouter.go( '/teacher/dashboard/test-maker/'
                 + Meteor.userId() + `?${test_session_bak.name}` );
-            } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin ) {
-              FlowRouter.go( '/admin/dashboard/test-maker/'   + Meteor.userId()
+                
+            } else 
+                if ( 
+                    Meteor.user() && 
+                    Meteor.user().roles && 
+                    Meteor.user().roles.admin 
+                   ) 
+            {
+              FlowRouter.go( '/admin/dashboard/test-maker/' + Meteor.userId()
                 + `?${test_session_bak.name}` );
             }
             break;
@@ -584,19 +600,21 @@ Template.courseBuilderPage.onRendered( function() {
                 $( ".dashboard-header-area" ).fadeIn( 'slow' );
               }
   );
+  
   $('#test_v').hide();
   $('#cb-media-toolbar').hide();
   $('#cb-text-toolbar').hide();
   $('#cb-bar').hide();
   $('#cb-title-toolbar').hide();
   $('#cb-video-toolbar').hide();
+  
 /*
  * WE'RE HERE TO EDIT?
  */
   if (
-      FlowRouter.getQueryParam('rtn') &&
-      FlowRouter.getQueryParam('id')  &&
-      FlowRouter.getQueryParam('edit') &&
+      FlowRouter.getQueryParam('rtn')   &&
+      FlowRouter.getQueryParam('id')    &&
+      FlowRouter.getQueryParam('edit')  &&
       FlowRouter.getQueryParam('name')
      )
   {
@@ -604,28 +622,32 @@ Template.courseBuilderPage.onRendered( function() {
       , nm = FlowRouter.getQueryParam('name')
       , id = FlowRouter.getQueryParam('id')
       , bc;
+      
     Session.set('my_id', id);
+    
     if ( Number(ed) == 1 ) { //WE'RE HERE TO EDIT
-    this.autorun(function() {
-      try {
-          bc = BuiltCourses.find({ _id: id }).fetch()[0];
-        console.log( bc );
-        console.log( bc.pages );
-          Session.set('cinfo', {
-                            cname: bc.cname,
-                            credits: Number(bc.credits),
-                            passing_percent: Number(bc.passing_percent),
-                            keywords: bc.keywords,
-                            icon: "/img/icon-4.png",
-                            company_id: bc.company_id,
-                            creator_type: bc.creator_type,
-                            creator_id: bc.creator_id
-          });
-      } catch (e) {
-        ;
-      }
-    });
-  }
+    
+      this.autorun(function() {
+        
+        try {
+            bc = BuiltCourses.find({ _id: id }).fetch()[0];
+          console.log( bc );
+          console.log( bc.pages );
+            Session.set('cinfo', {
+                              cname: bc.cname,
+                              credits: Number(bc.credits),
+                              passing_percent: Number(bc.passing_percent),
+                              keywords: bc.keywords,
+                              icon: "/img/icon-4.png",
+                              company_id: bc.company_id,
+                              creator_type: bc.creator_type,
+                              creator_id: bc.creator_id
+            });
+        } catch (e) {
+          ;
+        }
+      });//autorun
+    }//if
   } else
 /*
  * SUCCESSFUL RETURN FROM TEST CREATION
@@ -646,6 +668,7 @@ Template.courseBuilderPage.onRendered( function() {
       type:     'test',
       id:       Session.get('test_id'),
     });
+    
     //SHOW THE TEST
     $('#fb-template').empty();
     $('#fb-template').hide();
@@ -653,7 +676,7 @@ Template.courseBuilderPage.onRendered( function() {
     this.page.set( test_session_bak.page );
     this.total.set( test_session_bak.total );
     this.return_page.set(test_session_bak.rtn_page);
-    P.print()
+console.log( P.dump() ); 
     return;
   }
 /*
@@ -665,20 +688,32 @@ Template.courseBuilderPage.onRendered( function() {
      )
   {
     let test_session_bak = Session.get( 'obj' );
-    if ( test_session_bak && test_session_bak.page && test_session_bak.total ) {
+    if ( 
+        test_session_bak && 
+        test_session_bak.page && 
+        test_session_bak.total 
+       ) 
+    {
       this.page.set( test_session_bak.page );
       this.total.set( test_session_bak.total );
     } else {
       console.log('fail');
     }
-    if ( test_session_bak && test_session_bak.rtn_page ) {
+    
+    if ( 
+        test_session_bak && 
+        test_session_bak.rtn_page 
+       ) 
+    {
       this.return_page.set( test_session_bak.rtn_page);
       this.rtn.set( test_session_bak.rtn_page );
     }
+    
     Session.set('obj', null);
     test_session_bak = null;
     return;
   }
+  
   Meteor.setTimeout(function(){
     let returnFromTest = Session.get('test_id');
     //IF WE'RE RELOADING TO CLEAR URL AFTER RETURNING FROM TEST BUILDING
@@ -686,8 +721,6 @@ Template.courseBuilderPage.onRendered( function() {
       $( '#intro-modal' ).modal( 'show' );
     //OTHERWISE, WE'RE HERE FRESH
     } else {
-      console.log('----------------------');
-      console.log('RETURN');
       return;
     }
   }, 0);
@@ -699,10 +732,12 @@ Template.courseBuilderPage.onRendered( function() {
 */
 //-------------------------------------------------------------------
 }); //END ONRENDERED
+
 /*=========================================================
  * HELPERS
  *=======================================================*/
 Template.courseBuilderPage.helpers({
+  
   cbNavBack: () => {
     if ( Template.instance().return_page.get() == 'library' ) {
       return 'Back To Library';
@@ -710,6 +745,7 @@ Template.courseBuilderPage.helpers({
       return 'Back To Courses';
     }
   },
+  
   fname: () => {
     try {
       return Students.findOne({ _id: Meteor.userId() }).fname;
@@ -718,18 +754,23 @@ Template.courseBuilderPage.helpers({
       return;
     }
   },
+  
 	"files": function(){
 		return S3.collection.find();
 	},
+	
   page: () =>
     Template.instance().page.get(),
+    
   total: () =>
     Template.instance().total.get()
 });
 //-------------------------------------------------------------------
+
 /*=========================================================
  * EVENTS
  *=======================================================*/
+ 
 Template.courseBuilderPage.events({
 /********************************************************
  * CB-NEXT  ::(CLICK)::    [NEXT BUTTON CLICK]
@@ -741,9 +782,7 @@ Template.courseBuilderPage.events({
     $( '#cb-media-toolbar' ).hide();
     $( '#cb-title-toolbar' ).hide();
     $( '#cb-video-toolbar' ).hide();
-
     $('#cb-current').val(null);
-
     let p   = t.page.get()
       , tt  = t.total.get()
       , chk = P.dumpPage(p);
@@ -754,8 +793,8 @@ Template.courseBuilderPage.events({
     }
     
     $('#fb-template').empty();
-    $('#test_v').empty().hide();
-
+    $('#test_v').hide();
+    
     if ( p < tt ) {
       p++;
       t.page.set( p );
@@ -807,8 +846,6 @@ Template.courseBuilderPage.events({
     if ( chk == undefined ) {
       return;
     }
-    
-    $( '#fb-template' ).empty();
     
     let arr = P.dumpPage(p);
     Render.render( e, t, arr, P );

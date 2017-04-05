@@ -15,10 +15,13 @@ export function render( e, t, arr, P ) {
         $('#fb-template').hide();
         $('#test_v').show();
         Session.set('Scratch', arr[z].id );
+console.log('in test view');
+        return;
       }  else {
         $('#test_v').hide();
         $('#fb-template').show();
         Session.set('Scratch', null);
+console.log('not in test view');
       }
     }
     
@@ -106,9 +109,6 @@ export function render( e, t, arr, P ) {
                 eval(
                       $( `#${arr[i].id}` ).on( "dragstop", function( event, ui ) {
                         let idx = P.indexOf( `${arr[i].id}` );
-console.log('------');                        
-console.log( `${arr[i].text}` );                        
-console.log( '--------');
                         P.removeAt( idx );
                         P.insert( idx, {
                                       page_no:  t.page.get(),
