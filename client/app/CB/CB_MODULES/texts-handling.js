@@ -96,8 +96,8 @@ P.print();
         , pos = t.$( `#txt-${master_num}` ).offset();
 
       
-      pos.left = Math.abs(pos.left);
-      pos.top = Math.abs(pos.top);
+      //pos.left = Math.abs(pos.left);
+      //pos.top = Math.abs(pos.top);
 
 
 

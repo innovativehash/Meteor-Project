@@ -1279,7 +1279,7 @@ Template.courseBuilderPage.events({
 
       //IE #txt-0
       let currentItem = t.$( '#cb-current' ).val()
-        , text        = t.$( `#${currentItem}` ).text().trim()
+        , text        = t.$( `#${currentItem}` ).html()
         , config      = {};
 
       $( `#${currentItem}` ).hide();
@@ -1290,7 +1290,8 @@ Template.courseBuilderPage.events({
       //CKEDITOR.instances.editor.setData(text);
       $('#cb-text-toolbar').show()
 
-      //currentItem = null;
+      $('#cb-next-btn').prop("disabled",true);
+      $('#cb-prev-btn').prop("disabled",true);
  },
 //---------------------------------------------------------
 /**********************************************************
@@ -1317,7 +1318,7 @@ Template.courseBuilderPage.events({
 
    if ( cur != '' ) { //WE'RE EDITING
     $( `#${cur}` ).show();
-    $( `#${cur}` ).text( txt );
+    $( `#${cur}` ).html( txt );
 
     let idx = P.indexOf( `${cur}` );
 
@@ -1346,6 +1347,11 @@ Template.courseBuilderPage.events({
 
     editor && editor.destroy();
 		editor = null;
+		
+		//ALLOW PAGE ADVANCE / DECREMENT
+    $( '#cb-next-btn' ).prop('disabled', false );
+    $( '#cb-prev-btn' ).prop('disabled', false );
+		
 		return;
 
    } else {   
