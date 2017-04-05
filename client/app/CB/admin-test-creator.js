@@ -222,7 +222,9 @@ Template.adminTestCreator.events({
         //console.log( e.name );
         //console.log( e.message );
         try {
-          let cid = Meteor.user().profile && Meteor.user().profile.company_id;
+          let cid = Meteor.user() && 
+                    Meteor.user().profile && 
+                    Meteor.user().profile.company_id;
         
           testidnum = Test.insert({
                                   test_name: t.$( '#test-name' ).val(),
@@ -403,9 +405,6 @@ Template.adminTestCreator.events({
         answers[i] = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
         if ( String.fromCharCode( i + 65 ) == correct_a ) {
           correct_ans = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
-        } else { //correct_ans undefined tag
-          Bert.alert('You must select a correct answer from among answers you\'ve entered!','danger');
-          return;
         }
       }
     }
