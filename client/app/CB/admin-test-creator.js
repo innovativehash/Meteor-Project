@@ -698,6 +698,9 @@ Template.adminTestCreator.events({
     let lastLetter = t.$( e.currentTarget ).closest().context.previousElementSibling.innerText.charCodeAt(0);
 
     //add one makes it the next highest character, i.e. A(65) + 1 = B(66)
+    
+    if ( lastLetter > 90 || (lastLetter + 1) > 90 ) return; //no walking up the ascii table...
+    
     lastLetter += 1;
 
     //convert ascii number back into character, i.e 65 = A
