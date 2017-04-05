@@ -314,7 +314,7 @@ Template.adminTestCreator.events({
     
     let answers     = [];
 
-    //test name
+    //TEST NAME
     let nm          = t.$( '#test-name' ).val();
     if ( ! nm || (!nm.replace(/\s/g, '').length) ) {
       Bert.alert( 'Please give the test a name.', 'danger' );
@@ -322,7 +322,7 @@ Template.adminTestCreator.events({
       return;
     }
     
-    //question
+    //QUESTION
     let q           = t.$( '#question' ).val();
     if ( ! q || (!q.replace(/\s/g, '').length) ) {
       Bert.alert( 'Please enter a question before saving...', 'danger' );
@@ -330,29 +330,33 @@ Template.adminTestCreator.events({
       return;
     }
     
-    //correct answer
+    //CORRECT ANSWER
     let correct_a   = t.$( '#correct_ans' ).val(); //A, B, C
     if ( correct_a == 'Please Select' ) {
       Bert.alert('Please ensure you\'ve entered at least two alternative answers and the correct answer before saving', 'danger' );
       return;      
     }
     
-    let correct_ans;
+    let correct_ans
+      , correctAscii  = $( '#correct_ans' ).val();
 
-    //id of last multiple choice answer
+    //ID OF LAST MULTIPLE CHOICE ANSWER
     let lastId      = t.$( 'div#ans-mc input:last' ).attr( 'id' );
 
-   /* 
-    //A IS EMPTY
-    if ( t.$( '#A' ).val() == '' || t.$( '#B' ).val() == '' ) {
-      Bert.alert( 'At a minimum, two answers are needed: BOTH A and B', 'danger' );
-      return;
-    }
-*/
-    //converted to ascii code
-    let lastIdAscii   = lastId.charCodeAt( 0 )
-      , correctAscii  = $( '#correct_ans' ).val();
-      
+    //REMOVE EMPTY TRAILING ANSWER BOX "VALUES"
+    do {
+      if ( $(`#${lastId}`).val() == '' || !$(`#${lastId}`).val().replace(/\s/g, '').length ) {
+        if ( correctAscii == lastId ) break;
+        //$(`#${lastId}`).remove();
+        let lidn = Number( lastId.charCodeAt(0) );
+        lastId = String.fromCharCode(--lidn);
+      }
+    } while (  $(`#${lastId}`).val() == '' || !$(`#${lastId}`).val().replace(/\s/g, '').length );
+
+    //CONVERTED TO ASCII CODE
+    let lastIdAscii   = lastId.charCodeAt( 0 );    
+     
+    //HAS A CORRECT ANSWER BEEN SELECTED?
     if ( correctAscii == 'Please Select' ) {
       Bert.alert('You must select a correct answer!', 'danger');
       return
@@ -379,7 +383,7 @@ Template.adminTestCreator.events({
             return;
           }
           if ( j < correctAscii && ( t.$( `#${String.fromCharCode(j)}` ).val() == '' || (!t.$( `#${String.fromCharCode(j)}` ).val().replace(/\s/g, '').length)) ) {
-            Bert.alert( `Contigious values from A TO ${String.fromCharCode(correctAscii)}`, 'danger');
+            Bert.alert( `Contigious values from A TO ${String.fromCharCode(lastIdAscii)}`, 'danger');//correctAscii
             return;
           }
         }
@@ -390,7 +394,7 @@ Template.adminTestCreator.events({
       // 65 X  0  X   | X  X  0   | X  0  X
     }
 
-    //compute end of answers
+    //COMPUTE END OF ANSWERS
     let spread      = lastIdAscii - 65; // 0 = 65, 1 = 66, 2 = 67, etc.
 
     //serialize
@@ -399,11 +403,14 @@ Template.adminTestCreator.events({
         answers[i] = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
         if ( String.fromCharCode( i + 65 ) == correct_a ) {
           correct_ans = t.$( '#' + String.fromCharCode( i + 65 ) ).val();
+        } else { //correct_ans undefined tag
+          Bert.alert('You must select a correct answer from among answers you\'ve entered!','danger');
+          return;
         }
       }
     }
     
-    //clear out added dom elements
+    //CLEAR OUT ADDED DOM ELEMENTS
     if ( lastId != 'C' ){
       for( let i = 3; i <= spread; i++ ){
         t.$( '#lab' + String.fromCharCode( i + 65 ) ).remove();
@@ -413,14 +420,14 @@ Template.adminTestCreator.events({
       }
     }
 
-    //current question number
+    //CURRENT QUESTION NUMBER
     let questionNum           =  t.$( '[ name="qnum" ]' ).val();
     let currentQuestionNumber = questionNum;
 
-    //bump question number to next
+    //BUMP QUESTION NUMBER TO NEXT
     Number( questionNum++ );
-    t.$( '[ name="qnum" ]' ).val( questionNum );  //set hidden field
-    t.$( '#q_num' ).text( questionNum );           //set question number badge
+    t.$( '[ name="qnum" ]' ).val( questionNum );    //SET HIDDEN FIELD
+    t.$( '#q_num' ).text( questionNum );            //SET QUESTION NUMBER BADGE
 
     let num_ans = answers.length;
 
