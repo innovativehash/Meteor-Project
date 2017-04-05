@@ -1,4 +1,4 @@
-Start each new item worked on by doing a git pull
+Start each new item worked on by doing a git pull from *master*
 
 If working on an ISSUE, use the gitlab button to [CREATE A BRANCH] based on it
 
@@ -17,4 +17,8 @@ git checkout -b <descriptive branch name>
 
 Make good, understandable commit messages.
 
-Submit a pull-request.
+Submit a pull-request:
+(from the branch you're working on)
+```bash
+git push
+```
