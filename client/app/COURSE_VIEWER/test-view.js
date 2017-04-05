@@ -82,7 +82,14 @@ Template.testView.events({
   //console.log( 'total_score= ' + total_score );
   
     let percent = Math.ceil(Number( total_score / total_questions ) * 100);
-    $( '#yosco' ).show();
+    $( '#yosco' ).show()
+    avatar  = Meteor.user() && 
+              Meteor.user().profile && 
+              Meteor.user().profile.avatar
+    co_id   = Meteor.user() && 
+              Meteor.user().profile && 
+              Meteor.user().profile.company_id;
+              
   //console.log( 'percent = ' + percent );
   
     if ( percent >= passing_percent || passing_percent == 1001 ) {
@@ -97,12 +104,12 @@ Template.testView.events({
           Newsfeeds.insert({ 
                 owner_id:       Meteor.userId(),
                 poster:         uname,
-                poster_avatar:  Meteor.user().profile.avatar,
+                poster_avatar:  avatar,
                 type:           "passed-course",
                 private:        false,
                 news:           `${uname} has just passed the course: ${name}!`,
                 comment_limit:  3,
-                company_id:     Meteor.user().profile.company_id,
+                company_id:     co_id,
                 likes:          0,
                 date:           new Date()  
           });
@@ -129,11 +136,11 @@ Template.testView.events({
     Session.set('test', null);
     
     Meteor.setTimeout(function(){
-      if ( Meteor.user().roles.admin ) {
+      if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin ) {
           FlowRouter.go('admin-dashboard',{ _id: Meteor.userId()});
-      } else if( Meteor.user().roles.teacher ) {
+      } else if( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
           FlowRouter.go('teacher-dashboard',{ _id: Meteor.userId()});
-      } else if( Meteor.user().roles.student ) {
+      } else if( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
           FlowRouter.go('student-dashboard',{ _id: Meteor.userId()});
       }
     }, 1500);
