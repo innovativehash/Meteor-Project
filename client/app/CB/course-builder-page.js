@@ -537,10 +537,10 @@ Template.courseBuilderPage.onCreated( function() {
             test_session_bak.name     = Session.get('cinfo').cname;
             test_session_bak.rtn_page = that.return_page.get();
             Session.set( 'obj', test_session_bak );
-            if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+            if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
               FlowRouter.go( '/teacher/dashboard/test-maker/'
                 + Meteor.userId() + `?${test_session_bak.name}` );
-            } else if ( Meteor.user().roles && Meteor.user().roles.admin ) {
+            } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin ) {
               FlowRouter.go( '/admin/dashboard/test-maker/'   + Meteor.userId()
                 + `?${test_session_bak.name}` );
             }
