@@ -14,8 +14,11 @@ At the command line:
 
 $ mongorestore -h localhost:PORT --db meteor dump/meteor/
 
+
 <hr>
-*Current Package Versions (Meteor)*:
+
+**Current Package Versions (Meteor)**:
+
 accounts-base               1.2.15  A user account system
 
 accounts-password           1.3.4  Password support for accounts
