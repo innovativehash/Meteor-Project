@@ -12,11 +12,15 @@ Install MongoDB for target system:  https://docs.mongodb.com/manual/installation
 
 Pull Repo from GitLab:              
 
-```git pull git@gitlab.com:nsardo/collective-university-master.git```
+```bash
+git pull git@gitlab.com:nsardo/collective-university-master.git
+```
 
     OR:                             
     
-```git pull https://nsardo@gitlab.com/nsardo/collective-university-master.git```
+```bash
+git pull https://nsardo@gitlab.com/nsardo/collective-university-master.git
+```
     
     OR:                             download zip file of repo from GitLab
     
