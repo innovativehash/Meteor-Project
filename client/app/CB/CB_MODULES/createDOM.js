@@ -15,7 +15,10 @@ export class CreateDOM {
     this.markup = [];
   }
   makeTitle( obj ){
-    this.titles.push(`<span id="${obj.id}" style="cursor:move;
+	  
+	//Rahman: changes on makeTitle for course viewer alignment fixes for mobile & desktop
+  
+    /*this.titles.push(`<span id="${obj.id}" style="cursor:move;
                                                   position:relative;
                                                   top:${obj.offset.top};
                                                   left:${obj.offset.left};
@@ -30,7 +33,22 @@ export class CreateDOM {
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
-                    );
+                    );*/
+					
+	this.titles.push(`<span id="${obj.id}" style="cursor:move;
+                                                  position:relative;                                                 
+                                                  font-size:${obj.fontSize};
+                                                  font-style:${obj.fontStyle};
+                                                  font-weight:${obj.fontWeight};
+                                                  opacity:${obj.opacity};
+                                                  text-decoration:${obj.textDecoration};">
+                          ${obj.text}
+                      </span>`);
+                      
+    this.markup.push(
+                      `$('#${obj.id}').offset({ margin-bottom:10px; });`,
+                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
+                    );				
 
   }
   makeText( obj ){
@@ -41,7 +59,10 @@ export class CreateDOM {
     } catch (e) {
         obj.offset = $(`#${obj.id}`).offset();
     }
-    this.texts.push(`<span id="${obj.id}" style="cursor:move;
+	
+	//Rahman: changes on makeText for course viewer alignment fixes for mobile & desktop
+	
+  /*  this.texts.push(`<span id="${obj.id}" style="cursor:move;
                                                   position:relative;
                                                   top:${obj.offset.top};
                                                   left:${obj.offset.left};
@@ -56,11 +77,25 @@ export class CreateDOM {
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
-                    );
+                    );*/
+					
+		 this.texts.push(`<span id="${obj.id}" style="cursor:move;
+                                                  position:relative;                                                  
+                                                  font-style:${obj.fontStyle};
+                                                  font-weight:${obj.fontWeight};
+                                                  opacity:${obj.opacity};
+                                                  text-decoration:${obj.textDecoration};">
+                          ${obj.text}
+                      </span>`);
+                      
+    this.markup.push(
+                      `$('#${obj.id}').offset({ margin-bottom:10px; });`,
+                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
+                    );			
   }
-
+//Rahman: changes on makeText for course viewer alignment fixes for mobile & desktop
   makeImage( obj ) {
-    this.images.push( `
+    /*this.images.push( `
                        <div id="${obj.id}" style="position:relative;
                                                   top:${obj.offset.top}px;
                                                   left:${obj.offset.left}px;
@@ -71,6 +106,19 @@ export class CreateDOM {
                        </div>`);
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
+                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
+                      `$('#${obj.id}').resizable({ autoHide: false, aspectRatio: true, containment: "#fb-template" });`
+                    );
+					*/
+					this.images.push( `
+                       <div id="${obj.id}" style="position:relative;                                                  
+                                                  background-image:${obj.src};
+                                                  width:${obj.width}px;
+                                                  height:${obj.height}px;
+                                                  background-size:cover;">
+                       </div>`);
+    this.markup.push(
+                      `$('#${obj.id}').offset({ margin-bottom:10px; });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
                       `$('#${obj.id}').resizable({ autoHide: false, aspectRatio: true, containment: "#fb-template" });`
                     );
