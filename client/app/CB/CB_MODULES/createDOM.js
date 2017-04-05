@@ -46,7 +46,7 @@ export class CreateDOM {
                       </span>`);
                       
     this.markup.push(
-                      `$('#${obj.id}').offset({ margin-bottom:10px; });`,
+                      `$('#${obj.id}').css({ 'margin-bottom':'10px' });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
                     );				
 
@@ -89,7 +89,7 @@ export class CreateDOM {
                       </span>`);
                       
     this.markup.push(
-                      `$('#${obj.id}').offset({ margin-bottom:10px; });`,
+                      `$('#${obj.id}').css({ 'margin-bottom':'10px' });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
                     );			
   }
@@ -118,7 +118,7 @@ export class CreateDOM {
                                                   background-size:cover;">
                        </div>`);
     this.markup.push(
-                      `$('#${obj.id}').offset({ margin-bottom:10px; });`,
+                      `$('#${obj.id}').css({ 'margin-bottom':'10px' });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
                       `$('#${obj.id}').resizable({ autoHide: false, aspectRatio: true, containment: "#fb-template" });`
                     );
