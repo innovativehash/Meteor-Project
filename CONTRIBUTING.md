@@ -4,7 +4,7 @@
 **Start each new item worked on by doing a git pull from master**
 
 If working on an ISSUE, use the gitlab button located on the issue's page, 
-*[NEW BRANCH]* to create a new branch based on it, for this example, the issue 
+*[NEW BRANCH]*, to create a new branch based on it, for this example, the issue 
 would be titled, "34-course-builder-test-incorrect-validation-message-is-shown"
 
 After clicking that button, go into your repo and do a 
@@ -58,8 +58,7 @@ git pull
 
 - Make good, understandable commit messages.
 
--When finished, submit a pull-request:
-(from the branch you're working on)
-```bash
-git push
-```
+- When finished, submit a pull-request: (from the branch you're working on)
+    ```bash
+    git push
+    ```
