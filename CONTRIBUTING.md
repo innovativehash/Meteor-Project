@@ -11,7 +11,9 @@ After clicking that button, go into your repo and do a
 ```bash
 git pull
 ```
-Youll see in the pull some text to the affect:
+
+Youll see in the pull some text like:
+
 ```
 remote: Counting objects: 1, done.
 remote: Total 1 (delta 0), reused 0 (delta 0)
@@ -28,12 +30,14 @@ Now, on your command line, you would enter:
 ```
 git checkout 34-course-builder-test-incorrect-validation-message-is-shown
 ```
+
 This places you in the new branch, ready to do your work.
 
 **After** completing your work, enter
 ```
 git push
 ```
+
 
 ## Working on a Bug or Feature **not** in the Issue Tracker
 If you are working on something for which there is **not** a GitLab issue:
@@ -43,17 +47,18 @@ git checkout -b <descriptive branch name>
 ```
 where <descriptive branch name> is a **descriptive** name for what you are doing.
 
+
 ## **ALWAYS**
 **Start with**:
 ```
 git pull
 ```
 
-Create a **separate branch** for **each** *feature/bugfix* worked on:
+- Create a **separate branch** for **each** *feature/bugfix* worked on:
 
-Make good, understandable commit messages.
+- Make good, understandable commit messages.
 
-When finished, submit a pull-request:
+-When finished, submit a pull-request:
 (from the branch you're working on)
 ```bash
 git push
