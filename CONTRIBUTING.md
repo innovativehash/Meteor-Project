@@ -58,7 +58,7 @@ git pull
 
 - Make good, understandable commit messages.
 
-- When finished, submit a pull-request: (from the branch you're working on)
+- When finished, submit a pull-request: (from the branch you're working on):
     ```bash
     git push
     ```
