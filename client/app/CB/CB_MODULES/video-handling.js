@@ -5,7 +5,7 @@
  * @copyright  2016-2017 Collective Innovation
  */
 
-
+import embed from 'embed-video';
 
   /**
    * RESET
@@ -26,55 +26,43 @@
 
     if ( e.currentTarget.id == 'intro-modal' ) return;
 
-// ([a-z][A-Z])\w+ ["oTugjssqOtO", "oT"] 'https://www.youtube.com/embed/oTugjssqOT0'
-//vimeo: /https:\/\/vimeo\.com\/(\d+)/
     let vid   = t.$( '#added-video' ).val()
-      , m_youtube     = /(v=)(.*)(#)?/g
-      , m_vimeo       = /https:\/\/vimeo\.com\/(\d+)/g
-      , match_youtube = m_youtube.exec(vid)
-      , match_vimeo   = m_vimeo.exec(vid)
-      , url
-      , patt
-      , conv
-      , isYoutube;
+      , url;
     
-    if ( vid.indexOf('vimeo') != -1 ) {
-      if (  match_vimeo[0] != '' && 
-            match_vimeo[0] != undefined && 
-            match_vimeo[0] != null &&
-            match_vimeo[1] != '' &&
-            match_vimeo[1] != undefined &&
-            match_vimeo[1] != null ) 
-      {
-        conv = match_vimeo[1];
-        isYoutube = false;
-      }
+    if ( vid.indexOf('embed') != -1 ) {
+      Bert.alert('Please use the actual video URL, NOT an embed url', 'danger');
+      return;
     } else
-        if ( match_youtube == null ) {
-          let m     = /([a-z][A-Z])\w+/
-            , match = m.exec(vid);
-          conv  = match[0];
-          isYoutube = true;
-    } else {
-      conv = match[2];
-      isYoutube = true;
+        if ( vid.indexOf('<iframe') != -1 ) {
+          Bert.alert('Please use the actual video URL, NOT an embed code', 'danger' );
+          return;
+    } else
+        if ( vid.indexOf('youtube') != -1 ) {
+      url = embed( vid );
+      let u = $(url);
+      u.attr('id', `vid-${master_num}`);
+      u.attr('width', "854");
+      u.attr('height', "480");
+      url = u[0].outerHTML;
+    } else
+        if ( vid.indexOf('vimeo') ) {
+      url = embed( vid );
+      let u = $(url);
+      u.attr('id', `vid-${master_num}`);
+      u.attr('width', "854");
+      u.attr('height', "363");
+      url = u[0].outerHTML;
     }
-    
-    //IS THERE AN &LIST IN THE VIDEO ID?
-    patt = new RegExp("[?&]list");
-    
-    //IF SO, CHANGE IT TO ?LIST
-    if( patt.test( conv ) ) conv = conv.replace("&list", "?list");
-    
+/*    
     if ( isYoutube ) {
       url = `<iframe  id="vid-${master_num}"
-                      width="854" 
+                      width="854"
                       height="480" 
                       src="https://www.youtube.com/embed/${conv}" 
                       frameborder="0" 
                       allowfullscreen>
             </iframe>`;
-    } else {
+    } else if ( isVimeo ) {
       url = `<div style="margin:auto;width:50%;display:block;">
                 <iframe  id="vid-${master_num}"
                       src="https://player.vimeo.com/video/${conv}?title=0&byline=0&portrait=0&badge=0" 
@@ -87,8 +75,7 @@
                 </iframe>
               </div>`
     }
-          
-
+*/
     t.$( '#added-video' ).remove();
 
     Bert.alert('Loading video...', 'success' );
