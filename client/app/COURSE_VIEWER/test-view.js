@@ -17,7 +17,6 @@ import './test-view.html';
 
 let id;
 
-
 Template.testView.helpers({
   
   test() {
@@ -27,8 +26,15 @@ Template.testView.helpers({
     } catch(e) {
       return;
     }
-  }
+  },
   
+  passed() {
+    let tst = Session.get('taken');
+    if ( tst[Session.get('test')] == true ) {
+      $('#submit-answers').hide()
+      return "PASSED!"
+    }
+  },
 });
 
 Template.testView.events({
@@ -38,6 +44,7 @@ Template.testView.events({
    */
   'click #submit-answers'( e, t ){
     e.preventDefault();
+    e.stopImmediatePropagation();
     
     let cid             = FlowRouter.getQueryParam( "course" )
       , c               = Courses.find({ _id: cid}).fetch()[0]
@@ -59,7 +66,7 @@ Template.testView.events({
       | #q-x     | input[name="mcradio"]:checked  (mult-choice ans selected) |
       |----------------------------------------------------------------------|
     */
-
+    
     let total_questions = Number( $( '#tot_q' ).val() );
   //console.log( 'total_questions = ' + total_questions );
   
@@ -69,24 +76,9 @@ Template.testView.events({
     }
   
     let percent = Math.ceil(Number( total_score / total_questions ) * 100);
-    $( '#yosco' ).show()
-    avatar  = Meteor.user() && 
-              Meteor.user().profile && 
-              Meteor.user().profile.avatar
-    co_id   = Meteor.user() && 
-              Meteor.user().profile && 
-              Meteor.user().profile.company_id;
-              
   //console.log( 'percent = ' + percent );
   
     if ( percent >= passing_percent || passing_percent == 1001 ) {
-      $( '#score' ).addClass( 'label-success' );
-      if ( passing_percent == 1001 ) {
-        $('#score').text( "You Passed!" );
-      } else { 
-        $( '#score' ).text( percent + '%' );
-      }
-      
       if ( 
             ! ( 
                 Meteor.user() && 
@@ -97,21 +89,19 @@ Template.testView.events({
       {
         Meteor.setTimeout(function() {
           
-          let prof    = Meteor.user() && Meteor.user().profile
-            , avatar  = prof.avatar 
-            , co_id   = prof.company_id;
+          let prof    = Meteor.user() && Meteor.user().profile;
                         
           Meteor.call( 'courseCompletionUpdate', name, cid, percent, credits );
           
           Newsfeeds.insert({ 
                 owner_id:       Meteor.userId(),
                 poster:         uname,
-                poster_avatar:  avatar,
+                poster_avatar:  prof.avatar,
                 type:           "passed-course",
                 private:        false,
                 news:           `${uname} has just passed the course: ${name}!`,
                 comment_limit:  3,
-                company_id:     co_id,
+                company_id:     prof.company_id,
                 likes:          0,
                 date:           new Date()  
           });
@@ -125,18 +115,17 @@ Template.testView.events({
       
     } else {
       
-      $( '#score' ).addClass( 'label-danger' );
-      $( '#score' ).text( percent + '%' );
-      
       Bert.alert( 'Sorry, you failed to achieve the minimum score to pass', 
                   'danger', 
                   'fixed-top' );
     }
-
-    $( '#submit-answers' ).prop( 'disabled', true );
     
-    Session.set('test', null);
+    let tst = Session.get('taken');
+    tst[Session.get('test')] = true;
+    Session.set('taken', tst );
+    //Session.set('test', null);
     
+/* 
     Meteor.setTimeout(function(){
       let roles = Meteor.user() && Meteor.user().roles
         , u_id  = Meteor.userId();
@@ -153,7 +142,9 @@ Template.testView.events({
           FlowRouter.go('student-dashboard',{ _id: u_id });
       }
     }, 1500);
+*/
   }
+
 });
 
 

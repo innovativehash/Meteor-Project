@@ -87,8 +87,10 @@ Template.courseBuilderPage.onCreated( function() {
  * TITLE
  ******/
           case 'title':
+          console.log('title drug');
              try {
               let arr = P.dumpPage( that.page.get() );
+          console.log('dumpPage is ', arr );
               if ( arr.length > 0 ) {
                 for( let titi = 0, titlen = arr.length; titi < titlen; titi++ ) {
                   if ( arr[titi].type == 'test' ) {
@@ -676,7 +678,6 @@ Template.courseBuilderPage.onRendered( function() {
     this.page.set( test_session_bak.page );
     this.total.set( test_session_bak.total );
     this.return_page.set(test_session_bak.rtn_page);
-console.log( P.dump() ); 
     return;
   }
 /*
@@ -807,7 +808,7 @@ Template.courseBuilderPage.events({
         if ( p == tt && arr.length == 0 ){
           return;
         } else {
-          $('#fb-template').empty();
+          $('#fb-template').empty().show();
           t.page.set( p + 1 );
           t.total.set( p + 1 );
             return;
@@ -866,7 +867,10 @@ Template.courseBuilderPage.events({
       , creator_id  = Meteor.userId()
       , cid         = Meteor.user() &&
                       Meteor.user().profile &&
-                      Meteor.user().profile.company_id;
+                      Meteor.user().profile.company_id
+      , roles       = Meteor.user() &&
+                      Meteor.user().roles;
+                      
       if ( percent  == '' ) percent = 1001; //completion is passing
       if ( name     == '' || credits == '' ) {
         Bert.alert(
@@ -887,19 +891,12 @@ Template.courseBuilderPage.events({
                   );
         return;
       }
-      if (
-            Meteor.user() &&
-            Meteor.user().roles &&
-            Meteor.user().roles.teacher )  role = 'teacher';
-      if (
-            Meteor.user() &&
-            Meteor.user().roles &&
-            Meteor.user().roles.admin )    role = 'admin';
-      if (
-            Meteor.user() &&
-            Meteor.user().roles &&
-            Meteor.user().roles.SuperAdmin ) role = 'SuperAdmin';
+      if ( roles.teacher )    role = 'teacher';
+      if ( roles.admin )      role = 'admin';
+      if ( roles.SuperAdmin ) role = 'SuperAdmin';
+            
       if ( keys == null ) keys = [""];
+      
       Session.set('cinfo', {
                             cname: name,
                             credits: Number(credits),
@@ -923,10 +920,10 @@ Template.courseBuilderPage.events({
       let ret_route = FlowRouter.getQueryParam("rtn");
       t.$( '#intro-modal' ).modal( 'hide' );
       Meteor.setTimeout(function() {
-        if (
-              Meteor.user() &&
-              Meteor.user().roles &&
-              Meteor.user().roles.admin )
+        
+        let roles = Meteor.user() && Meteor.user().roles;
+        
+        if ( roles.admin )
         {
           if ( ret_route == 'courses' ) {
               FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
@@ -935,20 +932,12 @@ Template.courseBuilderPage.events({
               FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
           }
         }
-        else if (
-                    Meteor.user() &&
-                    Meteor.user().roles &&
-                    Meteor.user().roles.SuperAdmin
-                )
+        else if ( roles.SuperAdmin )
         {
           FlowRouter.go( 'super-admin-library', { _id: Meteor.userId() });
           return;
         }
-        else if (
-                    Meteor.user() &&
-                    Meteor.user().roles &&
-                    Meteor.user().roles.teacher
-                )
+        else if ( roles.teacher )
         {
           FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
           return;
@@ -988,43 +977,30 @@ Template.courseBuilderPage.events({
     //NECESSARY DELAY OR DIALOG CAUSES DISPLAY ISSUES ON DESTINATION
     Meteor.setTimeout(function(){
       try {
+        
+        let roles = Meteor.user() && Meteor.user().roles;
+        
         if ( t.return_page.get() == 'courses' )
         {
-          if (
-              Meteor.user() &&
-              Meteor.user().roles &&
-              Meteor.user().roles.teacher )
+          if ( roles.teacher )
           {
             FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
             return;
-          } else if (
-                      Meteor.user() &&
-                      Meteor.user().roles &&
-                      Meteor.user().roles.admin )
+          } else if ( roles.admin )
           {
             FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
             return;
           }
         } else if ( t.return_page.get() == 'library' ) {
-          if (
-              Meteor.user() &&
-              Meteor.user().roles &&
-              Meteor.user().roles.teacher )
+          if ( roles.teacher )
           {
             FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
             return;
-          } else if (
-                      Meteor.user() &&
-                      Meteor.user().roles &&
-                      Meteor.user().roles.admin )
+          } else if ( roles.admin )
           {
             FlowRouter.go( 'admin-add-from-library', { _id: Meteor.userId() });
             return;
-          } else if (
-                      Meteor.user() &&
-                      Meteor.user().roles &&
-                      Meteor.user().roles.SuperAdmin
-                    )
+          } else if ( roles.SuperAdmin )
           {
             FlowRouter.go( 'super-admin-library', { _id: Meteor.userId() });
             return;
@@ -1045,31 +1021,23 @@ Template.courseBuilderPage.events({
       // ADVANCE PAGE COUNTS
       t.page.set(  1 );
       t.total.set( 1 );
+      
       Session.set( 'cinfo',   null );
       Session.set( 'my_id',   null );
       Session.set( 'test_id', null );
       Session.set( 'Scratch', null );
-    if (
-        Meteor.user() &&
-        Meteor.user().roles &&
-        Meteor.user().roles.teacher
-       )
+      
+    let roles = Meteor.user() && Meteor.user().roles;
+    
+    if ( roles.teacher )
     {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
       return;
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.admin
-              )
+    } else if ( roles.admin )
     {
       FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
       return;
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.SuperAdmin
-              )
+    } else if ( roles.SuperAdmin )
     {
       FlowRouter.go( 'super-admin-dashboard', { _id: Meteor.userId() });
       return;
@@ -1098,6 +1066,9 @@ Template.courseBuilderPage.events({
       Bert.alert("You can't save an EMPTY course!!", 'danger');
       return;
     }
+console.log( 'uname ', uname );
+console.log( 'cinfo ', cinfo );
+console.log( 'pobj ', pobj );
 
     Meteor.setTimeout(function(){
       Meteor.call('saveBuiltCourse',  cinfo.cname,
@@ -1168,29 +1139,19 @@ Template.courseBuilderPage.events({
       let path        = FlowRouter.path( routeName, params );
       FlowRouter.go( path );
 */
-    if (
-        Meteor.user() &&
-        Meteor.user().roles &&
-        Meteor.user().roles.admin
-       )
+    let roles = Meteor.user() && Meteor.user().roles;
+    
+    if ( roles.admin )
     {
       FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
       return;
     }
-    if (
-        Meteor.user() &&
-        Meteor.user().roles &&
-        Meteor.user().roles.teacher
-       )
+    if ( roles.teacher )
     {
       FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
       return;
     }
-    if (
-        Meteor.user() &&
-        Meteor.user().roles &&
-        Meteor.user().roles.SuperAdmin
-       )
+    if ( roles.SuperAdmin )
     {
       FlowRouter.go( 'super-admin-dashboard', { _id: Meteor.userId() });
       return;
