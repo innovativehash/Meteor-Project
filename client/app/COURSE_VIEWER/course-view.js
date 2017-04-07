@@ -8,8 +8,8 @@ import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
 import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
-import * as CBCreateDOM from '../CB/CB_MODULES/createDOM.js';
-import * as Render      from '../CB/CB_MODULES/render.js';
+import * as CBCreateDOM   from '../CB/CB_MODULES/createDOM.js';
+import * as Render        from '../CB/CB_MODULES/render.js';
 import './course-view.html';
 let b, c, len, page, total;
 /*=========================================================
@@ -45,11 +45,16 @@ Template.courseView.onRendered( function() {
     
     this.autorun(function() { //self
       try {
-       let bc = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" )}).fetch();
-       let pg_num  = Template.instance().page.get();
-       Template.instance().total.set( bc[0] && bc[0].pages && bc[0].pages.length );
+        let bc = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" )}).fetch()
+          , pg_num  = Template.instance().page.get()
+          , bcp;
+       
+        bcp = bc && bc[0] && bc[0].pages;
+        
+        Template.instance().total.set( bcp.length );
+                                      
         //IS THE DATABASE PRESENT?
-        if ( bc && bc[0] && bc[0].pages ) {
+        if ( bcp ) {
           render( bc );
         }
       } catch(e) {
@@ -58,13 +63,18 @@ Template.courseView.onRendered( function() {
       }
     }); //autorun
 //-----------------------ON RENDERED------------AUTORUN----------------------
+
   /*****************
    * RENDER FUNCTION
    ****************/
   render =
     (function( bc ){
       let rtn_arr
-        , o       = [];
+        , o       = []
+        , bcp;
+        
+      bcp = bc && bc[0] && bc[0].pages;
+      
       try {
        if ( (bcp.length) != undefined ) {
           for( let i = 0, ilen = bcp.length; i < ilen; i++ ) {
@@ -88,7 +98,7 @@ Template.courseView.onRendered( function() {
                 $( '#test_v' ).show();
                 break;
               } else
-                  if ( bc[0].pages[i].type == 'pdf') {
+                  if ( bcp[i].type == 'pdf') {
                     Bert.alert({
                         title:    'Loading PDF',
                         message:  'Give it a few seconds to load...',
@@ -97,7 +107,7 @@ Template.courseView.onRendered( function() {
                         icon:     'fa-youtube'
                   });
               } else
-                  if ( bc[0].pages[i].type == 'video' ) {
+                  if ( bcp[i].type == 'video' ) {
                     Bert.alert({
                         title:    'Loading Video',
                         message:  'Give it a few seconds to load...',
@@ -106,7 +116,7 @@ Template.courseView.onRendered( function() {
                         icon:     'fa-youtube'
                     });
               } else
-                  if ( bc[0].pages[i].type == 'scorm' ) {
+                  if ( bcp[i].type == 'scorm' ) {
                     Bert.alert({
                         title:    'Loading SCORM',
                         message:  'Give it a few seconds of load...',
@@ -114,17 +124,21 @@ Template.courseView.onRendered( function() {
                         style:    'growl-top-right',
                     });
               }
-              o.push( bc[0].pages[i] );
+              o.push( bcp[i] );
             }
           }
         } else {
-            o.push(bc[0].pages );
+            o.push( bcp );
         }
+        
         $('#fb-template').empty();
-        rtn_arr = handlePrevious( o );
+        
+        rtn_arr   = handlePrevious( o );
         let funcs = rtn_arr[1];
+        
         //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
         $('#fb-template').append( rtn_arr[0] );
+        
         //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
         for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
           eval( funcs[i] );
@@ -174,9 +188,11 @@ Template.courseView.helpers({
    Template.instance().total.get()
 //-------------------------------------------------------------------
 });
+
 /*=========================================================
  * EVENTS
  *=======================================================*/
+ 
 Template.courseView.events({
   /********************************************************
    * #LOGOUT  ::(CLICK)::
@@ -188,35 +204,28 @@ Template.courseView.events({
     FlowRouter.go( '/login' );
 //-------------------------------------------------------------------
   },
+  
   /********************************************************
    * .JS-BACK-TO-HOME  ::(CLICK)::
    *******************************************************/
   'click #course-view-page-back'( e, t ) {
     e.preventDefault();
+    
+    let roles = Meteor.user() && Meteor.user().roles
+      , u_id  = Meteor.userId();
+    
     Session.set('Scratch', null);
-    if (
-        Meteor.user() &&
-        Meteor.user().roles &&
-        Meteor.user().roles.teacher
-       )
+    if ( roles.teacher )
     {
-      FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+      FlowRouter.go( 'teacher-courses', { _id: u_id });
       return;
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.admin
-              )
+    } else if ( roles.admin )
     {
-      FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+      FlowRouter.go( 'admin-courses', { _id: u_id });
       return;
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.student
-              )
+    } else if ( roles.student )
     {
-      FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
+      FlowRouter.go( 'student-courses', { _id: u_id });
       return;
     }
     return;
@@ -227,30 +236,23 @@ Template.courseView.events({
    *******************************************************/
   'click #cv-dashboard-link'( e, t ) {
       e.preventDefault();
+      
+      let roles = Meteor.user() && Meteor.user().roles
+        , u_id  = Meteor.userId();
+        
       Session.set('Scratch', null);
-      if (
-          Meteor.user() &&
-          Meteor.user().roles &&
-          Meteor.user().roles.teacher
-         )
+      
+      if ( roles.teacher )
       {
-        FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
+        FlowRouter.go( 'teacher-dashboard', { _id: u_id });
         return;
-      } else if (
-                  Meteor.user() &&
-                  Meteor.user().roles &&
-                  Meteor.user().roles.admin
-                )
+      } else if ( roles.admin )
       {
-        FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
+        FlowRouter.go( 'admin-dashboard', { _id: u_id });
         return;
-      } else if (
-                  Meteor.user() &&
-                  Meteor.user().roles &&
-                  Meteor.user().roles.student
-                )
+      } else if ( roles.student )
       {
-        FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
+        FlowRouter.go( 'student-dashboard', { _id: u_id });
         return;
       }
       //$( '#course-view-page-back' ).click();
@@ -262,30 +264,22 @@ Template.courseView.events({
     ******************************************************/
   'click #cv-courses-link'( e, t ) {
     e.preventDefault();
+    
+    let roles = Meteor.user() && Meteor.user().roles
+      , u_id  = Meteor.userId();
     Session.set('Scratch', null);
-    if (
-        Meteor.user() &&
-        Meteor.user().roles &&
-        Meteor.user().roles.teacher
-       )
+    
+    if ( roles.teacher )
     {
-      FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
+      FlowRouter.go( 'teacher-courses', { _id: u_id });
       return;
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.admin
-              )
+    } else if ( roles.admin )
     {
-      FlowRouter.go( 'admin-courses', { _id: Meteor.userId() });
+      FlowRouter.go( 'admin-courses', { _id: u_id });
       return;
-    } else if (
-                Meteor.user() &&
-                Meteor.user().roles &&
-                Meteor.user().roles.student
-              )
+    } else if ( roles.student )
     {
-      FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
+      FlowRouter.go( 'student-courses', { _id: u_id });
       return;
     }
 //-------------------------------------------------------------------
@@ -315,6 +309,7 @@ Template.courseView.events({
 //-------------------------------------------------------------------
   }
 });
+
 /**********************************************************
  * HANDLE PREVIOUS
  *********************************************************/
@@ -323,13 +318,16 @@ Template.courseView.events({
       , content = ''                    //RENDERED MARKUP (AND FUNCS) RETURNED
       , cd                              //RENDERING CLASS INSTANCE
       , mark_up = '';                   //RENDERED MARKUP RETURN VARIABLE
-    //if ( p.length == 0 ) return;
+      
     //CREATE INSTANCE OF CBCreateDOM CLASS
     cd        = new CBCreateDOM.CreateDOM( o );
+    
     //RETRIEVE RESULT OF PROCESSING RETURNED DATABASE ELEMENTS
     content   = cd.buildDOM();
+    
     //PULL OUT THE MARKUP RETURNED FROM CLASS
     mark_up   = content[0];
+    
     //PULL OUT THE JQUERY FUNCTIONS RETURNED FROM CLASS
     funcs     = content[1];
     return [ mark_up, funcs ];

@@ -31,6 +31,10 @@ let CompaniesSchema = new SimpleSchema({
   },
   'logo': {
     type: String
+  },
+  'insert_code': {
+    type: String,
+    optional: true
   }
   
 });

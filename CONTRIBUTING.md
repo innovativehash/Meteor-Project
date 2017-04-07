@@ -1,6 +1,11 @@
 # Contributing to CollectiveUniversity
 
-## Working on GitLab Issues, Features
+## Read this post on Git Commit Messages:
+[Git Commit Messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+
+
+<hr>
+## Working on GitLab: Issues, Features
 **Start each new item worked on by doing a git pull from master**
 
 If working on an ISSUE, use the gitlab button located on the issue's page, it's called:
@@ -39,6 +44,7 @@ git push
 ```
 
 
+<hr>
 ## Working on a Bug or Feature **not** in the Issue Tracker
 If you are working on something for which there is **not** a GitLab issue:
 ```bash
@@ -62,3 +68,9 @@ git pull
     ```bash
     git push
     ```
+   
+
+<hr>   
+## General Procedures:
+The following excerpt from Gitlab flow should be observed:
+> If you work on a feature branch for more than a few hours it is good to share the intermediate result with the rest of the team. This can be done by creating a merge request without assigning it to anyone, instead you mention people in the description or a comment (/cc @mark @susan). This means it is not ready to be merged but feedback is welcome. Your team members can comment on the merge request in general or on specific lines with line comments. The merge requests serves as a code review tool and no separate tools such as Gerrit and reviewboard should be needed. If the review reveals shortcomings anyone can commit and push a fix. Commonly the person to do this is the creator of the merge/pull request. The diff in the merge/pull requests automatically updates when new commits are pushed on the branch.

@@ -39,6 +39,10 @@ import embed from 'embed-video';
     } else
         if ( vid.indexOf('youtube') != -1 ) {
       url = embed( vid );
+      if ( url == undefined ) {
+        Bert.alert('Please paste in a valid Youtube or Vimeo URL', 'danger');
+        return;
+      } 
       let u = $(url);
       u.attr('id', `vid-${master_num}`);
       u.attr('width', "854");
@@ -47,11 +51,18 @@ import embed from 'embed-video';
     } else
         if ( vid.indexOf('vimeo') ) {
       url = embed( vid );
+      if ( url == undefined ) {
+        Bert.alert('Please paste in a valid Youtube or Vimeo URL', 'danger');
+        return;
+      }
       let u = $(url);
       u.attr('id', `vid-${master_num}`);
       u.attr('width', "854");
       u.attr('height', "363");
       url = u[0].outerHTML;
+    } else {
+      Bert.alert('Please enter a Youtube or Vimeo video url', 'danger');
+      return;
     }
 /*    
     if ( isYoutube ) {
