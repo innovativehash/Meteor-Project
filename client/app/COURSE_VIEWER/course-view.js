@@ -89,12 +89,6 @@ Template.courseView.onRendered( function() {
                 
                 $( '#fb-template' ).empty().hide();
                 
-                //let tst = Session.get('taken');
-                //if ( tst[Session.get('test')] == true ) {
-                  //$('#submit-answers').hide();
-                //} else {
-                  //$('#submit-answers').show();
-                //}
                 $( '#test_v' ).show();
                 break;
               } else
