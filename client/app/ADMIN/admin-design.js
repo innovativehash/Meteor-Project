@@ -8,7 +8,6 @@ import '../../../public/css/bootstrap-colorpicker.min.css';
 
 
 import { Template }     from 'meteor/templating';
-import { Students }     from '../../../both/collections/api/students.js';
 import { Companies  }   from '../../../both/collections/api/companies.js';
 
 import '../../templates/admin/admin-design.html';
@@ -31,10 +30,9 @@ Template.adminDesign.onCreated(function(){
    * BOOTSTRAP-COLORPICKER
    */
   $.getScript( '/js/bootstrap-colorpicker.min.js', function() {
-    let tmp = Students.findOne({ _id: Meteor.userId() });
-    co_id   = tmp && tmp.company_id;
+    let co_id = Meteor.user().profile.company_id;
 
-    tmp     = Companies.findOne({ _id: co_id });
+    let tmp     = Companies.findOne({ _id: co_id });
     let col = tmp && tmp.backgroundColor;
 
 	  //color picker
@@ -62,8 +60,12 @@ Template.adminDesign.onRendered(function(){
 
 Template.adminDesign.helpers({
   companies: () => {
-    let id = Students.findOne({ _id: Meteor.userId() }).company_id;
-    return Companies.findOne({ _id: id });
+    try {
+      let id = Meteor.user().profile.company_id;
+      return Companies.findOne({ _id: id });
+    } catch(e) {
+      ;
+    }
   }
 });
 
@@ -123,7 +125,7 @@ Template.adminDesign.events({
     fr.readAsDataURL( fil );
     Meteor.setTimeout( function() {
       if ( foo ) {
-        let co_id = Students.findOne({ _id: Meteor.userId() }).company_id;
+        let co_id = Meteor.user().profile.company_id;
         t.$( '#logo-preview' ).attr( "src", ig ); // foo
         t.$( '#logo-preview' ).css({width:'150px', height:'150px'});
         Meteor.call( 'saveCompanyLogo', co_id, ig );
@@ -155,7 +157,7 @@ Template.adminDesign.events({
 
     Meteor.setTimeout(function(){
       if ( colorValue ) {
-        let co_id = Students.findOne({_id: Meteor.userId()}).company_id;
+        let co_id = Meteor.user().profile.company_id;
         Meteor.call( 'saveCompanyColor', co_id, colorValue );
       }
     }, 200);
