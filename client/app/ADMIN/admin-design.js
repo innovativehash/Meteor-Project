@@ -30,11 +30,15 @@ Template.adminDesign.onCreated(function(){
    * BOOTSTRAP-COLORPICKER
    */
   $.getScript( '/js/bootstrap-colorpicker.min.js', function() {
-    let co_id = Meteor.user().profile.company_id;
-
-    let tmp     = Companies.findOne({ _id: co_id });
-    let col = tmp && tmp.backgroundColor;
-
+    let co_id, tmp, col;
+    try {
+      co_id   = Meteor.user().profile.company_id
+      , tmp     = Companies.findOne({ _id: co_id })
+      , col     = tmp && tmp.backgroundColor;
+    } catch(e) {
+      ;
+    }
+    
 	  //color picker
 	  $( ".color-picker" ).colorpicker({ color: col });
     //console.log('DESIGN:: bootstrap-colorpicker.min.js loaded...');
@@ -103,7 +107,7 @@ Template.adminDesign.events({
     let myimage = new Image();
     fr.onload   = function() {
       ig        = this.result;
-/*
+
       //orig
       myimage.src = ig;
       console.log( 'img.width   = ' + myimage.width );
@@ -118,7 +122,7 @@ Template.adminDesign.events({
       console.log( 'img.height  = ' + myimage.height );
       b = new Buffer( foo, 'base64' ).length
       console.log( 'img.size ' + b );
-*/
+
     };
 
     // reads in image, calls back fr.onload
