@@ -1,5 +1,9 @@
 # Contributing to CollectiveUniversity
 
+## Read this post on Git Commit Messages:
+[Git Commit Messages](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+
+
 ## Working on GitLab: Issues, Features
 **Start each new item worked on by doing a git pull from master**
 
@@ -62,6 +66,7 @@ git pull
     ```bash
     git push
     ```
+   
     
 ## General Procedures:
 The following excerpt from Gitlab flow should be observed:
