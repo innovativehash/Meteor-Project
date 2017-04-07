@@ -20,13 +20,15 @@ Template.courseView.onCreated( function() {
   this.page       = new ReactiveVar(1);
   this.total      = new ReactiveVar(1);
   this.render;
+  
+  Session.set('taken', false);
 //-------------------------------------------------------------------
 });
 /*=========================================================
  * RENDERED
  *=======================================================*/
 Template.courseView.onRendered( function() {
-  $('#yosco').hide();
+  //$('#yosco').hide();
 /*
   $( '#cover' ).delay( 1000 ).fadeOut( 'slow',
                                       function() {
@@ -38,7 +40,9 @@ Template.courseView.onRendered( function() {
 */
     //let self = this;
     //self.subscribe("name", function() {
-    //console.log( FlowRouter.getQueryParam("builder"))
+    
+    Session.set('taken', {} );
+    
     this.autorun(function() { //self
       try {
        let bc = BuiltCourses.find({ _id: FlowRouter.getQueryParam( "course" )}).fetch();
@@ -49,7 +53,7 @@ Template.courseView.onRendered( function() {
           render( bc );
         }
       } catch(e) {
-        console.log( e );
+        ;
         return;
       }
     }); //autorun
@@ -62,15 +66,25 @@ Template.courseView.onRendered( function() {
       let rtn_arr
         , o       = [];
       try {
-       if ( (bc && bc[0] && bc[0].pages && bc[0].pages.length) != undefined ) {
-          for( let i = 0, ilen = bc[0].pages.length; i < ilen; i++ ) {
-            if ( bc[0].pages[i].page_no == Template.instance().page.get() ){
+       if ( (bcp.length) != undefined ) {
+          for( let i = 0, ilen = bcp.length; i < ilen; i++ ) {
+            if ( bcp[i].page_no == Template.instance().page.get() ){
+              
               $( '#test_v' ).hide();
               $( '#fb-template' ).show();
-              if ( bc[0].pages[i].type == 'test' ) {
-                Session.set('test', bc[0].pages[i].id );
-                $( '#fb-template' ).hide();
-                $( '#fb-template' ).empty();
+              
+              if ( bcp[i].type == 'test' ) {
+                
+                Session.set('test', bcp[i].id );
+                
+                $( '#fb-template' ).empty().hide();
+                
+                //let tst = Session.get('taken');
+                //if ( tst[Session.get('test')] == true ) {
+                  //$('#submit-answers').hide();
+                //} else {
+                  //$('#submit-answers').show();
+                //}
                 $( '#test_v' ).show();
                 break;
               } else
@@ -116,7 +130,7 @@ Template.courseView.onRendered( function() {
           eval( funcs[i] );
         }
      } catch(ReferenceError) {
-        console.log( 'no record line:650' );
+        ;
       }
   });
 //------------------------------------------------------ON RENDERED-------------

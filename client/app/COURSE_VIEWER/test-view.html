@@ -17,6 +17,7 @@
         <strong>
           {{test_name}}
         </strong>
+        <span style="margin-left:50px;"><strong>{{passed}}</strong></span>
       </div>
       
       <div class = "panel-body">
@@ -117,10 +118,12 @@
           {{/each}}
           <div class = "panel panel-default">
             <div class = "panel-body">
+              {{#unless passed}}
               <button id = "submit-answers" 
                       class = "btn btn-primary">
                 Submit Answers
               </button>
+              {{/unless}}
             </div>
           </div>
         </div>
