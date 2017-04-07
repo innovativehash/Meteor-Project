@@ -70,6 +70,15 @@ Template.adminDesign.helpers({
     } catch(e) {
       ;
     }
+  },
+  
+  insert_code: () => {
+    try {
+      let cid = Meteor.user().profile.company_id;
+      return Companies.findOne({ _id: cid }).insert_code;
+    } catch(e) {
+      ;
+    }
   }
 });
 
@@ -114,7 +123,7 @@ Template.adminDesign.events({
       console.log( 'img.height  = ' + myimage.height );
       let b = new Buffer( ig, 'base64' ).length
       console.log( 'img.size ' + b );
-
+/*
       //resized
       foo = resizedataURL( myimage, ext, 150, 150 );
       myimage.src = foo;
@@ -122,13 +131,13 @@ Template.adminDesign.events({
       console.log( 'img.height  = ' + myimage.height );
       b = new Buffer( foo, 'base64' ).length
       console.log( 'img.size ' + b );
-
+*/
     };
 
     // reads in image, calls back fr.onload
     fr.readAsDataURL( fil );
     Meteor.setTimeout( function() {
-      if ( foo ) {
+      if ( ig ) {
         let co_id = Meteor.user().profile.company_id;
         t.$( '#logo-preview' ).attr( "src", ig ); // foo
         t.$( '#logo-preview' ).css({width:'150px', height:'150px'});
@@ -147,8 +156,16 @@ Template.adminDesign.events({
    */
   'click #design-submit'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
+    let ic = $('#ic').val();
+    
+    if (ic.length > 0 ) {
+      let co_id = Meteor.user() && 
+                  Meteor.user().profile && 
+                  Meteor.user().profile.company_id;
+      Companies.update({ _id: co_id }, {$set:{insert_code: ic }});
+    }
+    
     Bert.alert( 'Your information has been saved.', 'success' );
   },
 
