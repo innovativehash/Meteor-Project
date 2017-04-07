@@ -18,18 +18,6 @@ import './test-view.html';
 let id;
 
 
-Template.testView.onCreated(function(){
-    
-});
-
-
-
-Template.testView.onRendered(function(){
-
-});
-
-
-
 Template.testView.helpers({
   
   test() {
@@ -79,7 +67,6 @@ Template.testView.events({
     for ( let i = 1; i <= total_questions; i++ ) {
       total_score += Number( getAnswer( i ) );
     }
-  //console.log( 'total_score= ' + total_score );
   
     let percent = Math.ceil(Number( total_score / total_questions ) * 100);
     $( '#yosco' ).show()
@@ -94,11 +81,26 @@ Template.testView.events({
   
     if ( percent >= passing_percent || passing_percent == 1001 ) {
       $( '#score' ).addClass( 'label-success' );
-      $( '#score' ).text( percent + '%' );
+      if ( passing_percent == 1001 ) {
+        $('#score').text( "You Passed!" );
+      } else { 
+        $( '#score' ).text( percent + '%' );
+      }
       
-      if ( ! Meteor.user().roles.admin ) {
+      if ( 
+            ! ( 
+                Meteor.user() && 
+                Meteor.user().roles && 
+                Meteor.user().roles.admin
+              ) 
+          ) 
+      {
         Meteor.setTimeout(function() {
-  
+          
+          let prof    = Meteor.user() && Meteor.user().profile
+            , avatar  = prof.avatar 
+            , co_id   = prof.company_id;
+                        
           Meteor.call( 'courseCompletionUpdate', name, cid, percent, credits );
           
           Newsfeeds.insert({ 
@@ -136,12 +138,19 @@ Template.testView.events({
     Session.set('test', null);
     
     Meteor.setTimeout(function(){
-      if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.admin ) {
-          FlowRouter.go('admin-dashboard',{ _id: Meteor.userId()});
-      } else if( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
-          FlowRouter.go('teacher-dashboard',{ _id: Meteor.userId()});
-      } else if( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
-          FlowRouter.go('student-dashboard',{ _id: Meteor.userId()});
+      let roles = Meteor.user() && Meteor.user().roles
+        , u_id  = Meteor.userId();
+      
+      if ( roles.admin ) { //THIS WILL BE REMOVED
+          FlowRouter.go('admin-dashboard',{ _id: u_id });
+      } else 
+          if  (  roles.teacher ) 
+      {
+          FlowRouter.go('teacher-dashboard',{ _id: u_id });
+      } else 
+          if  (  roles.student ) 
+      {
+          FlowRouter.go('student-dashboard',{ _id: u_id });
       }
     }, 1500);
   }
