@@ -3674,3 +3674,8 @@ html .ui-button.ui-state-disabled:active {
     float: left;
     padding: 10px;
 }
+
+/* added for CKEditor marker class */
+.marker{
+  background-color: yellow;
+}
