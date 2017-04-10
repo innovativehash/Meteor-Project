@@ -73,7 +73,6 @@ meteor list
 accounts-base               | 1.2.15    |A user account system
 accounts-password           | 1.3.4     |Password support for accounts
 aldeed:collection2          | 2.10.0    |Automatic validation of insert and update operations on the client and server.
-autopublish                 | 1.0.7     |(For prototyping only) Publish the entire database to all clients
 blaze-html-templates        | 1.1.2     |Compile HTML templates into reactive UI with Meteor Blaze
 check                       | 1.2.5     |Check whether a value matches a pattern
 deanius:promise             | 3.1.3     |Utilities for Promise-based wrappers, method calls, helpers and HTTP in Meteor
@@ -83,7 +82,6 @@ es5-shim                    | 4.6.15    |Shims and polyfills to improve ECMAScri
 fortawesome:fontawesome     | 4.7.0     |Font Awesome (official): 500+ scalable vector icons, customizable via CSS, Retina friendly
 fullcalendar:fullcalendar   | 2.9.0     |Full-sized drag & drop event calendar
 http                        | 1.2.12    |Make HTTP calls to remote servers
-insecure                    | 1.0.7     |(For prototyping only) Allow all database writes from the client
 jquery                      | 1.11.10   |Manipulate the DOM using CSS selectors
 kadira:blaze-layout         | 2.3.0     |Layout Manager for Blaze (works well with FlowRouter)
 kadira:flow-router          | 2.12.1    |Carefully Designed Client Side Router for Meteor
@@ -105,3 +103,19 @@ themeteorchef:bert          | 2.1.2     |A client side, multi-style alerts syste
 tmeasday:html5-history-api  | 4.1.2     |HTML5 History API expansion for browsers not supporting pushState, replaceState
 tracker                     | 1.1.2     |Dependency tracker to allow reactive callbacks
 twbs:bootstrap              | 3.3.6     |The most popular front-end framework for developing responsive, mobile first projects on the web.
+
+**NPM Packages**:
+( Excerpt from *package.json* )
+```
+  "version": "1.0.0",
+  "dependencies": {
+    "async": "^2.3.0",
+    "babel-runtime": "^6.23.0",
+    "bcrypt": "^0.8.7",
+    "embed-video": "^1.5.0",
+    "pdfjs-dist": "^1.5.376"
+  },
+  "engines": {
+    "node": "4.6.1"
+  },
+ ```
