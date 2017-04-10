@@ -71,6 +71,18 @@ body.main .container {width: 1170px;}
 	 margin-top: 15px;
 }
 }
+@media only screen and (min-width:1920px){
+	.diamonds {
+    left: -65px;
+    top: 13px;
+}
+}
+@media only screen and (min-width:1600px){
+	.diamonds {
+    left: -65px;
+    top: 13px;
+}
+}
 /* Medium Desktop Layout */
 @media only screen and (min-width:1375px) and (max-width: 1475px){
 .admin-dashbord .container,.admin .container,.container {width: 765px;}
