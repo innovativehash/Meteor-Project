@@ -19,6 +19,11 @@ import '../../templates/admin/degree-certificate.html';
  */
 Template.degreeCertificate.onCreated( function() {
 
+  Tracker.autorun( () => { 
+    Meteor.subscribe('certifications');
+    Meteor.subscribe('diplomas');
+  });
+  
   //$("#degree-cert-cover").show();
 
   Session.setDefault( 'doc', 'degreeCertificate' );

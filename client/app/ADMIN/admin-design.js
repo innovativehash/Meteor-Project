@@ -21,6 +21,7 @@ Template.adminDesign.onCreated(function(){
 
   //$("#cover").show();
 
+  
   //this.autorun(() => {
   //this.subscribe("company_id", Meteor.userId());
   //});

@@ -24,7 +24,12 @@ let course_list       = []
  */
 Template.certs.onCreated(function(){
 
-
+  Tracker.autorun( () => { 
+    Meteor.subscribe('courses');
+    Meteor.subscribe('certifications');
+    Meteor.subscribe('newsfeeds');
+  });
+  
   $( "#certificate-cover" ).show();
 
   /*

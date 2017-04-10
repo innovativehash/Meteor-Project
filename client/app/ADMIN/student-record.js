@@ -24,6 +24,12 @@ Template.studentRecord.onCreated( function() {
 
   //this.cur_cor = new ReactiveArray([]);
   //this.cor_com = new ReactiveArray([]);
+  
+  Tracker.autorun( () => { 
+    Meteor.subscribe('courses');
+    Meteor.subscribe('students');
+  });
+  
 });
 
 

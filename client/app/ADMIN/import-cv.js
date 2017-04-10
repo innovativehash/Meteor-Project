@@ -23,6 +23,10 @@ Template.importCV.onCreated( function() {
 
   $( "#csv-cover" ).show();
 
+  Tracker.autorun( () => { 
+    Meteor.subscribe('companies');
+    Meteor.subscribe('students');
+  });
 
   /********************************************************
    * BOOTSTRAP-SELECT

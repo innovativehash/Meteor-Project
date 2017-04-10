@@ -19,6 +19,14 @@ import '../../templates/admin/assign-courses.html';
  *========================================================*/
 Template.assignCourses.onCreated(function() {
 
+  Tracker.autorun( () => { 
+    Meteor.subscribe('students');
+    Meteor.subscribe('courses');
+    Meteor.subscribe('departments');
+    Meteor.subscribe('diplomas');
+    Meteor.subscribe('certifications');
+  });
+  
   //$("#assign-courses-cover").show();  //set-up fade-in screen
 
   Session.set('assign-toggle-cert', false );

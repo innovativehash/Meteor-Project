@@ -22,6 +22,11 @@ Template.adminCreditRequests.onCreated( function() {
 
   //$('#cover').show();
 
+  Tracker.autorun( () => { 
+    Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('students');
+  });
+  
   $.getScript( '/bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js', function() {
       //console.log('AdminCreditRequest:: bootstrap-dialog loaded...');
   }).fail( function( jqxhr, settings, exception ) {

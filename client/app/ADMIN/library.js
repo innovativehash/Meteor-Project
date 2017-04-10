@@ -19,6 +19,12 @@ import '../../templates/admin/library.html';
 Template.library.onCreated(function() {
 
   $( "#library-cover" ).show();
+  
+  Tracker.autorun( () => { 
+    Meteor.subscribe('courses');
+    Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('students');
+  });
 
   /*
    * BOOTSTRAP3-DIALOG

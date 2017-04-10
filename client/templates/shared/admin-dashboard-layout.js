@@ -22,6 +22,12 @@ Template.adminDashboardLayout.onCreated(function(){
 
   $( "#cover" ).show();
 
+  Tracker.autorun( () => { 
+    Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('students');
+    Meteor.subscribe('companies');
+  });
+  
 });
 
 

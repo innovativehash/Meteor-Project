@@ -25,7 +25,14 @@ Template.adminStudents.onCreated( function() {
 
   //$("#students-cover").show();
 
-
+  Tracker.autorun( () => { 
+    Meteor.subscribe('students');
+    Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('comments');
+    Meteor.subscribe('departments');
+    Meteor.subscribe('companies');
+  });
+  
   /********************
    * BOOTSTRAP3-DIALOG
    *******************/
@@ -294,8 +301,8 @@ Template.adminStudents.events({
       /* 
        *  CHANGE THIS FOR PRODUCTION
        */
-      let url       = 'https://collective-university-dev-nsardo.c9users.io/login';
-      //let url = 'http://collectiveuniversity.com/login';
+      let url = 'http://collectiveuniversity.com/login';
+      
       let text      = `Hello ${fname},\n\nThis organization has set up its own Collective University to help provide training and more sharing of internal knowledge.  Your plan administrator will be providing more details in the coming days.\n\nTo login to your account and enroll in classes, please visit: ${url}.\n\nUsername: ${email}\nPass: ${password}\n\nFrom here you'll be able to enroll in courses, to request credit for off-site training and conferences, and keep track of all internal training meetings.\nIn Student Records, you'll see all the classes and certifications you have completed.  For a more complete overview, please see this video: ${videoLink}\n\nIf you have any questions, please contact: ${adminEmail}`;
 
       //ALL FIELDS MUST BE FILLED OUT OR ERR
@@ -408,7 +415,7 @@ Template.adminStudents.events({
         /*
          * CHANGE THIS URL FOR PRODUCTION
          */
-        url = 'https://collective-university-dev-nsardo.c9users.io/login';
+        url = 'http://collectiveuniversity/login';
   
     //if ( d == '' ) d = 'sales';
     if ( d == '' || _.isNull(d) || _.isUndefined(d) ) {
@@ -433,6 +440,7 @@ Template.adminStudents.events({
 
     if ( r == 'teacher' ) {
       let text = `Hello ${fn},\n\nThe administrator of Collective University has upgraded your account to teacher level so that you may now create courses and schedule training sessions within our Corporate University.  As an expert within the organization, it's important to provide you the opportunity to share your knowledge with others so you will get credit for every class you teach and course you build.\n\nYou can login here: ${url}\n\nUser: ${em}\n`;
+      
       Meteor.call('sendEmail', em, 'admin@collectiveuniversity.com', 'Upgraded Account', text );
     }
     

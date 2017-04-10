@@ -27,6 +27,12 @@ Template.degrees.onCreated(function() {
 
   $( "#degree-cover" ).show();
 
+  Tracker.autorun( () => { 
+    Meteor.subscribe('courses');
+    Meteor.subscribe('diplomas');
+    Meteor.subscribe('newsfeeds');
+  });
+  
   /*
    * JQUERY-UI SORTABLE
    */

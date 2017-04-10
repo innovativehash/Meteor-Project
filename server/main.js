@@ -29,7 +29,7 @@ Meteor.startup(() => {
   
   smtp = {
     username: 'gcc.programmer@gmail.com',
-    password: 'K81sgr82me!',
+    password: 'xxx',
     server:   'smtp.gmail.com',
     port:     587
   };
@@ -39,10 +39,8 @@ Meteor.startup(() => {
     encodeURIComponent( smtp.password ) + '@' +
     encodeURIComponent( smtp.server )   + ':' + smtp.port;
 
-  //process.env.MAIL_URL="smtp://gcc.programmer:K81sgr82me!@smtp.gmail.com:587/";
   
-  process.env.ROOT_URL = 'https://collective-university-dev-nsardo.c9users.io';
-  //process.env.ROOT_URL = "http://collectiveuniversity.com";
+  process.env.ROOT_URL = 'http://collectiveuniversity.com';
 /*  
   let exec = require('child_process').exec;
   let cmd = 'ls';
