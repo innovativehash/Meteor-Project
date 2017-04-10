@@ -104,10 +104,11 @@ tmeasday:html5-history-api  | 4.1.2     |HTML5 History API expansion for browser
 tracker                     | 1.1.2     |Dependency tracker to allow reactive callbacks
 twbs:bootstrap              | 3.3.6     |The most popular front-end framework for developing responsive, mobile first projects on the web.
 
+
 **NPM Packages**:
 ( Excerpt from *package.json* )
 ```
-  "version": "1.0.0",
+  "version": "0.8.0",
   "dependencies": {
     "async": "^2.3.0",
     "babel-runtime": "^6.23.0",
