@@ -15,7 +15,7 @@ import { Newsfeeds }      from '../../../both/collections/api/newsfeeds.js';
 
 import './test-view.html';
 
-let id;
+let id, p = {};
 
 Template.testView.helpers({
   
@@ -31,8 +31,12 @@ Template.testView.helpers({
   passed() {
     let tst = Session.get('taken');
     if ( tst[Session.get('test')] == true ) {
-      $('#submit-answers').hide()
-      return "PASSED!"
+      if ( p.passed == true ) {
+        $('#submit-answers').hide()
+        return "PASSED!   " + String(p.percent) + '%';
+      } else if ( p.passed == false ) {
+        return "FAILED!   " + String(p.percent) + '%';
+      }
     }
   },
 });
@@ -87,6 +91,9 @@ Template.testView.events({
               ) 
           ) 
       {
+        p.passed    = true;
+        p.percent   = percent;
+        
         Meteor.setTimeout(function() {
           
           let prof    = Meteor.user() && Meteor.user().profile;
@@ -96,12 +103,12 @@ Template.testView.events({
           Newsfeeds.insert({ 
                 owner_id:       Meteor.userId(),
                 poster:         uname,
-                poster_avatar:  prof.avatar,
+                poster_avatar:  prof && prof.avatar,
                 type:           "passed-course",
                 private:        false,
                 news:           `${uname} has just passed the course: ${name}!`,
                 comment_limit:  3,
-                company_id:     prof.company_id,
+                company_id:     prof && prof.company_id,
                 likes:          0,
                 date:           new Date()  
           });
@@ -114,6 +121,8 @@ Template.testView.events({
                   'fixed-top' );
       
     } else {
+      p.passed  = false;
+      p.percent = percent;
       
       Bert.alert( 'Sorry, you failed to achieve the minimum score to pass', 
                   'danger', 
