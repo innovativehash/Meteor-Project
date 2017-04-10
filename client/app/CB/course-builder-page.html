@@ -445,15 +445,23 @@
         <div class="pop-up-area">
           <!-- <button type="button" id="popup-close" data-dismiss="modal" aria-label="Close">x</button> -->
           <button type="button" class="cb-popup-close" id="cb-intro-modal-cancel" aria-label="Cancel">x</button>
-          <div class="popup-body">
+          <div class="popup-body ">
             <form action="">
               <div class="course-build-popup">
-                <div class="row">
+                <div class="row hide-to-mobile">
               	  <div class="col-sm-12">
               		  <h2>Course Information</h2>
               	  </div>
                 </div>
-                <div class="row">
+				  <div class="row show-to-mobile">
+              	  <div class="col-sm-6">
+              		  <div class="course-single-input">
+					    <h2>* Course Builder is not available on mobile devices *</h2>
+					  </div>
+					  
+				  </div>
+				  </div>
+                <div class="row hide-to-mobile">
               	  <div class="col-sm-6">
               		  <div class="course-single-input">
               			  <label for="course-builder-name">* Please choose course name:</label>

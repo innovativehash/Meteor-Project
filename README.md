@@ -10,6 +10,20 @@ Install Meteor for target system:   https://www.meteor.com/install
 
 Install MongoDB for target system:  https://docs.mongodb.com/manual/installation/
 
+Clone Repo from GitLab:
+
+```
+git clone git@gitlab.com:nsardo/collective-university-master.git
+```
+
+OR:
+
+```
+git clone https://nsardo@gitlab.com/nsardo/collective-university-master.git
+```
+
+OR:
+
 Pull Repo from GitLab:              
 
 ```bash
