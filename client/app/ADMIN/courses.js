@@ -13,6 +13,13 @@ import '../../templates/admin/courses.html';
  *========================================================*/
 Template.courses.onCreated(function(){
   //$("#courses-cover").show();
+  
+  Tracker.autorun( () => { 
+    Meteor.subscribe('courses');
+    Meteor.subscribe('built-courses');
+    Meteor.subscribe('tests');
+  });
+  
   /********************************************************
    * BOOTSTRAP3-DIALOG
    *******************************************************/

@@ -15,6 +15,10 @@ import '../../templates/admin/admin-advanced.html';
 Template.adminAdvanced.onCreated(function(){
   //$("#cover").show();
 
+  Tracker.autorun( () => { 
+    Meteor.subscribe('newsfeeds');
+  });
+  
   //this.isInternalTraining = new ReactiveVar(false);
 
 });

@@ -25,6 +25,12 @@ import './newsfeed.html';
 Template.newsfeed.onCreated(function(){
 
   Session.setDefault( 'active_click_id', '' );
+  
+  Tracker.autorun(() => {
+    Meteor.subscribe('students');
+    Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('comments');
+  });
 
 });
 
@@ -48,6 +54,8 @@ Template.newsfeed.onDestroyed( function() {
  */
 Template.newsfeed.helpers({
   newsfeeds() {
+    
+
     let owner = Meteor.userId(); //reactivevariable
 
     //var feed  = Newsfeeds.find({ owner_id: owner}, { sort: { date: -1 } }).fetch();

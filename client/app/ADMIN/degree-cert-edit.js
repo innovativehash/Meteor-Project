@@ -27,6 +27,12 @@ let //certificate       = {}
 
 
 Template.degreeCertEdit.onCreated(function(){
+  
+  Tracker.autorun( () => { 
+    Meteor.subscribe('certifications');
+    Meteor.subscribe('diplomas');
+    Meteor.subscribe('courses');
+  });
 
   /*
    * JQUERY-UI DRAG & DROP

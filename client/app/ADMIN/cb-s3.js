@@ -1,6 +1,11 @@
 
 import { Images }       from '../../../both/collections/api/images.js';
 
+Template.cbS3.onCreated(function() {
+  Tracker.autorun( () => { 
+    Meteor.subscribe('images');
+  });
+})
 
 Template.cbS3.events({
   

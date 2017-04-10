@@ -8,11 +8,9 @@
 import { Template }     from 'meteor/templating';
 import { ReactiveVar }  from 'meteor/reactive-var';
 
-import { Newsfeeds }    from '../../../both/collections/api/newsfeeds.js';
 import { Students }     from '../../../both/collections/api/students.js';
 
 import '../../templates/admin/admin-dashboard.html';
-
 
 
 /*=========================================================
@@ -22,6 +20,9 @@ Template.adminDashboard.onCreated( function() {
 
   $( '#cover' ).show();
 
+  Tracker.autorun(() => {
+    Meteor.subscribe('students');
+  });
 });
 //---------------------------------------------------------
 
