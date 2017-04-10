@@ -70,9 +70,28 @@ body.main .container {width: 1170px;}
 .dashboard-header-area .dash-title{
 	 margin-top: 15px;
 }
+.show-to-mobile{
+display: none;
+}
+.hide-to-mobile{
+display: block;
+}
+}
+@media only screen and (min-width:1920px){
+	.diamonds {
+    left: -65px;
+    top: 13px;
+}
+}
+@media only screen and (min-width:1600px){
+	.diamonds {
+    left: -65px;
+    top: 13px;
+}
 }
 /* Medium Desktop Layout */
 @media only screen and (min-width:1375px) and (max-width: 1475px){
+
 .admin-dashbord .container,.admin .container,.container {width: 765px;}
 .sidebar-menu-area {left: 0 !important;}
 body.main .container {width: 1170px;}
@@ -100,9 +119,21 @@ body.main .container {width: 1170px;}
 .diamonds {
 	top: 12px;
 }
+.show-to-mobile{
+display: none;
+}
+.hide-to-mobile{
+display: block;
+}
 }
 /* Medium Desktop Layout */
 @media only screen and (min-width:1200px) and (max-width: 1375px){
+.show-to-mobile{
+display: none;
+}
+.hide-to-mobile{
+display: block;
+}	
 .admin-dashbord .container,.admin .container,.container {width: 765px;}
 .sidebar-menu-area {left: 0 !important;}
 .dashboard-body-area.admin .container {width: 100%;}
@@ -128,6 +159,12 @@ body.main .container {width: 1170px;}
 }
 /* Nexus 10 */
 @media only screen and (min-width: 768px) and (max-width: 820px) {
+	.show-to-mobile{
+display: none;
+}
+.hide-to-mobile{
+display: block;
+}
 	
 	.profile-bar {
     margin-right: 0px;
@@ -150,6 +187,12 @@ body.main .container {width: 1170px;}
 }
 /* Small Desktop Layout */
 @media only screen and (min-width: 991px) and (max-width: 1200px) {
+.show-to-mobile{
+display: none;
+}
+.hide-to-mobile{
+display: block;
+}
 .signup-form h2 {font-size: 30px;margin-bottom: 10px;}
 .signup-form p {font-size: 20px;}
 .signup-form form input[type="email"] {min-width: 405px;}
@@ -253,6 +296,12 @@ body.main .container {width: 970px;}
 }
 /* Tablet Layout */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
+.show-to-mobile{
+display: none;
+}
+.hide-to-mobile{
+display: block;
+}
 .main-menu ul li {margin-left: 30px;}
 .main-menu ul li a {font-size: 15px;}
 .slider-text h2 {font-size: 20px;}
@@ -370,6 +419,12 @@ body.main .container {width: 750px;}
 }
 /* Mobile Small Layout */
 @media only screen and (max-width: 767px) { 
+.show-to-mobile{
+display: none;
+}
+.hide-to-mobile{
+display: block;
+}
 .logo {overflow: hidden;}
 .logo a {float: none;display: block;width: 200px;margin: auto;padding-left: 20px;}
 .main-menu ul {text-align: center;}
@@ -666,8 +721,9 @@ Mahabub media query started from here ..
   and (min-device-width: 320px) 
   and (max-device-width: 480px)
   and (-webkit-min-device-pixel-ratio: 2) {
-      #fb-template{
-    font-size: 15px;
+
+#fb-template{
+font-size: 15px;
 }
 .dashboard-body-area{
     padding-top: 0px;
@@ -687,6 +743,14 @@ margin-top:10px;
 .pop-up-area.eventpop button#popup-close {
 	margin-top:0px;
 }
+
+.show-to-mobile{
+display: block;
+}
+.hide-to-mobile{
+display: none;
+}
+
   }
   
   /* ----------- iPhone 5 and 5S ----------- */
@@ -763,4 +827,11 @@ margin-top:10px;
 .dash-post-single-list .comment-avatar {
 	top:0px;
 }
+.show-to-mobile{
+display: block;
+}
+.hide-to-mobile{
+display: none;
+}
+
 }

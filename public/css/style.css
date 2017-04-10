@@ -3674,7 +3674,13 @@ html .ui-button.ui-state-disabled:active {
     float: left;
     padding: 10px;
 }
+
 .mrr-course-viewer iframe{
 	margin: auto;
     display: block;
+}
+
+/* added for CKEditor marker class */
+.marker{
+  background-color: yellow;
 }
