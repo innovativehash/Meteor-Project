@@ -15,13 +15,11 @@ export function render( e, t, arr, P ) {
         $('#fb-template').hide();
         $('#test_v').show();
         Session.set('Scratch', arr[z].id );
-console.log('in test view');
         return;
       }  else {
         $('#test_v').hide();
         $('#fb-template').show();
         Session.set('Scratch', null);
-console.log('not in test view');
       }
     }
     
@@ -164,7 +162,23 @@ console.log('not in test view');
                                     });
                         })
                     );
-        }//else if
+        } else
+            if ( arr[i].type == 'pdf' ) {
+               eval(
+                        $( `#${arr[i].id}` ).on( "mouseup", function(){
+                          e.preventDefault();
+                          //SHOW RELATED EDITING TOOLBAR
+                          $( '#cb-text-toolbar'  ).hide();
+                          $( '#cb-title-toolbar' ).hide();
+                          $( '#cb-media-toolbar' ).hide();
+                          $( '#cb-video-toolbar' ).show();
+
+                          // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR
+                          //R/O HIDDEN FIELD
+                          t.$( '#cb-current' ).val( `${arr[i].id}` );
+                        })
+                    );
+        }//else
       }//outer for
 }
 
