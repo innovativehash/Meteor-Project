@@ -19,6 +19,11 @@ let Test      = new Mongo.Collection(null)
  * CREATED
  ============================================*/
 Template.adminTestCreator.onCreated(function(){
+
+  Tracker.autorun( () => {
+    Meteor.subscribe('tests');
+  });
+	
   /*
     $('#cover').show();
   */

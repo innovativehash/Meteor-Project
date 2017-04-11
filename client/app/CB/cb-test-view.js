@@ -14,6 +14,14 @@ import './cb-test-view.html';
 
 let id;
 
+Template.cbTestView.onCreated(function() {
+  Tracker.autorun( () => {
+    Meteor.subscribe('tests');
+  });
+});
+
+
+
 Template.cbTestView.helpers({
   
   test() {

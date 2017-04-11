@@ -8,6 +8,17 @@ import { Comments  }    from '../../../both/collections/api/comments.js';
 
 let ig  = '';
 
+
+Template.userProfile.onCreated(function() {
+  Tracker.autorun( () => {
+    Meteor.subscribe('students');
+    Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('comments');
+  });
+});
+
+
+
 /*
  * EVENTS
  */
@@ -18,7 +29,6 @@ Template.userProfile.events({
    */
   'change #user-avatar-upload'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     if ( e.currentTarget.files === 'undefined' ) {
       console.log('aborted');

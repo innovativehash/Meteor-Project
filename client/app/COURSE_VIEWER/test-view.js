@@ -17,6 +17,19 @@ import './test-view.html';
 
 let id, p = {};
 
+Template.testView.onCreated(function() {
+
+  Tracker.autorun( () => {
+    Meteor.subscribe('students');
+    Meteor.subscribe('courses');
+    Meteor.subscribe('tests');
+    Meteor.subscribe('newsfeeds');
+  });
+
+});
+
+
+
 Template.testView.helpers({
   
   test() {

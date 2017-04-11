@@ -21,6 +21,12 @@ import './student-dashboard-layout.html';
  */
 Template.studentDashboardLayout.onCreated(function(){
 
+  Tracker.autorun( () => {
+    Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('students');
+    Meteor.subscribe('companies');
+  });
+
   //$("#cover").show();
 
   /*

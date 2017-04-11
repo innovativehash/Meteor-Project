@@ -6,11 +6,15 @@
  */
 import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
+
 import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
+
 import * as CBCreateDOM   from '../CB/CB_MODULES/createDOM.js';
 import * as Render        from '../CB/CB_MODULES/render.js';
+
 import './course-view.html';
+
 let b, c, len, page, total;
 /*=========================================================
  * CREATED
@@ -21,6 +25,11 @@ Template.courseView.onCreated( function() {
   this.total      = new ReactiveVar(1);
   this.render;
   
+  Tracker.autorun( () => {
+    Meteor.subscribe('builtCourses');
+    Meteor.subscribe('students');
+  });
+
   Session.set('taken', false);
 //-------------------------------------------------------------------
 });

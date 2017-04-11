@@ -18,6 +18,11 @@ import './student-dashboard.html';
  */
 Template.studentDashboard.onCreated( function() {
 
+  Tracker.autorun( () => {
+    Meteor.subscribe('students');
+    Meteor.subscribe('events');
+  });
+
   //$("#cover").show();
 
 });

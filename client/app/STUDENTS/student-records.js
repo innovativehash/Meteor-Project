@@ -20,6 +20,12 @@ import './student-records.html';
  */
 Template.studentRecords.onCreated( function() {
   $('#cover').show();
+
+  Tracker.autorun( () => {
+    Meteor.subscribe('courses');
+    Meteor.subscribe('students');
+  });
+
   //this.cur_cor = new ReactiveArray([]);
   //this.cor_com = new ReactiveArray([]);
 });

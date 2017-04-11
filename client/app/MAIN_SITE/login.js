@@ -14,13 +14,25 @@ import './login.html';
 
 
 /*
+ * ON CREATED
+ */
+Template.login.onCreated(function() {
+
+  Tracker.autorun( () => {
+    Meteor.subscribe('students');
+  });
+
+});
+
+
+
+/*
  * EVENTS
  */
 Template.login.events({
 
   'submit form': function( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     //e.target.email.value
     var email     = $( '#email' ).val().trim();
@@ -30,14 +42,8 @@ Template.login.events({
     Meteor.logoutOtherClients();
 
     Meteor.loginWithPassword( email, password, ( error ) => {
-      //console.log( email );
-      //console.log( password );
-      //console.log( Meteor.userId() );
       let s = Students.find({ _id: Meteor.userId() });
-      //console.log( s );
       if ( error ) {
-        console.log(s);
-        console.log( 'log in error ' + error );
         Bert.alert( 'Please provide a valid Account Email and Password!', 'danger', 'fixed-top', 'fa-frown-o' );
 
       } else {
@@ -59,19 +65,38 @@ Template.login.events({
 
           Bert.alert('No user established', 'danger');
           return;
-        } else if ( Meteor.user().roles && Meteor.user().roles.SuperAdmin ) {
+        } else if ( 
+		    Meteor.user() && 
+		    Meteor.user().roles && 
+		    Meteor.user().roles.SuperAdmin 
+	          ) 
+	{
 
           FlowRouter.go( 'super-admin-dashboard', { _id: Meteor.userId() });
 
-        } else if ( Meteor.user().roles && Meteor.user().roles.admin )
+        } else if ( 
+		    Meteor.user() && 
+		    Meteor.user().roles && 
+		    Meteor.user().roles.admin 
+	          )
         {
           FlowRouter.go( 'admin-dashboard', { _id: Meteor.userId() });
 
-        } else if ( Meteor.user().roles && Meteor.user().roles.student ) {
+        } else if ( 
+		    Meteor.user() && 
+		    Meteor.user().roles && 
+		    Meteor.user().roles.student 
+	          ) 
+	{
 
             FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
 
-        } else if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+        } else if ( 
+		    Meteor.user() && 
+		    Meteor.user().roles && 
+		    Meteor.user().roles.teacher 
+	          ) 
+	{
 
           FlowRouter.go( 'teacher-dashboard', { _id: Meteor.userId() });
         }
