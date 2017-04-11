@@ -15,19 +15,19 @@ import { Mongo } from 'meteor/mongo';
 */
 
 export const Tests = new Mongo.Collection("tests");
-/*
+
 Tests.allow({
-  insert: () => false,
-  update: () => false,
-  remove: () => false
+  insert: () => true,
+  update: () => true,
+  //remove: () => false
 });
 
 Tests.deny({
-  insert: () => true,
-  update: () => true,
+  //insert: () => true,
+  //update: () => true,
   remove: () => true
 });
-*/
+
 
 let TestsSchema = new SimpleSchema({
   'company_id': {

@@ -12,8 +12,8 @@ import { Mongo } from 'meteor/mongo';
 export const Courses = new Mongo.Collection("courses");
 
 Courses.allow({
-  insert: () => false,
-  update: () => false,
+  insert: () => true,
+  update: () => true,
   remove: () => false
 });
 /*

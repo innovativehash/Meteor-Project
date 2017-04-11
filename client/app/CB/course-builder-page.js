@@ -14,7 +14,7 @@ import { Students }       from '../../../both/collections/api/students.js';
 import { Images }         from '../../../both/collections/api/images.js';
 import { Pdfs }           from '../../../both/collections/api/pdfs.js';
 import { PowerPoints }    from '../../../both/collections/api/powerpoints.js';
-import { Scorms } 	  from '../../../both/collections/api/scorms.js';
+import { Scorms } 	      from '../../../both/collections/api/scorms.js';
 
 import './course-builder-page.html';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.css';
@@ -1084,9 +1084,6 @@ Template.courseBuilderPage.events({
       Bert.alert("You can't save an EMPTY course!!", 'danger');
       return;
     }
-console.log( 'uname ', uname );
-console.log( 'cinfo ', cinfo );
-console.log( 'pobj ', pobj );
 
     Meteor.setTimeout(function(){
       Meteor.call('saveBuiltCourse',  cinfo.cname,
@@ -1123,6 +1120,7 @@ console.log( 'pobj ', pobj );
             });
           }
     });
+    
       //-----------------------------------------------
       /*
        * IF THE COURSE CREATOR IS A TEACHER
@@ -1316,16 +1314,18 @@ console.log( 'pobj ', pobj );
  'click #cb-editor-save-text'( e, t ) {
    e.preventDefault();
 
-   let cur = $('#cb-current').val()
-    , txt = editor && editor.getData(); //CKEDITOR.instances.editor.getData();
+   let cur  = $('#cb-current').val()
+    , txt   = editor && editor.getData(); //CKEDITOR.instances.editor.getData();
+    
     //TEXT COMES FORM CKEDITOR IN HTML FORMAT. CONVERT TO TEXT
     //txt = $(txt).text().trim();
     
 	 //DON'T ACCEPT EMPTY INPUT
-	 if ( txt == ''         || 
+	 if ( 
+	      txt == ''         || 
         txt == undefined  || 
         txt == null       || 
-        (! txt.replace(/\s/g, '').length) 
+        ( ! txt.replace(/\s/g, '').length ) 
       ) 
    {
 	   Bert.alert('You must enter text to be saved', 'danger');
@@ -1333,58 +1333,58 @@ console.log( 'pobj ', pobj );
 	 }
 
    if ( cur != '' ) { //WE'RE EDITING
-    $( `#${cur}` ).show();
-    $( `#${cur}` ).html( txt );
+      $( `#${cur}` ).show();
+      $( `#${cur}` ).html( txt );
 
-    let idx = P.indexOf( `${cur}` );
+      let idx = P.indexOf( `${cur}` );
 
-    P.removeAt( idx );
+      P.removeAt( idx );
 
-    P.insert( idx, {
-      page_no:        t.page.get(),
-      type:           'text',
-      id:             cur,
-      text:           txt,
-      offset:         $( `#${cur}` ).offset(),
-      zIndex:         $( `#${cur}` ).css('z-index'),
-      fontSize:       $( `#${cur}` ).css('font-size'),
-      border:         $( `#${cur}` ).css('border'),
-      fontWeidht:     $( `#${cur}` ).css('font-weight'),
-      fontStyle:      $( `#${cur}` ).css('font-style'),
-      textDecoration: $( `#${cur}` ).css('text-decoration'),
-      opacity:        $( `#${cur}` ).css('opacity')
-    });
-    P.print();
+      P.insert( idx, {
+        page_no:        t.page.get(),
+        type:           'text',
+        id:             cur,
+        text:           txt,
+        offset:         $( `#${cur}` ).offset(),
+        zIndex:         $( `#${cur}` ).css('z-index'),
+        fontSize:       $( `#${cur}` ).css('font-size'),
+        border:         $( `#${cur}` ).css('border'),
+        fontWeidht:     $( `#${cur}` ).css('font-weight'),
+        fontStyle:      $( `#${cur}` ).css('font-style'),
+        textDecoration: $( `#${cur}` ).css('text-decoration'),
+        opacity:        $( `#${cur}` ).css('opacity')
+      });
+      P.print();
 
-		$('#cb-text-toolbar').hide();
+		  $('#cb-text-toolbar').hide();
 
     
-    $('#cb-current').val(null);
+      $('#cb-current').val(null);
 
-    editor && editor.destroy();
-		editor = null;
+      editor && editor.destroy();
+		  editor = null;
 		
-		//ALLOW PAGE ADVANCE / DECREMENT
-    $( '#cb-next-btn' ).prop('disabled', false );
-    $( '#cb-prev-btn' ).prop('disabled', false );
+		  //ALLOW PAGE ADVANCE / DECREMENT
+      $( '#cb-next-btn' ).prop('disabled', false );
+      $( '#cb-prev-btn' ).prop('disabled', false );
 		
-		return;
+		  return;
 
    } else {   
-                         //WE'RE CREATING A NEW TEST ELEMENT
-    editor && editor.destroy();
-		editor = null;
+      //WE'RE CREATING A NEW TEST ELEMENT
+      editor && editor.destroy();
+		  editor = null;
 
-		$('#cb-text-toolbar').hide();
+		  $('#cb-text-toolbar').hide();
 
-    CBTexts.cbAddedTextBlur(  e,
-                              t,
-                              txt,
-                              t.page.get(),
-                              master_num++,
-                              P
-                            );
-   }
+      CBTexts.cbAddedTextBlur(  e,
+                                t,
+                                txt,
+                                t.page.get(),
+                                master_num++,
+                                P
+                              );
+   }//else
 
    //SHOW CANVAS AS IT WAS HIDDEN WHEN TEXT EDITOR WAS DISPLAYED
    $( '#fb-template' ).show();

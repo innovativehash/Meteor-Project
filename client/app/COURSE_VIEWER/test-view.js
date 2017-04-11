@@ -35,7 +35,8 @@ Template.testView.helpers({
   test() {
     id = Session.get('test');
     try{
-      return Tests.findOne({ _id: id });
+      let ts = Tests.findOne({ _id: id });
+      return ts;
     } catch(e) {
       return;
     }
@@ -43,11 +44,13 @@ Template.testView.helpers({
   
   passed() {
     let tst = Session.get('taken');
+    
     if ( tst[Session.get('test')] == true ) {
       if ( p.passed == true ) {
-        $('#submit-answers').hide()
+        $('#submit-answers').hide();
         return "PASSED!   " + String(p.percent) + '%';
       } else if ( p.passed == false ) {
+        $('#submit-answers').hide();
         return "FAILED!   " + String(p.percent) + '%';
       }
     }
@@ -61,7 +64,6 @@ Template.testView.events({
    */
   'click #submit-answers'( e, t ){
     e.preventDefault();
-    e.stopImmediatePropagation();
     
     let cid             = FlowRouter.getQueryParam( "course" )
       , c               = Courses.find({ _id: cid}).fetch()[0]
@@ -93,9 +95,10 @@ Template.testView.events({
     }
   
     let percent = Math.ceil(Number( total_score / total_questions ) * 100);
-  //console.log( 'percent = ' + percent );
   
     if ( percent >= passing_percent || passing_percent == 1001 ) {
+      p.percent   = percent;
+      p.passed    = true;
       if ( 
             ! ( 
                 Meteor.user() && 
@@ -104,9 +107,6 @@ Template.testView.events({
               ) 
           ) 
       {
-        p.passed    = true;
-        p.percent   = percent;
-        
         Meteor.setTimeout(function() {
           
           let prof    = Meteor.user() && Meteor.user().profile;
@@ -145,7 +145,6 @@ Template.testView.events({
     let tst = Session.get('taken');
     tst[Session.get('test')] = true;
     Session.set('taken', tst );
-    //Session.set('test', null);
     
 /* 
     Meteor.setTimeout(function(){
