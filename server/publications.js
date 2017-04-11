@@ -1,6 +1,7 @@
 /*
  * (c)2016 Collective Innovations, Inc.
  */
+import { BuiltCourses }   from '../both/collections/api/built-courses.js';
 import { Comments }       from '../both/collections/api/comments.js';
 import { Newsfeeds }      from '../both/collections/api/newsfeeds.js';
 import { Students }       from '../both/collections/api/students.js';
@@ -38,6 +39,9 @@ Meteor.publish("company_id", function( id ){
   return Students.find({ _id: id},{fields:{company_id:1}} );
 });
 
+Meteor.publish( 'builtCourses', function() { 
+  return BuiltCourses.find({});  
+});
 
 Meteor.publish( 'events', function() { 
   return Events.find({}); 

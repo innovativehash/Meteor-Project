@@ -7,14 +7,10 @@ import { Mongo } from 'meteor/mongo';
 export const BuiltCourses = new Mongo.Collection("builtCourses");
 
 BuiltCourses.allow({
-  insert: function(id, q){
-    return true;
-  },
-  update: function(id, q){
-    return true;
-  },
+  insert: () => true, 
+  update: () => true,
   remove: function(id){
-    return true;
+    return false;
   }
   
 });
