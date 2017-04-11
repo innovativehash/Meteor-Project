@@ -2,6 +2,9 @@
  * @module createDOM
  *
  * @programmer Nick Sardo <nsardo@aol.com>
+ *
+ * //todo: need to rank element placements for render order on mobile devices
+ *
  */
 export class CreateDOM {
 
@@ -14,12 +17,31 @@ export class CreateDOM {
     this.videos = [];
     this.markup = [];
   }
+  
   makeTitle( obj ){
 	  
 	//Rahman: changes on makeTitle for course viewer alignment fixes for mobile & desktop
+  //nfs: changes media selector match (experimental)
+    if (window.matchMedia("(max-width: 768px)").matches) {
+    		
+    	this.titles.push(`<span id="${obj.id}" style="cursor:move;
+                                                      position:relative;                                                 
+                                                      font-size:${obj.fontSize};
+                                                      font-style:${obj.fontStyle};
+                                                      font-weight:${obj.fontWeight};
+                                                      opacity:${obj.opacity};
+                                                      text-decoration:${obj.textDecoration};">
+                              ${obj.text}
+                          </span>`);
+                          
+        this.markup.push(
+                          `$('#${obj.id}').css({ 'margin-bottom':'10px' });`,
+                          `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
+                        );				
   
-    /*this.titles.push(`<span id="${obj.id}" style="cursor:move;
-                                                  position:relative;
+    } else {
+      this.titles.push(`<span id="${obj.id}" style="cursor:move;
+                                                  position:absolute;
                                                   top:${obj.offset.top};
                                                   left:${obj.offset.left};
                                                   font-size:${obj.fontSize};
@@ -33,24 +55,11 @@ export class CreateDOM {
     this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
-                    );*/
-					
-	this.titles.push(`<span id="${obj.id}" style="cursor:move;
-                                                  position:relative;                                                 
-                                                  font-size:${obj.fontSize};
-                                                  font-style:${obj.fontStyle};
-                                                  font-weight:${obj.fontWeight};
-                                                  opacity:${obj.opacity};
-                                                  text-decoration:${obj.textDecoration};">
-                          ${obj.text}
-                      </span>`);
-                      
-    this.markup.push(
-                      `$('#${obj.id}').css({ 'margin-bottom':'10px' });`,
-                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
-                    );				
-
+                    );
+			
+    }
   }
+  
   makeText( obj ){
     try {
       if ( obj && obj.offset == undefined ) {
@@ -61,25 +70,10 @@ export class CreateDOM {
     }
 	
 	//Rahman: changes on makeText for course viewer alignment fixes for mobile & desktop
-	
-  /*  this.texts.push(`<span id="${obj.id}" style="cursor:move;
-                                                  position:relative;
-                                                  top:${obj.offset.top};
-                                                  left:${obj.offset.left};
-                                                  font-size:${obj.fontSize};
-                                                  font-style:${obj.fontStyle};
-                                                  font-weight:${obj.fontWeight};
-                                                  opacity:${obj.opacity};
-                                                  text-decoration:${obj.textDecoration};">
-                          ${obj.text}
-                      </span>`);
-                      
-    this.markup.push(
-                      `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
-                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
-                    );*/
-					
-		 this.texts.push(`<span id="${obj.id}" style="cursor:move;
+	//nfs: changes media selector match (experimental)
+	   if (window.matchMedia("(max-width: 768px)").matches) {
+     
+		    this.texts.push(`<span id="${obj.id}" style="cursor:move;
                                                   position:relative;                                                  
                                                   font-style:${obj.fontStyle};
                                                   font-weight:${obj.fontWeight};
@@ -88,15 +82,55 @@ export class CreateDOM {
                           ${obj.text}
                       </span>`);
                       
-    this.markup.push(
+        this.markup.push(
                       `$('#${obj.id}').css({ 'margin-bottom':'10px' });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
                     );			
+    } else {
+      this.texts.push(`<span id="${obj.id}" style="cursor:move;
+                                                  position:absolute;
+                                                  top:${obj.offset.top};
+                                                  left:${obj.offset.left};
+                                                  font-size:${obj.fontSize};
+                                                  font-style:${obj.fontStyle};
+                                                  font-weight:${obj.fontWeight};
+                                                  margin-top:10px;
+                                                  margin-bottom:10px;
+                                                  opacity:${obj.opacity};
+                                                  text-decoration:${obj.textDecoration};">
+                          ${obj.text}
+                      </span>`);
+                      
+      this.markup.push(
+                      `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
+                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
+                    );
+					
+    }
   }
+  
 //Rahman: changes on makeText for course viewer alignment fixes for mobile & desktop
+//nfs: changes media selector match (experimental)
+    
   makeImage( obj ) {
-    /*this.images.push( `
-                       <div id="${obj.id}" style="position:relative;
+    if (window.matchMedia("(max-width: 768px)").matches) {
+     
+		  this.images.push( `
+                       <div id="${obj.id}" style="position:relative;                                                  
+                                                  background-image:${obj.src};
+                                                  width:${obj.width}px;
+                                                  height:${obj.height}px;
+                                                  background-size:cover;">
+                       </div>`);
+      this.markup.push(
+                      `$('#${obj.id}').css({ 'margin-bottom':'10px' });`,
+                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
+                      `$('#${obj.id}').resizable({ autoHide: false, aspectRatio: true, containment: "#fb-template" });`
+                    );
+
+    } else {
+       this.images.push( `
+                       <div id="${obj.id}" style="position:absolute;
                                                   top:${obj.offset.top}px;
                                                   left:${obj.offset.left}px;
                                                   background-image:${obj.src};
@@ -104,26 +138,14 @@ export class CreateDOM {
                                                   height:${obj.height}px;
                                                   background-size:cover;">
                        </div>`);
-    this.markup.push(
+      this.markup.push(
                       `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
                       `$('#${obj.id}').resizable({ autoHide: false, aspectRatio: true, containment: "#fb-template" });`
                     );
-					*/
-					this.images.push( `
-                       <div id="${obj.id}" style="position:relative;                                                  
-                                                  background-image:${obj.src};
-                                                  width:${obj.width}px;
-                                                  height:${obj.height}px;
-                                                  background-size:cover;">
-                       </div>`);
-    this.markup.push(
-                      `$('#${obj.id}').css({ 'margin-bottom':'10px' });`,
-                      `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
-                      `$('#${obj.id}').resizable({ autoHide: false, aspectRatio: true, containment: "#fb-template" });`
-                    );
-
-  }
+					
+      }
+    }
 
   makeVideo( obj ) {
     this.videos.push( obj.url );

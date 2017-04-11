@@ -44,7 +44,7 @@ let pos = t.$(`#txt-${master_num}`).css({top: `200px`, left: `200px` });
                                       ${txt}
                                   </span>`);
                                   
-//t.$(`#txt-${master_num}`).parent().css({position: 'relative'});
+    t.$( `#txt-${master_num}` ).css({ 'margin-top': '10px', 'margin-bottom': '10px' });
     t.$( `#txt-${master_num}` ).offset({ left: pos.left, top: pos.top });
     t.$( `#txt-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
 
