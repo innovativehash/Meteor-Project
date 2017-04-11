@@ -9,6 +9,17 @@ import { Companies }    from '../../../both/collections/api/companies.js';
 import  './internal-training-layout.html';
 
 
+Template.internalTrainingLayout.onCreated(function() {
+  
+  Tracker.autorun( () => {
+    Meteor.subscribe('students');
+    Meteor.subscribe('companies');
+  });
+	
+});
+
+
+
 /*=========================================================
  * HELPERS
  *=======================================================*/

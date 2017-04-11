@@ -24,6 +24,12 @@ let closeModal = () => {
  *=======================================================*/
 Template.addEditEventModal.onCreated( () => {
 
+  Tracker.autorun( () => {
+    Meteor.subscribe('events');
+    Meteor.subscribe('students');
+    Meteor.subscribe('timezones');
+  });
+
   //let template = Template.instance();
   //template.subscribe( 'students' );
   //-------------------------------------------------------

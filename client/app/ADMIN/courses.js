@@ -16,7 +16,7 @@ Template.courses.onCreated(function(){
   
   Tracker.autorun( () => { 
     Meteor.subscribe('courses');
-    Meteor.subscribe('built-courses');
+    Meteor.subscribe('builtCourses');
     Meteor.subscribe('tests');
   });
   

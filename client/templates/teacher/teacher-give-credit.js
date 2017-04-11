@@ -15,6 +15,11 @@ import './teacher-give-credit.html';
  *============================================*/
 Template.teacherGiveCredit.onCreated(function(){
 
+  Tracker.autorun( () => {
+    Meteor.subscribe('students');
+    Meteor.subscribe('events');
+  });
+
   $.getScript( '/js/select2.min.js', function() {
     $(document).ready(function(){			
 		  $( ".js-teacher-add-students" ).select2({

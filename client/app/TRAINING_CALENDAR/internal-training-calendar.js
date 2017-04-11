@@ -25,6 +25,10 @@ let isPast  = ( date ) => {
 Template.internalTrainingCalendar.onCreated( () => {
   //$('#cover').show();
   
+  Tracker.autorun( () => {
+    Meteor.subscribe('events');
+  });
+
   let template = Template.instance();
   
   template.subscribe( 'events' );

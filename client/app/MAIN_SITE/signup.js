@@ -18,6 +18,11 @@ import './signup.html';
  */
  Template.signup.onCreated(function(){
     $('[data-toggle="tooltip"]').tooltip();
+
+    Tracker.autorun( () => {
+      Meteor.subscribe('students');
+      Meteor.subscribe('companies');
+    });
 //-------------------------------------------------------------------
  });
  

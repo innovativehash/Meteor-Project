@@ -19,6 +19,11 @@ import './student-request-credit.html';
  * ON CREATED
  */
 Template.studentRequestCredit.onCreated(function() {
+	
+  Tracker.autorun( () => {
+    Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('students');
+  });
 
   //$("#cover").show();
 

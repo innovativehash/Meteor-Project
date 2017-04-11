@@ -22,6 +22,11 @@ Template.superAdminDashboard.onCreated( function() {
 
   $( '#cover' ).show();
 
+  Tracker.autorun( () => {
+    Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('students');
+  });
+
 });
 //---------------------------------------------------------
 

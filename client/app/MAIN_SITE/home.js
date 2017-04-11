@@ -28,6 +28,10 @@ import './home.html';
 Template.home.onCreated(function homeOnCreated() {
 
   $( "#cover" ).show();
+
+  Tracker.autorun( () => {
+    Meteor.subscribe('students');
+  });
   
   $(document).on('click', '[data-toggle="lightbox"]', function(event) {
     event.preventDefault();

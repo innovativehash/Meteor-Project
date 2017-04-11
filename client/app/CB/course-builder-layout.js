@@ -5,6 +5,9 @@ import './course-builder-layout.html';
 
 Template.courseBuilderLayout.onCreated(function(){
 
+  Tracker.autorun( () => {
+    Meteor.subscribe('students');
+  });
 
 });
 

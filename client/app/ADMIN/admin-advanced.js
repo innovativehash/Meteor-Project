@@ -17,6 +17,7 @@ Template.adminAdvanced.onCreated(function(){
 
   Tracker.autorun( () => { 
     Meteor.subscribe('newsfeeds');
+    Meteor.subscribe('students');
   });
   
   //this.isInternalTraining = new ReactiveVar(false);

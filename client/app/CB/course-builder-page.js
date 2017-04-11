@@ -7,12 +7,15 @@
 import async              from 'async';
 import { Template }       from 'meteor/templating';
 import { ReactiveVar }    from 'meteor/reactive-var';
+
 import { Courses }        from '../../../both/collections/api/courses.js';
 import { BuiltCourses }   from '../../../both/collections/api/built-courses.js'
 import { Students }       from '../../../both/collections/api/students.js';
 import { Images }         from '../../../both/collections/api/images.js';
 import { Pdfs }           from '../../../both/collections/api/pdfs.js';
 import { PowerPoints }    from '../../../both/collections/api/powerpoints.js';
+import { Scorms } 	  from '../../../both/collections/api/scorms.js';
+
 import './course-builder-page.html';
 import '../../../public/jquery-ui-1.12.0.custom/jquery-ui.css';
 
@@ -45,9 +48,12 @@ let P           = new PageObject()
  *=======================================================*/
 Template.courseBuilderPage.onCreated( function() {
   //p  = FlowRouter.current().path;
+	
   $( '#prompt' ).hide();
   Blaze._allowJavascriptUrls();
+
   $( '#cover' ).show();
+
   this.rtn          = new ReactiveVar( FlowRouter.getQueryParam('rtn') );
   this.return_page  = new ReactiveVar(this.rtn.get());
   this.page         = new ReactiveVar(1)
@@ -55,7 +61,19 @@ Template.courseBuilderPage.onCreated( function() {
   this.page.set(1);
   this.total.set(1);
   $('#p').attr('data-p', 1);
+
   let that = this;
+
+  Tracker.autorun( () => {
+    Meteor.subscribe('courses');
+    Meteor.subscribe('builtCourses');
+    Meteor.subscribe('students');
+    Meteor.subscribe('images');
+    Meteor.subscribe('pdfs');
+    Meteor.subscribe('powerpoints');
+    Meteor.subscribe('scorms');
+  });
+
   /**************
    * JQUERY-UI
    *************/

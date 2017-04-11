@@ -10,6 +10,17 @@ import { Newsfeeds }  from '../../../both/collections/api/newsfeeds.js';
 import './super-admin.html';
 
 
+Template.superAdmin.onCreated(function() {
+  
+  Tracker.autorun( () => {
+    Meteor.subscribe('students');
+    Meteor.subscribe('newsfeed');
+  });
+
+});
+
+
+
 Template.superAdmin.helpers({
   
   users: () => {

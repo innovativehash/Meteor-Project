@@ -27,6 +27,10 @@ let isPast = ( date ) => {
 Template.studentTrainingCalendar.onCreated( () => {
   //$('#cover').show();
   
+  Tracker.autorun( () => {
+    Meteor.subscribe('events');
+  });
+
   let template = Template.instance();
   
   template.subscribe( 'events' );

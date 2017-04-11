@@ -19,6 +19,10 @@ let co_id = '';
  */
 Template.adminDesign.onCreated(function(){
 
+  Tracker.autorun( () => {
+    Meteor.subscribe('companies');
+  });
+	
   //$("#cover").show();
 
   
