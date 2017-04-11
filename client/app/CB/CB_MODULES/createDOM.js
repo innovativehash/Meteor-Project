@@ -44,6 +44,8 @@ export class CreateDOM {
                                                   position:absolute;
                                                   top:${obj.offset.top};
                                                   left:${obj.offset.left};
+                                                  margin-top:10px;
+                                                  margin-bottom:10px;
                                                   font-size:${obj.fontSize};
                                                   font-style:${obj.fontStyle};
                                                   font-weight:${obj.fontWeight};
@@ -134,6 +136,8 @@ export class CreateDOM {
                                                   top:${obj.offset.top}px;
                                                   left:${obj.offset.left}px;
                                                   background-image:${obj.src};
+                                                  margin-top:10px;
+                                                  margin-bottom:10px;
                                                   width:${obj.width}px;
                                                   height:${obj.height}px;
                                                   background-size:cover;">
