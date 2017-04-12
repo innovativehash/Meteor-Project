@@ -13,13 +13,13 @@ Install MongoDB for target system:  https://docs.mongodb.com/manual/installation
 Clone Repo from GitLab:
 
 ```
-git clone git@gitlab.com:nsardo/collective-university-master.git
+git@gitlab.com:collective-university-development/collective-university-master.git
 ```
 
 OR:
 
 ```
-git clone https://nsardo@gitlab.com/nsardo/collective-university-master.git
+https://<your-gitlab-id>@gitlab.com/collective-university-development/collective-university-master.git
 ```
 
 OR:
@@ -27,13 +27,13 @@ OR:
 Pull Repo from GitLab:              
 
 ```bash
-git pull git@gitlab.com:nsardo/collective-university-master.git
+git@gitlab.com:collective-university-development/collective-university-master.git
 ```
 
 OR:                             
 
 ```bash
-git pull https://nsardo@gitlab.com/nsardo/collective-university-master.git
+https://<your-gitlab-id>@gitlab.com/collective-university-development/collective-university-master.git
 ```
     
 OR:                             download zip file of repo from GitLab
