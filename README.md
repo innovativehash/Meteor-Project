@@ -131,6 +131,6 @@ twbs:bootstrap              | 3.3.6     |The most popular front-end framework fo
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com:nsardo/collective-university-master.git"
+    "url": "git+https://gitlab.com:collective-university-development/collective-university-master.git"
   },
  ```
