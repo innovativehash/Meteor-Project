@@ -76,6 +76,14 @@ display: none;
 .hide-to-mobile{
 display: block;
 }
+
+.filter-buttons .hide-to-mobile{
+display:block;
+}	
+
+.filter-buttons .show-to-mobile{
+    display: none;
+}	
 }
 @media only screen and (min-width:1920px){
 	.diamonds {
@@ -125,6 +133,14 @@ display: none;
 .hide-to-mobile{
 display: block;
 }
+
+.filter-buttons .hide-to-mobile{
+display:block;
+}	
+
+.filter-buttons .show-to-mobile{
+    display: none;
+}
 }
 /* Medium Desktop Layout */
 @media only screen and (min-width:1200px) and (max-width: 1375px){
@@ -156,6 +172,13 @@ body.main .container {width: 1170px;}
 .diamonds {
 	top: 12px;
 }
+.filter-buttons .hide-to-mobile{
+display:block;
+}	
+
+.filter-buttons .show-to-mobile{
+    display: none;
+}
 }
 /* Nexus 10 */
 @media only screen and (min-width: 768px) and (max-width: 820px) {
@@ -183,6 +206,13 @@ display: block;
 }
 .nexus-width{
 	width: 39%;
+}
+.filter-buttons .hide-to-mobile{
+display:block;
+}	
+
+.filter-buttons .show-to-mobile{
+    display: none;
 }
 }
 /* Small Desktop Layout */
@@ -293,6 +323,14 @@ body.main .container {width: 970px;}
 .profile-bar{
 	margin-right: 0px;
 }
+.filter-buttons .hide-to-mobile{
+display:block;
+}	
+
+.filter-buttons .show-to-mobile{
+    display: none;
+}
+
 }
 /* Tablet Layout */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -416,6 +454,15 @@ body.main .container {width: 750px;}
     padding-left: 10px;
     padding-right: 10px;
 }
+
+.filter-buttons .hide-to-mobile{
+display:block;
+}	
+
+.filter-buttons .show-to-mobile{
+    display: none;
+}
+
 }
 /* Mobile Small Layout */
 @media only screen and (max-width: 767px) { 
@@ -425,6 +472,9 @@ display: none;
 .hide-to-mobile{
 display: block;
 }
+
+
+
 .logo {overflow: hidden;}
 .logo a {float: none;display: block;width: 200px;margin: auto;padding-left: 20px;}
 .main-menu ul {text-align: center;}
@@ -750,6 +800,13 @@ display: block;
 .hide-to-mobile{
 display: none;
 }
+.filter-buttons .hide-to-mobile{
+display:none;
+}	
+
+.filter-buttons .show-to-mobile{
+    display: block;
+}	
 
   }
   
@@ -760,6 +817,14 @@ display: none;
   and (max-device-width: 568px)
   and (-webkit-min-device-pixel-ratio: 2) {
 	  
+.filter-buttons .hide-to-mobile{
+display:none;
+}	
+
+.filter-buttons .show-to-mobile{
+    display: block;
+}	
+
 #create-training-event-button{
 margin-top:10px;
 }	

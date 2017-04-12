@@ -39,3 +39,5 @@ check@1.2.5
 deanius:promise
 manuel:reactivearray
 msavin:mongol
+aslagle:reactive-table
+mrt:jquery-ui

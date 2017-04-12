@@ -27,7 +27,8 @@
               <br />
               <div class="filter-buttons">
                 <div class="col-sm-8">
-                  <button class="js-course-builder">Build Course</button>
+                  <button class="js-course-builder hide-to-mobile">Build Course</button>
+				  <button type="button" class="show-to-mobile" data-toggle="modal" data-target="#nocourseModal">Build Course</button> 
                   <button class="js-add-course-from-library">Add From Library</button>
                   <button class       = "js-load-scorm"
                           type        = "button"
@@ -36,6 +37,8 @@
                           data-target = "#myModal">
                     Import Course
                   </button>
+				  
+				  
                 </div>
                 <div class="col-sm-4">
                     <select id    = "search-courses"
@@ -227,4 +230,32 @@
   </div>
 </div>
 {{/if}}
+
+<!-- modal -->
+                <div  class           = "modal fade left"
+                      id              = "nocourseModal"
+                      tabindex        = "-1"
+                      role            = "dialog"
+                      aria-labelledby = "myModalLabel">
+                  <div class = "modal-dialog">
+                    <div class = "pop-up-area">
+                      <button type          = "button"
+                              id            = "popup-close"
+                              data-dismiss  = "modal"
+                              aria-label    = "Close">x</button>
+                      <div class = "popup-body">
+                        <form action = "">
+						 <div class="row show-to-mobile">
+						  <div class="col-sm-6">
+							  <div class="course-single-input">
+								<h2>* Course Builder is not available on mobile devices *</h2>
+							  </div>
+							  
+						  </div>
+						  </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- modal -->
 </template>
