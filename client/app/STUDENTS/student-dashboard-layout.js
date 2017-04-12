@@ -153,7 +153,6 @@ Template.studentDashboardLayout.events({
    */
   'click #logout': function( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     Meteor.logout();
     FlowRouter.go( '/login' );
@@ -166,7 +165,6 @@ Template.studentDashboardLayout.events({
    */
   'click #logo-click': function( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-dashboard', { _id: Meteor.userId() });
@@ -182,11 +180,20 @@ Template.studentDashboardLayout.events({
    */
   'click #st-courses': function ( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
-    if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
+    if ( 
+        Meteor.user() && 
+        Meteor.user().roles && 
+        Meteor.user().roles.student 
+        ) 
+    {
       FlowRouter.go( 'student-courses', { _id: Meteor.userId() });
-    } else if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
+    } else if ( 
+                Meteor.user() && 
+                Meteor.user().roles && 
+                Meteor.user().roles.teacher 
+              ) 
+    {
       FlowRouter.go( 'teacher-courses', { _id: Meteor.userId() });
     }
 //-------------------------------------------------------------------
@@ -198,7 +205,6 @@ Template.studentDashboardLayout.events({
    */
   'click #st-request-credit': function ( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-request-credit', { _id: Meteor.userId() });
@@ -214,7 +220,6 @@ Template.studentDashboardLayout.events({
    */
   'click #st-records': function ( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-records', { _id: Meteor.userId() });
@@ -230,7 +235,6 @@ Template.studentDashboardLayout.events({
    */
   'click #st-training-calendar': function( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
     if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.student ) {
       FlowRouter.go( 'student-training-calendar', { _id: Meteor.userId() });

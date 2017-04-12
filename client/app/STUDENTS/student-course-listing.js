@@ -27,7 +27,7 @@ Template.studentCourseListing.onCreated(function() {
   this.ass_cor = new ReactiveArray([]);
   this.o       = new ReactiveArray([]);
 
-  Tracking.autorun( () => {
+  Tracker.autorun( () => {
     Meteor.subscribe('courses');
     Meteor.subscribe('students');
   });
@@ -188,7 +188,6 @@ Template.studentCourseListing.events = {
    */
   'click #course-button': function ( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
       let //builder   = $( e.currentTarget ).data( 'bid' )
           cid       = $( e.currentTarget ).data( 'id' );
@@ -214,9 +213,8 @@ Template.studentCourseListing.events = {
    */
   'click .js-teacher-cb'( e, t ) {
     e.preventDefault();
-    e.stopImmediatePropagation();
 
-    if ( Meteor.user().roles && Meteor.user().roles.teacher ) {
+    if ( Meteor.user() && Meteor.user().roles && Meteor.user().roles.teacher ) {
       FlowRouter.go( `/teacher/dashboard/course-builder/${Meteor.userId()}/?rtn=courses` );
     }
   },
