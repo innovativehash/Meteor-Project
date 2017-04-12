@@ -7,6 +7,7 @@
 <hr>
 ## Working on GitLab: Issues, Features
 **Start each new item worked on by doing a git pull from master**
+**Do a git pull prior to git push**
 
 If working on an ISSUE, use the gitlab button located on the issue's page, it's called:
 *[NEW BRANCH]*, to create a new branch based on it, for this example, the issue 
@@ -40,6 +41,7 @@ This places you in the new branch, ready to do your work.
 
 **After** completing your work, enter
 ```
+git pull
 git push
 ```
 
