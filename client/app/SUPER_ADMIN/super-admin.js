@@ -14,7 +14,7 @@ Template.superAdmin.onCreated(function() {
   
   Tracker.autorun( () => {
     Meteor.subscribe('students');
-    Meteor.subscribe('newsfeed');
+    Meteor.subscribe('newsfeeds');
   });
 
 });
