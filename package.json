@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com:nsardo/collective-university-master.git"
+    "url": "git+https://gitlab.com:collective-university-development/collective-university-master.git"
   },
   "author": "Nicholas Sardo",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/nsardo/collective-university-master/issues"
+    "url": "https://gitlab.com/collective-university-development/collective-university-master/issues"
   },
   "homepage": "http://collectiveuniversity.com"
 }
