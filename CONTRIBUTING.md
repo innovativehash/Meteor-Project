@@ -7,6 +7,7 @@
 <hr>
 ## Working on GitLab: Issues, Features
 **Start each new item worked on by doing a git pull from master**
+
 **Do a git pull prior to git push**
 
 If working on an ISSUE, use the gitlab button located on the issue's page, it's called:
@@ -61,6 +62,11 @@ where <descriptive branch name> is a **descriptive** name for what you are doing
 ```
 git pull
 ```
+**Finish with**:
+```
+git pull
+git push
+```
 
 - Create a **separate branch** for **each** *feature/bugfix* worked on:
 
@@ -68,6 +74,7 @@ git pull
 
 - When finished, submit a pull-request: (from the branch you're working on):
     ```bash
+    git pull
     git push
     ```
    
