@@ -8,12 +8,16 @@
     "babel-runtime": "^6.23.0",
     "bcrypt": "^0.8.7",
     "embed-video": "^1.5.0",
+    "jquery-ui": "^1.12.1",
     "pdfjs-dist": "^1.5.376"
   },
   "engines": {
     "node": "4.6.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-eslint": "^7.2.1",
+    "eslint": "^3.19.0"
+  },
   "scripts": {
     "start": "meteor run"
   },

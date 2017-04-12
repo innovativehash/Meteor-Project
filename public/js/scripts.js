@@ -6,7 +6,7 @@ $(document).ready(function(){
 		$('.sidebar-menu-area button#close').show();
 		$('.sidebar-menu-area').animate({'left': '0'},500);
 		return false;
-	});	
+	});
 	$('.sidebar-menu-area button#close').on('click',function(){
 		$(this).hide();
 		$('.sidebar-menu-area button#open').show();
@@ -24,7 +24,7 @@ $(document).ready(function(){
 		default_width: 700,
         default_height: 444,
         horizontal_padding: 20
- 	}); 
+ 	});
 
 
 	// Slider
@@ -40,7 +40,7 @@ $(document).ready(function(){
 		autoplayTimeout: 7000
 	});
 
-	//Sponsor 
+	//Sponsor
 	$(".sponsor-list ul").owlCarousel({
 		responsive: {
 			0: {
@@ -68,7 +68,7 @@ $(document).ready(function(){
 	$('button#cancel').on('click',function(){
 		$('.credit-request').slideUp();
 		return false;
-	});	
+	});
 
 	$('input#fileup').change(function(){
 	    var fileName = $(this).val();
@@ -77,31 +77,31 @@ $(document).ready(function(){
 
     $( "#datepicker" ).datepicker({
         showAnim: "slideDown"
-    }).datepicker("setDate", new Date());;	
+    }).datepicker("setDate", new Date());;
 
 	$(".js-multiple-select-1").select2({
 		placeholder: "Type Student Name"
-	}); 
+	});
 
 	$(".js-multiple-select-2").select2({
 		placeholder: "Type Department Name"
-	}); 
+	});
 
 	$('button#assign').attr('data-target', function(i){
 		return '#myModal-'+(i++);
-	});	
+	});
 
 	$('.modal').attr('id', function(i){
 		return 'myModal-'+(i++);
-	});	
+	});
 
 	$('.assign-title input').attr('id', function(i){
 		return 'radio-'+(i++);
-	});	
+	});
 
 	$('.assign-title label').attr('for', function(i){
 		return 'radio-'+(i++);
-	});	
+	});
 
 
 	$('.ui-datepicker').hover(function(){
