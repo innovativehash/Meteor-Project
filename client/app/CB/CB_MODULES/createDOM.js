@@ -42,8 +42,8 @@ export class CreateDOM {
     } else {
       this.titles.push(`<span id="${obj.id}" style="cursor:move;
                                                   position:absolute;
-                                                  top:${obj.offset.top};
-                                                  left:${obj.offset.left};
+                                                  top:${obj.top}px;
+                                                  left:${obj.left}px;
                                                   margin-top:10px;
                                                   margin-bottom:10px;
                                                   font-size:${obj.fontSize};
@@ -55,7 +55,7 @@ export class CreateDOM {
                       </span>`);
                       
     this.markup.push(
-                      `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
+                      `$('#${obj.id}').css({ top: ${obj.top}, left: ${obj.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
                     );
 			
@@ -91,8 +91,8 @@ export class CreateDOM {
     } else {
       this.texts.push(`<span id="${obj.id}" style="cursor:move;
                                                   position:absolute;
-                                                  top:${obj.offset.top};
-                                                  left:${obj.offset.left};
+                                                  top:${obj.top};
+                                                  left:${obj.left};
                                                   font-size:${obj.fontSize};
                                                   font-style:${obj.fontStyle};
                                                   font-weight:${obj.fontWeight};
@@ -102,9 +102,10 @@ export class CreateDOM {
                                                   text-decoration:${obj.textDecoration};">
                           ${obj.text}
                       </span>`);
-                      
+ console.log( `${obj.top}` );
+ console.log( `${obj.left}` );
       this.markup.push(
-                      `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
+                      `$('#${obj.id}').css({ top: ${obj.top}, left: ${obj.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`
                     );
 					
@@ -133,8 +134,8 @@ export class CreateDOM {
     } else {
        this.images.push( `
                        <div id="${obj.id}" style="position:absolute;
-                                                  top:${obj.offset.top}px;
-                                                  left:${obj.offset.left}px;
+                                                  top:${obj.top}px;
+                                                  left:${obj.left}px;
                                                   background-image:${obj.src};
                                                   margin-top:10px;
                                                   margin-bottom:10px;
@@ -143,7 +144,7 @@ export class CreateDOM {
                                                   background-size:cover;">
                        </div>`);
       this.markup.push(
-                      `$('#${obj.id}').offset({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
+                      `$('#${obj.id}').css({ top: ${obj.offset.top}, left: ${obj.offset.left} });`,
                       `$('#${obj.id}').draggable({ containment: "#fb-template", scroll: false });`,
                       `$('#${obj.id}').resizable({ autoHide: false, aspectRatio: true, containment: "#fb-template" });`
                     );

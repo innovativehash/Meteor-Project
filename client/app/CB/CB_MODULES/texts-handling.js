@@ -29,12 +29,10 @@
   {
     e.preventDefault();
 
-let pos = t.$(`#txt-${master_num}`).css({top: `200px`, left: `200px` });
-
     t.$( '#fb-template' ).append( `<span  style="cursor:move;
                                                  z-index:0;
-                                                 top:10
-                                                 left:80
+                                                 top:10px 
+                                                 left:80px
                                                  background-color:white;
                                                  position:absolute;"
                                           id="txt-${master_num}"
@@ -45,7 +43,7 @@ let pos = t.$(`#txt-${master_num}`).css({top: `200px`, left: `200px` });
                                   </span>`);
                                   
     t.$( `#txt-${master_num}` ).css({ 'margin-top': '10px', 'margin-bottom': '10px' });
-    t.$( `#txt-${master_num}` ).offset({ left: pos.left, top: pos.top });
+    t.$( `#txt-${master_num}` ).css({ left: '10px', top: '80px' });
     t.$( `#txt-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
 
     P.append({
@@ -54,7 +52,8 @@ let pos = t.$(`#txt-${master_num}`).css({top: `200px`, left: `200px` });
       id:             `txt-${master_num}`,
       text:           txt,
       zIndex:         $( `#txt-${master_num}` ).css('z-index')          || 0,
-      offset:         pos,
+      top:            $( `#txt-${master_num}` ).css('top'),
+      left:           $( `#txt-${master_num}` ).css('left'),
       fontSize:       $( `#txt-${master_num}` ).css('font-size')        || 16,
       border:         $( `#txt-${master_num}` ).css('border')           || '',
       fontWeight:     $( `#txt-${master_num}` ).css('font-weight')      || '',
@@ -63,10 +62,9 @@ let pos = t.$(`#txt-${master_num}`).css({top: `200px`, left: `200px` });
       opacity:        $( `#txt-${master_num}` ).css('opacity')          || 1
     });
 P.print();
+
     Meteor.setTimeout(function(){
-      //console.log( my_id );
       $( `#txt-${master_num}` ).attr( 'data-pid', `${Session.get('my_id')}` );
-      //console.log( $( `#txt-${txt_id}` ).data('pid'));
     }, 500);
 
   //--------------------------
@@ -92,8 +90,7 @@ P.print();
 
       let id  = `txt-${master_num}`
         , str = $( `#txt-${master_num}` ).html()
-        , idx = P.indexOf( `txt-${master_num}` )
-        , pos = t.$( `#txt-${master_num}` ).offset();
+        , idx = P.indexOf( `txt-${master_num}` );
 
       
       //pos.left = Math.abs(pos.left);
@@ -108,15 +105,17 @@ P.print();
       id:             id,
       type:           'text',
       text:           str,
-      offset:         pos,
-      zIndex:         $( `#txt-${master_num}` ).css('z-index')        || 0,
-      fontSize:       $( `#txt-${master_num}` ).css('font-size')      || 16,
-      border:         $( `#txt-${master_num}` ).css('border')         || '',
-      fontWeight:     $( `#txt-${master_num}` ).css('font-weight')    || '',
-      fontStyle:      $( `#txt-${master_num}` ).css('font-style')     || 'normal',
-      textDecoration: $( `#txt-${master_num}` ).css('text-decoration') || 'none',
-      opacity:        $( `#txt-${master_num}` ).css('opacity')         || 1 
+      top:            t.$( `#txt-${master_num}` ).css('top'),
+      left:           t.$( `#txt-${master_num}` ).css('left'),
+      zIndex:         t.$( `#txt-${master_num}` ).css('z-index')        || 0,
+      fontSize:       t.$( `#txt-${master_num}` ).css('font-size')      || 16,
+      border:         t.$( `#txt-${master_num}` ).css('border')         || '',
+      fontWeight:     t.$( `#txt-${master_num}` ).css('font-weight')    || '',
+      fontStyle:      t.$( `#txt-${master_num}` ).css('font-style')     || 'normal',
+      textDecoration: t.$( `#txt-${master_num}` ).css('text-decoration') || 'none',
+      opacity:        t.$( `#txt-${master_num}` ).css('opacity')         || 1 
     });
+    
 P.print();
     });//mouseup
   })( master_num );//anon func

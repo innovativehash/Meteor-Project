@@ -114,7 +114,8 @@ $(`#ig-${master_num}`).resizable({ containment: "#fb-template" });
                             type:            'image',
                             id:              `ig-${master_num}`,
                             img_lnk:         a_img_id,
-                            offset:          $( `#ig-${master_num}` ).offset(),
+                            top:             $( `#ig-${master_num}` ).css('top'),
+                            left:            $( `#ig-${master_num}` ).css('left'),
                             width:           $( `#ig-${master_num}` ).width(),
                             height:          $( `#ig-${master_num}` ).height(),
                             opacity:         $( `#ig-${master_num}` ).css('opacity'),
@@ -138,8 +139,7 @@ $(`#ig-${master_num}`).resizable({ containment: "#fb-template" });
                     
                     t.$( '#cb-current' ).val( `ig-${master_num}` );
                     
-                    pos = t.$( `#ig-${master_num}` ).offset()
-                  , src = t.$( `#ig-${master_num}` ).css('background-image')
+                    src = t.$( `#ig-${master_num}` ).css('background-image')
                   , id  = `ig-${master_num}`
                   , idx = P.indexOf( `ig-${master_num}` );
                       
@@ -150,7 +150,8 @@ $(`#ig-${master_num}`).resizable({ containment: "#fb-template" });
                                   type:            'image',
                                   id:              `ig-${master_num}`,
                                   img_lnk:         a_img_id,
-                                  offset:          $(`#ig-${master_num}`).offset(),
+                                  top:             $(`#ig-${master_num}`).css('top'),
+                                  left:            $(`#ig-${master_num}`).css('left'),
                                   opacity:         $(`#ig-${master_num}`).css('opacity'),
                                   width:           $(`#ig-${master_num}`).width(),
                                   height:          $(`#ig-${master_num}`).height(),

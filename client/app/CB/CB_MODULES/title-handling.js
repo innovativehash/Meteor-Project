@@ -28,8 +28,8 @@
 
 
     let str   = t.$( '#added-title' ).val().trim()
-      , pos   = t.$( '#added-title' ).offset()
-      , my_id = Session.get('my_id');
+      , my_id = Session.get('my_id')
+      , pos   = t.$( '#added-title' ).offset();
 
     if ( t.$( '#added-title' ).length ) {
       try {
@@ -39,8 +39,8 @@
       }
     }
 
-    t.$( '#fb-template' ).append( `<span id="tit-${master_num}" data-pid="0" data-page="${page_no}" style="font-size:18px;font-weight:bold;z-index:0;border-radius:5px;background-color:white;position:relative;top: 0;cursor:move;border:none !important;">` + escapeHtml( str ) + '</span>');
-    t.$( `#tit-${master_num}` ).offset({ left: pos.left, top: pos.top });
+    t.$( '#fb-template' ).append( `<span id="tit-${master_num}" data-pid="0" data-page="${page_no}" style="font-size:18px;font-weight:bold;z-index:0;border-radius:5px;background-color:white;position:absolute;top: 0;cursor:move;border:none !important;">` + escapeHtml( str ) + '</span>');
+    t.$( `#tit-${master_num}` ).css({ left: pos.left, top: pos.top });
     t.$( `#tit-${master_num}` ).draggable({ containment: "#fb-template", scroll: false });
     
     P.append({
@@ -48,7 +48,8 @@
                     type:     'title',
                     id:       `tit-${master_num}`,
                     text:     escapeHtml(str),
-                    offset:   pos,
+                    top:              $( `#tit-${master_num}` ).css('top'),
+                    left:             $( `#tit-${master_num}` ).css('left'),
                     zIndex:           $( `#tit-${master_num}` ).css('z-index') || 0,
                     fontSize:         $( `#tit-${master_num}` ).css('font-size') || 18,
                     border:           $( `#tit-${master_num}` ).css('border') || '',
@@ -75,8 +76,7 @@
         // MAKE THIS THE CURRENTLY SELECTED ITEM FOR TOOLBAR R/O HIDDEN FIELD
         t.$( '#cb-current' ).val( `tit-${master_num}` );
         
-        let pos = $( `#tit-${master_num}` ).offset()
-          , str = $( `#tit-${master_num}` ).text().trim()
+        let str = $( `#tit-${master_num}` ).text().trim()
           , id  = `tit-${master_num}`
           , idx = P.indexOf( `tit-${master_num}` )
           , sz  = $( `#tit-${master_num}` ).css('fontSize')
@@ -101,7 +101,8 @@
                       id:       id,
                       type:     'title',
                       text:     escapeHtml(str),
-                      offset:   pos,
+                      top:              $( `#tit-${master_num}` ).css('top'),
+                      left:             $( `#tit-${master_num}` ).css('left'),
                       zIndex:           $( `#tit-${master_num}` ).css('z-index') || 0,
                       fontSize:         $( `#tit-${master_num}` ).css('font-size') || 18,
                       border:           $( `#tit-${master_num}` ).css('border') || '',

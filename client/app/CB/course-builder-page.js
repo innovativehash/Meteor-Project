@@ -1066,6 +1066,7 @@ Template.courseBuilderPage.events({
  *******************************************************/
   'click #cb-save'( e, t ) {
     e.preventDefault();
+    
     t.$( '#intro-modal' ).modal( 'hide' );
 
     // CHECK THAT THERE'S CONTENT
@@ -1073,12 +1074,8 @@ Template.courseBuilderPage.events({
 
     let uname = Students.findOne( { _id: Meteor.userId() },
                                   { fullName:1 } ).fullName
-      //, uid   = Meteor.userId()
-      //, apv   = ( Meteor.user().roles.teacher ) ? false : true
-      , cinfo = Session.get('cinfo'); //{cname: name, credits: Number(credits),
-                                      //passing_percent: Number(percent),
-                                      //keywords: keys,
-                                      //icon: "/img/icon-4.png" }
+      , cinfo = Session.get('cinfo'); 
+      
     let pobj = P.dump();
     if ( pobj.length <= 0 ) {
       Bert.alert("You can't save an EMPTY course!!", 'danger');
@@ -1137,11 +1134,14 @@ Template.courseBuilderPage.events({
       t.page.set( 1 );
       t.total.set( 1 );
     }, 300);
+    
     P = null;
+    
     Session.set( 'my_id',           null );
     Session.set( 'cinfo',           null );
     Session.set( 'test_id',         null );
     Session.set( 'Scratch',         null );
+    
     Meteor.setTimeout(function(){
       Bert.alert(
                   'Your Course was saved!',
@@ -1149,12 +1149,7 @@ Template.courseBuilderPage.events({
                   'growl-top-right'
                 );
     }, 500);
-/*
-      let params      = { _id: Meteor.userId() };
-      let routeName   = "teacher-dashboard";
-      let path        = FlowRouter.path( routeName, params );
-      FlowRouter.go( path );
-*/
+    
     let roles = Meteor.user() && Meteor.user().roles;
     
     if ( roles && roles.admin )
@@ -1316,7 +1311,7 @@ Template.courseBuilderPage.events({
 
    let cur  = $('#cb-current').val()
     , txt   = editor && editor.getData(); //CKEDITOR.instances.editor.getData();
-    
+console.log(txt);    
     //TEXT COMES FORM CKEDITOR IN HTML FORMAT. CONVERT TO TEXT
     //txt = $(txt).text().trim();
     
@@ -1360,7 +1355,8 @@ Template.courseBuilderPage.events({
 
     
       $('#cb-current').val(null);
-
+      
+      editor.focusManager.blur(true);
       editor && editor.destroy();
 		  editor = null;
 		
@@ -1372,6 +1368,8 @@ Template.courseBuilderPage.events({
 
    } else {   
       //WE'RE CREATING A NEW TEST ELEMENT
+console.log('creating');
+      editor.focusManager.blur(true)
       editor && editor.destroy();
 		  editor = null;
 

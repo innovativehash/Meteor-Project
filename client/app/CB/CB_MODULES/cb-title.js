@@ -44,16 +44,16 @@
       t.$( `#${cur}` ).show();
       t.$( `#${cur}` ).text( txt );
 
-      let idx = P.indexOf( `${cur}` )
-        , pos = t.$( `#${cur}` ).offset();
+      let idx = P.indexOf( `${cur}` );
 
       P.removeAt( idx );
       P.insert( idx, {
                         page_no:  t.page.get(),
                         id:       cur,
                         type:     'title',
-                        text:     t.$(`#${cur}`).text().trim(),
-                        offset:   pos,
+                        text:             t.$(`#${cur}`).text().trim(),
+                        top:              t.$(`#${cur}`).css('top'),
+                        left:             t.$(`#${cur}`).css('left'), 
                         zIndex:           t.$( `#${cur}` ).css('z-index'),
                         fontSize:         t.$( `#${cur}` ).css('font-size'),
                         border:           t.$( `#${cur}` ).css('border'),
@@ -103,8 +103,7 @@
     e.preventDefault();
 
     let cur = t.$( '#cb-current' ).val()
-      , idx = P.indexOf(`${cur}`)
-      , pos = t.$( `#${cur}` ).offset();
+      , idx = P.indexOf(`${cur}`);
 
     if ( $( `#${cur}` ).css('fontStyle') != 'italic' ) {
       t.$( `#${cur}` ).css('fontStyle', 'italic');
@@ -121,8 +120,9 @@
                       page_no:  t.page.get(),
                       id:       `${cur}`,
                       type:     'title',
-                      text:     t.$(`#${cur}`).text().trim(),
-                      offset:   pos,
+                      text:             t.$(`#${cur}`).text().trim(),
+                      top:              t.$(`#${cur}`).css('top'),
+                      left:             t.$(`#${cur}`).css('left'),
                       zIndex:           t.$( `#${cur}` ).css('z-index'),
                       fontSize:         t.$( `#${cur}` ).css('font-size'),
                       border:           t.$( `#${cur}` ).css('border'),
@@ -144,8 +144,7 @@
     e.preventDefault();
 
     let cur = t.$( '#cb-current' ).val()
-      , idx = P.indexOf(`${cur}`)
-      , pos = t.$( `#${cur}` ).offset();
+      , idx = P.indexOf(`${cur}`);
 
     if ( $( `#${cur}` ).css('fontWeight') != 'bold' ) {
       t.$( `#${cur}` ).css('fontWeight', 'bold');
@@ -162,8 +161,9 @@
                       page_no:  t.page.get(),
                       id:       `${cur}`,
                       type:     'title',
-                      text:     t.$(`#${cur}`).text().trim(),
-                      offset:   pos,
+                      text:             t.$(`#${cur}`).text().trim(),
+                      top:              t.$(`#${cur}`).css('top'),
+                      left:             t.$(`#${cur}`).css('left'),
                       zIndex:           t.$( `#${cur}` ).css('z-index'),
                       fontSize:         t.$( `#${cur}` ).css('font-size'),
                       border:           t.$( `#${cur}` ).css('border'),
@@ -185,8 +185,7 @@
     e.preventDefault();
 
     let cur = t.$( '#cb-current' ).val()
-      , idx = P.indexOf(`${cur}`)
-      , pos = t.$( `#${cur}` ).offset();
+      , idx = P.indexOf(`${cur}`);
 
 
     if ( t.$( `#${cur}` ).css( 'textDecoration' ) != 'underline' ) {
@@ -204,8 +203,9 @@
                       page_no:  t.page.get(),
                       id:       `${cur}`,
                       type:     'title',
-                      text:     t.$(`#${cur}`).text().trim(),
-                      offset:   pos,
+                      text:             t.$(`#${cur}`).text().trim(),
+                      top:              t.$(`#${cur}`).css('top'),
+                      left:             t.$(`#${cur}`).css('left'),
                       zIndex:           t.$( `#${cur}` ).css('z-index'),
                       fontSize:         t.$( `#${cur}` ).css('font-size'),
                       border:           t.$( `#${cur}` ).css('border'),
@@ -256,8 +256,9 @@
                       page_no:  t.page.get(),
                       id:       `${cur}`,
                       type:     'title',
-                      text:     t.$(`#${cur}`).text().trim(),
-                      offset:   pos,
+                      text:             t.$(`#${cur}`).text().trim(),
+                      top:              t.$(`#${cur}`).css('top'),
+                      left:             t.$(`#${cur}`).css('left'),
                       zIndex:           t.$( `#${cur}` ).css('z-index'),
                       fontSize:         t.$( `#${cur}` ).css('font-size'),
                       border:           t.$( `#${cur}` ).css('border'),
@@ -301,16 +302,16 @@
   export function titleOpacityMU( e, t, P ) {
 
     let cur = t.$( '#cb-current' ).val()
-      , idx = P.indexOf(`${cur}`)
-      , pos = t.$( `#${cur}` ).offset();
+      , idx = P.indexOf(`${cur}`);
 
     P.removeAt( idx );
     P.insert( idx, {
                       page_no:  t.page.get(),
                       id:       `${cur}`,
                       type:     'title',
-                      text:     t.$(`#${cur}`).text().trim(),
-                      offset:   pos,
+                      text:             t.$(`#${cur}`).text().trim(),
+                      top:              t.$(`#${cur}`).css('top'),
+                      left:             t.$(`#${cur}`).css('left'),
                       zIndex:           t.$( `#${cur}` ).css('z-index'),
                       fontSize:         t.$( `#${cur}` ).css('font-size'),
                       border:           t.$( `#${cur}` ).css('border'),

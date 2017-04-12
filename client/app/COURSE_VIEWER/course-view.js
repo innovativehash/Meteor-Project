@@ -11,7 +11,7 @@ import { BuiltCourses }   from '../../../both/collections/api/built-courses.js';
 import { Students }       from '../../../both/collections/api/students.js';
 
 import * as CBCreateDOM   from '../CB/CB_MODULES/createDOM.js';
-import * as Render        from '../CB/CB_MODULES/render.js';
+//import * as Render        from '../CB/CB_MODULES/render.js';
 
 import './course-view.html';
 
@@ -140,7 +140,7 @@ Template.courseView.onRendered( function() {
         let funcs = rtn_arr[1];
         
         //ATTACH ELEMENTS RETURNED FROM CLASS TO DOM
-        $('#fb-template').append( rtn_arr[0] );
+        $('#fb-template').html( rtn_arr[0] ); //append
         
         //ACTIVATE POSITIONING JQUERY FUNCTIONS RETURNED FROM CLASS
         for ( let i = 0, ilen = funcs.length; i < ilen; i++ ) {
