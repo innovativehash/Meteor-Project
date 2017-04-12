@@ -73,6 +73,7 @@ meteor list
 accounts-base               | 1.2.15    |A user account system
 accounts-password           | 1.3.4     |Password support for accounts
 aldeed:collection2          | 2.10.0    |Automatic validation of insert and update operations on the client and server.
+aslagle:reactive-table      | 0.8.40    |A reactive table designed for Meteor
 blaze-html-templates        | 1.1.2     |Compile HTML templates into reactive UI with Meteor Blaze
 check                       | 1.2.5     |Check whether a value matches a pattern
 deanius:promise             | 3.1.3     |Utilities for Promise-based wrappers, method calls, helpers and HTTP in Meteor
@@ -92,6 +93,7 @@ meteor-base                 | 1.0.4     |Packages that every Meteor app needs
 mobile-experience           | 1.0.4     |Packages for a great mobile user experience
 momentjs:moment             | 2.18.1    |Moment.js (official): parse, validate, manipulate, and display dates - official Meteor packaging
 mongo                       | 1.1.16    |Adaptor for using MongoDB and Minimongo over DDP
+mrt:jquery-ui               | 1.9.2     |jQuery-UI - jQuery user interface
 msavin:mongol               | 2.0.1     |In-App MongoDB Editor.. now works better than ever!
 reactive-dict               | 1.1.8     |Reactive dictionary
 reactive-var                | 1.0.11    |Reactive variable
@@ -108,15 +110,27 @@ twbs:bootstrap              | 3.3.6     |The most popular front-end framework fo
 **NPM Packages**:
 ( Excerpt from *package.json* )
 ```
-  "version": "0.8.0",
+   "version": "1.0.0",
   "dependencies": {
     "async": "^2.3.0",
     "babel-runtime": "^6.23.0",
     "bcrypt": "^0.8.7",
     "embed-video": "^1.5.0",
+    "jquery-ui": "^1.12.1",
     "pdfjs-dist": "^1.5.376"
   },
   "engines": {
     "node": "4.6.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.1",
+    "eslint": "^3.19.0"
+  },
+  "scripts": {
+    "start": "meteor run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com:nsardo/collective-university-master.git"
   },
  ```
