@@ -129,7 +129,7 @@
               <div class="single-event-pop">
   <!-- END TIME -->
                 <label for = "end-time">
-                  Time End
+                  Time End&nbsp;
                 </label>
                 
                 <input  type    = "time" 
@@ -186,18 +186,35 @@
       <div class="row">
         <div class="col-sm-12 text-right">
           {{#if modalType 'edit'}}
-            <button class="event-btn pull-left delete-event">Delete Event</button>
+            <button class="event-btn pull-left delete-event mob-pull-left">Delete Event</button>
           {{/if}}
           
-          <button class         = "event-btn"
+          
+		  
+		  {{#if modalType 'edit'}}
+		  <button class         = "event-btn mob-pull-left"
+                  data-dismiss  = "modal"
+                  aria-label    = "close">
+            Cancel
+          </button>		  
+		   {{else}}
+		   <button class         = "event-btn"
                   data-dismiss  = "modal"
                   aria-label    = "close">
             Cancel
           </button>
+		   {{/if}}
           
-          <button class = "event-btn add js-event-modal-button">
+		   
+          {{#if modalType 'edit'}}
+          <button class = "event-btn add mob-pull-left js-event-modal-button">
             {{modalLabel.button}} Event <span>+</span>
           </button>
+		   {{else}}
+		   <button class = "event-btn add js-event-modal-button">
+            {{modalLabel.button}} Event <span>+</span>
+          </button>
+		   {{/if}}
                                                         </div>
                                                     </div>
                                                 </form>
@@ -205,5 +222,6 @@
                                         </div>
                                     </div>
                                 </div>
+
 
 </template>
