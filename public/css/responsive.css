@@ -77,9 +77,9 @@ display: none;
 display: block;
 }
 
-.filter-buttons .hide-to-mobile{
-display:block;
-}	
+.filter-buttons .hide-to-mobile {
+    display: inline-block;
+}
 
 .filter-buttons .show-to-mobile{
     display: none;
@@ -134,10 +134,9 @@ display: none;
 display: block;
 }
 
-.filter-buttons .hide-to-mobile{
-display:block;
-}	
-
+.filter-buttons .hide-to-mobile {
+    display: inline-block;
+}
 .filter-buttons .show-to-mobile{
     display: none;
 }
@@ -172,10 +171,9 @@ body.main .container {width: 1170px;}
 .diamonds {
 	top: 12px;
 }
-.filter-buttons .hide-to-mobile{
-display:block;
-}	
-
+.filter-buttons .hide-to-mobile {
+    display: inline-block;
+}
 .filter-buttons .show-to-mobile{
     display: none;
 }
@@ -207,9 +205,9 @@ display: block;
 .nexus-width{
 	width: 39%;
 }
-.filter-buttons .hide-to-mobile{
-display:block;
-}	
+.filter-buttons .hide-to-mobile {
+    display: inline-block;
+}
 
 .filter-buttons .show-to-mobile{
     display: none;
