@@ -101,12 +101,27 @@ Template.courses.events({
     let idx = $( e.currentTarget ).val();
     $( 'tr').css( 'border', '' );
     $( 'tr' ).css( 'background-color', '' );
-    $( 'tr#' + idx ).css( 'border',
-                          '1px solid' ).css(  'background-color',
-                                              'PaleTurquoise' );
+    $( 'tr#' + idx ).css( 'border','1px solid' ).css(  'background-color','PaleTurquoise' );
+						  
+	  var domToScroll= $( e.currentTarget ).val();
+	  var currentOffset=$("#"+domToScroll).offset();
+	  var scrolltotop=currentOffset.top;
+	  //console.log(currentOffset.top);
+	  
+	  $( 'html, body' ).animate({
+      scrollTop: scrolltotop + 'px'
+      }, 'fast');
+	  $(".name").css({'background-color':'transparent','border':'0px solid'} );
+	  $("#"+domToScroll).css({'background-color':'PaleTurquoise','border':'1px solid'} );
+	  
+        /*                                      
     $( 'html, body' ).animate({
       scrollTop: $( 'tr#' + $( e.currentTarget ).val() ).offset().top + 'px'
       }, 'fast');
+	  */
+	  
+	 // var offset= $( 'tr#' + $( e.currentTarget ).val() ).offset();
+	  //console.log("offset:"+offset.top);
 //-------------------------------------------------------------------
   },
   /********************************************************
