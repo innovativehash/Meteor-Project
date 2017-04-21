@@ -813,6 +813,10 @@ margin-left:0;
 .pop-up-area.eventpop button.mob-pull-left{
 	margin-left:0;
 }
+.mob-margin-btm{
+	    margin-bottom: 20px;
+    margin-top: 20px;
+}
   }
   
   /* ----------- iPhone 5 and 5S ----------- */
@@ -911,6 +915,10 @@ margin-left:0;
 }	
 .pop-up-area.eventpop button.mob-pull-left{
 	margin-left:0;
+}
+.mob-margin-btm{
+	    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 }
