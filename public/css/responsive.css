@@ -817,6 +817,18 @@ margin-left:0;
 	    margin-bottom: 20px;
     margin-top: 20px;
 }
+
+#vid-0,#vid-1,#vid-2,#vid-3,#vid-4,#vid-5{
+	width:100%;
+	height:auto;
+	
+    margin-top: 25%;
+}
+
+
+#fb-template iframe{
+	width:100%;
+}
   }
   
   /* ----------- iPhone 5 and 5S ----------- */
@@ -919,6 +931,17 @@ margin-left:0;
 .mob-margin-btm{
 	    margin-bottom: 20px;
     margin-top: 20px;
+}
+
+#vid-0,#vid-1,#vid-2,#vid-3,#vid-4,#vid-5{
+	width:100%;
+	height:auto;
+	
+    margin-top: 25%;
+}
+
+#fb-template iframe{
+	width:100%;
 }
 
 }
